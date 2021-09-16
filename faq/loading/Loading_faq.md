@@ -1,9 +1,5 @@
 # 导入通用FAQ
 
-## 导入问题排查流程
-
-一般，
-
 ## 导入常见问题
 
 ### 异常：close index channel failed/too many tablet versions
