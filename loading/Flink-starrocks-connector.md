@@ -23,10 +23,12 @@ flink的用户想要将数据sink到StarRocks当中，但是flink官方只提供
 
 ```plain text
 <dependency>
-    <groupId>com.starrocks.connector</groupId>
+    <groupId>com.starrocks</groupId>
     <artifactId>flink-connector-starrocks</artifactId>
-    <version>1.0.32-SNAPSHOT</version>  <!-- for flink-1.11 ~ flink-1.12 -->
-    <version>1.0.32_1.13-SNAPSHOT</version>  <!-- for flink-1.13 -->
+    <!-- for flink-1.11, flink-1.12 -->
+    <version>1.1.1_flink-1.11</version>
+    <!-- for flink-1.13 -->
+    <version>1.1.1_flink-1.13</version>
 </dependency>
 ```
 
@@ -41,8 +43,8 @@ fromElements(new String[]{
     StarRocksSink.sink(
         // the sink options
         StarRocksSinkOptions.builder()
-            .withProperty("jdbc-url", "jdbc:mysql://fe_ip:query_port,fe_ip:query_port?xxxxx")
-            .withProperty("load-url", "fe_ip:http_port;fe_ip:http_port")
+            .withProperty("jdbc-url", "jdbc:mysql://ip:port,ip:port?xxxxx")
+            .withProperty("load-url", "ip:port;ip:port")
             .withProperty("username", "xxx")
             .withProperty("password", "xxx")
             .withProperty("table-name", "xxx")
@@ -76,8 +78,8 @@ fromElements(
             .build(),
         // the sink options
         StarRocksSinkOptions.builder()
-            .withProperty("jdbc-url", "jdbc:mysql://fe_ip:query_port,fe_ip:query_port?xxxxx")
-            .withProperty("load-url", "fe_ip:http_port;fe_ip:http_port")
+            .withProperty("jdbc-url", "jdbc:mysql://ip:port,ip:port?xxxxx")
+            .withProperty("load-url", "ip:port;ip:port")
             .withProperty("username", "xxx")
             .withProperty("password", "xxx")
             .withProperty("table-name", "xxx")
@@ -105,15 +107,19 @@ tEnv.executeSql(
         "score BIGINT" +
     ") WITH ( " +
         "'connector' = 'starrocks'," +
-        "'jdbc-url'='jdbc:mysql://fe_ip:query_port,fe_ip:query_port?xxxxx'," +
-        "'load-url'='fe_ip:http_port;fe_ip:http_port'," +
+        "'jdbc-url'='jdbc:mysql://ip:port,ip:port?xxxxx'," +
+        "'load-url'='ip:port;ip:port'," +
         "'database-name' = 'xxx'," +
         "'table-name' = 'xxx'," +
         "'username' = 'xxx'," +
         "'password' = 'xxx'," +
+        "'sink.buffer-flush.max-rows' = '1000000'," +
+        "'sink.buffer-flush.max-bytes' = '300000000'," +
+        "'sink.buffer-flush.interval-ms' = '300000'," +
         "'sink.properties.column_separator' = '\\x01'," +
         "'sink.properties.row_delimiter' = '\\x02'," +
-        "'sink.properties.columns' = 'k1, v1'" +
+        "'sink.max-retries' = '3'" +
+        "'sink.properties.*' = 'xxx'" + // stream load properties like `'sink.properties.columns' = 'k1, v1'`
     ")"
 );
 ```
@@ -147,4 +153,4 @@ tEnv.executeSql(
 
 ### 完整示例
 
-- 完整代码工程，参考 [https://github.com/StarRocks/demo](https://github.com/StarRocks/demo)
+- 完整代码工程，参考 [demo](https://github.com/DorisDB/demo)
