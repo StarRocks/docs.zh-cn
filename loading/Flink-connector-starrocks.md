@@ -12,7 +12,7 @@ flink的用户想要将数据sink到StarRocks当中，但是flink官方只提供
 
 将以下内容加入`pom.xml`:
 
-```plain text
+```xml
 <dependency>
     <groupId>com.starrocks</groupId>
     <artifactId>flink-connector-starrocks</artifactId>
