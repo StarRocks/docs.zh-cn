@@ -2,7 +2,7 @@
 
 StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能。在底层实现上， StarRocksWriter 通过Stream load以csv或 json 格式导入数据至StarRocks。内部将`reader`读取的数据进行缓存后批量导入至StarRocks，以提高写入性能。总体数据流是 `source -> Reader -> DataX channel -> Writer -> StarRocks`。
 
-[点击下载插件](<http://starrocks-release.cdn.starrocks.com/starrockswriter.tar.gz?Expires=1990135845&OSSAccessKeyId=LTAI4GFYjbX9e7QmFnAAvkt8&Signature=wxTRzVOf1Tx8Di8PIBzTHEf5mwU%3D>
+[点击下载插件](https://github.com/StarRocks/DataX/releases)
 
 [源码地址](https://github.com/StarRocks/DataX)
 

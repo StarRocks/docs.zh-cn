@@ -4,22 +4,13 @@ flink的用户想要将数据sink到StarRocks当中，但是flink官方只提供
 
 ## 使用方式
 
+[点击下载插件](https://github.com/StarRocks/flink-connector-starrocks/releases)
+
+[源码地址](https://github.com/StarRocks/flink-connector-starrocks)
+
 将`com.starrocks.table.connector.flink.StarRocksDynamicTableSinkFactory`加入到：`src/main/resources/META-INF/services/org.apache.flink.table.factories.Factory`。
 
-将以下两部分内容加入`pom.xml`:
-
-```plain text
-<repositories>
-    <repository>
-        <id>starrocks-maven-releases</id>
-        <url>http://starrocksvisitor:starrocksvisitor134@nexus.starrocks.com/repository/maven-releases/</url>
-    </repository>
-    <repository>
-        <id>starrocks-maven-snapshots</id>
-        <url>http://starrocksvisitor:starrocksvisitor134@nexus.starrocks.com/repository/maven-snapshots/</url>
-    </repository>
-</repositories>
-```
+将以下内容加入`pom.xml`:
 
 ```plain text
 <dependency>
