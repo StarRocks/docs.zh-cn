@@ -120,7 +120,8 @@ mysql -h 127.0.0.1 -P9030 -uroot
 第三步: 查看FE状态：
 
 ```Plain Text
-mysql> SHOW PROC '/frontends'\\G
+mysql> SHOW PROC '/frontends'\G
+
 
 ***1\. row***
 
