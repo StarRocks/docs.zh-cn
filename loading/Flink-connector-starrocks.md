@@ -34,8 +34,8 @@ fromElements(new String[]{
     StarRocksSink.sink(
         // the sink options
         StarRocksSinkOptions.builder()
-            .withProperty("jdbc-url", "jdbc:mysql://ip:port,ip:port?xxxxx")
-            .withProperty("load-url", "ip:port;ip:port")
+            .withProperty("jdbc-url", "jdbc:mysql://fe1_ip:query_port,fe2_ip:query_port,fe3_ip:query_port?xxxxx")
+            .withProperty("load-url", "fe1_ip:http_port;fe2_ip:http_port;fe3_ip:http_port")
             .withProperty("username", "xxx")
             .withProperty("password", "xxx")
             .withProperty("table-name", "xxx")
@@ -69,8 +69,8 @@ fromElements(
             .build(),
         // the sink options
         StarRocksSinkOptions.builder()
-            .withProperty("jdbc-url", "jdbc:mysql://ip:port,ip:port?xxxxx")
-            .withProperty("load-url", "ip:port;ip:port")
+            .withProperty("jdbc-url", "jdbc:mysql://fe1_ip:query_port,fe2_ip:query_port,fe3_ip:query_port?xxxxx")
+            .withProperty("load-url", "fe1_ip:http_port;fe2_ip:http_port;fe3_ip:http_port")
             .withProperty("username", "xxx")
             .withProperty("password", "xxx")
             .withProperty("table-name", "xxx")
@@ -98,15 +98,15 @@ tEnv.executeSql(
         "score BIGINT" +
     ") WITH ( " +
         "'connector' = 'starrocks'," +
-        "'jdbc-url'='jdbc:mysql://ip:port,ip:port?xxxxx'," +
-        "'load-url'='ip:port;ip:port'," +
+        "'jdbc-url'='jdbc:mysql://fe1_ip:query_port,fe2_ip:query_port,fe3_ip:query_port?xxxxx'," +
+        "'load-url'='fe1_ip:http_port;fe2_ip:http_port;fe3_ip:http_port'," +
         "'database-name' = 'xxx'," +
         "'table-name' = 'xxx'," +
         "'username' = 'xxx'," +
         "'password' = 'xxx'," +
-        "'sink.buffer-flush.max-rows' = '1000000'," +
+        "'sink.buffer-flush.max-rows' = '10000000'," +
         "'sink.buffer-flush.max-bytes' = '300000000'," +
-        "'sink.buffer-flush.interval-ms' = '300000'," +
+        "'sink.buffer-flush.interval-ms' = '5000'," +
         "'sink.properties.column_separator' = '\\x01'," +
         "'sink.properties.row_delimiter' = '\\x02'," +
         "'sink.max-retries' = '3'" +
