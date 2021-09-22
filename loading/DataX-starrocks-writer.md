@@ -77,7 +77,7 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
 
 * **username**
 
-  * 描述：StarRocks数据库的用户名
+  * 描述：StarRocks 数据库的用户名
 
   * 必选：是
 
@@ -85,7 +85,7 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
 
 * **password**
 
-  * 描述：StarRocks数据库的密码
+  * 描述：StarRocks 数据库的密码
 
   * 必选：是
 
@@ -93,7 +93,7 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
 
 * **database**
 
-  * 描述：StarRocks表的数据库名称。
+  * 描述：StarRocks 表的数据库名称。
 
   * 必选：是
 
@@ -101,7 +101,7 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
 
 * **table**
 
-  * 描述：StarRocks表的表名称。
+  * 描述：StarRocks 表的表名称。
 
   * 必选：是
 
