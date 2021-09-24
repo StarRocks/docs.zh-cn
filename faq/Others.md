@@ -91,7 +91,7 @@ ALTER DATABASE example_db SET DATA QUOTA 10T;
 
 这样可以导入数据后做一定的验证以后再替换,可以进行临时分区的原子替换。
 
-## fe重启报错：error to open replicated environment，will exit
+## fe重启报错:error to open replicated environment，will exit
 
 ### 问题描述
 
@@ -101,7 +101,7 @@ ALTER DATABASE example_db SET DATA QUOTA 10T;
 
 是bdbje的一个bug，社区版和1.17版本（不含此版本）以前重启会小概率触发该bug，可以升级到1.17及更高版本，已修复该问题。
 
-## 创建hive表，查询没有数据报错Broker list path exception
+## 创建hive表，查询报错:Broker list path exception
 
 ### 问题描述
 
@@ -114,7 +114,7 @@ path=hdfs://172.31.3.136:9000/user/hive/warehouse/zltest.db/student_info/*, brok
 
 namenode的地址和端口跟运维人员确认是否正确，权限有没有开启
 
-## 创建hive表，查询没有数据报错:get hive partition meta data failed
+## 创建hive表，查询报错:get hive partition meta data failed
 
 ### 问题描述
 
@@ -124,9 +124,7 @@ msg:get hive partition meta data failed: java.net.UnknownHostException: emr-head
 
 ### 解决方案
 
-```plain text
  需要把集群里的host文件传一份到每个BE机器上，并确认网络是通的。
-```
 
 ## hive外表orc访问失败：do_open failed. reason = Invalid ORC postscript length
 
