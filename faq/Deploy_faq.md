@@ -98,7 +98,7 @@ Flink导入报错，定位原因为磁盘不足，后来扩容磁盘后，不能
 解决方案:
 目前正在修复当中，解决方法测试客户如果数据不重要推荐直接删除掉磁盘，线上客户或者重要数据推荐手工操作
 
- 不是重要数据直接删除掉磁盘的话可能会面临一个问题就是：切换完磁盘目录后，会报错：Failed to get scan range, no queryable replica found in tablet: 11903，解决方法为：把这张表11903truncate 一下之后即可
+ 不是重要数据直接删除掉磁盘的话可能会面临一个问题就是：切换完磁盘目录后，会报错：Failed to get scan range, no queryable replica found in tablet: 11903，解决方法为：把这张表11903truncate 一下之后即可.
 
 ### keyword
 
