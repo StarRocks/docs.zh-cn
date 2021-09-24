@@ -71,7 +71,7 @@ mkdir -p starrocks-meta (1.18.2及以前的版本需要使用mkdir -p doris-meta
 
 <br/>
 
-第三doris-meta
+第三步: 启动FE进程:
 
 ```bash
 bin/start_fe.sh --daemon
@@ -403,7 +403,7 @@ echo 0 | sudo tee /proc/sys/vm/swappiness
 
 * **Compaction相关**
 
-当使用聚合表或更新模型，导入数据比较快的时候，可改下列参数`be.conf`以加速compaction。
+当使用聚合表或更新模型，导入数据比较快的时候，可在配置文件 `be.conf` 中修改下列参数以加速compaction。
 
 ```shell
 cumulative_compaction_num_threads_per_disk = 4
