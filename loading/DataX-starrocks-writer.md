@@ -169,11 +169,11 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
 
 * **flushInterval**
 
-	* 描述：上一次StreamLoad结束至下一次开始的时间间隔（单位：ms）。 <br />
+  * 描述：上一次StreamLoad结束至下一次开始的时间间隔（单位：ms）。
 
- 	* 必选：否 <br />
+  * 必选：否
 
-	* 默认值：300000 (ms)
+  * 默认值：300000 (ms)
 
 * **loadProps**
 
