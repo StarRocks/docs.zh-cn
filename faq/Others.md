@@ -51,7 +51,7 @@ ALTER DATABASE example_db SET DATA QUOTA 10T;
 类似CK的分区卸载、装载，跨表分区移动等功能。
 下面以原子替换表 table1 的数据，或 table1 的分区数据，为例。可能比insert overwrite更安全些，可以先检查下数据。
 
-原子替换「表」
+### 原子替换「表」
 
 1. 创建一张新表table2;
 
@@ -68,7 +68,8 @@ ALTER DATABASE example_db SET DATA QUOTA 10T;
 
 这样就可以进行表的原子替换。
 
-原子替换「分区」
+### 原子替换「分区」
+
 同样可以用「导入临时分区」的方式进行替换。
 
 1. 创建临时分区:
@@ -100,17 +101,32 @@ ALTER DATABASE example_db SET DATA QUOTA 10T;
 
 是bdbje的一个bug，社区版和1.17版本（不含此版本）以前重启会小概率触发该bug，可以升级到1.17及更高版本，已修复该问题。
 
-## 创建hive表，查询没有数据报错如下
+## 创建hive表，查询没有数据报错Broker list path exception
 
-1. msg:Broker list path exception
+### 问题描述
+
+```plain text
+msg:Broker list path exception
 path=hdfs://172.31.3.136:9000/user/hive/warehouse/zltest.db/student_info/*, broker=TNetworkAddress(hostname:172.31.4.233, port:8000)
-
-2. get hive partition meta data failed: java.net.UnknownHostException: emr-header-1.cluster-242
+```
 
 ### 解决方案
 
-1. namenode的地址和端口跟运维人员确认是否正确，权限有没有开启
-2. 需要把集群里的host文件传一份到每个BE机器上，并确认网络是通的。
+namenode的地址和端口跟运维人员确认是否正确，权限有没有开启
+
+## 创建hive表，查询没有数据报错:get hive partition meta data failed
+
+### 问题描述
+
+```plain text
+msg:get hive partition meta data failed: java.net.UnknownHostException: emr-header-1.cluster-242
+```
+
+### 解决方案
+
+```plain text
+ 需要把集群里的host文件传一份到每个BE机器上，并确认网络是通的。
+```
 
 ## hive外表orc访问失败：do_open failed. reason = Invalid ORC postscript length
 
