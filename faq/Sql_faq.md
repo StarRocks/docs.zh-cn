@@ -3,7 +3,7 @@
 ## [bigint等值查询中加引号]出现多余数据
 
 ```sql
-mysql>select cust_id,idno from llyt_dev.dwd_mbr_custinfo_dd where Pt= ‘2021-06-30’ and cust_id = ‘20210129005809043707’ limit 10 offset 0;
+select cust_id,idno from llyt_dev.dwd_mbr_custinfo_dd where Pt= ‘2021-06-30’ and cust_id = ‘20210129005809043707’ limit 10 offset 0;
 ```
 
 ```plain text
@@ -20,7 +20,7 @@ mysql>select cust_id,idno from llyt_dev.dwd_mbr_custinfo_dd where Pt= ‘2021-06
 ```
 
 ```sql
-mysql>select cust_id,idno from llyt_dev.dwd_mbr_custinfo_dd where Pt= ‘2021-06-30’ and cust_id = 20210129005809043707 limit 10 offset 0;
+select cust_id,idno from llyt_dev.dwd_mbr_custinfo_dd where Pt= ‘2021-06-30’ and cust_id = 20210129005809043707 limit 10 offset 0;
 ```
 
 ```plain text
@@ -96,4 +96,4 @@ select B from tbl order by A,B limit 10，将B也进行排序就能保证结果�
 
 问题原因：
 
-上面的SQL只能保证A是有序的，并不能保证每次查询出来的B顺序是一致的，MySQL能保证这点因为它是单机数据库，而StarRocks是分布式数据库，底层表数据存储是sharding的，A的数据分布在多台机器上，每次查询多台机器返回的顺序可能不同，就会导致每次B顺序不一致
+上面的SQL只能保证A是有序的，并不能保证每次查询出来的B顺序是一致的，MySQL能保证这点因为它是单机数据库，而StarRocks是分布式数据库，底层表数据存储是sharding的，A的数据分布在多台机器上，每次查询多台机器返回的顺序可能不同，就会导致每次B顺序不一致.
