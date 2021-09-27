@@ -28,7 +28,7 @@ StarRocks通过CBO优化器(Cost Based Optimizer)可以对复杂查询自动优�
 
 ### 联邦查询
 
-StarRocks支持使用外表的方式进行联邦查询，当前可以支持Hive、MySQL、Elasticserach三种类型的外表，用户无需通过数据导入，可以直接进行数据查询加速。
+StarRocks支持使用外表的方式进行联邦查询，当前可以支持Hive、MySQL、Elasticsearch三种类型的外表，用户无需通过数据导入，可以直接进行数据查询加速。
 
 ### 高效更新
 
