@@ -62,9 +62,9 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
 
     * DECIMAL[(precision, scale)] (16字节)
     保证精度的小数类型。默认是 DECIMAL(10, 0)
-      precision: 1 ~ 27
-      scale: 0 ~ 9
-    其中整数部分为 1 ~ 18
+      precision: 1 ~ 38
+      scale: 0 ~ precision
+    其中整数部分为：precision - scale
     不支持科学计数法
 
     * DATE（3字节）
