@@ -3,7 +3,11 @@
 ## [bigint等值查询中加引号]出现多余数据
 
 ```sql
-select cust_id,idno from llyt_dev.dwd_mbr_custinfo_dd where Pt= ‘2021-06-30’ and cust_id = ‘20210129005809043707’ limit 10 offset 0;
+select cust_id,idno 
+from llyt_dev.dwd_mbr_custinfo_dd 
+where Pt= ‘2021-06-30’ 
+and cust_id = ‘20210129005809043707’ 
+limit 10 offset 0;
 ```
 
 ```plain text
@@ -20,7 +24,11 @@ select cust_id,idno from llyt_dev.dwd_mbr_custinfo_dd where Pt= ‘2021-06-30’
 ```
 
 ```sql
-select cust_id,idno from llyt_dev.dwd_mbr_custinfo_dd where Pt= ‘2021-06-30’ and cust_id = 20210129005809043707 limit 10 offset 0;
+select cust_id,idno 
+from llyt_dev.dwd_mbr_custinfo_dd 
+where Pt= ‘2021-06-30’ 
+and cust_id = 20210129005809043707 
+limit 10 offset 0;
 ```
 
 ```plain text
@@ -63,7 +71,12 @@ show tablet from lineitem where State="ALTER";
 
 查看alter状态，执行时间与数据量大小有关系，一般是分钟级别，建议alter过程中停止数据导入。导入会降低alter 速度。
 
-## [hive外部表查询问题] 查询hive外部表的时候，报错信息为：get partition detail failed: org.apache.doris.common.DdlException: get hive partition meta data failed: java.net.UnknownHostException:hadooptest（具体hdfs-ha的名字）
+## [hive外部表查询问题] 查询hive外部表的时候报错获取分区失败
+
+**问题描述：**
+
+查询hive外部表是具体报错信息为：
+`get partition detail failed: org.apache.doris.common.DdlException: get hive partition meta data failed: java.net.UnknownHostException:hadooptest（具体hdfs-ha的名字）`
 
 **解决方案:**
 
@@ -77,9 +90,15 @@ show tablet from lineitem where State="ALTER";
 
 多张大表关联时，旧planner有时没有自动谓词下推，比如：
 
+```sql
 A JION B ON A.col1=B.col1 JOIN C on B.col1=C.col1 where A.col1='北京' ，
+```
 
-可以更改为：A JION B ON A.col1=B.col1 JOIN C on A.col1=C.col1 where A.col1='北京'，
+可以更改为：
+
+```sql
+A JION B ON A.col1=B.col1 JOIN C on A.col1=C.col1 where A.col1='北京'，
+```
 
 或者升级较新版本并开启CBO，然后会有此类谓词下推操作，优化查询性能。
 
@@ -98,7 +117,7 @@ A JION B ON A.col1=B.col1 JOIN C on B.col1=C.col1 where A.col1='北京' ，
 
 **解决方案：**
 
-select B from tbl order by A,B limit 10，将B也进行排序就能保证结果一致。
+`select B from tbl order by A,B limit 10` ，将B也进行排序就能保证结果一致。
 
 **问题原因：**
 

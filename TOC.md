@@ -151,25 +151,25 @@
       + [STREAM LOAD](/sql-reference/sql-statements/data-manipulation/STREAM%20LOAD.md)
     + 数据类型
       + 数字类型
-      + [BIGINT](/sql-reference/sql-statements/data-types/BIGINT.md)
-      + [LARGEINT](/sql-reference/sql-statements/data-types/LARGEINT.md)
-      + [SMALLINT](/sql-reference/sql-statements/data-types/SMALLINT.md)
-      + [TINYINT](/sql-reference/sql-statements/data-types/TINYINT.md)
-      + [BOOLEAN](/sql-reference/sql-statements/data-types/BOOLEAN.md)
-      + [DECIMAL](/sql-reference/sql-statements/data-types/DECIMAL.md)
-      + [DOUBLE](/sql-reference/sql-statements/data-types/DOUBLE.md)
-      + [FLOAT](/sql-reference/sql-statements/data-types/FLOAT.md)
-      + [INT](/sql-reference/sql-statements/data-types/INT.md)
+        + [BIGINT](/sql-reference/sql-statements/data-types/BIGINT.md)
+        + [LARGEINT](/sql-reference/sql-statements/data-types/LARGEINT.md)
+        + [SMALLINT](/sql-reference/sql-statements/data-types/SMALLINT.md)
+        + [TINYINT](/sql-reference/sql-statements/data-types/TINYINT.md)
+        + [BOOLEAN](/sql-reference/sql-statements/data-types/BOOLEAN.md)
+        + [DECIMAL](/sql-reference/sql-statements/data-types/DECIMAL.md)
+        + [DOUBLE](/sql-reference/sql-statements/data-types/DOUBLE.md)
+        + [FLOAT](/sql-reference/sql-statements/data-types/FLOAT.md)
+        + [INT](/sql-reference/sql-statements/data-types/INT.md)
       + 字符串类型
-      + [CHAR](/sql-reference/sql-statements/data-types/CHAR.md)
-      + [VARCHAR](/sql-reference/sql-statements/data-types/VARCHAR.md)
-      + [STRING](/sql-reference/sql-statements/data-types/STRING.md)
+        + [CHAR](/sql-reference/sql-statements/data-types/CHAR.md)
+        + [VARCHAR](/sql-reference/sql-statements/data-types/VARCHAR.md)
+        + [STRING](/sql-reference/sql-statements/data-types/STRING.md)
       + 日期类型
-      + [DATE](/sql-reference/sql-statements/data-types/DATE.md)
-      + [DATETIME](/sql-reference/sql-statements/data-types/DATETIME.md)
+        + [DATE](/sql-reference/sql-statements/data-types/DATE.md)
+        + [DATETIME](/sql-reference/sql-statements/data-types/DATETIME.md)
       + 其他类型
-      + [HLL](/sql-reference/sql-statements/data-types/HLL.md)
-      + [BITMAP](/sql-reference/sql-statements/data-types/BITMAP.md)
+        + [HLL](/sql-reference/sql-statements/data-types/HLL.md)
+        + [BITMAP](/sql-reference/sql-statements/data-types/BITMAP.md)
 
     + 辅助命令
       + [DESCRIBE](/sql-reference/sql-statements/Utility/DESCRIBE.md)

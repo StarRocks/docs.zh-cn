@@ -16,7 +16,7 @@
 
 **问题描述：**
 
-be安装过程中启动报错Doris Be http service did not start correctly,exiting
+be安装过程中启动报错 `Doris Be http service did not start correctly,exiting`
 
 **解决方案：**
 
@@ -24,21 +24,13 @@ be安装过程中启动报错Doris Be http service did not start correctly,exiti
 
 ## SUSE 12SPS的 OS 是否支持
 
-**解答：**
-
 可以支持，经过测试是没有问题的
 
 ## ERROR 1064 (HY000): Could not initialize class org.apache.doris.rpc.BackendServiceProxy
 
-**解决方案：**
-
 检查是否使用的是jre,如果使用的jre换成jdk即可，推荐使用oraclejdk版本1.8+。
 
 ## 【企业版部署】安装部署过程当中，在配置节点时报错：Failed to Distribute files to node
-
-**问题原因：**
-
-setuptools的版本不对
 
 **解决方案:**
 
@@ -58,23 +50,26 @@ wget https://bootstrap.pypa.io/ez_setup.py -O - | python
 
 FE配置临时修改：
 
-1、SQL方式：
+SQL方式：
 
 ```sql
 ADMIN SET FRONTEND CONFIG ("key" = "value");
+```
 
-示例：
-
+```sql
+--示例：
 ADMIN SET FRONTEND CONFIG ("enable_statistic_collect" = "false");
 ```
 
-2、命令方式：
+命令方式：
 
 ```plain text
 curl --location-trusted -u username:password http://ip:fe_http_port/api/_set_config?key=value
+```
 
 示例：
 
+```plain text
 curl --location-trusted -u root:root  http://192.168.110.101:8030/api/_set_config?enable_statistic_collect=true
 ```
 
@@ -105,8 +100,6 @@ Flink导入报错，定位原为磁盘不足，扩容磁盘后，不能对数据
 
  不是重要数据直接删除掉磁盘的话可能会面临一个问题就是：切换完磁盘目录后，会报错：
 
- Failed to get scan range, no queryable replica found in tablet: 11903，
+ `Failed to get scan range, no queryable replica found in tablet: 11903`，
 
- **解决方法为：**
-
- 把这张表11903truncate 一下之后即可.
+ 解决方法是把这张表11903 在truncate 一下之后即可.
