@@ -1,20 +1,20 @@
 # dev-env image 使用说明
 
-### image 下载
+## image 下载
 
 ```shell
 # 从 dockerhub 上下载 image
 docker pull starrocks/dev-env:{version}
 ```
 
-### starrocks 与 image 对应关系
+## starrocks 与 image 对应关系
 
 | starrocks branch | image tag              |
 | ---------------- | ---------------------- |
 | main             | starrocks/dev-env:main |
 | ...              | ...                    |
 
-### 使用方式
+## 使用方式
 
 - 不挂载本地盘
 
@@ -28,7 +28,7 @@ docker pull starrocks/dev-env:{version}
   
   cd starrocks
   
-  ./build.sh	
+  ./build.sh
   ```
 
 - 挂载本地盘（建议使用）
@@ -50,7 +50,7 @@ docker pull starrocks/dev-env:{version}
   ./build.sh
   ```
 
-### 三方工具
+## 三方工具
 
 image 内集安装的三方工具
 
