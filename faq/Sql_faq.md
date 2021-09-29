@@ -31,11 +31,11 @@ select cust_id,idno from llyt_dev.dwd_mbr_custinfo_dd where Pt= ‘2021-06-30’
 +---------------------+-----------------------------------------+
 ```
 
-现象描述：
+**现象描述：**
 
 where里bigint类型，查询加单引号，查出很多无关数据。
 
-解决方案：
+**解决方案：**
 
 字符串和int比较，相当于 cast 成double。int比较时，不要加引号。同时，加了引号，还会导致没法命中索引。
 
@@ -53,7 +53,7 @@ MySQL的“utf8mb4”是真正的“UTF-8”，所以StarRocks是没问题的
 
 ## [Schema change] alter table 时显示：table's state is not normal
 
-解决方案：
+**解决方案：**
 
 Alter table 是异步的，之前有过alter table 操作还没完成，可以通过
 
@@ -65,21 +65,27 @@ show tablet from lineitem where State="ALTER";
 
 ## [hive外部表查询问题] 查询hive外部表的时候，报错信息为：get partition detail failed: org.apache.doris.common.DdlException: get hive partition meta data failed: java.net.UnknownHostException:hadooptest（具体hdfs-ha的名字）
 
-解决方案:
+**解决方案:**
 
 把core-site.xml和hdfs-site.xml文件拷贝到 fe/conf 和 be/conf中即可。
 
-问题原因：
+**问题原因：**
 
 获取配置单元分区元数据失败。
 
 ## 大表查询结果慢，没有谓词下推
 
-多张大表关联时，旧planner有时没有自动谓词下推，比如A JION B ON A.col1=B.col1 JOIN C on B.col1=C.col1 where A.col1='北京' ，可以更改为A JION B ON A.col1=B.col1 JOIN C on A.col1=C.col1 where A.col1='北京'，或者升级较新版本并开启CBO，然后会有此类谓词下推操作，优化查询性能。
+多张大表关联时，旧planner有时没有自动谓词下推，比如：
+
+A JION B ON A.col1=B.col1 JOIN C on B.col1=C.col1 where A.col1='北京' ，
+
+可以更改为：A JION B ON A.col1=B.col1 JOIN C on A.col1=C.col1 where A.col1='北京'，
+
+或者升级较新版本并开启CBO，然后会有此类谓词下推操作，优化查询性能。
 
 ## 查询报错Doris planner use long time 3000 remaining task num 1
 
-解决方案：
+**解决方案：**
 
 查看fe.gc日志看是否是多并发引起的full gc问题。
 
@@ -90,10 +96,10 @@ show tablet from lineitem where State="ALTER";
 
 ## 当A基数很小时，select B from tbl order by A limit 10查询结果每次不一样
 
-解决方案：
+**解决方案：**
 
 select B from tbl order by A,B limit 10，将B也进行排序就能保证结果一致。
 
-问题原因：
+**问题原因：**
 
 上面的SQL只能保证A是有序的，并不能保证每次查询出来的B顺序是一致的，MySQL能保证这点因为它是单机数据库，而StarRocks是分布式数据库，底层表数据存储是sharding的，A的数据分布在多台机器上，每次查询多台机器返回的顺序可能不同，就会导致每次B顺序不一致.

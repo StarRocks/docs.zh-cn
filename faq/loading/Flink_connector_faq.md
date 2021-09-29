@@ -23,29 +23,29 @@ WITH (
 
 ## [Flink导入] 在starrocks集群上部署的kafka集群的数据可以导入，其他kafka集群无法导入
 
-报错信息：
+**报错信息：**
 
 ```SQL
 failed to query wartermark offset, err: Local: Bad message format
 ```
 
-解决方案：
+**解决方案：**
 
 kafka通信会用到hostname，需要在starrocks集群节点配置kafka主机名解析/etc/hosts
 
 ## StarRocks可以将表结构创建语句批量导出来吗？
 
-解决方案：
+**解决方案：**
 
 可以使用Doris Tools导出
 
 ## 没有查询时 BE 内存处于打满状态，且cpu也是打满状态
 
-问题:
+**问题描述:**
 
 打满是什么原因引起的？
 
-解释:
+**解释:**
 
 因为会定期收集统计信息，不是长期占用cpu，10g以内的内存使用完不会释放，be会自己管理，可以通过tc_use_memory_min限制大小。
 
@@ -53,13 +53,13 @@ tc_use_memory_min，默认等于10737418240。解释：TCmalloc 最小保留内�
 
 ## Be申请的内存不会释放给操作系统
 
-问题解答：
+**问题解答：**
 
 这是一种正常想象, 因为数据库从操作系统获得的大块的内存分配，在分配的时候会多预留，释放时候会延后，为了重复利用，因为大块内存的分配的代价比较大. 建议测试环境验证时，对内存使用进行监控，在较长的周期内看内存是否能够完成释放
 
 ## 关于下载flink connector后不生效问题
 
-解决方案:
+**解决方案:**
 
 请确认 /etc/maven/settings.xml的 mirror 部分是否配置了全部通过阿里云镜像获取。
 
@@ -72,13 +72,13 @@ tc_use_memory_min，默认等于10737418240。解释：TCmalloc 最小保留内�
     <url>https：//maven.aliyun.com/repository/public</url>
 </mirror>
 
-问题原因：
+**问题原因：**
 
 该包需要通过阿里云镜像地址来获取
 
 ## Flink-connector-StarRocks中sink.buffer-flush.interval-ms参数的含义
 
-问题:
+**问题:**
 
 ```plain text
 +----------------------+--------------------------------------------------------------+
@@ -91,6 +91,6 @@ tc_use_memory_min，默认等于10737418240。解释：TCmalloc 最小保留内�
 
 如果这个参数设置为15s，但是checkpoint interval=5mins,那么这个值还生效么？
 
-解释:
+**解释:**
 
 三个阈值先达到其中的哪一个，那一个就先生效，是和checkpoint interval设置的值没关系的，checkpoint interval 对于 exactly once 才有效，at_least_once 用 interval-ms
