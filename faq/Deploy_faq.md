@@ -6,11 +6,11 @@
 
 ## 安装集群报错：failed to get service info err
 
-检查机器是否开启了sshd。
+检查机器是否开启了sshd。/etc/init.d/sshd status查看sshd状态。
 
 ## BE启动失败，日志报错：Fail to get master client from cache. host= port=0 code=THRIFT_RPC_ERROR
 
-检查be.conf中的端口是否占用，更换其他空闲端口后重启。
+检查be.conf中的端口是否占用，netstat  -anp  |grep  port查看是否占用，更换其他空闲端口后重启。
 
 ## 企业版升级Manager时，提示：Failed to transport upgrade files to agent host. src:…
 
