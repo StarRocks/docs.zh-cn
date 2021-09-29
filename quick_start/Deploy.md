@@ -627,5 +627,4 @@ mysql> desc table2;
 
 ## 使用Docker进行编译
 
-
 具体参考[在容器内编译](../administration/Build_in_docker.md)。
