@@ -172,14 +172,22 @@ MySQL5.7版本默认则为mysql_native_password
 ## StarRocks可以通过“select current_version();”或者CLI执行“sh bin/show_fe_version.sh”查看版本
 
 ##fe内存大小设置可以参考tablet数量
+
 元数据信息都保存在fe的内存,一千万个tablet内存使用在20G左右,目前支持的meta上限约为该级别。
+
 ##StarRocks查询时间计算规则
 StarRocks是多线程计算,查询时间是查询线程所用的时间,ScanTime是所有线程使用的时间加起来的时间,查询时间可以通过执行计划下的Query下的Total查看。
+
 ##export目前不支持导出数据到本地时设置路径
 
 ##StarRocks的并发量级
+
 这个要看业务场景,或模拟业务场景实际测试一下。在客户的一些场景下,压到过2、3万的QPS。
+
 ##starrocks的ssb测试,第一次执行速度较慢,后面较快
+
 第一次查询读盘跟磁盘性能相关,第一次后操作系统的pagecache生效,再次查询会先扫描pagecache,速度提升
+
 ##集群BE最小配置数量是1,支持单节点部署,推荐集群部署性能更好,be节点需要支持avx2,推荐配置8核16G及以上机器配置
+
 ##superset+StarRocks可以通过创建单独用户后,创建View授权给用户解决数据权限的问题
