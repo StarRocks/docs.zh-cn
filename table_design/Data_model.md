@@ -55,7 +55,7 @@ StarRocks建表的默认模型是明细模型。
 CREATE TABLE IF NOT EXISTS detail (
     event_time DATETIME NOT NULL COMMENT "datetime of event",
     event_type INT NOT NULL COMMENT "type of event",
-    user_id INT COMMENT "id of user"
+    user_id INT COMMENT "id of user",
     device_code INT COMMENT "device of ",
     channel INT COMMENT ""
 )
@@ -121,7 +121,7 @@ StarRocks会将指标列按照相同维度列进行聚合。当多条数据具�
 CREATE TABLE IF NOT EXISTS example_db.aggregate_tbl (
     site_id LARGEINT NOT NULL COMMENT "id of site",
     date DATE NOT NULL COMMENT "time of event",
-    city_code VARCHAR(20) COMMENT "city_code of user"
+    city_code VARCHAR(20) COMMENT "city_code of user",
     pv BIGINT SUM DEFAULT "0" COMMENT "total page views"
 )
 DISTRIBUTED BY HASH(site_id) BUCKETS 8;
@@ -152,7 +152,7 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 8;
 
 更新模型中, 排序键满足唯一性约束, 成为主键.
 
-StarRocks存储内部会给每一个批次导入数据分配一个版本号, 同一主键的数据可能有多个版本, 查询是, 最大(最新)版本的数据胜出.
+StarRocks存储内部会给每一个批次导入数据分配一个版本号, 同一主键的数据可能有多个版本, 查询时最大(最新)版本的数据胜出.
 
 |  ID   |   value  |   _version  |
 | :---: | :---: | :---: |
@@ -162,7 +162,7 @@ StarRocks存储内部会给每一个批次导入数据分配一个版本号, 同
 |  2   |  101   |  4   |
 |  2   |  102   |  5   |
 
-具体的示例如上表所示，ID是表的主键，value是表的内容，而\_\_version是StarRocks内部的版本号。其中ID为1的数据有两个导入批次，版本分别为1，2；ID为2的数据有三个批次导入，版本分别为3，4，5。在查询的时候对于ID为1只会返回最新版本2的数据，而对于ID为2只会返回最新版本5的数据，那么对于用户能能够看到的数据如下表所示：
+具体的示例如上表所示，ID是表的主键，value是表的内容，而\_\_version是StarRocks内部的版本号。其中ID为1的数据有两个导入批次，版本分别为1，2；ID为2的数据有三个批次导入，版本分别为3，4，5。在查询的时候对于ID为1只会返回最新版本2的数据，而对于ID为2只会返回最新版本5的数据，那么用户能够看到的数据如下表所示：
 
 |  ID   |   value  |
 | :---: | :---: |

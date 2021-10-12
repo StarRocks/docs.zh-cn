@@ -1,5 +1,7 @@
 # 目录
 
+## 索引
+
 + [StarRocks介绍](/introduction/StarRocks_intro.md)
 + 快速开始
   + [StarRocks基本概念](/quick_start/Concepts.md)
@@ -15,7 +17,7 @@
   + [数据分布](/table_design/Data_distribution.md)
   + [排序键和shortkey index](/table_design/Sort_key.md)
   + [物化视图](/table_design/Materialized_view.md)
-  + [bitmap索引](/table_design/Bitmap_index.md)
+  + [Bitmap索引](/table_design/Bitmap_index.md)
   + [Bloomfilter索引](/table_design/Bloomfilter_index.md)
 + 数据导入
   + [导入总览](/loading/Loading_intro.md)
@@ -30,6 +32,7 @@
   + [DataX-writer](/loading/DataX-starrocks-writer.md)
 + 数据提取
   + [Export数据导出](/unloading/Export.md)
+  + [Spark Connector](/unloading/Spark_connector.md)
 + 使用StarRocks
   + [用Bitmap实现精确去重](/using_starrocks/Using_bitmap.md)
   + [用HLL实现近似去重](/using_starrocks/Using_HLL.md)
@@ -293,6 +296,7 @@
   + [错误码](/reference/Error_code.md)
   + [系统限制](/reference/System_limit.md)
 + 管理手册
+  + [在容器内编译](/administration/Build_in_docker.md)
   + [集群部署](/administration/Deployment.md)
   + [集群管理](/administration/Cluster_administration.md)
   + [配置参数](/administration/Configuration.md)
