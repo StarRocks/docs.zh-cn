@@ -140,4 +140,3 @@ pagecache大小可以通过设置 be.conf 中`storage_page_cache_limit`参数来
 ## 当字段为NULL时，除了is null， 其他所有的计算结果都是false
 
 标准sql中null和其他表达式计算结果都是null。
-
