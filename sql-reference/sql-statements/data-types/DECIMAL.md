@@ -12,7 +12,7 @@ DECIMAL(M[,D])
 
 * Fast Decimal  (1.18版本支持)
 
-  M的范围是[1,38], D的范围[1, M]。默认的D取值为0。
+  M的范围是[1,38], D的范围[0, M]。默认的D取值为0。
   StarRocks-1.18版本开始起, decimal类型支持更高精度的FastDecimal
 
   主要优化有：
