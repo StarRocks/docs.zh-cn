@@ -341,9 +341,12 @@ select count(*) from profile_wos_p7;
 
 ## StarRocks外部表
 
-1.19版本开始，StarRocks支持将数据通过外表方式写入另一个StarRocks集群的表中。这可以解决用户的读写分离需求，提供更好的资源隔离。用户需要首先在目标集群上创建一张目标表，然后在源
+1.19版本开始，StarRocks支持将数据通过外表方式写入另一个StarRocks集群的表中。这可以解决用户的读写分离需求，提供更好的资源隔离。用户需要首先在目标集群上创建一张目标表，然后在源StarRocks集群上创建一个Schema信息一致的外表，并在属性中指定目标集群和表的信息。
 
-StarRocks集群上创建一个Schema信息一致的外表，并在属性中指定目标集群和表的信息。
+通过insert into 写入数据至StarRocks外表,可以实现如下目标:
+
+* 集群间的数据同步
+* 在外表集群计算结果写入目标表集群，并在目标表集群提供查询服务，实现读写分离
 
 以下是创建目标表和外表的实例：
 
@@ -381,8 +384,10 @@ PROPERTIES
     "table" = "t"
 );
 
-#向外表插入数据
+# 向外表插入数据,线上推荐使用第二种方式
 insert into external_t values ('2020-10-11', 1, 1, 'hello', '2020-10-11 10:00:00');
+
+insert into external_t select * from other_table;
 ~~~
 
 其中：
