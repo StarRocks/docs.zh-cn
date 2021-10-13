@@ -142,7 +142,7 @@ tEnv.executeSql(
 
 - 如果遇到导入停止的 情况，请尝试增加flink任务的内存。
 
-- 如果代码运行正常且能接收到数据，但是写入不成功时请确认当前机器能访问be的http_port端口，这里指能ping通集群show backends显示的ip:port。举个例子：如果一台机器有外网和内网ip，且fe/be的http_port均可通过外网ip：port访问，集群里绑定的ip为内网ip，任务里loadurl写的fe外网ip:http_port,fe会将写入任务转发给be内网ip：port,这时如果ping不通则写入失败。当然也可以开通fe的query_port和be的http_port的访问权限，在load_url里直接输入be_ip:http_port，不过不建议这样做，因为会将导入压力倾斜到一台be上。
+- 如果代码运行正常且能接收到数据，但是写入不成功时请确认当前机器能访问BE的http_port端口，这里指能ping通集群show backends显示的ip:port。举个例子：如果一台机器有外网和内网ip，且FE/BE的http_port均可通过外网ip:port访问，集群里绑定的ip为内网ip，任务里loadurl写的FE外网ip:http_port,FE会将写入任务转发给BE内网ip:port,这时如果Client机器ping不通BE的内网ip就会写入失败。
 
 ### 完整示例
 
