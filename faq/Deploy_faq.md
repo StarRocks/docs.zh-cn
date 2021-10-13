@@ -123,4 +123,3 @@ Flink导入报错，定位原为磁盘不足，扩容磁盘后，不能对数据
 ## 新扩容节点的FE状态正常，但是Manager"诊断"页面下该FE节点日志展示报错："Failed to search log."
 
 Manager默认30秒内去获取新部署FE的路径配置，如果FE启动较慢或由于其他原因导致30s内未响应就会出现上述问题。检查Manager Web日志，日志目录例如：`/starrocks-manager-xxx/center/log/webcenter/log/web/drms.INFO`，搜索日志是否有：`Failed to update fe configurations`，若有，重启对应的FE服务。重启会重新获取路径配置。
-
