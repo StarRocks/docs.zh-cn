@@ -104,8 +104,6 @@ Flink导入报错，定位原为磁盘不足，扩容磁盘后，不能对数据
 
  解决方法是把这张表11903 在truncate 一下之后即可.
 
-# 部署问题
-
 ## 集群重启时，fe启动失败报错：Fe type:unknown ,is ready :false
 
 确认master是否已启动，或者尝试逐台重启。
