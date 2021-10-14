@@ -4,7 +4,7 @@
 
 DECIMAL(P[,S])
 
-高精度定点数，M代表一共有多少个有效数字(precision)，D代表小数点后最多有多少数字(scale)
+高精度定点数，P代表一共有多少个有效数字(precision)，S代表小数点后最多有多少数字(scale)
 
 * Decimal V2
 
