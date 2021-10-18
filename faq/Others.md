@@ -57,18 +57,19 @@ ALTER DATABASE example_db SET DATA QUOTA 10T;
 
 ### 原子替换「表」
 
-1.创建一张新表table2;
+1. 创建一张新表table2;
 
-```SQL
+    ```SQL
     create table2 like table1;
-```
+    ```
 
-2.使用stream load / broker load /insert into 等方式导入数据到新表 table2 中；
-3.原子替换 table1 与 table2：
+2. 使用stream load / broker load /insert into 等方式导入数据到新表 table2 中；
 
-```SQL
+3. 原子替换 table1 与 table2：
+
+    ```SQL
     ATER TABLE table1 SWAP WITH table2;
-```
+    ```
 
 这样就可以进行表的原子替换。
 
@@ -76,22 +77,22 @@ ALTER DATABASE example_db SET DATA QUOTA 10T;
 
 同样可以用「导入临时分区」的方式进行替换。
 
-1.创建临时分区:
+1. 创建临时分区:
 
-```SQL
+    ```SQL
     ALTER TABLE table1
     ADD TEMPORARY PARTITION tp1
     VALUES LESS THAN("2020-02-01");
-```
+    ```
 
-2.向临时分区导入数据;
+2. 向临时分区导入数据;
 
-3.原子替换「分区」:
+3. 原子替换「分区」:
 
-```SQL
+    ```SQL
     ALTER TABLE table1
     REPLACE PARTITION (p1) WITH TEMPORARY PARTITION (tp1);
-```
+    ```
 
 这样可以导入数据后做一定的验证以后再替换,可以进行临时分区的原子替换。
 
@@ -160,15 +161,15 @@ MySQL5.7版本默认则为mysql_native_password
 * 连接终端
 
 ```sql
-    ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'yourpassword';
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'yourpassword';
 ```
 
 * 修改my.cnf文件
 
 ```plain text
-    vim my.cnf
-    [mysqld]
-    default_authentication_plugin=mysql_native_password
+vim my.cnf
+[mysqld]
+default_authentication_plugin=mysql_native_password
 ```
 
 ## set is_report_success = true;后profile不显示
