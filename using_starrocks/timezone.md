@@ -6,13 +6,13 @@ StarRocks 支持多时区设置
 
 StarRocks 内部存在多个时区相关参数
 
-system_time_zone: 当服务器启动时，会根据机器设置时区自动设置，设置后不可修改。
+* system_time_zone: 当服务器启动时，会根据机器设置时区自动设置，设置后不可修改。
 
-time_zone: 服务器当前时区，区分session级别和global级别
+* time_zone: 服务器当前时区，区分session级别和global级别
 
 ## 具体操作
 
-1. show variables like '%time_zone%'
+1. SHOW variables like '%time_zone%'
 
     查看当前时区相关配置
 
@@ -34,11 +34,11 @@ time_zone: 服务器当前时区，区分session级别和global级别
 
 受时区影响的函数：
 
-* FROM_UNIXTIME：给定一个 UTC 时间戳，返回指定时区的日期时间：如 FROM_UNIXTIME(0)， 返回 CST 时区：1970-01-01 08:00:00。
-* UNIX_TIMESTAMP：给定一个指定时区日期时间，返回 UTC 时间戳：如 CST 时区 UNIX_TIMESTAMP('1970-01-01 08:00:00')，返回 0。
-* CURTIME：返回指定时区时间。
-* NOW：返指定地时区日期时间。
-* CONVERT_TZ：将一个日期时间从一个指定时区转换到另一个指定时区。
+* FROM_UNIXTIME：给定一个 UTC 时间戳，返回指定时区的日期时间：如 `FROM_UNIXTIME(0)`， 返回 CST 时区：`1970-01-01 08:00:00`。
+* UNIX_TIMESTAMP：给定一个指定时区日期时间，返回 UTC 时间戳：如 CST 时区 `UNIX_TIMESTAMP('1970-01-01 08:00:00')`，返回：`0`。
+* CURTIME：返回当前时区时间：如`CURTIME()`，返回：`16:34:05`。
+* NOW：返回当前时区日期时间：如`NOW()`，返回：`2021-02-11 16:34:13`。
+* CONVERT_TZ：将一个日期时间从一个指定时区转换到另一个指定时区。如`CONVERT_TZ('2021-08-01 11:11:11', 'Asia/Shanghai', 'America/Los_Angeles');`返回：`2021-07-31 20:11:11`。
 
 ## 使用限制
 
@@ -48,13 +48,13 @@ time_zone: 服务器当前时区，区分session级别和global级别
 
 * 标准时区格式，如"Asia/Shanghai"、"America/Los_Angeles"
 
-* 不支持缩写时区格式，如"MET"、"CTT"。因为缩写时区在不同场景下存在歧义，不建议使用。
+* 不支持缩写时区格式，如"MET"、"CTT"。因为缩写时区在不同场景下存在歧义。
 
 * 为了兼容StarRocks，支持CST缩写时区，内部会将CST转移为"Asia/Shanghai"的中国标准时区
 
 ## 默认时区
 
-系统default timezone为"Asia/Shanghai"，当导入时如果服务器时区为其他时区需要指定相应时区否则日期字段会不一致。
+系统default timezone为"Asia/Shanghai"，当导入时，如果服务器时区为其他时区，需要指定相应时区，否则日期字段会不一致。
 
 例如系统时区为UTC时，未指定情况下导入结果的日期字段会出现+8h的异常结果，需要在导入的参数部分指定时区，具体参数指定参考对应Load章节的参数说明。
 
