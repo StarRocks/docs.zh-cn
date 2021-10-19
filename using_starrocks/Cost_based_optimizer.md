@@ -133,7 +133,7 @@ CREATE ANALYZE TABLE test(v1)
 
 ~~~conf
 // 统计信息收集功能开关
-enable_statistic_collect = false;
+enable_statistic_collect = true;
 
 // 统计信息功能执行周期，默认为2小时
 statistic_collect_interval_sec = 7200;
