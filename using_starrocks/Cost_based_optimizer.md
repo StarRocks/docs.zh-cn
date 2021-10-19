@@ -132,6 +132,7 @@ CREATE ANALYZE TABLE test(v1)
 #### FE 相关配置
 
 fe.conf中的相关配置项
+
 ~~~conf
 // 统计信息收集功能开关
 enable_statistic_collect = true;
