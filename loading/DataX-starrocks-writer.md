@@ -1,6 +1,6 @@
 # 介绍
 
-StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能。在底层实现上， StarRocksWriter 通过Stream load以csv或 json 格式导入数据至StarRocks。内部将`reader`读取的数据进行缓存后批量导入至StarRocks，以提高写入性能。总体数据流是 `source -> Reader -> DataX channel -> Writer -> StarRocks`。
+StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能。在底层实现上，StarRocksWriter 通过Stream load以csv或 json 格式导入数据至StarRocks。内部将`reader`读取的数据进行缓存后批量导入至StarRocks，以提高写入性能。总体数据流是 `source -> Reader -> DataX channel -> Writer -> StarRocks`。
 
 [点击下载插件](https://github.com/StarRocks/DataX/releases)
 
@@ -117,7 +117,7 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
 
 * **column**
 
-  * 描述：目的表需要写入数据的字段,字段之间用英文逗号分隔。例如: "column": ["id","name","age"]。
+  * 描述：目的表需要写入数据的字段，字段之间用英文逗号分隔。例如: "column": ["id","name","age"]。
 
    **column配置项必须指定，不能留空！**
 
@@ -186,7 +186,7 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
 ### 类型转换
 
 默认传入的数据均会被转为字符串，并以`\t`作为列分隔符，`\n`作为行分隔符，组成`csv`文件进行StreamLoad导入操作。
-如需更改列分隔符， 则正确配置 `loadProps` 即可：
+如需更改列分隔符，则正确配置 `loadProps` 即可：
 
 ```json
 "loadProps": {
@@ -195,7 +195,7 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
 }
 ```
 
-如需更改导入格式为`json`， 则正确配置 `loadProps` 即可：
+如需更改导入格式为`json`，则正确配置 `loadProps` 即可：
 
 ```json
 "loadProps": {
@@ -206,10 +206,10 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
 
 ## 关于时区
 
-源tp库为其他时区时，执行datax.py时，命令行后面需要加如下参数
+源库与目标库时区不同时，执行datax.py，命令行后面需要加如下参数：
 
 ```json
 "-Duser.timezone=xx时区"
 ```
 
-e.g. DataX导入Postgrest数据，源库是UTC时间，通过在dataX启动时加参数 "-Duser.timezone=GMT+0"
+例如，DataX导入PostgreSQL中的数据，源库是UTC时间，在dataX启动时加参数 "-Duser.timezone=GMT+0"。

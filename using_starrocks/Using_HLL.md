@@ -23,7 +23,7 @@ HyperLogLog是一种近似的去重算法，能够使用极少的存储空间计
 * 试验B:  遍历数据集， 对数据集的元素做试验A的处理， 每次试验时， 更新bit 1首次出现的最大位置m；
 * 估算数据集中不重复元素的个数为m<sup>2</sup>。
 
-事实上, HLL算法根据元素哈希值的低k位, 将元素划分到K=2<sup>k</sup>个桶中, 统计桶内元素的第k+1位起bit 1首次出现位置的最大值m<sub>1</sub>, m<sub>2</sub>,..., m<sub>k</sub>, 估算桶内不重复元素元素的个数2<sup>m<sub>1</sub></sup>, 2<sup>m<sub>2</sub></sup>,..., 2<sup>m<sub>k</sub></sup>, 数据集的不重复元素个数为桶的数量乘以桶内不重复元素个数的调和平均数: N = K(K/(2<sup>\-m<sub>1</sub></sup>+2<sup>\-m<sub>2</sub></sup>,..., 2<sup>\-m<sub>K</sub></sup>))。
+事实上，HLL算法根据元素哈希值的低k位，将元素划分到K=2<sup>k</sup>个桶中，统计桶内元素的第k+1位起bit 1首次出现位置的最大值m<sub>1</sub>, m<sub>2</sub>,..., m<sub>k</sub>, 估算桶内不重复元素元素的个数2<sup>m<sub>1</sub></sup>, 2<sup>m<sub>2</sub></sup>,..., 2<sup>m<sub>k</sub></sup>, 数据集的不重复元素个数为桶的数量乘以桶内不重复元素个数的调和平均数: N = K(K/(2<sup>\-m<sub>1</sub></sup>+2<sup>\-m<sub>2</sub></sup>,..., 2<sup>\-m<sub>K</sub></sup>))。
 <br/>
 
 HLL为了使结果更加精确，用修正因子和估算结果相乘， 得出最终结果.
@@ -35,7 +35,7 @@ SELECT floor((0.721 * 1024 * 1024) / (sum(pow(2, m * -1)) + 1024 - count(*))) AS
 FROM(select(murmur_hash3_32(c2) & 1023) AS bucket,
      max((31 - CAST(log2(murmur_hash3_32(c2) & 2147483647) AS INT))) AS m
      FROM db0.table0
-     GROUP BY bucket) bucket_values
+     GROUP BY bucket) bucket_values;
 ~~~
 
 该算法对db0.table0的col2进行去重分析。
