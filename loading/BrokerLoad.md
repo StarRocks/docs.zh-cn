@@ -194,9 +194,9 @@ data_desc中的WHERE语句负责过滤已经完成transform的数据。被过滤
 
 推荐超时时间的计算方式如下：
 
-`超时时间 >（（总文件大小(MB) * 待导入的表及相关 Roll up 表的个数） / (10 * 导入并发数））`
+`超时时间 >（（总文件大小(MB) * 待导入的表及相关 Roll up 表的个数） / (30 * 导入并发数））`
 
-导入并发数见文档最后的导入系统配置说明，公式中的10为目前BE导入的默认限速：10MB/s。
+导入并发数见文档最后的导入系统配置说明，公式中的30为目前BE导入的平均速度：30MB/s。
 
 例如对于1GB的待导入数据文件，待导入表包含2个Rollup表，当前的导入并发数为3。则 timeout 的最小值为 (1 \* 1024 \* 3 ) / (10 \* 3) = 102 秒
 
@@ -404,3 +404,9 @@ LoadFinishTime: 2019-07-27 11:50:16
   A：需要将 ViewFs 相关的配置 core-site.xml 和 hdfs-site.xml 拷贝到 broker/conf 目录中。
 
     如果有自定义的 FileSystem，需要将相关的 jar 拷贝到 broker/lib 目录中。
+
+* Q：访问kerberos认证的集群时，报错：`Can't get Kerberos realm`
+
+  A：首先检查是不是所有的broker所在机器是否都配置了`/etc/krb5.conf`文件。
+
+    如果配置了仍然报错，需要在broker的启动脚本中的`JAVA_OPTS`变量最后，加上`-Djava.security.krb5.conf:/etc/krb5.conf`。

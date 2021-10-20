@@ -44,7 +44,7 @@ partition 支持如下几种修改方式
     语法：
 
     ```sql
-    DROP PARTITION [IF EXISTS] partition_name [FORCE]
+    DROP PARTITION [IF EXISTS | FORCE] partition_name
     ```
 
     注意：
@@ -210,7 +210,7 @@ rollup 支持如下几种创建方式：
     VARCHAR 转换成 TINTINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE
     VARCHAR 转换成 DATE (目前支持"%Y-%m-%d", "%y-%m-%d", "%Y%m%d", "%y%m%d", "%Y/%m/%d, "%y/%m/%d"六种格式化格式)
     DATETIME 转换成 DATE(仅保留年-月-日信息, 例如: `2019-12-09 21:47:05` <--> `2019-12-09`)
-    DATE 转换成 DATETIME(时分秒自动补零， 例如: `2019-12-09` <--> `2019-12-09 00:00:00`)
+    DATE 转换成 DATETIME(时分秒自动补零，例如: `2019-12-09` <--> `2019-12-09 00:00:00`)
     FLOAT 转换成 DOUBLE
     INT 转换成 DATE (如果INT类型数据不合法则转换失败，原始数据不变)
     6. 不支持从NULL转为NOT NULL
@@ -308,7 +308,7 @@ bitmap index 支持如下几种修改方式
 1. 修改表的默认副本数量, 新建分区副本数量默认使用此值
 
     ```sql
-    ATLER TABLE example_db.my_table
+    ALTER TABLE example_db.my_table
     SET ("default.replication_num" = "2");
     ```
 
