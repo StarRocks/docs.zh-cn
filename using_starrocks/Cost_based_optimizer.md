@@ -108,7 +108,7 @@ CREATE ANALYZE FULL TABLE tbl_name(columnA, columnB, columnC...) PROPERTIES(...)
 
 ~~~SQL
 -- 删除Analyze job，id可以通过SHOW ANALYZE获取
-DROP ANALYZE id;
+DROP ANALYZE <id>;
 ~~~
 
 示例&说明
