@@ -36,7 +36,7 @@ curl -v --location-trusted -u root: \
 * strict\_mode：导入过程中的列类型转换进行严格过滤
 * columns:对应StarRocks表中的字段的名称
 
-对jsonpaths的值的和columns的值还有StarRocks中的字段三者的关系进行梳理:
+jsonpaths参数和columns参数还有StarRocks表中字段三者含义及关系如下:
 
 * jsonpaths的值名称与json文件中的key的名称一致
 * columns的值的名称和StarRocks表中字段名称保持一致
