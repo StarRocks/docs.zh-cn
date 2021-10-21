@@ -70,6 +70,7 @@ PROPERTIES(
 
 ~~~SQL
 ANALYZE FULL TABLE tbl_name(columnA, columnB, columnC...);
+
 ~~~
 
 #### Analyze Job
@@ -93,7 +94,6 @@ CREATE ANALYZE TABLE tbl_name(columnA, columnB, columnC...) PROPERTIES(...);
 全量收集
 
 ~~~SQL
-ANALYZE FULL TABLE tbl_name(columnA, columnB, columnC...);
 -- 定期全量采集所有数据库的统计信息
 CREATE ANALYZE FULL ALL PROPERTIES(...);
 
@@ -134,16 +134,16 @@ CREATE ANALYZE TABLE test(v1)
 fe.conf中的相关配置项
 
 ~~~conf
-// 统计信息收集功能开关
+# 统计信息收集功能开关
 enable_statistic_collect = true;
 
-// 统计信息功能执行周期，默认为2小时
+# 统计信息功能执行周期，默认为2小时
 statistic_collect_interval_sec = 7200;
 
-// 统计信息Job的默认收集间隔时间，默认为1天
+# 统计信息Job的默认收集间隔时间，默认为1天
 statistic_update_interval_sec = 86400;
 
-// 采样统计信息Job的默认采样行数，默认为200000行
+# 采样统计信息Job的默认采样行数，默认为200000行
 statistic_sample_collect_rows = 200000;
 ~~~
 
