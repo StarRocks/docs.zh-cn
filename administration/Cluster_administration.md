@@ -74,6 +74,7 @@ StarRocks可以通过滚动升级的方式，平滑进行升级。**升级顺序
 * 在完成数据正确性验证后，将 BE 和 FE 新版本的二进制文件分发到各自目录下。
 
 * 小版本升级，BE 只需升级 starrocks_be；FE 只需升级 starrocks-fe.jar。
+
 * 大版本升级，则可能需要升级其他文件（包括但不限于 bin/ lib/ 等）；如果不确定是否需要替换其他文件，全部替换即可。
 
 #### 升级
@@ -204,8 +205,11 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
     ```
 
 5. 验证BE是否正确运行  
+
   a. 在MySQL客户端执行show backends/show proc '/backends' \G 查看BE是否成功启动并且版本是否正确  
+  
   b. 观察be/log/be.INFO的日志是否正常  
+  
   c. 观察be/log/be.WARNING 是否有异常日志  
 
 6. 第一台观察10分钟后，按照上述流程执行其他BE节点
@@ -273,8 +277,11 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
     ```
 
 6. 验证FE是否正确运行  
+
   a. 在MySQL客户端执行show frontends /show proc '/frontends' \G查看FE是否成功启动并且版本是否正确  
+  
   b. 观察fe/log/fe.INFO的日志是否正常  
+  
   c. 观察fe/log/fe.WARNING 是否有异常日志  
 
 7. 第一台观察10分钟后，按照上述流程执行其他FE节点
@@ -309,9 +316,11 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
     ```
 
 5. 验证Broker是否正确运行
-  包括：
-  a. 在MySQL客户端执行show broker 查看Broker是否成功启动并且版本是否正确  
+
+  a. 在MySQL客户端执行show broker 查看Broker是否成功启动并且版本是否正确
+  
   b. 观察broker/log/broker.INFO的日志是否正常  
+  
   c. 观察broker/log/broker.WARNING 是否有异常日志  
 
 6. 按照上述流程执行其他Broker节点
@@ -354,9 +363,11 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
     ```
 
 5. 观察Broker进程是否运行正常  
-  观察内容包括：  
+
   a. 在MySQL Client中执行show broker 查看是否成功启动  
+  
   b. 查看broker/log  
+  
   c. /broker.INFO 是否运行正常  
 
 ##### 回滚FE
@@ -389,8 +400,9 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
     ```
 
 5. 观察FE进程是否运行正常
-  观察内容包括：
+
   a. 在MySQL Client中执行show frontends 查看是否成功启动，并且版本信息是否成功回滚  
+  
   b. 查看fe/log/fe.INFO 是否运行正常
 
 ##### 回滚BE
@@ -449,6 +461,7 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
 2. 假设
 
     这里假设原Apache Doris目录为 `/home/doris/doris/`, 手工安装的 DorisDB 新目录为 `/home/doris/dorisdb/`，为了减少操作失误，后续步骤采用全路径方式。如有具体升级中个，存在路径差异，建议统一修改文档中对应路径，然后严格按照操作步骤执行。
+    
     有些`/home/doris`是软链接，可能会使用`/disk1/doris`等，具体情况下得注意
 
 3. 检查 BE 配置文件
@@ -459,7 +472,9 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
     ```
 
     重点是，检查default_rowset_type=BETA配置项，确认是否是 BETA 类型：
+    
     a. 如果为 BETA，说明已经开始使用 segmentV2 格式，但还有可能有部分tablet或 rowset还是 segmentV1 格式，也需要检查和转换。  
+    
     b. 如果是 ALPHA，说明全部数据都是 segmentV1 格式，则需要修改配置为 BETA，并做后续检查和转换。  
 
 4. 测试SQL
