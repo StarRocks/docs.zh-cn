@@ -206,11 +206,11 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
 
 5. 验证BE是否正确运行  
 
-  a. 在MySQL客户端执行show backends/show proc '/backends' \G 查看BE是否成功启动并且版本是否正确  
-  
-  b. 观察be/log/be.INFO的日志是否正常  
-  
-  c. 观察be/log/be.WARNING 是否有异常日志  
+    a. 在MySQL客户端执行show backends/show proc '/backends' \G 查看BE是否成功启动并且版本是否正确  
+
+    b. 观察be/log/be.INFO的日志是否正常  
+
+    c. 观察be/log/be.WARNING 是否有异常日志  
 
 6. 第一台观察10分钟后，按照上述流程执行其他BE节点
 
@@ -278,11 +278,11 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
 
 6. 验证FE是否正确运行  
 
-  a. 在MySQL客户端执行show frontends /show proc '/frontends' \G查看FE是否成功启动并且版本是否正确  
-  
-  b. 观察fe/log/fe.INFO的日志是否正常  
-  
-  c. 观察fe/log/fe.WARNING 是否有异常日志  
+    a. 在MySQL客户端执行show frontends /show proc '/frontends' \G查看FE是否成功启动并且版本是否正确  
+
+    b. 观察fe/log/fe.INFO的日志是否正常  
+
+    c. 观察fe/log/fe.WARNING 是否有异常日志  
 
 7. 第一台观察10分钟后，按照上述流程执行其他FE节点
 
@@ -317,11 +317,11 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
 
 5. 验证Broker是否正确运行
 
-  a. 在MySQL客户端执行show broker 查看Broker是否成功启动并且版本是否正确
-  
-  b. 观察broker/log/broker.INFO的日志是否正常  
-  
-  c. 观察broker/log/broker.WARNING 是否有异常日志  
+    a. 在MySQL客户端执行show broker 查看Broker是否成功启动并且版本是否正确
+
+    b. 观察broker/log/broker.INFO的日志是否正常  
+
+    c. 观察broker/log/broker.WARNING 是否有异常日志  
 
 6. 按照上述流程执行其他Broker节点
 
@@ -364,11 +364,11 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
 
 5. 观察Broker进程是否运行正常  
 
-  a. 在MySQL Client中执行show broker 查看是否成功启动  
-  
-  b. 查看broker/log  
-  
-  c. /broker.INFO 是否运行正常  
+    a. 在MySQL Client中执行show broker 查看是否成功启动  
+
+    b. 查看broker/log  
+
+    c. /broker.INFO 是否运行正常  
 
 ##### 回滚FE
 
@@ -401,9 +401,9 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
 
 5. 观察FE进程是否运行正常
 
-  a. 在MySQL Client中执行show frontends 查看是否成功启动，并且版本信息是否成功回滚  
-  
-  b. 查看fe/log/fe.INFO 是否运行正常
+    a. 在MySQL Client中执行show frontends 查看是否成功启动，并且版本信息是否成功回滚  
+
+    b. 查看fe/log/fe.INFO 是否运行正常
 
 ##### 回滚BE
 
@@ -438,7 +438,7 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
     ```
 
 5. 观察BE进程是否运行正常  
-观察内容与升级时观察内容一致，除BE的版本信息外  
+    观察内容与升级时观察内容一致，除BE的版本信息外  
 
 ### 从 ApacheDoris 升级为 DorisDB 标准版操作手册
 
@@ -455,13 +455,15 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
     ```
 
     重点关注：
-    a. FE、BE 的 数量/IP/版本 等信息；  
+
+    a. FE、BE 的 数量/IP/版本 等信息；
+  
     b. FE 的 Leader、Follower、Observer 情况；  
 
 2. 假设
 
     这里假设原Apache Doris目录为 `/home/doris/doris/`, 手工安装的 DorisDB 新目录为 `/home/doris/dorisdb/`，为了减少操作失误，后续步骤采用全路径方式。如有具体升级中个，存在路径差异，建议统一修改文档中对应路径，然后严格按照操作步骤执行。
-    
+
     有些`/home/doris`是软链接，可能会使用`/disk1/doris`等，具体情况下得注意
 
 3. 检查 BE 配置文件
@@ -472,9 +474,9 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
     ```
 
     重点是，检查default_rowset_type=BETA配置项，确认是否是 BETA 类型：
-    
+
     a. 如果为 BETA，说明已经开始使用 segmentV2 格式，但还有可能有部分tablet或 rowset还是 segmentV1 格式，也需要检查和转换。  
-    
+
     b. 如果是 ALPHA，说明全部数据都是 segmentV1 格式，则需要修改配置为 BETA，并做后续检查和转换。  
 
 4. 测试SQL
@@ -551,12 +553,12 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
     如果已经显示成功设置 storage_format 为 V2 了，但还是有数据是 v1 格式的，则可以通过以下方式进一步检查：
 
     a. 逐个寻找所有表，通过`show tablet from table_name`获取表的元数据链接；
-    
+
     b. 通过MetaUrl，类似`wget http://172.26.92.139:8640/api/meta/header/11010/691984191获取tablet`的元数据；
-    
+
     c. 这时候本地会出现一个`691984191`的JSON文件，查看其中的`rowset_type`看看内容是不是`ALPHA_ROWSET/BETA_ROWSET`；
-    
-    d. 如果是ALPHA_ROWSET，就表明是segmentV1的数据，需要进行转换到segmentV2。 
+
+    d. 如果是ALPHA_ROWSET，就表明是segmentV1的数据，需要进行转换到segmentV2。
 
     如果直接修改 storage_format为 v2 的方法执行后，还是有数据为 v1 版本，则需要再使用如下方法处理（但一般不会有问题，这个方法也比较麻烦）：
 
@@ -695,12 +697,12 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
 #### FAQs
 
 1. 大量表有segmentV1的格式，需要转换，改怎么操作？
-    
+
     segmentV1转segmentV2需要费时间来完成，这个可能需要一定时间，建议用户平时就可以进行这个操作。
 2. FE/BE升级有没有顺序？
-    
+
     需要先升级 BE、再升级 FE，因为DorisDB的标准版中BE是兼容FE的。升级BE的过程中，需要进行灰度升级，先升级一台BE，过一天观察无误，再升级其他FE。
 3. 升级出问题是否能进行回滚？
-    
+
     BE如果写入数据可以进行回滚，回滚方式就是用旧版本再升级替换一下。
     FE目前支持回滚到1.13(包括)以后的任意版本。
