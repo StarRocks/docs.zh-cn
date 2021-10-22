@@ -388,10 +388,10 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     ```sql
     CREATE TABLE example_db.table_hash
     (
-    k1 BIGINT,
-    k2 LARGEINT,
-    v1 VARCHAR(2048) REPLACE,
-    v2 SMALLINT SUM DEFAULT "10"
+        k1 BIGINT,
+        k2 LARGEINT,
+        v1 VARCHAR(2048) REPLACE,
+        v2 SMALLINT SUM DEFAULT "10"
     )
     ENGINE=olap
     UNIQUE KEY(k1, k2)
@@ -408,10 +408,10 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     ```sql
     CREATE TABLE example_db.table_hash
     (
-    k1 BIGINT,
-    k2 LARGEINT,
-    v1 VARCHAR(2048) REPLACE,
-    v2 SMALLINT SUM DEFAULT "10"
+        k1 BIGINT,
+        k2 LARGEINT,
+        v1 VARCHAR(2048) REPLACE,
+        v2 SMALLINT SUM DEFAULT "10"
     )
     ENGINE=olap
     PRIMARY KEY(k1, k2)

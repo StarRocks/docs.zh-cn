@@ -449,9 +449,9 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
     如果原有集群 FE/BE/broker 信息未给出，可以通过 MySQL 连接到 FE 的方式，并使用以下 SQL 命令查看并确认清楚：
 
     ```SQL
-        show frontends;
-        show backends;
-        show broker;
+    show frontends;
+    show backends;
+    show broker;
     ```
 
     重点关注：
