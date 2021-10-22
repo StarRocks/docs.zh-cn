@@ -21,18 +21,18 @@
   * or语句
 * 优化磁盘Balance算法，单机增加磁盘后可以自动进行数据均衡。
 * 支持部分列导出。 [参考文档](/unloading/Export.md)
-* 优化show processlist，显示具体SQL
- SET_VAR支持多个变量设置
-* 完善更多报错信息，包括table_sink、routine load、创建物化视图等
+* 优化show processlist，显示具体SQL。
+* SET_VAR支持多个变量设置。
+* 完善更多报错信息，包括table_sink、routine load、创建物化视图等。
 
 #### StarRocks-Datax Connector
 
-* StarRocks-DataX Writer 支持设置interval flush
+* StarRocks-DataX Writer 支持设置interval flush。
 
 ### Bugfix
 
-* 修复动态分区表在数据恢复作业完成后，新分区无法自动创建的问题 [# 337](https://github.com/StarRocks/starrocks/issues/337)
-* 修复CBO开启后row_number函数报错的问题
-* 修复统计信息收集导致fe卡死的问题
-* 修复set_var 针对session生效而不是针对语句生效的问题
-* 修复Hive分区外表select count(*) 返回异常的问题
+* 修复动态分区表在数据恢复作业完成后，新分区无法自动创建的问题。 [# 337](https://github.com/StarRocks/starrocks/issues/337)
+* 修复CBO开启后row_number函数报错的问题。
+* 修复统计信息收集导致fe卡死的问题。
+* 修复set_var针对session生效而不是针对语句生效的问题。
+* 修复Hive分区外表`select count(*)` 返回异常的问题。
