@@ -436,7 +436,7 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
 
     如果原有集群 FE/BE/broker 信息未给出，可以通过 MySQL 连接到 FE 的方式，并使用以下 SQL 命令查看并确认清楚：
 
-    ```bash
+    ```SQL
         show frontends;
         show backends;
         show broker;
@@ -465,7 +465,7 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
 4. 测试SQL
     可以测试下，看看当前数据的情况。
 
-    ```bash
+    ```SQL
     show databases;
     use {one_db};
     show tables;
@@ -523,7 +523,7 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
 2. 寻找segmentv1的表，进行转换
     针对每一个有 segmentV1 格式数据的表，进行格式转换：
 
-    ```bash
+    ```SQL
     -- 修改格式
     ALTER TABLE table_name SET ("storage_format" = "v2");
 
@@ -536,13 +536,16 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
     如果已经显示成功设置 storage_format 为 V2 了，但还是有数据是 v1 格式的，则可以通过以下方式进一步检查：
 
     a. 逐个寻找所有表，通过`show tablet from table_name`获取表的元数据链接；
+    
     b. 通过MetaUrl，类似`wget http://172.26.92.139:8640/api/meta/header/11010/691984191获取tablet`的元数据；
+    
     c. 这时候本地会出现一个`691984191`的JSON文件，查看其中的`rowset_type`看看内容是不是`ALPHA_ROWSET/BETA_ROWSET`；
-    d. 如果是ALPHA_ROWSET，就表明是segmentV1的数据，需要进行转换到segmentV2。
+    
+    d. 如果是ALPHA_ROWSET，就表明是segmentV1的数据，需要进行转换到segmentV2。 
 
     如果直接修改 storage_format为 v2 的方法执行后，还是有数据为 v1 版本，则需要再使用如下方法处理（但一般不会有问题，这个方法也比较麻烦）：
 
-    ```bash
+    ```SQL
     -- 方法2:参考SQL 通过重新导入数据到临时分区，然后分区替换的方式来处理SegmentV2的转化
     alter table dwd_user_tradetype_d
     ADD TEMPORARY PARTITION p09
@@ -663,11 +666,12 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
     # 检查：用当前 FE 登录 mysql，并且其中alive 为 true
     #  ，ReplayedJournalId 在同步甚至增长，以及进程存在
     mysql> show frontends;
+    ```
 
     * 观察升级结果：
         * 观察 fe.out/fe.log 查看是否有错误信息。
         * 如果fe.log始终是UNKNOWN状态， 没有变成Follower、Observer，说明有问题。
-        *fe.out报各种Exception，也有问题。
+        * fe.out报各种Exception，也有问题。
     （注意要先升级 Observer ，再升级Follower ）
 
 5. 部署 DorisDBManager
@@ -676,9 +680,12 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
 #### FAQs
 
 1. 大量表有segmentV1的格式，需要转换，改怎么操作？
+    
     segmentV1转segmentV2需要费时间来完成，这个可能需要一定时间，建议用户平时就可以进行这个操作。
 2. FE/BE升级有没有顺序？
+    
     需要先升级 BE、再升级 FE，因为DorisDB的标准版中BE是兼容FE的。升级BE的过程中，需要进行灰度升级，先升级一台BE，过一天观察无误，再升级其他FE。
 3. 升级出问题是否能进行回滚？
+    
     BE如果写入数据可以进行回滚，回滚方式就是用旧版本再升级替换一下。
     FE目前支持回滚到1.13(包括)以后的任意版本。
