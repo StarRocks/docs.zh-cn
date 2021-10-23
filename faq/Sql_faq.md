@@ -153,3 +153,11 @@ MERGE:
 ## 目前delete中不支持嵌套函数
 
 类似这种：`DELETE from test_new WHERE to_days(now())-to_days(publish_time) >7;`to_days(now())这个嵌套了，目前不支持。
+
+## use database的时候特别慢，database几百张表
+
+`mysql -uroot -h127.0.0.1 -P8867 -A`，client连接的时候加上-A参数，-A不会预读数据库信息，切换database会很快。
+
+## be/fe日志文件太多，怎么处理？
+
+调整日志级别和参数大小，详情参考文档中log相关的参数默认值和作用说明：[参数配置](https://docs.dorisdb.com/zh-cn/main/administration/Configuration)
