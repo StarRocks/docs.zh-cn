@@ -36,11 +36,11 @@ curl -v --location-trusted -u root: \
 * strict\_mode：导入过程中的列类型转换进行严格过滤
 * columns:对应StarRocks表中的字段的名称
 
-jsonpaths参数和columns参数还有StarRocks表中字段三者关系如下:
+jsonpaths参数和columns参数还有StarRocks表中字段三者关系如下：
 
 * jsonpaths的值名称与json文件中的key的名称一致
 * columns的值的名称和StarRocks表中字段名称保持一致
-* columns和jsonpaths属性的值名称不需要保持一致(建议设置为一致方便区分),值的顺序保持一致即可将json文件中的value和StarRocks表中字段对应起来,如下图:
+* columns和jsonpaths属性的值，名称不需要保持一致(建议设置为一致方便区分)，值的顺序保持一致就可以将json文件中的value和StarRocks表中字段对应起来，如下图：
 
 ![streamload](../assets/4.8.1.png)
 
@@ -70,7 +70,7 @@ curl -v --location-trusted -u root: \
 +------+------+
 ~~~
 
-对于Json数据和StarRocks数据schema不完全一致的情况，我们可以通过修改Jsonpath等方式来进行导入
+如果想先对Json中数据进行加工，然后再落入StarRocks表中，可以通过更改columns的值来实现，属性的对应关系可以参考上图中描述，示例如下:
 
 样例数据：
 
