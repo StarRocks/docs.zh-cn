@@ -160,4 +160,4 @@ MERGE:
 
 ## be/fe日志文件太多，怎么处理？
 
-调整日志级别和参数大小，详情参考文档中log相关的参数默认值和作用说明：[参数配置](https://docs.dorisdb.com/zh-cn/main/administration/Configuration)
+调整日志级别和参数大小，详情参考文档中log相关的参数默认值和作用说明：[参数配置](https://docs.starrocks.com/zh-cn/main/administration/Configuration)
