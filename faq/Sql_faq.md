@@ -154,7 +154,7 @@ MERGE:
 
 类似这种：`DELETE from test_new WHERE to_days(now())-to_days(publish_time) >7;`to_days(now())这个嵌套了，目前不支持。
 
-## use database的时候特别慢，database几百张表
+## 在一个 database 中有上百张表后，use database 会特别慢
 
 `mysql -uroot -h127.0.0.1 -P8867 -A`，client连接的时候加上-A参数，-A不会预读数据库信息，切换database会很快。
 
