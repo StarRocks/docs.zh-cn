@@ -37,7 +37,7 @@ CREATE MATERIALIZED VIEW [MV name] as [query]
 
     select_expr: 物化视图的 schema 中所有的列。
     + 仅支持不带表达式计算的单列，聚合列。
-    + 其中聚合函数目前仅支持 SUM, MIN, MAX 三种，且聚合函数的参数只能是不带表达式计算的单列。
+    + 其中聚合函数目前支持 COUNT，SUM， MIN，MAX，PERCENTILE_APPROX，HLL_UNION，BITMAP_UNION。且聚合函数的参数只能是不带表达式计算的单列。
     + 至少包含一个单列。
     + 所有涉及到的列，均只能出现一次。
 

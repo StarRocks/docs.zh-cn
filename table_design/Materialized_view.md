@@ -103,6 +103,17 @@ tuple ids: 0
 * MIN
 * SUM
 * PERCENTILE_APPROX
+
+     `PERCENTILE_APPROX(DOUBLE col,p,[compression])`返回第p个百分位点的近似值，p的值介于0到1之间。参数compression是可选项，可设置范围是[2048, 10000]，值越大，精度越高，内存消耗越大，计算耗时越长。 compression参数未指定或设置的值在[2048, 10000]范围外，以10000的默认值运行。该函数使用固定大小的内存，因此对于高基数的列可以使用更少的内存，可用于计算tp99等统计值。
+
+    ~~~SQL
+    create materialized view dt_uv as 
+        select dt, page_id, PERCENTILE_APPROX(user_id, 0.95)
+        from user_view
+        group by dt, page_id;
+    select percentile_approx(user_id,0.95) from user_view; 查询可命中该物化视图
+    ~~~
+
 * HLL_UNION
 
     对明细数据进行 HLL 聚合并且在查询时，使用 HLL 函数分析数据。主要适用于快速进行非精确去重计算。对明细数据使用HLL\_UNION聚合，需要先调用hll\_hash函数，对原数据进行转换。

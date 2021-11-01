@@ -7,7 +7,7 @@
 语法：
 
 ```sql
-DROP MATERIALIZED VIEW [IF EXISTS] mv_name ON table_name
+DROP MATERIALIZED VIEW [IF EXISTS] mv_name [IN|FROM db.table_name]
 ```
 
 1. IF EXISTS
@@ -17,7 +17,7 @@ DROP MATERIALIZED VIEW [IF EXISTS] mv_name ON table_name
 待删除的物化视图的名称。必填项。
 
 3. table_name
-待删除的物化视图所属的表名。必填项。
+待删除的物化视图所属的表名。格式必须是`db.table_name`，db为数据库名，表名称为可选。
 
 ## example
 
