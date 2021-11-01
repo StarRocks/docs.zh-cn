@@ -133,7 +133,7 @@ Stream Load 的最佳使用场景是原始文件在内存中或者存储在本�
 
 ### 数据量
 
-由于Stream Load是由BE发起的导入并分发数据，建议的导入数据量在 1GB 到 10GB 之间。系统默认的最大Stream Load导入数据量为10GB，所以如果要导入超过10GB的文件需要修改BE的配置项streaming_load_max_mb。比如，待导入文件大小为15G，则修改BE配置 `streaming_load_max_mb = 16000` 即可。
+由于Stream Load是由BE发起的导入并分发数据，建议的导入数据量在 1GB 到 10GB 之间。系统默认的最大Stream Load导入数据量为10GB，所以如果要导入超过10GB的文件需要修改BE的配置项streaming_load_max_mb。比如，待导入文件大小为15G，则可修改BE的该配置项大于15G,例如设置为 `streaming_load_max_mb = 16000` 即可。
 
 Stream Load的默认超时为300秒，按照StarRocks目前最大的导入限速来看，导入超过3GB大小的文件就需要修改导入任务默认的超时时间了。
 
@@ -147,7 +147,7 @@ Stream Load的默认超时为300秒，按照StarRocks目前最大的导入限速
 
 **集群情况**：Stream Load 的并发数不受集群大小影响。
 
-* step1: 导入文件大小超过默认的最大导入大小10GB，所以要修改BE的配置文件BE.conf：
+* step1: 导入文件大小超过默认的最大导入大小10GB，所以要修改BE的配置文件BE.conf,例如将最大导入大小设置为16000：
 
 `streaming_load_max_mb = 16000`
 
@@ -165,7 +165,7 @@ curl --location-trusted -u user:password -T /home/store_sales \
 ### 代码集成示例
 
 * JAVA开发stream load，参考：[https://github.com/StarRocks/demo/MiscDemo/stream_load](https://github.com/StarRocks/demo/tree/master/MiscDemo/stream_load)
-* Spark 集成stream load，参考： [01_sparkStreaming2StarRocks](https://github.com/StarRocks/demo/blob/master/docs/cn/01_sparkStreaming2StarRocks.md)
+* Spark 集成stream load，参考： [01_sparkStreaming2StarRocks](https://github.com/StarRocks/demo/blob/master/docs/01_sparkStreaming2StarRocks.md)
 
 ---
 
