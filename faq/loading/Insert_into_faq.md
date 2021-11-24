@@ -15,4 +15,4 @@ tablet_writer_open_rpc_timeout_sec=120
 
 ## insert into select 操作数据量大的时候会执行失败 ：execute timeout
 
-set query_timeout =xx  默认300s，单位是s改下这个参数
+set query_timeout =xx; 默认300s，单位是s改下这个参数

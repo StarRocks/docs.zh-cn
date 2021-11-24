@@ -124,11 +124,11 @@ Manager默认30秒内去获取新部署FE的路径配置，如果FE启动较慢�
 
 服务器时差超过5s，需要校准服务器时间
 
-## be 节点如果有多块盘做存储 storage_root_path 这个参数该怎么设置？
+## be节点如果有多块盘做存储，storage_root_path这个参数该怎么设置？
 
 be.conf里配置storage_root_path参数，用;隔开
 
-## 添加fe 一直显示集群id 不一样 这个怎么办invalid cluster id: 209721925
+## 添加fe，一直显示集群id不一样，这个怎么办：invalid cluster id: 209721925
 
 先把meta目录清空，然后通过--helper的方式重新加入集群
 

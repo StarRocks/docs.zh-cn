@@ -172,7 +172,7 @@ varchar是变长存储，存储跟数据实际长度有关
 
 ## truncate table 失败，报错create partititon timeout
 
-目前truncate会先创建对应空分区再swap，如果存在大量创建分区任务，积压就会超时，compaction过程中会持锁很长时间，也导致建表拿不到锁，如果集群导入比较多，设置be.conf中参数tablet_map_shard_size=512可以降低锁冲突
+目前truncate会先创建对应空分区再swap，如果存在大量创建分区任务，积压就会超时，compaction过程中会持锁很长时间，也导致建表拿不到锁，如果集群导入比较多，设置be.conf中参数tablet_map_shard_size=512，可以降低锁冲突
 
 ## hive外表访问出错，Failed to specify server's Kerberos principal name
 
