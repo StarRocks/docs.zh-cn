@@ -168,7 +168,7 @@ colocate table是有group的，一个组包含多个表，不支持单个表修�
 
 ## varchar 设置成最大值对存储有没有影响
 
-varchar是变长存储，存储跟数据实际长度有关
+varchar是变长存储，存储跟数据实际长度有关，建表时指定不同的varchar长度对同一数据的查询性能影响很小
 
 ## truncate table 失败，报错create partititon timeout
 
