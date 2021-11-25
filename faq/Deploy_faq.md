@@ -130,7 +130,7 @@ be.conf里配置storage_root_path参数，用;隔开
 
 ## 添加fe，一直显示集群id不一样，这个怎么办：invalid cluster id: 209721925
 
-先把meta目录清空，然后通过--helper的方式重新加入集群
+这种问题是因为元数据不一致了，常见于第一次安装时没有加--helper参数，此场景需要将meta目录清空，然后通过--helper的方式重新加入集群
 
 ## fe显示已经启动，有transfer：follower，但是show frontends;显示状态false
 
