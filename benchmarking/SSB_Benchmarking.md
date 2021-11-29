@@ -216,7 +216,6 @@ COMMENT "OLAP"
 DISTRIBUTED BY HASH(`lo_orderkey`) BUCKETS 96
 PROPERTIES (
     "replication_num" = "1",
-    "colocate_with" = "group1",
     "in_memory" = "false",
     "storage_format" = "DEFAULT"
 );
@@ -237,7 +236,6 @@ COMMENT "OLAP"
 DISTRIBUTED BY HASH(`c_custkey`) BUCKETS 12
 PROPERTIES (
     "replication_num" = "1",
-    "colocate_with" = "group2",
     "in_memory" = "false",
     "storage_format" = "DEFAULT"
 );
@@ -268,7 +266,6 @@ DISTRIBUTED BY HASH(`d_datekey`) BUCKETS 1
 PROPERTIES (
     "replication_num" = "1",
     "in_memory" = "false",
-    "colocate_with" = "group3",
     "storage_format" = "DEFAULT"
 );
 
@@ -286,7 +283,6 @@ COMMENT "OLAP"
 DISTRIBUTED BY HASH(`s_suppkey`) BUCKETS 12
 PROPERTIES (
     "replication_num" = "1",
-    "colocate_with" = "group4",
     "in_memory" = "false",
     "storage_format" = "DEFAULT"
 );
@@ -307,7 +303,6 @@ COMMENT "OLAP"
 DISTRIBUTED BY HASH(`p_partkey`) BUCKETS 12
 PROPERTIES (
     "replication_num" = "1",
-    "colocate_with" = "group5",
     "in_memory" = "false",
     "storage_format" = "DEFAULT"
 );
@@ -356,13 +351,7 @@ CREATE TABLE `lineorder_flat` (
 DUPLICATE KEY(`lo_orderdate`, `lo_orderkey`)
 COMMENT "OLAP"
 PARTITION BY RANGE(`lo_orderdate`)
-(PARTITION p1 VALUES [('0000-01-01'), ('1993-01-01')),
-PARTITION p2 VALUES [('1993-01-01'), ('1994-01-01')),
-PARTITION p3 VALUES [('1994-01-01'), ('1995-01-01')),
-PARTITION p4 VALUES [('1995-01-01'), ('1996-01-01')),
-PARTITION p5 VALUES [('1996-01-01'), ('1997-01-01')),
-PARTITION p6 VALUES [('1997-01-01'), ('1998-01-01')),
-PARTITION p7 VALUES [('1998-01-01'), ('1999-01-01')))
+(START ("1992-01-01") END ("1999-01-01") EVERY (INTERVAL 1 YEAR))
 DISTRIBUTED BY HASH(`lo_orderkey`) BUCKETS 48
 PROPERTIES (
 "replication_num" = "1",
@@ -414,13 +403,7 @@ CREATE TABLE `lineorder_flat` (
 DUPLICATE KEY(`LO_ORDERDATE`, `LO_ORDERKEY`)
 COMMENT "OLAP"
 PARTITION BY RANGE(`LO_ORDERDATE`)
-(PARTITION p1 VALUES [('0000-01-01'), ('1993-01-01')),
-PARTITION p2 VALUES [('1993-01-01'), ('1994-01-01')),
-PARTITION p3 VALUES [('1994-01-01'), ('1995-01-01')),
-PARTITION p4 VALUES [('1995-01-01'), ('1996-01-01')),
-PARTITION p5 VALUES [('1996-01-01'), ('1997-01-01')),
-PARTITION p6 VALUES [('1997-01-01'), ('1998-01-01')),
-PARTITION p7 VALUES [('1998-01-01'), ('1999-01-01')))
+(START ("1992-01-01") END ("1999-01-01") EVERY (INTERVAL 1 YEAR))
 DISTRIBUTED BY HASH(`LO_ORDERKEY`) BUCKETS 120
 PROPERTIES (
 "replication_num" = "1",
