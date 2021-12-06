@@ -215,9 +215,7 @@ DUPLICATE KEY(`lo_orderkey`)
 COMMENT "OLAP"
 DISTRIBUTED BY HASH(`lo_orderkey`) BUCKETS 96
 PROPERTIES (
-    "replication_num" = "1",
-    "in_memory" = "false",
-    "storage_format" = "DEFAULT"
+    "replication_num" = "1"
 );
 
 
@@ -235,9 +233,7 @@ DUPLICATE KEY(`c_custkey`)
 COMMENT "OLAP"
 DISTRIBUTED BY HASH(`c_custkey`) BUCKETS 12
 PROPERTIES (
-    "replication_num" = "1",
-    "in_memory" = "false",
-    "storage_format" = "DEFAULT"
+    "replication_num" = "1"
 );
 
 
@@ -264,9 +260,7 @@ DUPLICATE KEY(`d_datekey`)
 COMMENT "OLAP"
 DISTRIBUTED BY HASH(`d_datekey`) BUCKETS 1
 PROPERTIES (
-    "replication_num" = "1",
-    "in_memory" = "false",
-    "storage_format" = "DEFAULT"
+    "replication_num" = "1"
 );
 
  CREATE TABLE IF NOT EXISTS `supplier` (
@@ -282,9 +276,7 @@ DUPLICATE KEY(`s_suppkey`)
 COMMENT "OLAP"
 DISTRIBUTED BY HASH(`s_suppkey`) BUCKETS 12
 PROPERTIES (
-    "replication_num" = "1",
-    "in_memory" = "false",
-    "storage_format" = "DEFAULT"
+    "replication_num" = "1"
 );
 
 CREATE TABLE IF NOT EXISTS `part` (
@@ -302,9 +294,7 @@ DUPLICATE KEY(`p_partkey`)
 COMMENT "OLAP"
 DISTRIBUTED BY HASH(`p_partkey`) BUCKETS 12
 PROPERTIES (
-    "replication_num" = "1",
-    "in_memory" = "false",
-    "storage_format" = "DEFAULT"
+    "replication_num" = "1"
 );
 
 # lineorder_flat表建表语句，测试数据量级是100G时
@@ -354,9 +344,7 @@ PARTITION BY RANGE(`lo_orderdate`)
 (START ("1992-01-01") END ("1999-01-01") EVERY (INTERVAL 1 YEAR))
 DISTRIBUTED BY HASH(`lo_orderkey`) BUCKETS 48
 PROPERTIES (
-"replication_num" = "1",
-"in_memory" = "false",
-"storage_format" = "DEFAULT"
+"replication_num" = "1"
 );
 
 # lineorder_flat表建表语句，测试数据量级是1T时
@@ -406,9 +394,7 @@ PARTITION BY RANGE(`LO_ORDERDATE`)
 (START ("1992-01-01") END ("1999-01-01") EVERY (INTERVAL 1 YEAR))
 DISTRIBUTED BY HASH(`LO_ORDERKEY`) BUCKETS 120
 PROPERTIES (
-"replication_num" = "1",
-"in_memory" = "false",
-"storage_format" = "DEFAULT"
+"replication_num" = "1"
 );
 ~~~
 
@@ -427,7 +413,7 @@ http_port: 8030
 be_heartbeat_port: 9050
 broker_port: 8000
 
-# parallel_fragment_exec_instance_num 设置并行度，建议是每个集群节点逻辑核数的一半,以下以8为例
+# parallel_fragment_exec_instance_num 设置并行度，建议是每个集群节点逻辑核数的一半，以下以8为例
 parallel_num: 8
 
 ...
@@ -457,11 +443,11 @@ data\_dir是之前生成的数据目录
 
 ### 查询
 
-首先在客户端执行命令，修改并行度(类似clickhouse set max_threads= 8)
+首先在客户端执行命令，修改并行度(类似clickhouse set max_threads = 8)
 
 ~~~shell
 # 设置并行度，建议是每个集群节点逻辑核数的一半,以下以8为例
-set global parallel_fragment_exec_instance_num  = 8;
+set global parallel_fragment_exec_instance_num = 8;
 ~~~
 
 测试ssb多表查询 (SQL 参见 share/ssb\_test/sql/ssb/)
