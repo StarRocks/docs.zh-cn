@@ -309,7 +309,9 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     <br/>
 
     当表为单分区表时，这些属性为表的属性。
+
     当表为两级分区时，这些属性附属于每一个分区。
+
     如果希望不同分区有不同属性。可以通过 ADD PARTITION 或 MODIFY PARTITION 进行操作。
 
     <br/>
