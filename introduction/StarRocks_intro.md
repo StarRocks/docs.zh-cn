@@ -1,8 +1,8 @@
 # StarRocks
 
-## StarRocks是什么 test
+## StarRocks是什么 
 
-* StarRocks是新一代极速全场景MPP数据库。test1
+* StarRocks是新一代极速全场景MPP数据库。test2
 * StarRocks充分吸收关系型OLAP数据库和分布式存储系统在大数据时代的优秀研究成果，在业界实践的基础上，进一步改进优化、升级架构，并增添了众多全新功能，形成了全新的企业级产品。
 * StarRocks致力于构建极速统一分析体验，满足企业用户的多种数据分析场景，支持多种数据模型(明细模型、聚合模型、更新模型)，多种导入方式（批量和实时），可整合和接入多种现有系统(Spark、Flink、Hive、 ElasticSearch)。
 * StarRocks兼容MySQL协议，可使用MySQL客户端和常用BI工具对接StarRocks来进行数据分析。
