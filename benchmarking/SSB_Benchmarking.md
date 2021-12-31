@@ -224,7 +224,7 @@ PARTITION p6 VALUES [("19970101"), ("19980101")),
 PARTITION p7 VALUES [("19980101"), ("19990101")))
 DISTRIBUTED BY HASH(`lo_orderkey`) BUCKETS 48
 PROPERTIES (
-"replication_num" = "1"
+    "replication_num" = "1"
 );
 
 # lineorder表建表语句，测试数据量级是1T时
@@ -259,7 +259,7 @@ PARTITION p6 VALUES [("19970101"), ("19980101")),
 PARTITION p7 VALUES [("19980101"), ("19990101")))
 DISTRIBUTED BY HASH(`lo_orderkey`) BUCKETS 120
 PROPERTIES (
-"replication_num" = "1"
+    "replication_num" = "1"
 );
 
 CREATE TABLE IF NOT EXISTS `customer` (
@@ -387,7 +387,7 @@ PARTITION BY RANGE(`LO_ORDERDATE`)
 (START ("1992-01-01") END ("1999-01-01") EVERY (INTERVAL 1 YEAR))
 DISTRIBUTED BY HASH(`LO_ORDERKEY`) BUCKETS 48
 PROPERTIES (
-"replication_num" = "1"
+    "replication_num" = "1"
 );
 
 # lineorder_flat表建表语句，测试数据量级是1T时
@@ -437,7 +437,7 @@ PARTITION BY RANGE(`LO_ORDERDATE`)
 (START ("1992-01-01") END ("1999-01-01") EVERY (INTERVAL 1 YEAR))
 DISTRIBUTED BY HASH(`LO_ORDERKEY`) BUCKETS 120
 PROPERTIES (
-"replication_num" = "1"
+    "replication_num" = "1"
 );
 ~~~
 
