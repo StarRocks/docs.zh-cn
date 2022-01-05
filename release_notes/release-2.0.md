@@ -20,7 +20,7 @@
 - 优化算子性能
   - 低基数字典性能优化[#791](https://github.com/StarRocks/starrocks/pull/791)
   - 单表的int scan性能优化 [#273](https://github.com/StarRocks/starrocks/issues/273)
-  - 高基数下的count(distinct int) 性能优化 [#139](https://github.com/StarRocks/starrocks/pull/139) [#250](https://github.com/StarRocks/starrocks/pull/250)  [#544](https://github.com/StarRocks/starrocks/pull/544)[#570](https://github.com/StarRocks/starrocks/pull/570)
+  - 高基数下的`count(distinct int)` 性能优化 [#139](https://github.com/StarRocks/starrocks/pull/139) [#250](https://github.com/StarRocks/starrocks/pull/250)  [#544](https://github.com/StarRocks/starrocks/pull/544)[#570](https://github.com/StarRocks/starrocks/pull/570)
   - 执行层优化和完善 `Group by 2 int` / `limit` / `case when` / `not equal`
 - 内存管理优化
   - 重构内存统计/控制框架，精确统计内存使用，彻底解决OOM
@@ -32,6 +32,6 @@
 
 - 修复Hive外表大量获取元数据超时的问题
 - 修复物化视图创建报错信息不明确的问题
-- 修复向量化引擎对like的实现 [#722](https://github.com/StarRocks/starrocks/pull/722)
-- 修复alter table中谓词is的解析错误[#725](https://github.com/StarRocks/starrocks/pull/725)
-- 修复curdate函数没办法格式化日期的问题
+- 修复向量化引擎对`like`的实现 [#722](https://github.com/StarRocks/starrocks/pull/722)
+- 修复`alter table`中谓词is的解析错误[#725](https://github.com/StarRocks/starrocks/pull/725)
+- 修复`curdate`函数没办法格式化日期的问题
