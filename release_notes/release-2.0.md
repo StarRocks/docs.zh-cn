@@ -6,8 +6,6 @@
 
 ### New Feature
 
-#### StarRocks
-
 - 外表
   - [实验功能]支持S3上的Hive外表功能 [参考文档](/using_starrocks/External_table.md#Hive外表)
   - DecimalV3支持外表查询 [#425](https://github.com/StarRocks/starrocks/pull/425)
