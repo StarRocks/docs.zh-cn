@@ -406,8 +406,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     (
         k1 BIGINT,
         k2 LARGEINT,
-        v1 VARCHAR(2048) REPLACE,
-        v2 SMALLINT SUM DEFAULT "10"
+        v1 VARCHAR(2048) REPLACE
     )
     ENGINE=olap
     UNIQUE KEY(k1, k2)
@@ -415,7 +414,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     PROPERTIES(
         "storage_type"="column",
         "storage_medium" = "SSD",
-        "storage_cooldown_time" = "2015-06-04 00:00:00"
+        "storage_cooldown_time" = "9999-01-01 00:00:00"
     );
     ```
 
@@ -426,8 +425,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     (
         k1 BIGINT,
         k2 LARGEINT,
-        v1 VARCHAR(2048) REPLACE,
-        v2 SMALLINT SUM DEFAULT "10"
+        v1 VARCHAR(2048) REPLACE
     )
     ENGINE=olap
     PRIMARY KEY(k1, k2)
@@ -435,7 +433,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     PROPERTIES(
         "storage_type"="column",
         "storage_medium" = "SSD",
-        "storage_cooldown_time" = "2015-06-04 00:00:00"
+        "storage_cooldown_time" = "9999-01-01 00:00:00"
     );
     ```
 
