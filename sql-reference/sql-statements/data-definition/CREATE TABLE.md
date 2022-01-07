@@ -251,7 +251,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
         START ("2021-01-01") END ("2021-01-04") EVERY (INTERVAL 1 day)
     )
     ```
-   
+
     说明：
     用户可以通过给出一个START值、一个END值以及一个定义分区增量值的EVERY子句批量产生分区。
     1. 当前分区键仅支持日期类型和整数类型，分区类型需要与EVERY里的表达式匹配。
