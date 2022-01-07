@@ -10,7 +10,7 @@
 CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
 (column_definition1[, column_definition2, ...]
 [, index_definition1[, ndex_definition12,]])
-[ENGINE = [olap|mysql|broker|hive]]
+[ENGINE = [olap|mysql|hive]]
 [key_desc]
 [COMMENT "table comment"];
 [partition_desc]
@@ -128,7 +128,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
 
 3. ENGINE 类型
 
-    默认为 olap。可选 mysql, broker, hive
+    默认为 olap。可选 mysql, hive
 
 ## Example
 
@@ -152,32 +152,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     在 StarRocks 创建 mysql 表的目的是可以通过 StarRocks 访问 mysql 数据库。
     而 StarRocks 本身并不维护、存储任何 mysql 数据。
 
-2. 如果是 broker，表示表的访问需要通过指定的broker, 需要在 properties 提供以下信息：
-
-    ```sql
-    PROPERTIES (
-        "broker_name" = "broker_name",
-        "path" = "file_path1[,file_path2]",
-        "column_separator" = "value_separator"
-        "line_delimiter" = "value_delimiter"
-    )
-    ```
-
-    另外还需要提供Broker需要的Property信息，通过BROKER PROPERTIES来传递，例如HDFS需要传入
-
-    ```sql
-    BROKER PROPERTIES(
-        "username" = "name",
-        "password" = "password"
-    )
-    ```
-
-    这个根据不同的Broker类型，需要传入的内容也不相同
-    注意：
-    "path" 中如果有多个文件，用逗号[,]分割。如果文件名中包含逗号，那么使用 %2c 来替代。如果文件名中包含 %，使用 %25 代替
-    现在文件内容格式支持CSV，支持GZ，BZ2，LZ4，LZO(LZOP) 压缩格式。
-
-3. 如果是 hive，则需要在 properties 提供以下信息：
+2. 如果是 hive，则需要在 properties 提供以下信息：
 
     ```sql
     PROPERTIES (
@@ -219,7 +194,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
 
 2. partition_desc
 
-    partition描述有两种使用方式
+    partition描述有三种使用方式
 
     LESS THAN
 
@@ -236,7 +211,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
 
     说明：
     使用指定的 key 列和指定的数值范围进行分区。
-
+    
     1. 分区名称仅支持字母开头，字母、数字和下划线组成
     2. 目前仅支持以下类型的列作为 Range 分区列，且只能指定一个分区列
     TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DATE, DATETIME
@@ -263,10 +238,26 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     ```
 
     说明：
-    1）Fixed Range比LESS THAN相对灵活些，左右区间完全由用户自己确定
+    1. Fixed Range比LESS THAN相对灵活些，左右区间完全由用户自己确定
 
-    2）其他与LESS THAN保持同步
+    2. 其他与LESS THAN保持同步
 
+    批量创建分区
+
+    语法：
+
+    ```sql
+    PARTITION BY RANGE (datekey) (
+        START ("2021-01-01") END ("2021-01-04") EVERY (INTERVAL 1 day)
+    )
+    ```
+    说明：
+    用户可以通过给出一个START值、一个END值以及一个定义分区增量值的EVERY子句批量产生分区。
+    1. 当前分区键仅支持日期类型和整数类型，分区类型需要与EVERY里的表达式匹配。
+    2. 当分区键为日期类型的时候需要指定INTERVAL关键字来表示日期间隔，目前日期仅支持day、week、month、year，分区的命名规则同动态分区一样。
+    
+    更详细的语法规则请参考：（[数据分布-批量创建和修改分区](../table_design/Data_distribution.md)）。
+   
 3. distribution_des
 
     Hash 分桶
