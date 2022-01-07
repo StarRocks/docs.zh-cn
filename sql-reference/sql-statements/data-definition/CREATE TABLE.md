@@ -211,7 +211,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
 
     说明：
     使用指定的 key 列和指定的数值范围进行分区。
-    
+
     1. 分区名称仅支持字母开头，字母、数字和下划线组成
     2. 目前仅支持以下类型的列作为 Range 分区列，且只能指定一个分区列
     TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DATE, DATETIME
@@ -251,13 +251,14 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
         START ("2021-01-01") END ("2021-01-04") EVERY (INTERVAL 1 day)
     )
     ```
+   
     说明：
     用户可以通过给出一个START值、一个END值以及一个定义分区增量值的EVERY子句批量产生分区。
     1. 当前分区键仅支持日期类型和整数类型，分区类型需要与EVERY里的表达式匹配。
     2. 当分区键为日期类型的时候需要指定INTERVAL关键字来表示日期间隔，目前日期仅支持day、week、month、year，分区的命名规则同动态分区一样。
-    
+
     更详细的语法规则请参考：（[数据分布-批量创建和修改分区](../table_design/Data_distribution.md)）。
-   
+
 3. distribution_des
 
     Hash 分桶
