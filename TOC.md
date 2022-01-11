@@ -22,6 +22,7 @@
 + 数据导入
   + [导入总览](/loading/Loading_intro.md)
   + [Stream Load](/loading/StreamLoad.md)
+  + [CloudCanal数据导入](/loading/CloudCanal-loading.md)
   + [Broker Load](/loading/BrokerLoad.md)
   + [Routine Load](/loading/RoutineLoad.md)
   + [Spark Load](/loading/SparkLoad.md)
@@ -325,6 +326,7 @@
     + 导入
       + [导入通用FAQ](/faq/loading/Loading_faq.md)
       + [Stream Load](/faq/loading/Stream_load_faq.md)
+      + [CloudCanal数据导入](/faq/loading/CloudCanal_load_faq.md)
       + [Routine Load](/faq/loading/Routine_load_faq.md)
       + [Broker Load](/faq/loading/Broker_load_faq.md)
       + [Spark Load](/faq/loading/Spark_load_faq.md)
