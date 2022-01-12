@@ -36,8 +36,9 @@ CloudCanal提供了完整的产品化能力，用户在可视化界面完成数�
 - 选择自建数据库中StarRocks
 
 ![image.png](../assets/cloudcanal/load_2.png)
+
 > Tips:
-> - Clinet地址: 为StarRocks提供给MySQL Client的服务端口，CloudCanal主要用其查询库表的元数据信息
+> - Clinet地址: 为StarRocks提供给MySQL Client的服务端口，CloudCanal主要用其查询库表的元数据信息 
 > - Http地址： Http地址主要用于接收CloudCanal数据导入的请求
 
 ### 任务创建
@@ -81,7 +82,3 @@ CloudCanal提供了完整的产品化能力，用户在可视化界面完成数�
 - [5分钟搞定MySQL/PostgreSQL/Oracle到StarRocks数据迁移同步-CloudCanal实战](https://www.askcug.com/topic/262)
 
 - [CloudCanal官方社区](https://www.askcug.com/)
-
-
-
-

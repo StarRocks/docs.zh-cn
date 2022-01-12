@@ -16,10 +16,8 @@
 
 调整compaction策略，加快合并(调整完需要观察内存和IO)，在be.conf中修改以下内容
 
-```
+```properties
 cumulative_compaction_num_threads_per_disk = 4
 base_compaction_num_threads_per_disk = 2
 cumulative_compaction_check_interval_seconds = 2
 ```
-
-
