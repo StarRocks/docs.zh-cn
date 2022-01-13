@@ -8,9 +8,9 @@
 - 打开任务参数
 - 调节fullBatchWaitTimeMs和increBatchWaitTimeMs参数，增加一批数据写入StarRocks之后的停顿时间，避免写入过于频繁导致的异常报错
 
-![image.png](../../assets/cloudcanal/faq_1.png)
+![image.png](../../assets/8.2.1.9-1.png)
 
-![image.png](../../assets/cloudcanal/faq_2.png)
+![image.png](../../assets/8.2.1.9-2.png)
 
 ### StarRocks侧解决办法
 
