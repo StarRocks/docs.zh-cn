@@ -76,7 +76,7 @@ CloudCanal提供了完整的产品化能力，用户在可视化界面完成数�
 
 - 查看任务状态。任务创建后，会自动完成结构迁移、全量、增量阶段。
 
-![image.png](../assets/load_8.png)
+![image.png](../assets/3.11-8.png)
 
 ## 参考资料
 
