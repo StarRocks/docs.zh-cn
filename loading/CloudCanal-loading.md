@@ -21,6 +21,7 @@ CloudCanal社区版是一款由[ClouGence公司](https://www.clougence.com)发�
   | PostgreSQL源端 | 支持 | 支持 | 支持 | 支持 |
   | Greenplum源端 | 支持 | 支持 | 不支持 | 支持 |
   | MySQL源端 | 支持 | 支持 | 支持 | 支持 |
+  
 ## 使用方法
 
 CloudCanal提供了完整的产品化能力，用户在可视化界面完成数据源添加和任务创建即可自动完成结构迁移、全量迁移、增量实时同步。下文演示如何将MySQL数据库中的数据迁移同步到对端StarRocks中。其他源端同步到StarRocks也可以按照类似的方式进行。
@@ -38,7 +39,7 @@ CloudCanal提供了完整的产品化能力，用户在可视化界面完成数�
 ![image.png](../assets/cloudcanal/load_2.png)
 
 > Tips:
-> - Clinet地址: 为StarRocks提供给MySQL Client的服务端口，CloudCanal主要用其查询库表的元数据信息 
+> - Client地址: 为StarRocks提供给MySQL Client的服务端口，CloudCanal主要用其查询库表的元数据信息 
 > - Http地址： Http地址主要用于接收CloudCanal数据导入的请求
 
 ### 任务创建
