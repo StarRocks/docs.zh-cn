@@ -39,7 +39,9 @@ CloudCanal提供了完整的产品化能力，用户在可视化界面完成数�
 ![image.png](../assets/cloudcanal/load_2.png)
 
 > Tips:
-> - Client地址: 为StarRocks提供给MySQL Client的服务端口，CloudCanal主要用其查询库表的元数据信息 
+> 
+> - Client地址: 为StarRocks提供给MySQL Client的服务端口，CloudCanal主要用其查询库表的元数据信息
+> 
 > - Http地址： Http地址主要用于接收CloudCanal数据导入的请求
 
 ### 任务创建
