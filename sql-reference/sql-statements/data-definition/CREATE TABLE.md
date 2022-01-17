@@ -128,7 +128,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
 
 3. ENGINE 类型
 
-    默认为 olap。可选 mysql, hive
+    默认为 olap。可选 mysql, elasticsearch, hive
 
 ## Example
 
@@ -152,7 +152,21 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     在 StarRocks 创建 mysql 表的目的是可以通过 StarRocks 访问 mysql 数据库。
     而 StarRocks 本身并不维护、存储任何 mysql 数据。
 
-2. 如果是 hive，则需要在 properties 提供以下信息：
+2. 如果是 elasticsearch，则需要在 properties 提供以下信息：
+
+    ```sql
+    PROPERTIES (
+        "hosts" = "http://192.168.0.1:8200,http://192.168.0.2:8200",
+        "user" = "root",
+        "password" = "root",
+        "index" = "tindex",
+        "type" = "doc"
+    )
+    ```
+
+    其中host为ES集群连接地址，可指定一个或者多个,user/password为开启basic认证的ES集群的用户名/密码，index是StarRocks中的表对应的ES的index名字，可以是alias，type指定index的type，默认是doc。
+
+3. 如果是 hive，则需要在 properties 提供以下信息：
 
     ```sql
     PROPERTIES (
@@ -163,7 +177,6 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     ```
 
     其中 database 是 hive 表对应的库名字，table 是 hive 表的名字，hive.metastore.uris 是 hive metastore 服务地址。
-    注意：目前hive外部表仅用于Spark Load使用，不支持查询。
 
 ### Syntax
 
