@@ -10,7 +10,7 @@
 CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
 (column_definition1[, column_definition2, ...]
 [, index_definition1[, ndex_definition12,]])
-[ENGINE = [olap|mysql|hive]]
+[ENGINE = [olap|mysql|elasticsearch|hive]]
 [key_desc]
 [COMMENT "table comment"];
 [partition_desc]
