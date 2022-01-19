@@ -68,7 +68,8 @@ FE 有可能因为某些原因出现无法启动 bdbje、FE 之间无法同步�
     * 启动完成后，先连接到这个 FE，执行一些查询导入，检查是否能够正常访问。如果不正常，有可能是操作有误，查看FE启动日志，排查问题后重新启动FE。
     * 如果成功，通过 `show frontends;` 命令，应该可以看到之前集群所添加的所有 FE，并且当前 FE 是 master。
     * 由于是用一个 OBSERVER 节点的元数据进行恢复的，导致完成上述步骤后，`show frontends;` 会发现，当前这个 FE 的角色为 OBSERVER，但是 IsMaster 显示为 true。这是因为，这里看到的 “OBSERVER” 是记录在 StarRocks 的元数据中的，而是否是 master，是记录在 bdbje 的元数据中的。我们是从一个 OBSERVER 节点恢复的，所以这里出现了不一致。这种内部不一致的状态，不能支持后续的导入等修改操作，所以，还需要继续按以下步骤修复：
-    * 先把除了这个 “OBSERVER” 以外的所有 FE 节点 DROP 掉。
+    * 先把这个 “OBSERVER” conf中的`metadata_failure_recovery=true`注释掉，但不要重启该节点，以防止这个节点再加入集群的时候报错。
+    * 把除了这个 “OBSERVER” 以外的所有 FE 节点 DROP 掉。
     * 通过 `ADD FOLLOWER` 命令，添加一个新的 FOLLOWER FE，假设在 hostA 上。
     * 在 hostA 上启动一个全新的 FE，通过 --helper 的方式加入集群。
     * 启动成功后，通过 `show frontends;` 语句，你应该能看到两个 FE，一个是之前的 OBSERVER，一个是新添加的 FOLLOWER，并且 OBSERVER 是 master。
