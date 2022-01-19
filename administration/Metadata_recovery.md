@@ -58,7 +58,7 @@ FE 有可能因为某些原因出现无法启动 bdbje、FE 之间无法同步�
     * 将 fe.conf 中的 `metadata_failure_recovery=true` 配置项删除，或者设置为 false，然后重启这个 FE(重要)。
     * 跳转至第六步骤继续执行恢复操作。
 
-5. 以下操作在2选出来的元数据最新的FE节点执行(恢复节点角色为 OBSERVER )：
+5. 以下操作在选出来的元数据最新的FE节点执行(恢复节点角色为 OBSERVER )：
 
     * 如果该节点是一个 OBSERVER，先将 meta_dir/image/ROLE 文件中的 `role=OBSERVER` 改为 `role=FOLLOWER`。
     * 在 fe.conf 中添加配置：`metadata_failure_recovery=true`。
