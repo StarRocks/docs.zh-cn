@@ -40,6 +40,7 @@ AS SELECT <query>
 ## example
 
 1. 创建一个新表 new_table，注意，new_table 和 t2 的表结构可能不会一样。
+因为这个操作会将原表的字符串类型或者转换成varchar(1048576)，浮点类型转换为DECIMAL(38,9)。
 
     ```sql
     create table new_table as select * from t2;
