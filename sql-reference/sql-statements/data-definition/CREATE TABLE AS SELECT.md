@@ -35,6 +35,8 @@ AS SELECT <query>
 
 5. PROPERTIES: 可选项，可以指定建表的附带的属性。
 
+6. 排序键是自动生成的，生成的表只会是duplicate key模型的表。
+
 ## example
 
 1. 创建一个新表 new_table，注意，new_table 和 t2 的表结构可能不会一样。
