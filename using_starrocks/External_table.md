@@ -526,6 +526,6 @@ PROPERTIES (
 
 创建Iceberg外表后，无需导入数据，执行如下命令，即可查询Iceberg的数据。
 
-~~~Apache
+~~~sql
 select count(*) from iceberg_tbl;
 ~~~
