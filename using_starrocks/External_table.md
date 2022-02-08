@@ -459,11 +459,11 @@ DROP RESOURCE "iceberg0";
 
 执行如下命令，在StarRocks中创建并进入名为`iceberg_test`的Iceberg数据库。
 
-```sql
+~~~sql
 CREATE DATABASE iceberg_test; 
 
 USE iceberg_test; 
-```
+~~~
 
 > 库名无需与Iceberg的实际库名保持一致。
 
@@ -471,7 +471,7 @@ USE iceberg_test;
 
 执行如下命令，在Iceberg数据库`iceberg_test`中，创建一张名为`iceberg_tbl`的Iceberg外表。
 
-```sql
+~~~sql
 CREATE EXTERNAL TABLE `iceberg_tbl` ( 
 
 `id` bigint NULL, 
@@ -489,9 +489,9 @@ PROPERTIES (
 "table" = "iceberg_table" 
 
 ); 
-```
+~~~
 
-- 相关参数说明，请参见下表：
+* 相关参数说明，请参见下表：
 
 | **参数**     | **说明**                       |
 | ------------ | ------------------------------ |
@@ -500,9 +500,9 @@ PROPERTIES (
 | **database** | Iceberg中的数据库名称。        |
 | **table**    | Iceberg中的数据表名称。        |
 
-- 表名无需与Iceberg的实际表名保持一致。
-- 列名需要与Iceberg的实际列名保持一致，列的顺序无需保持一致。
-- 您可以按照业务需求选择Iceberg表中的全部或部分列。支持的数据类型以及与StarRocks对应关系，请参见下表。 
+* 表名无需与Iceberg的实际表名保持一致。
+* 列名需要与Iceberg的实际列名保持一致，列的顺序无需保持一致。
+* 您可以按照业务需求选择Iceberg表中的全部或部分列。支持的数据类型以及与StarRocks对应关系，请参见下表。 
 
 | Apache Iceberg中列的数据类型 | StarRocks中列的数据类型 |
 | ---------------------------- | ----------------------- |
@@ -526,8 +526,6 @@ PROPERTIES (
 
 创建Iceberg外表后，无需导入数据，执行如下命令，即可查询Iceberg的数据。
 
-```Apache
+~~~Apache
 select count(*) from iceberg_tbl;
-```
-
-
+~~~
