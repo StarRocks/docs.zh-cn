@@ -1,0 +1,49 @@
+<table>
+<tgroup cols="2">
+<colspec colname="COLSPEC0" colwidth="121*"/>
+<colspec colname="COLSPEC1" colwidth="76*"/>
+<thead>
+<row>
+<entry colname="COLSPEC0" valign="top">Animal</entry>
+<entry colname="COLSPEC1" valign="top">Gestation</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>Elephant (African and Asian)</entry>
+<entry>19-22 months</entry>
+</row>
+<row>
+<entry>Giraffe</entry>
+<entry>15 months</entry>
+</row>
+<row>
+<entry>Rhinoceros</entry>
+<entry>14-16 months</entry>
+</row>
+<row>
+<entry>Hippopotamus</entry>
+<entry>7 1/2 months</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<steps>
+   <step>
+    <cmd>In a text editor, create a new file.</cmd>
+   </step>
+   <step>
+    <cmd>Enter the first query statement.</cmd>
+   </step>
+  </steps>
+
+  <substeps>
+  
+<substep><cmd>Hold pencil in a steady, level position.</cmd></substep>
+<substep><cmd>Turn handle until resistance diminishes.</cmd>
+<info>Note: initially, it might be somewhat difficult to turn the handle if 
+pencil has never been sharpened before.</info></substep>
+<substep><cmd>To determine if pencil is sharp, remove it from the sharpener 
+and inspect the tip.</cmd></substep>
+</substeps>
