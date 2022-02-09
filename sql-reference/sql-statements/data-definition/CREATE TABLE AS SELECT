@@ -30,7 +30,7 @@ AS SELECT <query>
 
 | 参数             | 说明                                                         |
 | ---------------- | ------------------------------------------------------------ |
-| column_name      | 列名。 您无需传入列类型，StarRocks 会自动选择合适的类型，并转换 FLOAT 为 DECIMAL(38,9)，STRING 为 VARCHAR(1048576)。 |
+| column_name      | 列名。您无需传入列类型，StarRocks 会自动选择合适的类型，并将 FLOAT 或 DOUBLE 转换为 DECIMAL(38,9)，CHAR、VARCHAR、STRING 转换为 VARCHAR(1048576)。 |
 | COMMENT          | 表注释。                                                     |
 | partition_desc   | 分区方式。更多说明，请参见 [StarRocks 数据分布](https://docs.starrocks.com/zh-cn/main/table_design/Data_distribution#starrocks数据分布)。如果不填写，则默认为无分区。 |
 | distribution_des | 分桶方式。更多说明，请参见 [StarRocks 数据分布](https://docs.starrocks.com/zh-cn/main/table_design/Data_distribution#starrocks数据分布)。如果不填写，则默认分桶键为CBO统计信息中最高基数的列，分桶数量为10。如果CBO中没有相关统计信息，则默认分桶键为第一列。 |
@@ -57,7 +57,7 @@ AS SELECT <query>
 create table order_new as select * from order;
 ```
 
-示例二：基于原表 order 的列 k1， k2，k3，创建一个新表 order_new，并指定列名为 a，b，c。
+示例二：基于原表 order 的列 k1、k2 和 k3，创建一个新表 order_new，并指定列名为 a、b 和 c。
 
 > 指定的列数需要与 AS SELECT *<query>* 的列数保持一致。
 
@@ -65,7 +65,7 @@ create table order_new as select * from order;
 create table order_new a, b, c as select k1, k2, k3 from order;
 ```
 
-示例三：基于三张原表 lineorder, customer, supplier和part，创建一个新表 lineorder_flat，并且调整分区和分桶方式。
+示例三：基于三张原表 lineorder、customer、supplier 和 part，创建一个新表 lineorder_flat，并且调整分区和分桶方式。
 
 ```SQL
 CREATE TABLE lineorder_flat
