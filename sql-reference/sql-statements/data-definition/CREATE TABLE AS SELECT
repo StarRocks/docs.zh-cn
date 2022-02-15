@@ -38,9 +38,9 @@ AS SELECT <query>
 
 ### 查询部分
 
-如果 AS SELECT *<query>* 直接指定具体列，如 `as select a, b, c from table_a;` ，则新建表的列名为a，b， c 。
+支持`AS SELECT <query>` 直接指定具体列，比如 `as select a, b, c from table_a;` ，则新建表的列名为a，b， c 。
 
-如果 AS SELECT *<query>* 使用了表达式，如 `select a+1 as x, b+2 as y, c*c as z from table_a;`，则新建表的列名为表达式中as指定的别名，即x，y，z。
+支持`AS SELECT <query>` 使用表达式，并且建议您为新表的列设置具有业务意义的别名，便于后续识别，比如`select a+1 as x, b+2 as y, c*c as z from table_a;`，设置新列名为x，y，z。
 
 ## Usage Notes
 
@@ -57,7 +57,7 @@ AS SELECT <query>
 create table order_new as select * from order;
 ```
 
-示例二：基于原表 order 的列 k1、k2 和 k3，创建一个新表 order_new，并指定列名为 a、b 和 c。
+示例二：根据原表 order 的列 k1、k2 和 k3，创建一个新表 order_new，并指定列名为 a、b 和 c。
 
 > 指定的列数需要与 AS SELECT *<query>* 的列数保持一致。
 
@@ -65,7 +65,31 @@ create table order_new as select * from order;
 create table order_new a, b, c as select k1, k2, k3 from order;
 ```
 
-示例三：基于三张原表 lineorder、customer、supplier 和 part，创建一个新表 lineorder_flat，并且调整分区和分桶方式。
+```SQL
+create table order_new as select k1 as a, k2 as b, k3 as c from order;
+```
+
+示例三：AS SELECT *<query>*使用表达式，根据表达式结果，创建一个新表，并重新指定列名。
+
+> 建议您为新表的列名设置具有业务意义的别名，便于后续识别。
+
+```SQL
+--根据原表 employee 的列 salary 计算出最大值，并根据结果，创建一个新表 employee_new 并指定新列名为 salary_new 。
+
+create table employee_new as select max(salary) as salary_max from employee;
+
+--查询新表 employee_new 。
+
+select * from employee_new;
+
++------------+
+| salary_max |
++------------+
+|   10000    |
++------------+
+```
+
+示例四：根据三张原表 lineorder、customer、supplier 和 part，创建一个新表 lineorder_flat，并且调整分区和分桶方式。
 
 ```SQL
 CREATE TABLE lineorder_flat
