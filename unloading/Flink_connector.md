@@ -2,13 +2,13 @@
 
 本文介绍Flink如何通过 flink-connector-starrocks 的 source 功能读取 StarRocks 数据。
 
-> 如果 Flink 需要通过 flink-connector-starrocks 的 sink 功能，将数据写入至StarRocks，请参见数据导入章节的 [Flink connector](~~https://docs.starrocks.com/zh-cn/main/loading/Flink-connector-starrocks~~)。
+> 如果 Flink 需要通过 flink-connector-starrocks 的 sink 功能，将数据写入至 StarRocks，请参见数据导入章节的 [Flink connector](~~https://docs.starrocks.com/zh-cn/main/loading/Flink-connector-starrocks~~)。
 
 ## 功能简介
 
-Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks 的数据。相较于Flink官方提供的Flink JDBC connector，flink-connector-starrocks 的source功能具备并行读取 StarRocks 的BE节点数据的能力，大大提高了数据读取效率。以下是两种连接器的实现方案对比。
+Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks 的数据。相较于 Flink 官方提供的 Flink JDBC connector，flink-connector-starrocks 的 source 功能具备并行读取 StarRocks 的BE节点数据的能力，大大提高了数据读取效率。以下是两种连接器的实现方案对比。
 
-flink-connector-starrocks的实现方案：Flink 先从 FE 节点获取查询计划（Query Plan），Flink 再将获取到的查询计划作为参数，下发至 BE 节点，然后获取 BE 节点返回的数据。
+flink-connector-starrocks 的实现方案：Flink 先从 FE 节点获取查询计划（Query Plan），Flink 再将获取到的查询计划作为参数，下发至 BE 节点，然后获取 BE 节点返回的数据。
 
 ![img](https://starrocks.feishu.cn/space/api/box/stream/download/asynccode/?code=NTI5NmQ0YmE3ZjQzYTBhMmQzMTBkNGM2MTk1ZDYzNzZfdG93bFJMMm9aYzdJM3Q1TXR6ZTJKVG5TbzRpbDFqZGNfVG9rZW46Ym94Y25ScGZWU3pqbUNHbDR5R3JDQmxoY3dKXzE2NDUxNTMzMDY6MTY0NTE1NjkwNl9WNA)
 
@@ -34,14 +34,14 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 ./build-thrift.bat
 ```
 
-1. 将源码编译成 JAR 包，并将 JAR 包放在 Flink 的 lib 目录中。
-2. 重启 Flink。
+3. 将源码编译成 JAR 包，并将 JAR 包放在 Flink 的 lib 目录中。
+4. 重启 Flink。
 
 ### 步骤二：调用 flink-connector-starrocks ，读取 StarRocks 数据
 
 > flink-connector-starrocks 的 source 功能暂时无法保证exactly-once语义。如果读取任务失败，您需要重复本步骤，再次创建读取任务。
 
-- 如您使用 Flink SQL 客户端（推荐），则需要参考如下命令，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见xxx。
+- 如您使用 Flink SQL 客户端（推荐），则需要参考如下命令，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见[参数说明](~~https://docs.starrocks.com/zh-cn/main/unloading/Flink_connector#参数说明~~)。
 
 ```SQL
 -- 根据 StarRocks 的表，创建表和配置属性（包括 flink-connector-starrocks 和库表的信息）。
@@ -99,9 +99,9 @@ CREATE TABLE flink_test (
 select date_1, smallint_1 from flink_test where char_1 <> 'A' and int_1 = -126;
 ```
 
-- > 仅支持使用部分 SQL 语句读取 StarRocks 数据，如`select ... from table_name where ...`。暂不支持除 COUNT 外的聚合函数。
+> - 仅支持使用部分 SQL 语句读取 StarRocks 数据，如`select ... from table_name where ...`。暂不支持除 COUNT 外的聚合函数。
 
-- > 支持谓词下推。使用 SQL 语句时，支持自动进行谓词下推，比如上述例子中的过滤条件 `char_1 <> 'A' and int_1 = -126`，会直接发送到 BE 节点的存储层进行过滤，不需要额外配置。
+  - 支持谓词下推。使用 SQL 语句时，支持自动进行谓词下推，比如上述例子中的过滤条件 `char_1 <> 'A' and int_1 = -126`，会直接发送到 BE 节点的存储层进行过滤，不需要额外配置。
 
 - 如您使用 Flink DataStream ，则需要先添加依赖，然后调用 flink-connector-starrocks，读取 StarRocks 的数据。
 
@@ -137,7 +137,7 @@ select date_1, smallint_1 from flink_test where char_1 <> 'A' and int_1 = -126;
 </dependency>
 ```
 
-1. 参考如下示例代码，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见xxx。
+2. 参考如下示例代码，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见[参数说明](~~https://docs.starrocks.com/zh-cn/main/unloading/Flink_connector#参数说明~~)。
 
 ```Java
 StarRocksSourceOptions options = StarRocksSourceOptions.builder()
