@@ -39,7 +39,7 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 
 ### 步骤二：调用 flink-connector-starrocks ，读取 StarRocks 数据
 
-> flink-connector-starrocks 的 source 功能暂时无法保证exactly-once语义。如果读取任务失败，您需要重复本步骤，再次创建读取任务。 
+> flink-connector-starrocks 的 source 功能暂时无法保证exactly-once语义。如果读取任务失败，您需要重复本步骤，再次创建读取任务。
 
 - 如您使用 Flink SQL 客户端（推荐），则需要参考如下命令，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见xxx。
 
@@ -102,8 +102,6 @@ select date_1, smallint_1 from flink_test where char_1 <> 'A' and int_1 = -126;
 - > 仅支持使用部分 SQL 语句读取 StarRocks 数据，如`select ... from table_name where ...`。暂不支持除 COUNT 外的聚合函数。
 
 - > 支持谓词下推。使用 SQL 语句时，支持自动进行谓词下推，比如上述例子中的过滤条件 `char_1 <> 'A' and int_1 = -126`，会直接发送到 BE 节点的存储层进行过滤，不需要额外配置。
-
-
 
 - 如您使用 Flink DataStream ，则需要先添加依赖，然后调用 flink-connector-starrocks，读取 StarRocks 的数据。
 
@@ -217,7 +215,7 @@ env.execute("StarRocks flink source");
 | scan.connect.timeout-ms     | 否       | String   | flink-connector-starrocks 连接 StarRocks 的时间上限，单位为毫秒，默认值为1000。超过该时间上限，则将报错。 |
 | scan.params.keep-alive-min  | 否       | String   | Max keep alive time min单位为分钟，默认值为10。              |
 | scan.params.query-timeout-s | 否       | String   | 单个查询的最长响应时间，单位为秒，默认值为600。<br>取值需要大于 StarRocks 内部运行查询时所耗时间。 |
-| scan.params.mem-limit-byte  | 否       | String   | BE 节点中单个查询的内存上限，单位为字节，默认值为1024 * 1024 * 1024（1G）。 |
+| scan.params.mem-limit-byte  | 否       | String   | BE 节点中单个查询的内存上限，单位为字节，默认值为1024*1024*1024（1G）。 |
 | scan.max-retries            | 否       | String   | 查询失败时的最大重试次数，默认值为1。超过该数量上限，则将报错。 |
 
 ## Flink 与 StarRocks 的数据类型映射关系
