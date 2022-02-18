@@ -19,6 +19,7 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 ## 操作步骤
 
 ### 步骤一：准备flink-connector-starrocks
+
 1. 下载源码 [flink-connector-starrocks](https://github.com/StarRocks/flink-connector-starrocks/tree/dev)。
 2. 根据 Flink 的版本，选择对应的分支。
 3. 运行如下脚本，生成与 BE 节点 Thrift 接口交互的 Java class 文件，用于 flink-connector-starrocks 直接调用 BE 节点 Thrift 接口。
@@ -39,7 +40,7 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 
 ### 步骤二：调用 flink-connector-starrocks ，读取 StarRocks 数据
 
-> flink-connector-starrocks 的 source 功能暂时无法保证exactly-once语义。如果读取任务失败，您需要重复本步骤，再次创建读取任务。
+> flink-connector-starrocks 的 source 功能暂时无法保证 exactly-once 语义。如果读取任务失败，您需要重复本步骤，再次创建读取任务。
 
 - 如您使用 Flink SQL 客户端（推荐），则需要参考如下命令，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见[参数说明](~~https://docs.starrocks.com/zh-cn/main/unloading/Flink_connector#参数说明~~)。
 
@@ -101,7 +102,7 @@ select date_1, smallint_1 from flink_test where char_1 <> 'A' and int_1 = -126;
 
 > - 仅支持使用部分 SQL 语句读取 StarRocks 数据，如`select ... from table_name where ...`。暂不支持除 COUNT 外的聚合函数。
 
-  - 支持谓词下推。使用 SQL 语句时，支持自动进行谓词下推，比如上述例子中的过滤条件 `char_1 <> 'A' and int_1 = -126`，会直接发送到 BE 节点的存储层进行过滤，不需要额外配置。
+> - 支持谓词下推。使用 SQL 语句时，支持自动进行谓词下推，比如上述例子中的过滤条件 `char_1 <> 'A' and int_1 = -126`，会直接发送到 BE 节点的存储层进行过滤，不需要额外配置。
 
 - 如您使用 Flink DataStream ，则需要先添加依赖，然后调用 flink-connector-starrocks，读取 StarRocks 的数据。
 
