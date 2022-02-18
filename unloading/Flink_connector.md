@@ -42,59 +42,59 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 - 如您使用 Flink SQL 客户端（推荐），则需要参考如下命令，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见[参数说明](~~https://docs.starrocks.com/zh-cn/main/unloading/Flink_connector#参数说明~~)。
 
    ```SQL
--- 根据 StarRocks 的表，创建表和配置属性（包括 flink-connector-starrocks 和库表的信息）。
+   -- 根据 StarRocks 的表，创建表和配置属性（包括 flink-connector-starrocks 和库表的信息）。
 
-CREATE TABLE flink_test (
+   CREATE TABLE flink_test (
 
-    date_1 DATE,
+       date_1 DATE,
 
-    datetime_1 TIMESTAMP(6),
+       datetime_1 TIMESTAMP(6),
 
-    char_1 CHAR(20),
+       char_1 CHAR(20),
 
-    varchar_1 VARCHAR,
+       varchar_1 VARCHAR,
 
-    boolean_1 BOOLEAN,
+       boolean_1 BOOLEAN,
 
-    tinyint_1 TINYINT,
+       tinyint_1 TINYINT,
 
-    smallint_1 SMALLINT,
+       smallint_1 SMALLINT,
 
-    int_1 INT,
+       int_1 INT,
 
-    bigint_1 BIGINT,
+       bigint_1 BIGINT,
 
-    largeint_1 STRING,
+       largeint_1 STRING,
 
-    float_1 FLOAT,
+       float_1 FLOAT,
 
-    double_1 DOUBLE,FLI
+       double_1 DOUBLE,FLI
 
-    decimal_1 DECIMAL(27,9)
+       decimal_1 DECIMAL(27,9)
 
-) WITH (
+      ) WITH (
 
-   'connector'='starrocks',
+      'connector'='starrocks',
 
-   'scan-url'='192.168.xxx.xxx:8030,192.168.xxx.xxx:8030',
+      'scan-url'='192.168.xxx.xxx:8030,192.168.xxx.xxx:8030',
 
-   'jdbc-url'='jdbc:mysql://192.168.xxx.xxx:9030',
+      'jdbc-url'='jdbc:mysql://192.168.xxx.xxx:9030',
 
-   'username'='root',
+      'username'='root',
 
-   'password'='xxxxxx',
+      'password'='xxxxxx',
 
-   'database-name'='flink_test',
+      'database-name'='flink_test',
 
-   'table-name'='flink_test'
+      'table-name'='flink_test'
 
-);
+   );
 
 
 
--- 使用 SQL 语句读取 StarRocks 数据。
+   -- 使用 SQL 语句读取 StarRocks 数据。
 
-select date_1, smallint_1 from flink_test where char_1 <> 'A' and int_1 = -126;
+   select date_1, smallint_1 from flink_test where char_1 <> 'A' and int_1 = -126;
    ```
 
 > - 仅支持使用部分 SQL 语句读取 StarRocks 数据，如`select ... from table_name where ...`。暂不支持除 COUNT 外的聚合函数。
