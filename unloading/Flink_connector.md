@@ -151,7 +151,7 @@ Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks �
 
 | StarRocks  | Flink     |
 | ---------- | --------- |
-| NULL_TYPE  | NULL      |
+| NULL       | NULL      |
 | BOOLEAN    | BOOLEAN   |
 | TINYINT    | TINYINT   |
 | SMALLINT   | SMALLINT  |
