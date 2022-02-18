@@ -2,13 +2,13 @@
 
 本文介绍Flink如何通过 flink-connector-starrocks 的 source 功能读取 StarRocks 数据。
 
-> 如果 Flink 需要通过 flink-connector-starrocks 的 sink 功能，将数据写入至StarRocks，请参见数据导入章节的 [Flink connector](~~https://docs.starrocks.com/zh-cn/main/loading/Flink-connector-starrocks~~)。
+> 如果 Flink 需要通过 flink-connector-starrocks 的 sink 功能，将数据写入至 StarRocks，请参见数据导入章节的 [Flink connector](~~https://docs.starrocks.com/zh-cn/main/loading/Flink-connector-starrocks~~)。
 
 ## 功能简介
 
-Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks 的数据。相较于Flink官方提供的Flink JDBC connector，flink-connector-starrocks 的source功能具备并行读取 StarRocks 的BE节点数据的能力，大大提高了数据读取效率。以下是两种连接器的实现方案对比。
+Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks 的数据。相较于 Flink 官方提供的 Flink JDBC connector，flink-connector-starrocks 的 source 功能具备并行读取 StarRocks 的BE节点数据的能力，大大提高了数据读取效率。以下是两种连接器的实现方案对比。
 
-flink-connector-starrocks的实现方案：Flink 先从 FE 节点获取查询计划（Query Plan），Flink 再将获取到的查询计划作为参数，下发至 BE 节点，然后获取 BE 节点返回的数据。
+flink-connector-starrocks 的实现方案：Flink 先从 FE 节点获取查询计划（Query Plan），Flink 再将获取到的查询计划作为参数，下发至 BE 节点，然后获取 BE 节点返回的数据。
 
 ![img](https://starrocks.feishu.cn/space/api/box/stream/download/asynccode/?code=NTI5NmQ0YmE3ZjQzYTBhMmQzMTBkNGM2MTk1ZDYzNzZfdG93bFJMMm9aYzdJM3Q1TXR6ZTJKVG5TbzRpbDFqZGNfVG9rZW46Ym94Y25ScGZWU3pqbUNHbDR5R3JDQmxoY3dKXzE2NDUxNTMzMDY6MTY0NTE1NjkwNl9WNA)
 
@@ -24,184 +24,179 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 2. 根据 Flink 的版本，选择对应的分支。
 3. 运行如下脚本，生成与 BE 节点 Thrift 接口交互的 Java class 文件，用于 flink-connector-starrocks 直接调用 BE 节点 Thrift 接口。
 
-```SQL
--- 如使用Linux操作系统，则需要执行如下命令。
+   ```SQL
+   -- 如使用Linux操作系统，则需要执行如下命令。
+   ./build-thrift.sh   
+   -- 如使用Windows操作系统，则需要执行如下命令。
+   ./build-thrift.bat
+   ```
 
-./build-thrift.sh   
+4. 将源码编译成 JAR 包，并将 JAR 包放在 Flink 的 lib 目录中。
 
--- 如使用Windows操作系统，则需要执行如下命令。
+5. 重启 Flink。
 
-./build-thrift.bat
-```
+### 步骤二：调用 flink-connector-starrocks ，读取 StarRocks 数据
 
-1. 将源码编译成 JAR 包，并将 JAR 包放在 Flink 的 lib 目录中。
-2. 重启 Flink。
+> flink-connector-starrocks 的 source 功能暂时无法保证 exactly-once 语义。如果读取任务失败，您需要重复本步骤，再次创建读取任务。
 
-### 步骤二：调用 flink-connector-starrocks ，读取 StarRocks 数据。
+- 如您使用 Flink SQL 客户端（推荐），则需要参考如下命令，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见[参数说明](~~https://docs.starrocks.com/zh-cn/main/unloading/Flink_connector#参数说明~~)。
 
-> flink-connector-starrocks 的 source 功能暂时无法保证exactly-once语义。如果读取任务失败，您需要重复本步骤，再次创建读取任务。 
+   ```SQL
+   -- 根据 StarRocks 的表，创建表和配置属性（包括 flink-connector-starrocks 和库表的信息）。
 
-- 如您使用 Flink SQL 客户端（推荐），则需要参考如下命令，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见xxx。
+   CREATE TABLE flink_test (
 
-```SQL
--- 根据 StarRocks 的表，创建表和配置属性（包括 flink-connector-starrocks 和库表的信息）。
+       date_1 DATE,
 
-CREATE TABLE flink_test (
+       datetime_1 TIMESTAMP(6),
 
-    date_1 DATE,
+       char_1 CHAR(20),
 
-    datetime_1 TIMESTAMP(6),
+       varchar_1 VARCHAR,
 
-    char_1 CHAR(20),
+       boolean_1 BOOLEAN,
 
-    varchar_1 VARCHAR,
+       tinyint_1 TINYINT,
 
-    boolean_1 BOOLEAN,
+       smallint_1 SMALLINT,
 
-    tinyint_1 TINYINT,
+       int_1 INT,
 
-    smallint_1 SMALLINT,
+       bigint_1 BIGINT,
 
-    int_1 INT,
+       largeint_1 STRING,
 
-    bigint_1 BIGINT,
+       float_1 FLOAT,
 
-    largeint_1 STRING,
+       double_1 DOUBLE,FLI
 
-    float_1 FLOAT,
+       decimal_1 DECIMAL(27,9)
 
-    double_1 DOUBLE,FLI
+      ) WITH (
 
-    decimal_1 DECIMAL(27,9)
+      'connector'='starrocks',
 
-) WITH (
+      'scan-url'='192.168.xxx.xxx:8030,192.168.xxx.xxx:8030',
 
-   'connector'='starrocks',
+      'jdbc-url'='jdbc:mysql://192.168.xxx.xxx:9030',
 
-   'scan-url'='192.168.xxx.xxx:8030,192.168.xxx.xxx:8030',
+      'username'='root',
 
-   'jdbc-url'='jdbc:mysql://192.168.xxx.xxx:9030',
+      'password'='xxxxxx',
 
-   'username'='root',
+      'database-name'='flink_test',
 
-   'password'='xxxxxx',
+      'table-name'='flink_test'
 
-   'database-name'='flink_test',
-
-   'table-name'='flink_test'
-
-);
+   );
 
 
 
--- 使用 SQL 语句读取 StarRocks 数据。
+   -- 使用 SQL 语句读取 StarRocks 数据。
 
-select date_1, smallint_1 from flink_test where char_1 <> 'A' and int_1 = -126;
-```
+   select date_1, smallint_1 from flink_test where char_1 <> 'A' and int_1 = -126;
+   ```
 
-- > 仅支持使用部分 SQL 语句读取 StarRocks 数据，如`select ... from table_name where ...`。暂不支持除 COUNT 外的聚合函数。
-
-- > 支持谓词下推。使用 SQL 语句时，支持自动进行谓词下推，比如上述例子中的过滤条件 `char_1 <> 'A' and int_1 = -126`，会直接发送到 BE 节点的存储层进行过滤，不需要额外配置。
-
-
+   > - 仅支持使用部分 SQL 语句读取 StarRocks 数据，如`select ... from table_name where ...`。暂不支持除 COUNT 外的聚合函数。
+   > - 支持谓词下推。使用 SQL 语句时，支持自动进行谓词下推，比如上述例子中的过滤条件 `char_1 <> 'A' and int_1 = -126`，会直接发送到 BE 节点的存储层进行过滤，不需要额外配置。
 
 - 如您使用 Flink DataStream ，则需要先添加依赖，然后调用 flink-connector-starrocks，读取 StarRocks 的数据。
 
 1. 在 pom.xml 文件中添加如下依赖。
 
-> x.x.x需要替换为 flink-connector-starrocks 的最新版本号，您可以单击[版本信息](https://search.maven.org/search?q=g:com.starrocks)获取。
+   > x.x.x需要替换为 flink-connector-starrocks 的最新版本号，您可以单击[版本信息](https://search.maven.org/search?q=g:com.starrocks)获取。
 
-```SQL
-<dependency>    
+   ```SQL
+   <dependency>    
 
-    <groupId>com.starrocks</groupId>
+       <groupId>com.starrocks</groupId>
 
-    <artifactId>flink-connector-starrocks</artifactId>
+       <artifactId>flink-connector-starrocks</artifactId>
 
-    <!-- for flink-1.11 -->
+       <!-- for flink-1.11 -->
 
-    <version>x.x.x_flink-1.11_2.11</version>
+       <version>x.x.x_flink-1.11_2.11</version>
 
-    <version>x.x.x_flink-1.11_2.12</version>
+       <version>x.x.x_flink-1.11_2.12</version>
 
-    <!-- for flink-1.12 -->
+       <!-- for flink-1.12 -->
 
-    <version>x.x.x_flink-1.12_2.11</version>
+       <version>x.x.x_flink-1.12_2.11</version>
 
-    <version>x.x.x_flink-1.12_2.12</version>
+       <version>x.x.x_flink-1.12_2.12</version>
 
-    <!-- for flink-1.13 -->
+       <!-- for flink-1.13 -->
 
-    <version>x.x.x_flink-1.13_2.11</version>
+       <version>x.x.x_flink-1.13_2.11</version>
 
-    <version>x.x.x_flink-1.13_2.12</version>
+       <version>x.x.x_flink-1.13_2.12</version>
 
-</dependency>
-```
+   </dependency>
+   ```
 
-1. 参考如下示例代码，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见xxx。
+2. 参考如下示例代码，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见[参数说明](~~https://docs.starrocks.com/zh-cn/main/unloading/Flink_connector#参数说明~~)。
 
-```Java
-StarRocksSourceOptions options = StarRocksSourceOptions.builder()
+   ```Java
+   StarRocksSourceOptions options = StarRocksSourceOptions.builder()
 
-        .withProperty("scan-url", "192.168.xxx.xxx:8030,192.168.xxx.xxx:8030")
+           .withProperty("scan-url", "192.168.xxx.xxx:8030,192.168.xxx.xxx:8030")
 
-        .withProperty("jdbc-url", "jdbc:mysql://192.168.xxx.xxx:9030")
+           .withProperty("jdbc-url", "jdbc:mysql://192.168.xxx.xxx:9030")
 
-        .withProperty("username", "root")
+           .withProperty("username", "root")
 
-        .withProperty("password", "xxxxxx")
+           .withProperty("password", "xxxxxx")
 
-        .withProperty("table-name", "flink_test")
+           .withProperty("table-name", "flink_test")
 
-        .withProperty("database-name", "test")
+           .withProperty("database-name", "test")
 
-        .withProperty("cloumns", "char_1, date_1")        
+           .withProperty("cloumns", "char_1, date_1")        
 
-        .withProperty("filters", "int_1 = 10")
+           .withProperty("filters", "int_1 = 10")
 
-        .build();
-
-
-
-TableSchema tableSchema = TableSchema.builder()
-
-        .field("date_1", DataTypes.DATE())
-
-          .field("datetime_1", DataTypes.TIMESTAMP(6))
-
-          .field("char_1", DataTypes.CHAR(20))
-
-          .field("varchar_1", DataTypes.STRING())
-
-          .field("boolean_1", DataTypes.BOOLEAN())
-
-          .field("tinyint_1", DataTypes.TINYINT())
-
-          .field("smallint_1", DataTypes.SMALLINT())
-
-          .field("int_1", DataTypes.INT())
-
-          .field("bigint_1", DataTypes.BIGINT())
-
-          .field("largeint_1", DataTypes.STRING())
-
-          .field("float_1", DataTypes.FLOAT())
-
-          .field("double_1", DataTypes.DOUBLE())
-
-          .field("decimal_1", DataTypes.DECIMAL(27, 9))
-
-          .build();
+           .build();
 
 
 
-StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+   TableSchema tableSchema = TableSchema.builder()
 
-env.addSource(StarRocksSource.source(options, tableSchema)).setParallelism(5).print();
+           .field("date_1", DataTypes.DATE())
 
-env.execute("StarRocks flink source");
-```
+           .field("datetime_1", DataTypes.TIMESTAMP(6))
+
+           .field("char_1", DataTypes.CHAR(20))
+
+           .field("varchar_1", DataTypes.STRING())
+
+           .field("boolean_1", DataTypes.BOOLEAN())
+
+           .field("tinyint_1", DataTypes.TINYINT())
+
+           .field("smallint_1", DataTypes.SMALLINT())
+
+           .field("int_1", DataTypes.INT())
+
+           .field("bigint_1", DataTypes.BIGINT())
+
+           .field("largeint_1", DataTypes.STRING())
+
+           .field("float_1", DataTypes.FLOAT())
+
+           .field("double_1", DataTypes.DOUBLE())
+
+           .field("decimal_1", DataTypes.DECIMAL(27, 9))
+
+           .build();
+
+
+
+   StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
+   env.addSource(StarRocksSource.source(options, tableSchema)).setParallelism(5).print();
+
+   env.execute("StarRocks flink source");
+   ```
 
 ## 参数说明
 
@@ -217,7 +212,7 @@ env.execute("StarRocks flink source");
 | scan.connect.timeout-ms     | 否       | String   | flink-connector-starrocks 连接 StarRocks 的时间上限，单位为毫秒，默认值为1000。超过该时间上限，则将报错。 |
 | scan.params.keep-alive-min  | 否       | String   | Max keep alive time min单位为分钟，默认值为10。              |
 | scan.params.query-timeout-s | 否       | String   | 单个查询的最长响应时间，单位为秒，默认值为600。<br>取值需要大于 StarRocks 内部运行查询时所耗时间。 |
-| scan.params.mem-limit-byte  | 否       | String   | BE 节点中单个查询的内存上限，单位为字节，默认值为1024 * 1024 * 1024（1G）。 |
+| scan.params.mem-limit-byte  | 否       | String   | BE 节点中单个查询的内存上限，单位为字节，默认值为1024*1024*1024（1G）。 |
 | scan.max-retries            | 否       | String   | 查询失败时的最大重试次数，默认值为1。超过该数量上限，则将报错。 |
 
 ## Flink 与 StarRocks 的数据类型映射关系
