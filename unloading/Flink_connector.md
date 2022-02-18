@@ -41,7 +41,7 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 
 - 如您使用 Flink SQL 客户端（推荐），则需要参考如下命令，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见[参数说明](~~https://docs.starrocks.com/zh-cn/main/unloading/Flink_connector#参数说明~~)。
 
-```SQL
+   ```SQL
 -- 根据 StarRocks 的表，创建表和配置属性（包括 flink-connector-starrocks 和库表的信息）。
 
 CREATE TABLE flink_test (
@@ -95,7 +95,7 @@ CREATE TABLE flink_test (
 -- 使用 SQL 语句读取 StarRocks 数据。
 
 select date_1, smallint_1 from flink_test where char_1 <> 'A' and int_1 = -126;
-```
+   ```
 
 > - 仅支持使用部分 SQL 语句读取 StarRocks 数据，如`select ... from table_name where ...`。暂不支持除 COUNT 外的聚合函数。
 > - 支持谓词下推。使用 SQL 语句时，支持自动进行谓词下推，比如上述例子中的过滤条件 `char_1 <> 'A' and int_1 = -126`，会直接发送到 BE 节点的存储层进行过滤，不需要额外配置。
@@ -106,7 +106,7 @@ select date_1, smallint_1 from flink_test where char_1 <> 'A' and int_1 = -126;
 
 > x.x.x需要替换为 flink-connector-starrocks 的最新版本号，您可以单击[版本信息](https://search.maven.org/search?q=g:com.starrocks)获取。
 
-```SQL
+   ```SQL
 <dependency>    
 
     <groupId>com.starrocks</groupId>
@@ -132,11 +132,11 @@ select date_1, smallint_1 from flink_test where char_1 <> 'A' and int_1 = -126;
     <version>x.x.x_flink-1.13_2.12</version>
 
 </dependency>
-```
+   ```
 
 2. 参考如下示例代码，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见[参数说明](~~https://docs.starrocks.com/zh-cn/main/unloading/Flink_connector#参数说明~~)。
 
-```Java
+   ```Java
 StarRocksSourceOptions options = StarRocksSourceOptions.builder()
 
         .withProperty("scan-url", "192.168.xxx.xxx:8030,192.168.xxx.xxx:8030")
@@ -196,7 +196,7 @@ StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironm
 env.addSource(StarRocksSource.source(options, tableSchema)).setParallelism(5).print();
 
 env.execute("StarRocks flink source");
-```
+   ```
 
 ## 参数说明
 
