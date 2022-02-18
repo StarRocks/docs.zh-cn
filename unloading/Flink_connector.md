@@ -101,8 +101,7 @@ select date_1, smallint_1 from flink_test where char_1 <> 'A' and int_1 = -126;
 ```
 
 > - 仅支持使用部分 SQL 语句读取 StarRocks 数据，如`select ... from table_name where ...`。暂不支持除 COUNT 外的聚合函数。
-
-> - 支持谓词下推。使用 SQL 语句时，支持自动进行谓词下推，比如上述例子中的过滤条件 `char_1 <> 'A' and int_1 = -126`，会直接发送到 BE 节点的存储层进行过滤，不需要额外配置。
+  - 支持谓词下推。使用 SQL 语句时，支持自动进行谓词下推，比如上述例子中的过滤条件 `char_1 <> 'A' and int_1 = -126`，会直接发送到 BE 节点的存储层进行过滤，不需要额外配置。
 
 - 如您使用 Flink DataStream ，则需要先添加依赖，然后调用 flink-connector-starrocks，读取 StarRocks 的数据。
 
