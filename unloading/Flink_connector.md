@@ -57,7 +57,7 @@ Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks �
        float_1 FLOAT,
        double_1 DOUBLE,FLI
        decimal_1 DECIMAL(27,9)
-      ) WITH (
+   ) WITH (
       'connector'='starrocks',
       'scan-url'='192.168.xxx.xxx:8030,192.168.xxx.xxx:8030',
       'jdbc-url'='jdbc:mysql://192.168.xxx.xxx:9030',
