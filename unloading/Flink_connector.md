@@ -107,31 +107,31 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 > x.x.x需要替换为 flink-connector-starrocks 的最新版本号，您可以单击[版本信息](https://search.maven.org/search?q=g:com.starrocks)获取。
 
    ```SQL
-<dependency>    
+   <dependency>    
 
-    <groupId>com.starrocks</groupId>
+       <groupId>com.starrocks</groupId>
 
-    <artifactId>flink-connector-starrocks</artifactId>
+       <artifactId>flink-connector-starrocks</artifactId>
 
-    <!-- for flink-1.11 -->
+       <!-- for flink-1.11 -->
 
-    <version>x.x.x_flink-1.11_2.11</version>
+       <version>x.x.x_flink-1.11_2.11</version>
 
-    <version>x.x.x_flink-1.11_2.12</version>
+       <version>x.x.x_flink-1.11_2.12</version>
 
-    <!-- for flink-1.12 -->
+       <!-- for flink-1.12 -->
 
-    <version>x.x.x_flink-1.12_2.11</version>
+       <version>x.x.x_flink-1.12_2.11</version>
 
-    <version>x.x.x_flink-1.12_2.12</version>
+       <version>x.x.x_flink-1.12_2.12</version>
 
-    <!-- for flink-1.13 -->
+       <!-- for flink-1.13 -->
 
-    <version>x.x.x_flink-1.13_2.11</version>
+       <version>x.x.x_flink-1.13_2.11</version>
 
-    <version>x.x.x_flink-1.13_2.12</version>
+       <version>x.x.x_flink-1.13_2.12</version>
 
-</dependency>
+   </dependency>
    ```
 
 2. 参考如下示例代码，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见[参数说明](~~https://docs.starrocks.com/zh-cn/main/unloading/Flink_connector#参数说明~~)。
