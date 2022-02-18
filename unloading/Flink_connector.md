@@ -140,9 +140,9 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 | database-name               | 是       | String   | StarRocks 数据库的名称。                                     |
 | table-name                  | 是       | String   | StarRocks 数据表的名称。                                     |
 | scan.connect.timeout-ms     | 否       | String   | flink-connector-starrocks 连接 StarRocks 的时间上限，单位为毫秒，默认值为1000。超过该时间上限，则将报错。 |
-| scan.params.keep-alive-min  | 否       | String   | Max keep alive time min单位为分钟，默认值为10。              |
-| scan.params.query-timeout-s | 否       | String   | 单个查询的最长响应时间，单位为秒，默认值为600。<br>取值需要大于 StarRocks 内部运行查询时所耗时间。 |
-| scan.params.mem-limit-byte  | 否       | String   | BE 节点中单个查询的内存上限，单位为字节，默认值为1024*1024*1024（1G）。 |
+| scan.params.keep-alive-min  | 否       | String   | 查询任务的保活时间，单位为分钟。默认值为10，建议取值大于等于5。      |
+| scan.params.query-timeout-s | 否       | String   | 查询任务的超时时间，单位为秒，默认值为600。如果超过该时间，仍未返回查询结果，则停止查询任务。  |
+| scan.params.mem-limit-byte  | 否       | String   | BE 节点中单个查询的内存上限，单位为字节，默认值为1073741824（1G）。 |
 | scan.max-retries            | 否       | String   | 查询失败时的最大重试次数，默认值为1。超过该数量上限，则将报错。 |
 
 ## Flink 与 StarRocks 的数据类型映射关系
