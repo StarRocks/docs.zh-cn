@@ -19,10 +19,10 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 ## 操作步骤
 
 ### 步骤一：准备flink-connector-starrocks
-
 1. 下载源码 [flink-connector-starrocks](https://github.com/StarRocks/flink-connector-starrocks/tree/dev)。
 2. 根据 Flink 的版本，选择对应的分支。
 3. 运行如下脚本，生成与 BE 节点 Thrift 接口交互的 Java class 文件，用于 flink-connector-starrocks 直接调用 BE 节点 Thrift 接口。
+
 ```SQL
 -- 如使用Linux操作系统，则需要执行如下命令。
 
@@ -32,7 +32,9 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 
 ./build-thrift.bat
 ```
+
 4. 将源码编译成 JAR 包，并将 JAR 包放在 Flink 的 lib 目录中。
+
 5. 重启 Flink。
 
 ### 步骤二：调用 flink-connector-starrocks ，读取 StarRocks 数据
