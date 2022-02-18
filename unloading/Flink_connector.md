@@ -1,20 +1,20 @@
 # Flink Connector
 
-本文介绍Flink如何通过 flink-connector-starrocks 的 source 功能读取 StarRocks 数据。
+本文介绍 Flink 如何通过 flink-connector-starrocks 的 source 功能读取 StarRocks 数据。
 
-> 如果 Flink 需要通过 flink-connector-starrocks 的 sink 功能，将数据写入至 StarRocks，请参见数据导入章节的 [Flink connector](~~https://docs.starrocks.com/zh-cn/main/loading/Flink-connector-starrocks~~)。
+> 如果 Flink 需要通过 flink-connector-starrocks 的 sink 功能，将数据写入至 StarRocks，请参见数据导入章节的 [Flink connector](../loading/Flink-connector-starrocks.md)。
 
 ## 功能简介
 
-Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks 的数据。相较于 Flink 官方提供的 Flink JDBC connector，flink-connector-starrocks 的 source 功能具备并行读取 StarRocks 的BE节点数据的能力，大大提高了数据读取效率。以下是两种连接器的实现方案对比。
+Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks 的数据。相较于 Flink 官方提供的 Flink JDBC connector，flink-connector-starrocks 的 source 功能具备并行读取 StarRocks 的 BE 节点数据的能力，大大提高了数据读取效率。以下是两种连接器的实现方案对比。
 
-flink-connector-starrocks 的实现方案：Flink 先从 FE 节点获取查询计划（Query Plan），Flink 再将获取到的查询计划作为参数，下发至 BE 节点，然后获取 BE 节点返回的数据。
+- flink-connector-starrocks 的实现方案：Flink 先从 FE 节点获取查询计划（Query Plan），Flink 再将获取到的查询计划作为参数，下发至 BE 节点，然后获取 BE 节点返回的数据。
 
-![asset](../assets/5.2.1.png)
+   ![asset](../assets/5.2.1.png)
 
-Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点上串行读取数据，数据读取效率较低。
+- Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点上串行读取数据，数据读取效率较低。
 
-![asset](../assets/5.2.2.png)
+   ![asset](../assets/5.2.2.png)
 
 ## 操作步骤
 
@@ -24,10 +24,10 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 2. 根据 Flink 的版本，选择对应的分支。
 3. 运行如下脚本，生成与 BE 节点 Thrift 接口交互的 Java class 文件，用于 flink-connector-starrocks 直接调用 BE 节点 Thrift 接口。
 
-   ```SQL
-   -- 如使用Linux操作系统，则需要执行如下命令。
+   ```bash
+    # 如使用 Linux 操作系统，则需要执行如下命令。
    ./build-thrift.sh   
-   -- 如使用Windows操作系统，则需要执行如下命令。
+    # 如使用 Windows 操作系统，则需要执行如下命令。
    ./build-thrift.bat
    ```
 
@@ -39,7 +39,7 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 
 > flink-connector-starrocks 的 source 功能暂时无法保证 exactly-once 语义。如果读取任务失败，您需要重复本步骤，再次创建读取任务。
 
-- 如您使用 Flink SQL 客户端（推荐），则需要参考如下命令，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见[参数说明](~~https://docs.starrocks.com/zh-cn/main/unloading/Flink_connector#参数说明~~)。
+- 如您使用 Flink SQL 客户端（推荐），则需要参考如下命令，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见[参数说明](#参数说明)。
 
    ```SQL
    -- 根据 StarRocks 的表，创建表和配置属性（包括 flink-connector-starrocks 和库表的信息）。
@@ -132,10 +132,10 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 
 | 参数                        | 是否必填 | 数据类型 | 描述                                                         |
 | --------------------------- | -------- | -------- | ------------------------------------------------------------ |
-| connector                   | 是       | String   | 固定为 starrocks 。                                          |
-| scan-url                    | 是       | String   | FE 节点的连接地址，用于通过Web服务器访问 FE 节点。 具体格式为< FE 节点的 IP 地址>:< FE 的 HTTP server 端口号>，端口号默认为8030。多个地址之间用英文半角逗号分隔。例如192.168.xxx.xxx:8030,192.168.xxx.xxx:8030。 |
-| jdbc-url                    | 是       | String   | FE 节点的连接地址，用于访问 FE 节点上的 MySQL 客户端。具体格式为jdbc:mysql://< FE 节点的 IP 地址>:< FE 的 MySQL server 端口号>，端口号默认为9030。 |
-| username                    | 是       | String   | StarRocks 中的用户名称。需具备目标数据库表的读权限。用户权限说明，请参见[用户权限](~~https://docs.starrocks.com/zh-cn/main/administration/User_privilege~~)。 |
+| connector                   | 是       | String   | 固定为 starrocks。                                          |
+| scan-url                    | 是       | String   | FE 节点的连接地址，用于通过 Web 服务器访问 FE 节点。 具体格式为< FE 节点的 IP 地址>:< FE 的 HTTP server 端口号>，端口号默认为8030。多个地址之间用英文半角逗号分隔。例如192.168.xxx.xxx:8030,192.168.xxx.xxx:8030。 |
+| jdbc-url                    | 是       | String   | FE 节点的连接地址，用于访问 FE 节点上的 MySQL 客户端。具体格式为 jdbc:mysql://< FE 节点的 IP 地址>:< FE 的 MySQL server 端口号>，端口号默认为9030。 |
+| username                    | 是       | String   | StarRocks 中的用户名称。需具备目标数据库表的读权限。用户权限说明，请参见[用户权限](../administration/User_privilege.md)。 |
 | password                    | 是       | String   | StarRocks 的用户密码。                                       |
 | database-name               | 是       | String   | StarRocks 数据库的名称。                                     |
 | table-name                  | 是       | String   | StarRocks 数据表的名称。                                     |
@@ -147,7 +147,7 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 
 ## Flink 与 StarRocks 的数据类型映射关系
 
-> 该数据类型映射关系仅适用于 Flink 读取 StarRocks 数据。如需要查看 Flink 将数据写入至 StarRocks 的数据类型映射关系，请参见数据导入章节的 [Flink connector](~~https://docs.starrocks.com/zh-cn/main/loading/Flink-connector-starrocks~~)。
+> 该数据类型映射关系仅适用于 Flink 读取 StarRocks 数据。如需要查看 Flink 将数据写入至 StarRocks 的数据类型映射关系，请参见数据导入章节的 [Flink connector](../loading/Flink-connector-starrocks.md)。
 
 | StarRocks  | Flink     |
 | ---------- | --------- |
@@ -172,4 +172,4 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 
 ## 后续步骤
 
-Flink成功读取StarRocks数据后，您可以使用Flink官方的 [Flink WEBUI](https://nightlies.apache.org/flink/flink-docs-master/zh/docs/try-flink/flink-operations-playground/#flink-webui-界面) 界面观察读取任务。比如 Flink WEBUI 的 Metrics 页面会显示成功读取的数据行数（totalScannedRows）。
+Flink 成功读取 StarRocks 数据后，您可以使用 Flink 官方的 [Flink WEBUI](https://nightlies.apache.org/flink/flink-docs-master/zh/docs/try-flink/flink-operations-playground/#flink-webui-界面) 界面观察读取任务。比如 Flink WEBUI 的 Metrics 页面会显示成功读取的数据行数（totalScannedRows）。
