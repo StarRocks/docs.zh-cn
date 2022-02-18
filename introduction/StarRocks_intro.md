@@ -44,7 +44,7 @@ StarRocks支持标准的SQL语法，包括聚合、JOIN、排序、窗口函数�
 
 ### 流批一体
 
-StarRocks支持实时和批量两种数据导入方式，支持的数据源有Kafka、HDFS、本地文件，数据格式有ORC、Parquet和CSV等，支持导入多达10000列的数据。StarRocks可以实时消费Kafka数据来完成数据导入，保证数据不丢不重（exactly once）。StarRocks也可以从本地或者远程（HDFS）批量导入数据。
+StarRocks支持实时和批量两种数据导入方式，支持的数据源有Kafka、HDFS、本地文件，支持的数据格式有ORC、Parquet和CSV等，支持导入多达10000列的数据。StarRocks可以实时消费Kafka数据来完成数据导入，保证数据不丢不重（exactly once）。StarRocks也可以从本地或者远程（HDFS）批量导入数据。
 
 ### 高可用易扩展
 
