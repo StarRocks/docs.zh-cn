@@ -37,7 +37,7 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 1. 将源码编译成 JAR 包，并将 JAR 包放在 Flink 的 lib 目录中。
 2. 重启 Flink。
 
-### 步骤二：调用 flink-connector-starrocks ，读取 StarRocks 数据。
+### 步骤二：调用 flink-connector-starrocks ，读取 StarRocks 数据
 
 > flink-connector-starrocks 的 source 功能暂时无法保证exactly-once语义。如果读取任务失败，您需要重复本步骤，再次创建读取任务。 
 
