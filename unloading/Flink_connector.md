@@ -148,6 +148,7 @@ Flink JDBC connector 的实现方案：Flink JDBC connector 仅能从 FE 单点�
 ## Flink 与 StarRocks 的数据类型映射关系
 
 > 该数据类型映射关系仅适用于 Flink 读取 StarRocks 数据。如需要查看 Flink 将数据写入至 StarRocks 的数据类型映射关系，请参见数据导入章节的 [Flink connector](~~https://docs.starrocks.com/zh-cn/main/loading/Flink-connector-starrocks~~)。
+
 | StarRocks  | Flink     |
 | ---------- | --------- |
 | NULL_TYPE  | NULL      |
