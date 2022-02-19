@@ -590,14 +590,14 @@ bin/flat_insert.sh
 
 1. SSB query
 
-```Bash
-bin/benchmark.sh -p -d ssb
+   ```Bash
+   bin/benchmark.sh -p -d ssb
 
-bin/benchmark.sh -p -d ssb-flat
-```
+   bin/benchmark.sh -p -d ssb-flat
+   ```
 
 2. 低基数query
 
-```Bash
-bin/benchmark.sh -p -d ssb-low_cardinality
-```
+   ```Bash
+   bin/benchmark.sh -p -d ssb-low_cardinality
+   ```
