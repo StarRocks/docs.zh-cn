@@ -1,18 +1,18 @@
 # TPC-H 基准测试
 
-TPC-H 是美国交易处理效能委员会 TPC（Transaction Processing Performance Council）组织制定的用来模拟决策支持类应用的测试集。它包括一整套面向业务的 ad*-*hoc 查询和并发数据修改。
+TPC-H 是美国交易处理效能委员会 TPC（Transaction Processing Performance Council）组织制定的用来模拟决策支持类应用的测试集。它包括一整套面向业务的 ad-hoc 查询和并发数据修改。
 
-TPC-H 根据真实的生产运行环境来建模，模拟了一套销售系统的数据仓库。该测试共包含 8 张表，数据量可设定从 1GB~3 TB 不等。其基准测试共包含了 22 个查询，主要评价指标为各个查询的响应时间，即从提交查询到结果返回所需时间。
+TPC-H 根据真实的生产运行环境来建模，模拟了一套销售系统的数据仓库。该测试共包含8张表，数据量可设定从1GB~3TB 不等。其基准测试共包含了22个查询，主要评价指标为各个查询的响应时间，即从提交查询到结果返回所需时间。
 
 ## 一、测试结论
 
-在 TPCH 100G 规模的数据集上进行对比测试，共 22 个查询，结果如下：
+在 TPCH 100G 规模的数据集上进行对比测试，共22个查询，结果如下：
 
 ![TPCH 100G结果](../assets/7.2.png)
 
 StarRocks 使用本地存储查询和 Hive 外表查询两种方式进行测试。其中，StarRocks Hive 外表和 Trino 查询的是同一份数据，数据采用 ORC 格式存储，采用 zlib 格式压缩。
 
-最终，StarRocks 本地存储查询总耗时为 21s，StarRocks Hive 外表查询总耗时 92s。Trino 查询总耗时 307s。
+最终，StarRocks 本地存储查询总耗时为21s，StarRocks Hive 外表查询总耗时92s。Trino 查询总耗时307s。
 
 ## 二、测试准备
 
@@ -31,7 +31,7 @@ StarRocks 使用本地存储查询和 Hive 外表查询两种方式进行测试�
 
 操作系统版本：CentOS Linux release 7.8.2003  
 
-软件版本：StarRocks 2.1 ，Trino-357 ， Hive-3.1.2
+软件版本：StarRocks 2.1，Trino-357， Hive-3.1.2
 
 ## 三、测试数据与结果
 
