@@ -33,8 +33,6 @@ StarRocks 使用本地存储查询和 Hive 外表查询两种方式进行测试�
 
 软件版本：StarRocks 2.1 ，Trino-357 ， Hive-3.1.2
 
-
-
 ## 三、测试数据与结果
 
 ### （一）测试数据
@@ -892,8 +890,6 @@ order by
   cntrycode;
 ```
 
-
-
 ### （三）测试结果
 
 | Query | SR-native(ms) | SR-Hive external(ms) | Trino(ms) |
@@ -1398,8 +1394,6 @@ ANALYZE FULL TABLE supplier;
 ```Python
 ./bin/benchmark.sh -p -d tpch
 ```
-
-
 
 ### （二）StarRocks Hive 外表测试流程
 
@@ -2434,8 +2428,6 @@ insert into tpch_hive_orc.region  select * from region;
 
 insert into tpch_hive_orc.supplier  select * from supplier;
 ```
-
-
 
 #### 3. 数据查询
 
