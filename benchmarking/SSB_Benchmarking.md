@@ -7,11 +7,11 @@ Star Schema Benchmark（以下简称 SSB）是学术界和工业界广泛使用�
 - 在标准测试数据集的 13 个查询上，ClickHouse 的整体查询时间是 StarRocks 的 1.7 倍，Apache Druid 的整体查询时间是 StarRocks 的 2.2 倍。
 - 在 StarRocks 启用 bitmap index 和 cache 的情况下，性能更胜一筹，尤其在 Q2.2 Q2.3 Q3.3 上有显著提升。整体性能是 ClickHouse 的 2.2 倍，Apache Druid 的 2.9 倍。
 
-![img](https://starrocks.feishu.cn/space/api/box/stream/download/asynccode/?code=NjBmYmE4NmEzOWQ0MTg5NWQzY2U3YjBhZGViNTQ2YWZfeHBVY1FMTjhRU3kwSlhLSnhUZ3pRa0N5ZEE4Z1UzSDVfVG9rZW46Ym94Y25mSnlPa1NxT2x2dEZGc2ZCa3NjeWNjXzE2NDUwOTk3NTU6MTY0NTEwMzM1NV9WNA)
+![整体性能对比](../assets/7.1-1.png)
 
 - 在标准测试数据集上，我们选取了一些常见的低基数聚合场景。ClickHouse 的整体查询时间是 StarRocks 的 2.26 倍。
 
-![img](https://starrocks.feishu.cn/space/api/box/stream/download/asynccode/?code=M2Q5YmI0ZTgwNDgwNzhlNWUyYTIzYzRjZGE3NmEzMjNfVHFwS1JQWk1IWHEyRkVJU1VUVk1rWEI3a0tBVnRGbThfVG9rZW46Ym94Y25SZDJDMjBPVnB6ckxiRXczNHRkanJnXzE2NDUwOTk3NTU6MTY0NTEwMzM1NV9WNA)
+![性能对比低基数聚合](../assets/7.1-2.png)
 
 在 SSB 单表和用户经常碰到的低基数聚合场景下对比了 StarRocks 和 ClickHouse 的性能指标。采用 3x16core 64GB 内存的云主机，在 6 亿行的数据规模进行测试。
 
