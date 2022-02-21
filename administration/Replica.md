@@ -218,8 +218,8 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
 
     上图会显示具体的不健康的 Tablet ID（40467980）。后面我们会介绍如何查看一个具体的 Tablet 的各个副本的状态。
 2. 表（分区）级别状态检查  
-    用户可以通过以下命令查看指定表或分区的副本状态，并可以通过 WHERE 语句对状态进行过滤。如查看表 tbl1 中，分区 p1 和 p2 上状态为 NORMAL 的副本：  
-    `ADMIN SHOW REPLICA STATUS FROM tbl1 PARTITION (p1, p2) WHERE STATUS = "NORMAL";`
+    用户可以通过以下命令查看指定表或分区的副本状态，并可以通过 WHERE 语句对状态进行过滤。如查看表 tbl1 中，分区 p1 和 p2 上状态为 OK 的副本：  
+    `ADMIN SHOW REPLICA STATUS FROM tbl1 PARTITION (p1, p2) WHERE STATUS = "OK";`
 
     ~~~plain text
     +----------+-----------+-----------+---------+-------------------+--------------------+------------------+------------+------------+-------+--------+--------+
