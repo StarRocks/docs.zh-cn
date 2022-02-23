@@ -1273,6 +1273,7 @@ LOCATION
 ```
 
 StarRocks中的外表如下：
+
 ```SQL
 create database if not exists tpch_sr;
 use tpch_sr;
@@ -1416,7 +1417,6 @@ group by
 
 ```SQL
 create database tpch_hive_csv;
-
 use tpch_hive_csv;
 
 --创建customer外表
