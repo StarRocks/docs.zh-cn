@@ -25,8 +25,8 @@ AS SELECT <query>
 | ---------------- | ------------------------------------------------------------ |
 | column_name      | 列名。您无需传入列类型，StarRocks 会自动选择合适的类型，并将 FLOAT 或 DOUBLE 转换为 DECIMAL(38,9)，CHAR、VARCHAR、STRING 转换为 VARCHAR(1048576)。 |
 | COMMENT          | 表注释。                                                     |
-| partition_desc   | 分区方式。更多说明，请参见[partition_desc](CREATE%20TABLE.md/#syntax)。如果不填写，则默认为无分区。 |
-| distribution_desc | 分桶方式。更多说明，请参见[distribution_desc](CREATE%20TABLE.md/#syntax)。如果不填写，则默认分桶键为CBO统计信息中最高基数的列，分桶数量为10。如果CBO中没有相关统计信息，则默认分桶键为第一列。 |
+| partition_desc   | 分区方式。更多说明，请参见 [partition_desc](CREATE%20TABLE.md/#syntax)。如果不填写，则默认为无分区。 |
+| distribution_desc | 分桶方式。更多说明，请参见 [distribution_desc](CREATE%20TABLE.md/#syntax)。如果不填写，则默认分桶键为CBO统计信息中最高基数的列，分桶数量为10。如果CBO中没有相关统计信息，则默认分桶键为第一列。 |
 | properties       | 新表的附带属性。更多说明，请参见 [PROPERTIES](CREATE%20TABLE.md/#syntax)。目前CTA仅支持创建ENGINE类型为OLAP的表。 |
 
 ### 查询部分
@@ -47,7 +47,11 @@ AS SELECT <query>
 示例一：复制原表 order，创建一个新表 order_new。
 
 ```SQL
-CREATE TABLE order_new AS SELECT * FROM order;
+CREATE TABLE order_new 
+AS SELECT 
+  * 
+FROM 
+  order;
 ```
 
 示例二：根据原表 order 的列 k1、k2 和 k3，创建一个新表 order_new，并指定列名为 a、b 和 c。
@@ -55,11 +59,23 @@ CREATE TABLE order_new AS SELECT * FROM order;
 > 指定的列数需要与 AS SELECT *<query>* 的列数保持一致。
 
 ```SQL
-CREATE TABLE order_new a, b, c AS SELECT k1, k2, k3 FROM order;
+CREATE TABLE order_new a, b, c 
+AS SELECT 
+  k1, 
+  k2, 
+  k3 
+FROM 
+  order;
 ```
 
 ```SQL
-create table order_new as select k1 as a, k2 as b, k3 as c from order;
+CREATE TABLE order_new 
+AS SELECT 
+  k1 AS a, 
+  k2 AS b, 
+  k3 AS c 
+FROM 
+  order;
 ```
 
 示例三：`... AS SELECT <query>`使用表达式，根据表达式结果，创建一个新表，并重新指定列名。
@@ -68,9 +84,17 @@ create table order_new as select k1 as a, k2 as b, k3 as c from order;
 
 ```SQL
 --根据原表 employee 的列 salary 计算出最大值，并根据结果，创建一个新表 employee_new 并指定新列名为 salary_new 。
-create table employee_new as select max(salary) as salary_max from employee;
+CREATE TABLE employee_new 
+AS SELECT 
+  MAX(salary) AS salary_max 
+FROM 
+  employee;
+ 
 --查询新表 employee_new 。
-select * from employee_new;
+SELECT 
+  * 
+FROM 
+  employee_new;
 +------------+
 | salary_max |
 +------------+
@@ -83,7 +107,7 @@ select * from employee_new;
 ```SQL
 CREATE TABLE lineorder_flat
 PARTITION BY RANGE(`LO_ORDERDATE`)(
-START ("1993-01-01") END ("1999-01-01") EVERY (INTERVAL 1 YEAR)
+  START ("1993-01-01") END ("1999-01-01") EVERY (INTERVAL 1 YEAR)
 )
 DISTRIBUTED BY HASH(`LO_ORDERKEY`) BUCKETS 120 
 AS SELECT
