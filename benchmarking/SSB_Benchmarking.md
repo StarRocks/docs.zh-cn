@@ -446,6 +446,7 @@ from
 ### （三）测试结果
 
 #### 1. SSB 单表测试结果
+
 > StarRocks 与 ClickHouse、Druid 的性能对比，分别使用 ClickHouse、Druid 的查询时间除以 StarRocks 的查询时间，且结果数字越大代表 StarRocks 性能越好。
 
 |      | StarRocks-2.1(ms) | StarRocks-2.1-index(ms) | ClickHouse-21.9(ms) | ClickHouse/StarRocks 性能对比 | Druid-0.20.1(ms) | Druid/StarRocks 性能对比 |
@@ -519,31 +520,19 @@ bin/gen-ssb.sh 100 data_dir
 
 ```Bash
  # for mysql cmd
-
  mysql_host: 192.168.1.1
-
  mysql_port: 9030
-
  mysql_user: root
-
  mysql_password:
-
  database: ssb
- 
 
 # cluster ports
-
   http_port: 8030
-
   be_heartbeat_port: 9050
-
   broker_port: 8000
 
-
 # parallel_fragment_exec_instance_num 设置并行度,建议是每个集群节点逻辑核数的一半,以下以8为例
-
-parallel_num: 8
-
+  parallel_num: 8
  ...
 ```
 
@@ -551,7 +540,6 @@ parallel_num: 8
 
 ```Bash
 # 测试100G数据
-
  bin/create_db_table.sh ddl_100
 ```
 
@@ -559,103 +547,54 @@ parallel_num: 8
 
 ```SQL
 CREATE TABLE `lineorder_flat` (
-
   `lo_orderdate` date NOT NULL COMMENT "",
-
   `lo_orderkey` int(11) NOT NULL COMMENT "",
-
   `lo_linenumber` tinyint(4) NOT NULL COMMENT "",
-
   `lo_custkey` int(11) NOT NULL COMMENT "",
-
   `lo_partkey` int(11) NOT NULL COMMENT "",
-
   `lo_suppkey` int(11) NOT NULL COMMENT "",
-
   `lo_orderpriority` varchar(100) NOT NULL COMMENT "",
-
   `lo_shippriority` tinyint(4) NOT NULL COMMENT "",
-
   `lo_quantity` tinyint(4) NOT NULL COMMENT "",
-
   `lo_extendedprice` int(11) NOT NULL COMMENT "",
-
   `lo_ordtotalprice` int(11) NOT NULL COMMENT "",
-
   `lo_discount` tinyint(4) NOT NULL COMMENT "",
-
   `lo_revenue` int(11) NOT NULL COMMENT "",
-
   `lo_supplycost` int(11) NOT NULL COMMENT "",
-
   `lo_tax` tinyint(4) NOT NULL COMMENT "",
-
   `lo_commitdate` date NOT NULL COMMENT "",
-
   `lo_shipmode` varchar(100) NOT NULL COMMENT "",
-
   `c_name` varchar(100) NOT NULL COMMENT "",
-
   `c_address` varchar(100) NOT NULL COMMENT "",
-
   `c_city` varchar(100) NOT NULL COMMENT "",
-
   `c_nation` varchar(100) NOT NULL COMMENT "",
-
   `c_region` varchar(100) NOT NULL COMMENT "",
-
   `c_phone` varchar(100) NOT NULL COMMENT "",
-
   `c_mktsegment` varchar(100) NOT NULL COMMENT "",
-
   `s_region` varchar(100) NOT NULL COMMENT "",
-
   `s_nation` varchar(100) NOT NULL COMMENT "",
-
   `s_city` varchar(100) NOT NULL COMMENT "",
-
   `s_name` varchar(100) NOT NULL COMMENT "",
-
   `s_address` varchar(100) NOT NULL COMMENT "",
-
   `s_phone` varchar(100) NOT NULL COMMENT "",
-
   `p_name` varchar(100) NOT NULL COMMENT "",
-
   `p_mfgr` varchar(100) NOT NULL COMMENT "",
-
   `p_category` varchar(100) NOT NULL COMMENT "",
-
   `p_brand` varchar(100) NOT NULL COMMENT "",
-
   `p_color` varchar(100) NOT NULL COMMENT "",
-
   `p_type` varchar(100) NOT NULL COMMENT "",
-
   `p_size` tinyint(4) NOT NULL COMMENT "",
-
   `p_container` varchar(100) NOT NULL COMMENT ""
-
 ) ENGINE=OLAP
-
 DUPLICATE KEY(`lo_orderdate`, `lo_orderkey`)
-
 COMMENT "OLAP"
-
 PARTITION BY RANGE(`lo_orderdate`)
-
 (START ("1992-01-01") END ("1999-01-01") EVERY (INTERVAL 1 YEAR))
-
 DISTRIBUTED BY HASH(`lo_orderkey`) BUCKETS 48
-
 PROPERTIES (
-
 "replication_num" = "1",
-
 "in_memory" = "false",
-
 "storage_format" = "DEFAULT"
-
 );
 ```
 
@@ -663,7 +602,6 @@ PROPERTIES (
 
 ```Bash
 disable_storage_page_cache=false; -- 开启page_cache
-
 storage_page_cache_limit=4294967296; --设置page_cache的大小
 ```
 
@@ -671,51 +609,30 @@ storage_page_cache_limit=4294967296; --设置page_cache的大小
 
 对所有字符串列创建 bitmap_index。
 
-```Bash
-#对 lo_orderpriority、lo_shipmode、c_name、c_address、c_city、c_nation、c_region、c_phone、c_mktsegment、s_region、s_nation、s_city、s_name、s_address、s_phone、p_name、p_mfgr、p_category、p_brand、p_color、p_type、p_container 创建bitmap_index
+```sql
+--对 lo_orderpriority、lo_shipmode、c_name、c_address、c_city、c_nation、c_region、c_phone、c_mktsegment、s_region、s_nation、s_city、s_name、s_address、s_phone、p_name、p_mfgr、p_category、p_brand、p_color、p_type、p_container 创建bitmap_index
 
 CREATE INDEX bitmap_lo_orderpriority ON lineorder_flat (lo_orderpriority) USING BITMAP;
-
 CREATE INDEX bitmap_lo_shipmode ON lineorder_flat (lo_shipmode) USING BITMAP;
-
 CREATE INDEX bitmap_c_name ON lineorder_flat (c_name) USING BITMAP;
-
 CREATE INDEX bitmap_c_address ON lineorder_flat (c_address) USING BITMAP;
-
 CREATE INDEX bitmap_c_city ON lineorder_flat (c_city) USING BITMAP;
-
 CREATE INDEX bitmap_c_nation ON lineorder_flat (c_nation) USING BITMAP;
-
 CREATE INDEX bitmap_c_region ON lineorder_flat (c_region) USING BITMAP;
-
 CREATE INDEX bitmap_c_phone ON lineorder_flat (c_phone) USING BITMAP;
-
 CREATE INDEX bitmap_c_mktsegment ON lineorder_flat (c_mktsegment) USING BITMAP;
-
 CREATE INDEX bitmap_s_region ON lineorder_flat (s_region) USING BITMAP;
-
 CREATE INDEX bitmap_s_nation ON lineorder_flat (s_nation) USING BITMAP;
-
 CREATE INDEX bitmap_s_city ON lineorder_flat (s_city) USING BITMAP;
-
 CREATE INDEX bitmap_s_name ON lineorder_flat (s_name) USING BITMAP;
-
 CREATE INDEX bitmap_s_address ON lineorder_flat (s_address) USING BITMAP;
-
 CREATE INDEX bitmap_s_phone ON lineorder_flat (s_phone) USING BITMAP;
-
 CREATE INDEX bitmap_p_name ON lineorder_flat (p_name) USING BITMAP;
-
 CREATE INDEX bitmap_p_mfgr ON lineorder_flat (p_mfgr) USING BITMAP;
-
 CREATE INDEX bitmap_p_category ON lineorder_flat (p_category) USING BITMAP;
-
 CREATE INDEX bitmap_p_brand ON lineorder_flat (p_brand) USING BITMAP;
-
 CREATE INDEX bitmap_p_color ON lineorder_flat (p_color) USING BITMAP;
-
 CREATE INDEX bitmap_p_type ON lineorder_flat (p_type) USING BITMAP;
-
 CREATE INDEX bitmap_p_container ON lineorder_flat (p_container) USING BITMAP;
 ```
 
