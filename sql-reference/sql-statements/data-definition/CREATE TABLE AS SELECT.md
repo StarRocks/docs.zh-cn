@@ -32,8 +32,8 @@ AS SELECT <query>
 | ---------------- | ------------------------------------------------------------ |
 | column_name      | 列名。您无需传入列类型，StarRocks 会自动选择合适的类型，并将 FLOAT 或 DOUBLE 转换为 DECIMAL(38,9)，CHAR、VARCHAR、STRING 转换为 VARCHAR(1048576)。 |
 | COMMENT          | 表注释。                                                     |
-| partition_desc   | 分区方式。更多说明，请参见 [数据分布](../table_design/Data_distribution.md)。如果不填写，则默认为无分区。 |
-| distribution_des | 分桶方式。更多说明，请参见 [数据分布](../table_design/Data_distribution.md)。如果不填写，则默认分桶键为CBO统计信息中最高基数的列，分桶数量为10。如果CBO中没有相关统计信息，则默认分桶键为第一列。 |
+| partition_desc   | 分区方式。更多说明，请参见[数据分布](../table_design/Data_distribution.md)。如果不填写，则默认为无分区。 |
+| distribution_des | 分桶方式。更多说明，请参见[数据分布](../table_design/Data_distribution.md)。如果不填写，则默认分桶键为CBO统计信息中最高基数的列，分桶数量为10。如果CBO中没有相关统计信息，则默认分桶键为第一列。 |
 | properties       | 新表的附带属性。更多说明，请参见 [PROPERTIES](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md)。目前CTA仅支持创建ENGINE类型为OLAP的表。 |
 
 ### 查询部分
