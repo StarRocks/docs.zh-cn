@@ -2,7 +2,7 @@
 
 ## 测试方法
 
-为了方便用户快速的了解StarRocks的性能指标，这里我们提供了一个标准的Star schema benchmark的测试方法和工具仅供参考。
+为了方便用户快速的了解StarRocks的性能指标，这里我们提供了一个标准的Star schema benchmark的测试方法和工具仅供参 考。
 
 Star schema benchmark（以下简称SSB）是学术界和工业界广泛使用的一个星型模型测试集，通过这个测试集合也可以容易的和其他OLAP产品进行性能对比。
 
