@@ -843,7 +843,6 @@ cd benchmark
 
 ```Bash
 # generate 100GB data under the `data_100` directory
-
 ./bin/gen_data/gen-tpch.sh 100 data_100
 ```
 
