@@ -879,368 +879,186 @@ parallel_num: 8
 以下为建表语句，在上一步脚本中已经创建了表，并进行了默认分桶数配置。您可以删除该表，然后根据集群规模节点配置重新规划分桶数再进行创建，可实现更好测试效果。
 
 ```SQL
-#创建表customer
-
+--创建表customer
 drop table if exists customer;
-
 CREATE TABLE customer (
-
     c_custkey     int NOT NULL,
-
     c_name        VARCHAR(25) NOT NULL,
-
     c_address     VARCHAR(40) NOT NULL,
-
     c_nationkey   int NOT NULL,
-
     c_phone       VARCHAR(15) NOT NULL,
-
     c_acctbal     decimal(15, 2)   NOT NULL,
-
     c_mktsegment  VARCHAR(10) NOT NULL,
-
     c_comment     VARCHAR(117) NOT NULL
-
 )ENGINE=OLAP
-
 DUPLICATE KEY(`c_custkey`)
-
 COMMENT "OLAP"
-
 DISTRIBUTED BY HASH(`c_custkey`) BUCKETS 24
-
 PROPERTIES (
-
     "replication_num" = "1",
-
     "in_memory" = "false",
-
     "storage_format" = "DEFAULT"
-
 );
 
-
-
-#创建表lineitem
-
+--创建表lineitem
 drop table if exists lineitem;
-
 CREATE TABLE lineitem ( 
-
     l_shipdate    DATE NOT NULL,
-
     l_orderkey    int NOT NULL,
-
     l_linenumber  int not null,
-
     l_partkey     int NOT NULL,
-
     l_suppkey     int not null,
-
     l_quantity    decimal(15, 2) NOT NULL,
-
     l_extendedprice  decimal(15, 2) NOT NULL,
-
     l_discount    decimal(15, 2) NOT NULL,
-
     l_tax         decimal(15, 2) NOT NULL,
-
     l_returnflag  VARCHAR(1) NOT NULL,
-
     l_linestatus  VARCHAR(1) NOT NULL,
-
     l_commitdate  DATE NOT NULL,
-
     l_receiptdate DATE NOT NULL,
-
     l_shipinstruct VARCHAR(25) NOT NULL,
-
     l_shipmode     VARCHAR(10) NOT NULL,
-
     l_comment      VARCHAR(44) NOT NULL
-
 )ENGINE=OLAP
-
 DUPLICATE KEY(`l_shipdate`, `l_orderkey`)
-
 COMMENT "OLAP"
-
 DISTRIBUTED BY HASH(`l_orderkey`) BUCKETS 96
-
 PROPERTIES (
-
     "replication_num" = "1",
-
     "in_memory" = "false",
-
     "storage_format" = "DEFAULT",
-
     "colocate_with" = "tpch2"
-
 );
 
-
-
-#创建表nation
-
+--创建表nation
 drop table if exists nation;
-
 CREATE TABLE `nation` (
-
   `n_nationkey` int(11) NOT NULL,
-
   `n_name`      varchar(25) NOT NULL,
-
   `n_regionkey` int(11) NOT NULL,
-
   `n_comment`   varchar(152) NULL
-
 ) ENGINE=OLAP
-
 DUPLICATE KEY(`N_NATIONKEY`)
-
 COMMENT "OLAP"
-
 DISTRIBUTED BY HASH(`N_NATIONKEY`) BUCKETS 1
-
 PROPERTIES (
-
     "replication_num" = "3",
-
     "in_memory" = "false",
-
     "storage_format" = "DEFAULT"
-
 );
 
-
-
-#创建表orders
-
+--创建表orders
 drop table if exists orders;
-
 CREATE TABLE orders  (
-
     o_orderkey       int NOT NULL,
-
     o_orderdate      DATE NOT NULL,
-
     o_custkey        int NOT NULL,
-
     o_orderstatus    VARCHAR(1) NOT NULL,
-
     o_totalprice     decimal(15, 2) NOT NULL,
-
     o_orderpriority  VARCHAR(15) NOT NULL,
-
     o_clerk          VARCHAR(15) NOT NULL,
-
     o_shippriority   int NOT NULL,
-
     o_comment        VARCHAR(79) NOT NULL
-
 )ENGINE=OLAP
-
 DUPLICATE KEY(`o_orderkey`, `o_orderdate`)
-
 COMMENT "OLAP"
-
 DISTRIBUTED BY HASH(`o_orderkey`) BUCKETS 96
-
 PROPERTIES (
-
     "replication_num" = "1",
-
     "in_memory" = "false",
-
     "storage_format" = "DEFAULT",
-
     "colocate_with" = "tpch2"
-
 );
 
-
-
-#创建表part
-
+--创建表part
 drop table if exists part;
-
 CREATE TABLE part (
-
     p_partkey          int NOT NULL,
-
     p_name        VARCHAR(55) NOT NULL,
-
     p_mfgr        VARCHAR(25) NOT NULL,
-
     p_brand       VARCHAR(10) NOT NULL,
-
     p_type        VARCHAR(25) NOT NULL,
-
     p_size        int NOT NULL,
-
     p_container   VARCHAR(10) NOT NULL,
-
     p_retailprice decimal(15, 2) NOT NULL,
-
     p_comment     VARCHAR(23) NOT NULL
-
 )ENGINE=OLAP
-
 DUPLICATE KEY(`p_partkey`)
-
 COMMENT "OLAP"
-
 DISTRIBUTED BY HASH(`p_partkey`) BUCKETS 24
-
 PROPERTIES (
-
     "replication_num" = "1",
-
     "in_memory" = "false",
-
     "storage_format" = "DEFAULT",
-
     "colocate_with" = "tpch2p"
-
 );
 
-
-
-#创建表partsupp
-
+--创建表partsupp
 drop table if exists partsupp;
-
 CREATE TABLE partsupp ( 
-
-    ps_partkey          int NOT NULL,
-
+    ps_partkey     int NOT NULL,
     ps_suppkey     int NOT NULL,
-
     ps_availqty    int NOT NULL,
-
     ps_supplycost  decimal(15, 2)  NOT NULL,
-
     ps_comment     VARCHAR(199) NOT NULL
-
 )ENGINE=OLAP
-
 DUPLICATE KEY(`ps_partkey`)
-
 COMMENT "OLAP"
-
 DISTRIBUTED BY HASH(`ps_partkey`) BUCKETS 24
-
 PROPERTIES (
-
     "replication_num" = "1",
-
     "in_memory" = "false",
-
     "storage_format" = "DEFAULT",
-
     "colocate_with" = "tpch2p"
-
 );
 
-
-
-#创建表region
-
+--创建表region
 drop table if exists region;
-
 CREATE TABLE region  ( 
-
-    r_regionkey      int NOT NULL,
-
+    r_regionkey  int NOT NULL,
     r_name       VARCHAR(25) NOT NULL,
-
     r_comment    VARCHAR(152)
-
 )ENGINE=OLAP
-
 DUPLICATE KEY(`r_regionkey`)
-
 COMMENT "OLAP"
-
 DISTRIBUTED BY HASH(`r_regionkey`) BUCKETS 1
-
 PROPERTIES (
-
     "replication_num" = "3",
-
     "in_memory" = "false",
-
     "storage_format" = "DEFAULT"
-
 );
 
-
-
-#创建表supplier
-
+--创建表supplier
 drop table if exists supplier;
-
 CREATE TABLE supplier (  
-
-    s_suppkey       int NOT NULL,
-
+    s_suppkey     int NOT NULL,
     s_name        VARCHAR(25) NOT NULL,
-
     s_address     VARCHAR(40) NOT NULL,
-
     s_nationkey   int NOT NULL,
-
     s_phone       VARCHAR(15) NOT NULL,
-
     s_acctbal     decimal(15, 2) NOT NULL,
-
     s_comment     VARCHAR(101) NOT NULL
-
 )ENGINE=OLAP
-
 DUPLICATE KEY(`s_suppkey`)
-
 COMMENT "OLAP"
-
 DISTRIBUTED BY HASH(`s_suppkey`) BUCKETS 12
-
 PROPERTIES (
-
     "replication_num" = "1",
-
     "in_memory" = "false",
-
     "storage_format" = "DEFAULT"
-
 );
-
-
-
-
 
 drop view if exists revenue0;
-
 create view revenue0 (supplier_no, total_revenue) as
-
 select
-
     l_suppkey,
-
     sum(l_extendedprice * (1 - l_discount))
-
 from
-
     lineitem
-
 where
-
     l_shipdate >= date '1996-01-01'
-
     and l_shipdate < date '1996-01-01' + interval '3' month
-
 group by
-
     l_suppkey;
 ```
 
@@ -1256,19 +1074,12 @@ group by
 
 ```SQL
 ANALYZE FULL TABLE customer;
-
 ANALYZE FULL TABLE lineitem;
-
 ANALYZE FULL TABLE nation;
-
 ANALYZE FULL TABLE orders;
-
 ANALYZE FULL TABLE part;
-
 ANALYZE FULL TABLE partsupp;
-
 ANALYZE FULL TABLE region;
-
 ANALYZE FULL TABLE supplier;
 ```
 
@@ -1286,647 +1097,317 @@ ANALYZE FULL TABLE supplier;
 
 ```SQL
 create database tpch_hive_orc;
-
 use tpch_hive_orc;
 
-
-
 --创建customer
-
 CREATE TABLE `customer`(
-
   `c_custkey` int, 
-
   `c_name` varchar(25), 
-
   `c_address` varchar(40), 
-
   `c_nationkey` int, 
-
   `c_phone` varchar(15), 
-
   `c_acctbal` decimal(15,2), 
-
   `c_mktsegment` varchar(10), 
-
   `c_comment` varchar(117))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcSerde' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/hive/warehouse/tpch_hive_orc.db/customer';
 
-
-
 --创建lineitem
-
   CREATE TABLE `lineitem`(
-
   `l_orderkey` bigint, 
-
   `l_partkey` int, 
-
   `l_suppkey` int, 
-
   `l_linenumber` int, 
-
   `l_quantity` decimal(15,2), 
-
   `l_extendedprice` decimal(15,2), 
-
   `l_discount` decimal(15,2), 
-
   `l_tax` decimal(15,2), 
-
   `l_returnflag` varchar(1), 
-
   `l_linestatus` varchar(1), 
-
   `l_shipdate` date, 
-
   `l_commitdate` date, 
-
   `l_receiptdate` date, 
-
   `l_shipinstruct` varchar(25), 
-
   `l_shipmode` varchar(10), 
-
   `l_comment` varchar(44))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcSerde' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/hive/warehouse/tpch_hive_orc.db/lineitem';
 
-
-
 --创建nation
-
 CREATE TABLE `nation`(
-
   `n_nationkey` int, 
-
   `n_name` varchar(25), 
-
   `n_regionkey` int, 
-
   `n_comment` varchar(152))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcSerde' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/hive/warehouse/tpch_hive_orc.db/nation';
 
-
-
 --创建orders
-
 CREATE TABLE `orders`(
-
   `o_orderkey` bigint, 
-
   `o_custkey` int, 
-
   `o_orderstatus` varchar(1), 
-
   `o_totalprice` decimal(15,2), 
-
   `o_orderdate` date, 
-
   `o_orderpriority` varchar(15), 
-
   `o_clerk` varchar(15), 
-
   `o_shippriority` int, 
-
   `o_comment` varchar(79))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcSerde' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/hive/warehouse/tpch_hive_orc.db/orders';
 
-
-
 --创建part
-
 CREATE TABLE `part`(
-
   `p_partkey` int, 
-
   `p_name` varchar(55), 
-
   `p_mfgr` varchar(25), 
-
   `p_brand` varchar(10), 
-
   `p_type` varchar(25), 
-
   `p_size` int, 
-
   `p_container` varchar(10), 
-
   `p_retailprice` decimal(15,2), 
-
   `p_comment` varchar(23))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcSerde' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/hive/warehouse/tpch_hive_orc.db/part';
 
-
-
 --创建partsupp
-
 CREATE TABLE `partsupp`(
-
   `ps_partkey` int, 
-
   `ps_suppkey` int, 
-
   `ps_availqty` int, 
-
   `ps_supplycost` decimal(15,2), 
-
   `ps_comment` varchar(199))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcSerde' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/hive/warehouse/tpch_hive_orc.db/partsupp';
 
-
-
 --创建region
-
 CREATE TABLE `region`(
-
   `r_regionkey` int, 
-
   `r_name` varchar(25), 
-
   `r_comment` varchar(152))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcSerde' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/hive/warehouse/tpch_hive_orc.db/region';
 
-
-
 --创建supplier
-
 CREATE TABLE `supplier`(
-
   `s_suppkey` int, 
-
   `s_name` varchar(25), 
-
   `s_address` varchar(40), 
-
   `s_nationkey` int, 
-
   `s_phone` varchar(15), 
-
   `s_acctbal` decimal(15,2), 
-
   `s_comment` varchar(101))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcSerde' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.orc.OrcOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/hive/warehouse/tpch_hive_orc.db/supplier';
 ```
 
 StarRocks中的外表如下：
-
 ```SQL
 create database if not exists tpch_sr;
-
-
-
 use tpch_sr;
-
-
-
 CREATE EXTERNAL RESOURCE "hive_test" PROPERTIES (
-
   "type" = "hive",
-
   "hive.metastore.uris" = "thrift://xxx.xxx.xxx.xxx:9083"
-
 );
-
-          
-
 CREATE EXTERNAL TABLE IF NOT EXISTS nation (
-
     n_nationkey int,
-
     n_name VARCHAR(25),
-
     n_regionkey int,
-
     n_comment varchar(152))
-
 ENGINE=hive
-
 properties (
-
     "resource" = "hive_test",
-
     "table" = "nation",
-
     "database" = "tpch_hive_orc"
-
 );
-
-    
-
 CREATE EXTERNAL TABLE IF NOT EXISTS customer (
-
     c_custkey     INTEGER,
-
     c_name        VARCHAR(25),
-
     c_address     VARCHAR(40),
-
     c_nationkey   INTEGER,
-
     c_phone       VARCHAR(15),
-
     c_acctbal     DECIMAL(15,2),
-
     c_mktsegment  VARCHAR(10),
-
     c_comment     VARCHAR(117))
-
 ENGINE=hive
-
 properties (
-
     "resource" = "hive_test",
-
     "table" = "customer",
-
     "database" = "tpch_hive_orc"
-
 );
-
-    
-
 CREATE EXTERNAL TABLE IF NOT EXISTS lineitem (
-
     l_orderkey    BIGINT,
-
     l_partkey     INTEGER,
-
     l_suppkey     INTEGER,
-
     l_linenumber  INTEGER,
-
     l_quantity    DECIMAL(15,2),
-
     l_extendedprice  DECIMAL(15,2),
-
     l_discount    DECIMAL(15,2),
-
     l_tax         DECIMAL(15,2),
-
     l_returnflag  VARCHAR(1),
-
     l_linestatus  VARCHAR(1),
-
     l_shipdate    DATE,
-
     l_commitdate  DATE,
-
     l_receiptdate DATE,
-
     l_shipinstruct VARCHAR(25),
-
     l_shipmode     VARCHAR(10),
-
     l_comment      VARCHAR(44))
-
 ENGINE=hive
-
 properties (
-
     "resource" = "hive_test",
-
     "table" = "lineitem",
-
     "database" = "tpch_hive_orc"
-
 );
-
-    
-
 CREATE EXTERNAL TABLE IF NOT EXISTS orders  ( 
-
     o_orderkey       BIGINT,
-
     o_custkey        INTEGER,
-
     o_orderstatus    VARCHAR(1),
-
     o_totalprice     DECIMAL(15,2),
-
     o_orderdate      DATE,
-
     o_orderpriority  VARCHAR(15),
-
     o_clerk          VARCHAR(15),
-
     o_shippriority   INTEGER,
-
     o_comment        VARCHAR(79))
-
 ENGINE=hive
-
 properties (
-
     "resource" = "hive_test",
-
     "table" = "orders",
-
     "database" = "tpch_hive_orc"
-
 );
-
-    
-
 CREATE EXTERNAL TABLE IF NOT EXISTS part  ( 
-
     p_partkey     INTEGER,
-
     p_name        VARCHAR(55),
-
     p_mfgr        VARCHAR(25),
-
     p_brand       VARCHAR(10),
-
     p_type        VARCHAR(25),
-
     p_size        INTEGER,
-
     p_container   VARCHAR(10),
-
     p_retailprice DECIMAL(15,2),
-
     p_comment     VARCHAR(23))
-
 ENGINE=hive
-
 properties (
-
     "resource" = "hive_test",
-
     "table" = "part",
-
     "database" = "tpch_hive_orc"
-
 );
-
-    
-
 CREATE EXTERNAL TABLE IF NOT EXISTS partsupp ( 
-
     ps_partkey     INTEGER,
-
     ps_suppkey     INTEGER,
-
     ps_availqty    INTEGER,
-
     ps_supplycost  DECIMAL(15,2),
-
     ps_comment     VARCHAR(199))
-
 ENGINE=hive
-
 properties (
-
     "resource" = "hive_test",
-
     "table" = "partsupp",
-
     "database" = "tpch_hive_orc"
-
 );
-
-    
-
 CREATE EXTERNAL TABLE IF NOT EXISTS region  ( 
-
     r_regionkey  INTEGER,
-
     r_name       VARCHAR(25),
-
     r_comment    VARCHAR(152))
-
 ENGINE=hive
-
 properties (
-
     "resource" = "hive_test",
-
     "table" = "region",
-
     "database" = "tpch_hive_orc"
-
 );
-
-    
-
 CREATE EXTERNAL TABLE IF NOT EXISTS supplier (
-
     s_suppkey     INTEGER,
-
     s_name        VARCHAR(25),
-
     s_address     VARCHAR(40),
-
     s_nationkey   INTEGER,
-
     s_phone       VARCHAR(15),
-
     s_acctbal     DECIMAL(15,2),
-
     s_comment     VARCHAR(101))
-
 ENGINE=hive
-
 properties (
-
     "resource" = "hive_test",
-
     "table" = "supplier",
-
     "database" = "tpch_hive_orc"
-
 );
-
-
-
 create view revenue0 (supplier_no, total_revenue) as
-
 select
-
     l_suppkey,
-
     sum(l_extendedprice * (1 - l_discount))
-
 from
-
     lineitem
-
 where
-
     l_shipdate >= date '1996-01-01'
-
     and l_shipdate < date '1996-01-01' + interval '3' month
-
 group by
-
     l_suppkey;
 ```
 
@@ -1939,352 +1420,177 @@ create database tpch_hive_csv;
 
 use tpch_hive_csv;
 
-
-
 --创建customer外表
-
 CREATE EXTERNAL TABLE `customer`(
-
   `c_custkey` int, 
-
   `c_name` varchar(25), 
-
   `c_address` varchar(40), 
-
   `c_nationkey` int, 
-
   `c_phone` varchar(15), 
-
   `c_acctbal` double, 
-
   `c_mktsegment` varchar(10), 
-
   `c_comment` varchar(117))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.mapred.TextInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/tmp/csv/customer_csv';
-
- 
-
+  
 --创建lineitem外表
-
 CREATE EXTERNAL TABLE `lineitem`(
-
   `l_orderkey` int, 
-
   `l_partkey` int, 
-
   `l_suppkey` int, 
-
   `l_linenumber` int, 
-
   `l_quantity` double, 
-
   `l_extendedprice` double, 
-
   `l_discount` double, 
-
   `l_tax` double, 
-
   `l_returnflag` varchar(1), 
-
   `l_linestatus` varchar(1), 
-
   `l_shipdate` date, 
-
   `l_commitdate` date, 
-
   `l_receiptdate` date, 
-
   `l_shipinstruct` varchar(25), 
-
   `l_shipmode` varchar(10), 
-
   `l_comment` varchar(44))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.mapred.TextInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/tmp/csv/lineitem_csv';
 
- 
-
-
-
 --创建nation外表
-
 CREATE EXTERNAL TABLE `nation`(
-
   `n_nationkey` int, 
-
   `n_name` varchar(25), 
-
   `n_regionkey` int, 
-
   `n_comment` varchar(152))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.mapred.TextInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/tmp/csv/nation_csv';
 
-  
-
 --创建orders外表
-
 CREATE EXTERNAL TABLE `orders`(
-
   `o_orderkey` int, 
-
   `o_custkey` int, 
-
   `o_orderstatus` varchar(1), 
-
   `o_totalprice` double, 
-
   `o_orderdate` date, 
-
   `o_orderpriority` varchar(15), 
-
   `o_clerk` varchar(15), 
-
   `o_shippriority` int, 
-
   `o_comment` varchar(79))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.mapred.TextInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/tmp/csv/orders_csv';
 
-  
-
 --创建part外表
-
 CREATE EXTERNAL TABLE `part`(
-
   `p_partkey` int, 
-
   `p_name` varchar(55), 
-
   `p_mfgr` varchar(25), 
-
   `p_brand` varchar(10), 
-
   `p_type` varchar(25), 
-
   `p_size` int, 
-
   `p_container` varchar(10), 
-
   `p_retailprice` double, 
-
   `p_comment` varchar(23))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.mapred.TextInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/tmp/csv/part_csv';
 
-  
-
 --创建partsupp外表
-
 CREATE EXTERNAL TABLE `partsupp`(
-
   `ps_partkey` int, 
-
   `ps_suppkey` int, 
-
   `ps_availqty` int, 
-
   `ps_supplycost` double, 
-
   `ps_comment` varchar(199))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.mapred.TextInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/tmp/csv/partsupp_csv';
 
-  
-
 --创建region外表
-
 CREATE EXTERNAL TABLE `region`(
-
   `r_regionkey` int, 
-
   `r_name` varchar(25), 
-
   `r_comment` varchar(152))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.mapred.TextInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/tmp/csv/region_csv';
 
-  
-
 --创建supplier外表
-
 CREATE EXTERNAL TABLE `supplier`(
-
   `s_suppkey` int, 
-
   `s_name` varchar(25), 
-
   `s_address` varchar(40), 
-
   `s_nationkey` int, 
-
   `s_phone` varchar(15), 
-
   `s_acctbal` double, 
-
   `s_comment` varchar(101))
-
 ROW FORMAT SERDE 
-
   'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
-
 WITH SERDEPROPERTIES ( 
-
   'field.delim'='|', 
-
   'serialization.format'='|') 
-
 STORED AS INPUTFORMAT 
-
   'org.apache.hadoop.mapred.TextInputFormat' 
-
 OUTPUTFORMAT 
-
   'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
-
 LOCATION
-
   'hdfs://emr-header-1.cluster-49146:9000/user/tmp/csv/supplier_csv';
 ```
 
@@ -2292,23 +1598,13 @@ LOCATION
 
 ```SQL
 use tpch_hive_csv；
-
-
-
 insert into tpch_hive_orc.customer  select * from customer;
-
 insert into tpch_hive_orc.lineitem  select * from lineitem;
-
 insert into tpch_hive_orc.nation  select * from nation;
-
 insert into tpch_hive_orc.orders  select * from orders;
-
 insert into tpch_hive_orc.part  select * from part;
-
 insert into tpch_hive_orc.partsupp  select * from partsupp;
-
 insert into tpch_hive_orc.region  select * from region;
-
 insert into tpch_hive_orc.supplier  select * from supplier;
 ```
 
@@ -2316,16 +1612,10 @@ insert into tpch_hive_orc.supplier  select * from supplier;
 
 ```SQL
 use tpch_sr;
-
 --查看当前会话系统变量
-
 show variables;
-
 --设置并行度为8
-
 set parallel_fragment_exec_instance_num = 8;
-
-
 
 --Q1
 select 
