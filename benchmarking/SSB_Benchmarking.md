@@ -494,13 +494,9 @@ ClickHouse 的建表导入参考[官方文档](https://clickhouse.tech/docs/en/g
 
 ```Bash
 wget https://starrocks-public.oss-cn-zhangjiakou.aliyuncs.com/ssb-poc-0.10.0.zip
-
 unzip ssb-poc-0.10.0.zip
-
 cd ssb-poc-0.10.0
-
 cd ssb-poc
-
 make && make install  
 ```
 
