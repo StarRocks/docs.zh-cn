@@ -49,7 +49,8 @@ AS SELECT <query>
 示例一：复制原表 order，创建一个新表 order_new。
 
 ```SQL
-CREATE TABLE order_new AS SELECT * FROM order;
+CREATE TABLE order_new
+AS SELECT * FROM order;
 ```
 
 示例二：根据原表 order 的列 k1、k2 和 k3，创建一个新表 order_new，并指定列名为 a、b 和 c。
@@ -57,11 +58,13 @@ CREATE TABLE order_new AS SELECT * FROM order;
 > 指定的列数需要与 AS SELECT *<query>* 的列数保持一致。
 
 ```SQL
-CREATE TABLE order_new a, b, c AS SELECT k1, k2, k3 FROM order;
+CREATE TABLE order_new a, b, c
+AS SELECT k1, k2, k3 FROM order;
 ```
 
 ```SQL
-CREATE TABLE order_new AS SELECT k1 AS a, k2 AS b, k3 AS c FROM order;
+CREATE TABLE order_new
+AS SELECT k1 AS a, k2 AS b, k3 AS c FROM order;
 ```
 
 示例三：`... AS SELECT <query>`使用表达式，根据表达式结果，创建一个新表，并重新指定列名。
@@ -70,7 +73,8 @@ CREATE TABLE order_new AS SELECT k1 AS a, k2 AS b, k3 AS c FROM order;
 
 ```SQL
 --根据原表 employee 的列 salary 计算出最大值，并根据结果，创建一个新表 employee_new 并指定新列名为 salary_new 。
-CREATE TABLE employee_new AS SELECT MAX(salary) AS salary_max FROM employee;
+CREATE TABLE employee_new
+AS SELECT MAX(salary) AS salary_max FROM employee;
  
 --查询新表 employee_new 。
 SELECT * FROM employee_new;
