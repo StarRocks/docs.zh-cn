@@ -800,7 +800,7 @@ LOCATION
   'hdfs://emr-header-1.cluster-49146:9000/user/hive/warehouse/tpch_hive_orc.db/customer';
 
 --创建lineitem
-  CREATE TABLE `lineitem`(
+CREATE TABLE `lineitem`(
   `l_orderkey` bigint, 
   `l_partkey` int, 
   `l_suppkey` int, 
