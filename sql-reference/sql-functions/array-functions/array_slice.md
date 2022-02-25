@@ -1,4 +1,4 @@
-# array_slice 
+# array_slice
 
 ## 功能
 
