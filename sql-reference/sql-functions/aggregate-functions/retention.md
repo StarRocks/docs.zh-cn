@@ -23,7 +23,6 @@ output retention(input)
 
 ## 示例
 
-**示例三**:
 假设现在有表`lineorder_flat`，其中数据为
 
 ```plain text
