@@ -53,6 +53,16 @@ mysql> SELECT array_difference([1.2, 2.3, 3.2, 4324242.55]);
 +--------------------------------------------+
 ```
 
+**示例 四**:
+
+```plain text
+mysql> SELECT array_difference([false, true, false]);
++----------------------------------------+
+| array_difference([FALSE, TRUE, FALSE]) |
++----------------------------------------+
+| [0,1,-1]                               |
++----------------------------------------+
+
 ## 关键字
 
 ARRAY_DIFFERENCE
