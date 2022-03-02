@@ -181,6 +181,7 @@
     + 辅助命令
       + [DESCRIBE](/sql-reference/sql-statements/Utility/DESCRIBE.md)
   + 函数参考
+ [  + [How to Write Functions Documentation](/sql-reference/sql-functions/How%20to%20Write%20Functions%20Documentation.md)
     + 日期函数
       + [convert_tz](/sql-reference/sql-functions/date-time-functions/convert_tz.md)
       + [curdate](/sql-reference/sql-functions/date-time-functions/curdate.md)
