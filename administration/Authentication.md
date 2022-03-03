@@ -42,7 +42,7 @@ ldapwhoami -x -D "uid=test,cn=users,cn=account,dc=starrocks,dc=cn" -W ldap://127
 authentication_ldap_simple_server_host：127.0.0.1
 authentication_ldap_simple_server_port：389
 authentication_ldap_simple_bind_base_dn：cn=users,cn=account,dc=starrocks,dc=cn
-authentication_ldap_simple_user_search_attr：uid //我的配置是uid=test所以这里填写uid
+authentication_ldap_simple_user_search_attr：uid --我的配置是uid=test所以这里填写uid
 authentication_ldap_simple_bind_root_dn：uid=test,cn=users,cn=account,dc=starrocks,dc=cn
 authentication_ldap_simple_bind_root_pwd：123456
 ~~~
