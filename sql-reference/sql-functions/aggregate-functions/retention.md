@@ -23,6 +23,42 @@ output retention(input)
 
 ## 示例
 
+示例一:
+
+```plain text
+mysql> SELECT retention([lo_orderdate = '1997-08-01' AND lo_orderpriority = '2-HIGH', 
+                         lo_orderdate = '1997-08-02' AND lo_orderpriority = '1-URGENT', lo_orderdate = '1997-08-03' AND 
+                         lo_orderpriority = '5-LOW']) AS r FROM lineorder_flat GROUP BY lo_linenumber;
++---------+
+| r       |
++---------+
+| [1,1,1] |
+| [1,1,1] |
+| [1,1,1] |
+| [1,1,1] |
+| [1,1,1] |
+| [1,1,1] |
+| [1,1,1] |
++---------+
+```
+
+示例二:
+计算满足条件`lo_orderdate = '1997-08-02' AND lo_orderpriority = '1-URGENT'`和满足条件
+`lo_orderdate = '1997-08-03' AND lo_orderpriority = '5-LOW'`所占的比例
+
+```plain text
+mysql> SELECT sum(r[1]), sum(r[2]) / sum(r[1]), sum(r[3]) / sum(r[1]) FROM 
+    (SELECT retention([lo_orderdate = '1997-08-01' AND lo_orderpriority = '2-HIGH', 
+    lo_orderdate = '1997-08-02' AND lo_orderpriority = '1-URGENT', lo_orderdate = '1997-08-03' AND 
+    lo_orderpriority = '5-LOW']) AS r FROM lineorder_flat GROUP BY lo_suppkey) t;
++-------------+---------------------------+---------------------------+
+| sum(`r`[1]) | sum(`r`[2]) / sum(`r`[1]) | sum(`r`[3]) / sum(`r`[1]) |
++-------------+---------------------------+---------------------------+
+|       43951 |        0.2228163181725103 |        0.2214056562990603 |
++-------------+---------------------------+---------------------------+
+```
+
+示例三:
 假设现在有表`lineorder_flat`，其中数据为
 
 ```plain text
@@ -47,10 +83,10 @@ output retention(input)
 
 ```plain text
 mysql> SELECT lo_custkey,
-       retention([lo_orderdate='1022-11-20' AND lo_orderpriority='4-NOT SPECI',
-lo_orderdate='1022-11-21' AND lo_orderpriority='4-LONG']) AS retention
-FROM lineorder_flat
-GROUP BY lo_custkey;
+    retention([lo_orderdate='1022-11-20' AND lo_orderpriority='4-NOT SPECI',
+        lo_orderdate='1022-11-21' AND lo_orderpriority='4-LONG']) AS retention
+    FROM lineorder_flat
+    GROUP BY lo_custkey;
 +------------+-----------+
 | lo_custkey | retention |
 +------------+-----------+
@@ -79,10 +115,10 @@ GROUP BY lo_custkey;
 
 ```plain text
 mysql> SELECT lo_custkey,
-       retention([lo_orderdate='1022-11-20' AND lo_orderpriority='4-NOT SPECI',
-lo_orderdate='1022-11-21' AND lo_orderpriority='4-LONG']) AS retention
-FROM lineorder_flat
-GROUP BY lo_custkey;
+    retention([lo_orderdate='1022-11-20' AND lo_orderpriority='4-NOT SPECI',
+        lo_orderdate='1022-11-21' AND lo_orderpriority='4-LONG']) AS retention
+    FROM lineorder_flat
+    GROUP BY lo_custkey;
 +------------+-----------+
 | lo_custkey | retention |
 +------------+-----------+
@@ -111,10 +147,10 @@ GROUP BY lo_custkey;
 
 ```plain text
 mysql> SELECT lo_custkey,
-       retention([lo_orderdate='1022-11-20' AND lo_orderpriority='4-NOT SPECI',
-lo_orderdate='1022-11-21' AND lo_orderpriority='4-LONG']) AS retention
-FROM lineorder_flat
-GROUP BY lo_custkey;
+    retention([lo_orderdate='1022-11-20' AND lo_orderpriority='4-NOT SPECI',
+        lo_orderdate='1022-11-21' AND lo_orderpriority='4-LONG']) AS retention
+    FROM lineorder_flat
+    GROUP BY lo_custkey;
 +------------+-----------+
 | lo_custkey | retention |
 +------------+-----------+
