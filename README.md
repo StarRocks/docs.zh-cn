@@ -5,24 +5,23 @@
 
 ## 注意事项
 
-1. 语言。请至少选择中英文一种语言，欢迎提供中英双语版本。
-2. 索引。如果文档为新增，则需要在索引文件（TOC.md）中根据分类为新增文档添加索引，且 **索引路径为绝对路径**。此索引文件最终将被渲染为页面的侧边目录栏。
-3. 图片。图片需要先放入文件 ssets 中，文档中引用图片时请输入图片的相对路径，比如 `![test image](../../assets/test.png)` 或 `![test image](/assets/test.png)`。
-4. 引用。如果引用官网文档，则推荐使用文档相对路径，比如 `[test md](../../sql-referencest.md)` 或 `[test md](/sql-referencest.md)`。<br> 如果引用外部文档，则使用绝对路径，比如 `[引用文档名称](引用文档链接)`。
-5. 代码块。代码块必须标明语言类型，比如：```sql。
+1. 语言：请至少选择中英文一种语言，欢迎提供中英双语版本。
+2. 索引：如果文档为新增，则需要在索引文件（TOC.md）中根据分类为新增文档添加索引，且 **索引路径为绝对路径**。此索引文件最终将被渲染为页面的侧边目录栏。
+3. 图片：图片需要先放入文件 assets 中，文档中引用图片时请输入图片的相对路径，比如 `![test image](../../assets/test.png)` 。
+4. 引用：如果引用官网文档，则推荐使用文档相对路径，比如 `[test md](../../sql-referencest.md)`。<br> 如果引用外部文档，则引用格式为 `[引用文档名称](引用文档链接)`。
+5. 代码块：代码块必须标明语言类型，比如：```sql。
 6. 文档中目前暂不支持出现特殊符号。
-7. 如果文档需要被索引至help命令，则请将文档放入sql-referernce目录中。
 
 ## 编写流程
 
-1. **编写阶段。**按照如下[文档模板](/README.md/##文档模板)，编写文档（markdown格式），并在索引（TOC.md）中添加索引。
+1. **编写阶段：**按照如下[文档模板](./README.md/##文档模板)，编写文档（markdown格式），并在索引（TOC.md）中添加索引。
 
     > - 由于文档为markdown格式，建议您提前使用markdown-lint验证格式的规范性。
     > - 添加索引时，请注意函数分类。
 
-2. **提交阶段。**在github上提交文档，中文文档提交至[中文文档仓库](https://github.com/StarRocks/docs.zh-cn)，英文文档提交至[英文文档仓库](https://github.com/StarRocks/docs)。
+2. **提交阶段：**在github上提交文档，中文文档提交至[中文文档仓库](https://github.com/StarRocks/docs.zh-cn)，英文文档提交至[英文文档仓库](https://github.com/StarRocks/docs)。
 
-3. **评审阶段。**
+3. **评审阶段：**
 
    评审阶段分为自动检查和人工评审。
 
@@ -31,4 +30,4 @@
 
 ## 文档模板
 
-[函数文档模板](./sql-reference/sql-functions/How to Write Functions Documentation.md)
+[函数文档模板](./sql-reference/sql-functions/How%20to%20Write%20Functions%20Documentation.md)
