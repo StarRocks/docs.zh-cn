@@ -65,6 +65,10 @@ JAVA_OPTS = "-Xmx4096m -XX:+UseMembar -XX:SurvivorRatio=8 -XX:MaxTenuringThresho
 可以根据FE内存大小调整 -Xmx4096m，为了避免GC建议16G以上，StarRocks的元数据都在内存中保存。
 <br/>
 
+> 因为StarRocks的FE和BE因为安全考虑都只会监听一个IP来进行通信，如果一台机器有多块网卡，可能StarRocks无法自动找到正确的IP，例如 ifconfig 命令能看到  eth0 ip为 192.168.1.1, docker0:  172.17.0.1 ，所以我们可以设置 192.168.1.0/24 这一个子网来指定使用eth0作为通信的IP，这里采用是[CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)的表示方法来指定IP所在子网范围，这样可以在所有的BE，FE上使用相同的配置。
+> priority\_networks 是 FE 和 BE 相同的配置项，写在 fe.conf 和 be.conf 中。该配置项用于在 FE 或 BE 启动时，告诉进程应该绑定哪个IP。示例如下：
+> `priority_networks=10.1.3.0/24`
+
 第二步: 创建元数据目录:
 
 ```bash
