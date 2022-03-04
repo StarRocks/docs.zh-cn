@@ -27,8 +27,8 @@ output retention(input)
 
 ```plain text
 mysql> SELECT retention([lo_orderdate = '1997-08-01' AND lo_orderpriority = '2-HIGH', 
-                         lo_orderdate = '1997-08-02' AND lo_orderpriority = '1-URGENT', lo_orderdate = '1997-08-03' AND 
-                         lo_orderpriority = '5-LOW']) AS r FROM lineorder_flat GROUP BY lo_linenumber;
+    lo_orderdate = '1997-08-02' AND lo_orderpriority = '1-URGENT', lo_orderdate = '1997-08-03' AND 
+    lo_orderpriority = '5-LOW']) AS r FROM lineorder_flat GROUP BY lo_linenumber;
 +---------+
 | r       |
 +---------+
@@ -44,7 +44,7 @@ mysql> SELECT retention([lo_orderdate = '1997-08-01' AND lo_orderpriority = '2-H
 
 示例二:
 
-计算满足条件`lo_orderdate = '1997-08-02' AND lo_orderpriority = '1-URGENT'`和<br>    满足条件`lo_orderdate = '1997-08-03' AND lo_orderpriority = '5-LOW'`所占的比例
+计算满足条件`lo_orderdate = '1997-08-02' AND lo_orderpriority = '1-URGENT'`和<br>满足条件`lo_orderdate = '1997-08-03' AND lo_orderpriority = '5-LOW'`所占的比例
 
 ```plain text
 mysql> SELECT sum(r[1]), sum(r[2]) / sum(r[1]), sum(r[3]) / sum(r[1]) FROM 
