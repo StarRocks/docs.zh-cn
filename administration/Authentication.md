@@ -31,7 +31,9 @@ CREATE USER zhangsan IDENTIFIED WITH authentication_ldap_simple
 * authentication\_ldap\_simple\_user\_search\_attr：LDAP对象中标识用户的属性名称，默认为uid。
 * authentication\_ldap\_simple\_bind\_root\_dn：检索用户时，使用的管理员账号DN。
 * authentication\_ldap\_simple\_bind\_root\_pwd：检索用户时，使用的管理员账号密码。
-例如
+
+例如：
+
 ~~~text
 --ldap配置为
 
