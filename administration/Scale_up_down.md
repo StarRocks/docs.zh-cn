@@ -57,7 +57,7 @@ DROP会立刻删除BE节点，丢失的副本由FE调度补齐；DECOMMISSION先
 二者的命令类似：
 
 * `alter system decommission backend "be_host:be_heartbeat_service_port";`
-* `alter system drop backend "be_host:be_heartbeat_service_port";`
+* `alter system dropp backend "be_host:be_heartbeat_service_port";`
 
 Drop backend是一个危险操作所以需要二次确认后执行
 
