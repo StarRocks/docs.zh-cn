@@ -32,7 +32,7 @@ CREATE USER zhangsan IDENTIFIED WITH authentication_ldap_simple
 * authentication\_ldap\_simple\_bind\_root\_dn：检索用户时，使用的管理员账号DN。
 * authentication\_ldap\_simple\_bind\_root\_pwd：检索用户时，使用的管理员账号密码。
 例如
-~~~sql
+~~~
 --ldap配置为
 
 ldapwhoami -x -D "uid=test,cn=users,cn=account,dc=starrocks,dc=cn" -W ldap://127.0.0.1:389
@@ -42,7 +42,7 @@ ldapwhoami -x -D "uid=test,cn=users,cn=account,dc=starrocks,dc=cn" -W ldap://127
 authentication_ldap_simple_server_host：127.0.0.1
 authentication_ldap_simple_server_port：389
 authentication_ldap_simple_bind_base_dn：cn=users,cn=account,dc=starrocks,dc=cn
-authentication_ldap_simple_user_search_attr：uid   //我的配置是uid=test所以这里填写uid
+authentication_ldap_simple_user_search_attr：uid  
 authentication_ldap_simple_bind_root_dn：uid=test,cn=users,cn=account,dc=starrocks,dc=cn
 authentication_ldap_simple_bind_root_pwd：123456
 ~~~
