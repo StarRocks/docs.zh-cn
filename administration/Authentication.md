@@ -32,7 +32,7 @@ CREATE USER zhangsan IDENTIFIED WITH authentication_ldap_simple
 * authentication\_ldap\_simple\_bind\_root\_dn：检索用户时，使用的管理员账号DN。
 * authentication\_ldap\_simple\_bind\_root\_pwd：检索用户时，使用的管理员账号密码。
 例如
-~~~
+~~~text
 --ldap配置为
 
 ldapwhoami -x -D "uid=test,cn=users,cn=account,dc=starrocks,dc=cn" -W ldap://127.0.0.1:389
