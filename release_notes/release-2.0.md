@@ -82,4 +82,4 @@
 
 - 修复 BE 假死导致查询出错的问题。
 - 修复对单 tablet 的表在做聚合操作时因无法得到合理的执行计划而导致查询失败的问题。[#3854](https://github.com/StarRocks/starrocks/issues/3854)
-- 修复 FE 在低基数全局字典优化中收集信息时可能导致死锁的问题。[#3839](https://github.com/StarRocks/starrocks/issues/3839)
+- 修复 FE 收集信息以构建低基数全局字典时可能导致死锁的问题。。[#3839](https://github.com/StarRocks/starrocks/issues/3839)
