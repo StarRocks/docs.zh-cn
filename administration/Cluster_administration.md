@@ -118,7 +118,7 @@ StarRocks如果从2.0升级到2.1版本如果是灰度升级的方式需要确�
 1. 确保所有be的配置项vector_chunk_size是4096(默认配置)
 2. 确保 FE session 变量 batch_size 小于 4096 (默认配置为1024)
 
-```
+```sql
 mysql> show variables like '%batch_size%';
 +---------------+-------+
 | Variable_name | Value |
