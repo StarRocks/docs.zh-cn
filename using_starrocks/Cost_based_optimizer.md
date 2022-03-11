@@ -100,8 +100,6 @@ PROPERTIES(
     "collect_interval_sec" = "xxx"
 );
 
-
-
 -- 定期抽样采集指定表、列的统计信息。
 CREATE ANALYZE TABLE tbl_name(columnA, columnB, columnC...)
 PROPERTIES(
