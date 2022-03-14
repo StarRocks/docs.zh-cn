@@ -374,7 +374,7 @@ DISTRIBUTED BY HASH(k1) BUCKETS 10
 PROPERTIES
 (
     "host" = "127.0.0.1",
-    "port" = "9030",
+    "port" = "9020",
     "user" = "user",
     "password" = "passwd",
     "database" = "db_test",
@@ -474,21 +474,13 @@ USE iceberg_test;
 
 ~~~sql
 CREATE EXTERNAL TABLE `iceberg_tbl` ( 
-
 `id` bigint NULL, 
-
 `data` varchar(200) NULL 
-
 ) ENGINE=ICEBERG 
-
 PROPERTIES ( 
-
 "resource" = "iceberg0", 
-
 "database" = "iceberg", 
-
 "table" = "iceberg_table" 
-
 ); 
 ~~~
 
