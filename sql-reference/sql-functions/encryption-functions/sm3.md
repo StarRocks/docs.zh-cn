@@ -7,7 +7,7 @@
 ## 语法
 
 ```Haskell
-Varchar sm3(Varchar message)
+VARCHAR sm3(VARCHAR message)
 ```
 
 ## 参数说明
