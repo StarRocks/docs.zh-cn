@@ -116,7 +116,7 @@ PROPERTIES(
 CREATE ANALYZE ALL PROPERTIES("update_interval_sec" = "43200");
 
 -- 定期抽样采集test表中v1列的统计信息，采集间隔时间为默认，检查间隔时间为默认。
-CREATE ANALYZE TABLE test(v1)
+CREATE ANALYZE TABLE test(v1);
 ```
 
 ### 查询或删除采集任务
