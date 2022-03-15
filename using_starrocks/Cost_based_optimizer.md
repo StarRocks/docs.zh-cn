@@ -24,7 +24,7 @@ CBO优化器开启后，需要使用统计信息，统计信息默认为抽样�
 
 ### 全量采集
 
-选择采集方式（手动或自动定期），并执行相关命令 。相关参数说明，请参见xxx
+选择采集方式（手动或自动定期），并执行相关命令。相关参数说明，请参见[参数说明](./Cost_based_optimizer.md/###参数说明)。
 
 - 如果为手动采集，您可以执行如下命令。
 
@@ -40,22 +40,22 @@ ANALYZE FULL TABLE tbl_name(columnA, columnB, columnC...);
 -- 定期全量采集所有数据库的统计信息。
 CREATE ANALYZE FULL ALL 
 PROPERTIES(
-    "update_interval_sec" = "xxx",
-    "collect_interval_sec" = "xxx"
+    "update_interval_sec" = "43200",
+    "collect_interval_sec" = "3600"
 );
 
 -- 定期全量采集指定数据库下所有表的统计信息。
 CREATE ANALYZE FULL DATABASE db_name 
 PROPERTIES(
-    "update_interval_sec" = "xxx",
-    "collect_interval_sec" = "xxx"
+    "update_interval_sec" = "43200",
+    "collect_interval_sec" = "3600"
 );
 
 -- 定期全量采集指定表、列的统计信息。
 CREATE ANALYZE FULL TABLE tbl_name(columnA, columnB, columnC...) 
 PROPERTIES(
-    "update_interval_sec" = "xxx",
-    "collect_interval_sec" = "xxx"
+    "update_interval_sec" = "43200",
+    "collect_interval_sec" = "3600"
 );
 ```
 
@@ -68,14 +68,14 @@ CREATE ANALYZE FULL DATABASE tpch;
 
 ### 抽样采集
 
-选择采集方式（手动或自动定期），并执行相关命令。相关参数说明，请参见xxx
+选择采集方式（手动或自动定期），并执行相关命令。相关参数说明，请参见[参数说明](./Cost_based_optimizer.md/###参数说明)。
 
 - 如果为手动采集，您可以执行如下命令，设置抽样行数。
 
 ```SQL
 ANALYZE TABLE tbl_name(columnA, columnB, columnC...)
 PROPERTIES(
-    "sample_collect_rows" = "xxx"
+    "sample_collect_rows" = "100000"
 );
 ```
 
@@ -87,33 +87,33 @@ PROPERTIES(
 -- 定期抽样采集所有数据库的统计信息。
 CREATE ANALYZE ALL
 PROPERTIES(
-    "sample_collect_rows" = "xxx",
-    "update_interval_sec" = "xxx",
-    "collect_interval_sec" = "xxx"
+    "sample_collect_rows" = "100000",
+    "update_interval_sec" = "43200",
+    "collect_interval_sec" = "3600"
 );
 
 -- 定期抽样采集指定数据库下所有表的统计信息。
 CREATE ANALYZE DATABASE db_name
 PROPERTIES(
-    "sample_collect_rows" = "xxx",
-    "update_interval_sec" = "xxx",
-    "collect_interval_sec" = "xxx"
+    "sample_collect_rows" = "100000",
+    "update_interval_sec" = "43200",
+    "collect_interval_sec" = "3600"
 );
 
 -- 定期抽样采集指定表、列的统计信息。
 CREATE ANALYZE TABLE tbl_name(columnA, columnB, columnC...)
 PROPERTIES(
-    "sample_collect_rows" = "xxx",
-    "update_interval_sec" = "xxx",
-    "collect_interval_sec" = "xxx"
+    "sample_collect_rows" = "100000",
+    "update_interval_sec" = "43200",
+    "collect_interval_sec" = "3600"
 );
 ```
 
 示例：
 
 ```SQL
--- 每隔100秒定期抽样采集所有数据库的统计信息，检查间隔时间为默认。
-CREATE ANALYZE ALL PROPERTIES("update_interval_sec" = "100");
+-- 每隔43200秒（12小时）定期抽样采集所有数据库的统计信息，检查间隔时间为默认。
+CREATE ANALYZE ALL PROPERTIES("update_interval_sec" = "43200");
 
 -- 定期抽样采集test表中v1列的统计信息，采集间隔时间为默认，检查间隔时间为默认。
 CREATE ANALYZE TABLE test(v1)
