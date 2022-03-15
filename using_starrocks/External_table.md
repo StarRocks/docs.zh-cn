@@ -557,8 +557,8 @@ StarRocks支持通过外表的方式查询Apache Hudi数据湖中的数据，帮
 ~~~sql
 CREATE EXTERNAL RESOURCE "hudi0" 
 PROPERTIES ( 
-"type" = "hudi", 
-"hive.metastore.uris" = "thrift://192.168.7.251:9083"
+    "type" = "hudi", 
+    "hive.metastore.uris" = "thrift://192.168.7.251:9083"
 );
 ~~~
 
@@ -599,21 +599,13 @@ USE hudi_test;
 
 ~~~sql
 CREATE EXTERNAL TABLE `hudi_tbl` ( 
-
 `id` bigint NULL, 
-
 `data` varchar(200) NULL 
-
 ) ENGINE=HUDI 
-
 PROPERTIES ( 
-
-"resource" = "hudi0", 
-
-"database" = "hudi", 
-
-"table" = "hudi_table" 
-
+    "resource" = "hudi0", 
+    "database" = "hudi", 
+    "table" = "hudi_table" 
 ); 
 ~~~
 
