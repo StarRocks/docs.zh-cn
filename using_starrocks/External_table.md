@@ -626,11 +626,14 @@ PROPERTIES (
 | ---------------------------- | ----------------------- |
 | BOOLEAN                      | BOOLEAN                 |
 | INT                          | TINYINT/SMALLINT/INT    |
+| DATE                         | DATE                    |
+| TimeMillis/TimeMicros        | TIME                    |
 | LONG                         | BIGINT                  |
 | FLOAT                        | FLOAT                   |
 | DOUBLE                       | DOUBLE                  |
-| STRING                       | STRING/VARCHAR          |
+| STRING                       | CHAR/VARCHAR            |
 | ARRAY                        | ARRAY                   |
+| DECIMAL                      | DECIMAL                 |
 
 > 如果Apache Hudi部分列的数据类型为FIXED, ENUM, UNION, MAP, BYTES，则StarRocks暂不支持通过Hudi关联外表的方式访问此数据类型。
 
