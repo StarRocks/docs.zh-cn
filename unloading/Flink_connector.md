@@ -22,7 +22,7 @@ Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks �
 
 1. 根据 Flink 的版本，选择对应版本。下载 JAR 包 [flink-connector-starrocks](https://github.com/StarRocks/flink-connector-starrocks/releases)。
 2. 如需调试代码，可选择对应分支代码自行编译
-3. 将下载或者编译的 JAR 包，并将 JAR 包放在 Flink 的 lib 目录中。
+3. 将下载或者编译的 JAR 包放在 Flink 的 lib 目录中。
 4. 重启 Flink。
 
 ### 步骤二：调用 flink-connector-starrocks ，读取 StarRocks 数据
