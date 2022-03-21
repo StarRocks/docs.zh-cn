@@ -117,7 +117,7 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
 所有BE节点的配置项`vector_chunk_size`是 4096（默认值为 4096，单位为行）。
 FE节点的全局变量`batch_size`小于或等于 4096 （默认值和建议值为 4096，单位为行）。
 
-```sql
+```plain text
 -- 查询 batch_size
 mysql> show variables like '%batch_size%';
 +---------------+-------+
@@ -126,6 +126,7 @@ mysql> show variables like '%batch_size%';
 | batch_size    | 1024  |
 +---------------+-------+
 1 row in set (0.00 sec)
+
 -- 设置 batch_size
 mysql> set global batch_size = 4096;
 ```
