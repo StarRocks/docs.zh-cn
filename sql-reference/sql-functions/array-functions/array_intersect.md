@@ -7,16 +7,16 @@
 ## 语法
 
 ```Haskell
-output array_overlap(input)
+output array_intersect(input)
 ```
 
 ## 参数说明
 
-* input：不限数量的相同类型数组(input0, input1, ...)。
+* input：不限数量的相同元素类型的数组(input0, input1, ...), 具体类型可以任意。
 
 ## 返回值说明
 
-与input保持一致的相同类型数组，内容为所有输入数组(input0, input1, ...)的交集。
+类型为Array(元素类型与input中数组的元素类型保持一致)，内容为所有输入数组(input0, input1, ...)的交集。
 
 ## 示例
 

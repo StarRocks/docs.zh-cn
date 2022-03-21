@@ -13,7 +13,7 @@ output array_slice(input, offset, length)
 ## 参数说明
 
 * input：输入数组，类型为Array。
-* offset: 结果数组片段的起始偏移。
+* offset: 结果数组片段的起始偏移(从1开始)。
 * length: 结果数组片段的长度。
 
 ## 返回值说明

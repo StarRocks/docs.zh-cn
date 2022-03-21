@@ -7,16 +7,16 @@
 ## 语法
 
 ```Haskell
-output array_concat(input0, input1, ...)
+output array_concat(input)
 ```
 
 ## 参数说明
 
-* input：输入为不限数量的相同类型的数组(input0, input1, ...)。
+* input：不限数量相同元素类型的数组(input0, input1, ...)，具体元素类型可以任意。
 
 ## 返回值说明
 
-类型为Array(与输入input保持一致)，内容为将输入input(input0, input1, ...)，有序拼接后构成的数组。
+类型为Array(元素类型与input中array的元素类型保持一致)，内容为(input0, input1, ...)中所有元素有序拼接后构成的数组。
 
 ## 示例
 
