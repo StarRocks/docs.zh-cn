@@ -116,7 +116,7 @@ BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼�
 如果需要将 StarRocks 2.0 灰度升级至 2.1，则需要提前进行如下设置，确保所有 BE 节点的 chunk size（即 BE 节点在每个批次中处理数据的行数）一致。
 
 * 所有BE节点的配置项`vector_chunk_size`是 4096（默认值为 4096，单位为行）。
-  > 您需要在 BE 节点的配置文件 be.conf 中修改配置项`vector_chunk_size`。配置项修改成功后，需要重启才能生效。
+  > 您需要在 BE 节点的配置文件 be.conf 中设置配置项`vector_chunk_size`。配置项设置成功后，需要重启才能生效。
 * FE节点的全局变量`batch_size`小于或等于 4096 （默认值和建议值为 4096，单位为行）。
 
 ```plain text
