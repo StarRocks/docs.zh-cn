@@ -188,3 +188,35 @@ varchar是变长存储，存储跟数据实际长度有关，建表时指定不�
 ## 2021-10这种在starrocks里算日期格式么？可以用作分区字段么
 
 不可以，函数补足成2021-10-01这种再分区吧
+
+
+
+## starRocks on es， 创建es外表时，如果相关字符串字段过长，超过256，同时es使用动态mapping， 那么使用select语句将会导致无法查询到该列
+
+动态mapping 这时候es的数据类型为 
+          "k4": {
+                "type": "text",
+                "fields": {
+                   "keyword": {   
+                      "type": "keyword",
+                      "ignore_above": 256
+                   }
+                }
+             }
+             
+starRocks 将使用keyword 数据类型转换该查询语句，因为该列的数据keyword 长度超过256， 所以无法查询该列，
+
+解决办法：去除该字段映射中的
+            "fields": {
+                   "keyword": {   
+                      "type": "keyword",
+                      "ignore_above": 256
+                   }
+                }
+            
+让其使用 text 即可
+             
+
+
+
+
