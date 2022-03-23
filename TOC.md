@@ -311,10 +311,11 @@
     + [容器编译](/administration/Build_in_docker.md)
     + [集群部署](/administration/Deployment.md)
     + [集群管理](/administration/Cluster_administration.md)
-    + [参数配置](/administration/Configuration.md)
   + 运维操作
     + [扩容缩容](/administration/Scale_up_down.md)
     + [备份恢复](/administration/Backup_and_restore.md)
+    + [参数配置](/administration/Configuration.md)
+    + [监控报警](/administration/Monitor_and_Alert.md)
     + 资源管理
       + [查询管理](/administration/Query_management.md)
       + [黑名单管理](/administration/Blacklist.md)
@@ -324,7 +325,6 @@
   + 数据恢复
     + [数据删除恢复](/administration/Data_recovery.md)
     + [元数据恢复](/administration/Metadata_recovery.md)
-  + [监控报警](/administration/Monitor_and_Alert.md)
   + 用户权限及认证
     + [用户权限](/administration/User_privilege.md)
     + [认证方式](/administration/Authentication.md)
