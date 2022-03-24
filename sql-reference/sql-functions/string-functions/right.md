@@ -17,7 +17,7 @@ MySQL > select right("Hello starrocks",5);
 +-------------------------+
 | right('Hello starrocks', 5) |
 +-------------------------+
-| starrocks                   |
+| rocks                   |
 +-------------------------+
 ```
 
