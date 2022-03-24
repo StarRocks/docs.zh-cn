@@ -6,7 +6,7 @@
 + 快速开始
   + [StarRocks基本概念及系统架构](/quick_start/Architecture.md)
   + [StarRocks手动部署](/quick_start/Deploy.md)
-  + [创建表](/quick_start/Create_table.md)
+  + [表创建](/quick_start/Create_table.md)
   + [数据导入和查询](/quick_start/Import_and_query.md)
 + 表设计
   + [理解StarRocks表设计](/table_design/StarRocks_table_design.md)
