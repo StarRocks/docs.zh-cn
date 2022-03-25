@@ -32,7 +32,7 @@ StarRocks集群由FE和BE构成, 可以使用MySQL客户端访问StarRocks集群
 
 ### Broker
 
-StarRocks和HDFS/对象存储等外部数据对接的中转服务，辅助提供导入导出功能。
+StarRocks和 HDFS 对象存储等外部数据对接的中转服务，辅助提供导入导出功能。
 
 * Hdfs Broker:  用于从Hdfs中导入数据到StarRocks集群，详见[数据导入](../loading/Loading_intro.md)章节。
 
@@ -41,7 +41,3 @@ StarRocks和HDFS/对象存储等外部数据对接的中转服务，辅助提供
 ### StarRocksManager
 
 StarRocksManager是StarRocks企业版提供的管理工具，通过Manager可以可视化的进行StarRocks集群管理、在线查询、故障查询、监控报警、可视化慢查询分析等功能。
-
-### Tablet
-
- tablet是StarRocks中表的逻辑分片，也是StarRocks中副本管理的基本单位，每个表根据分区和分桶机制被划分成多个tablet，采用列式存储的方式存储在不同BE节点上。
