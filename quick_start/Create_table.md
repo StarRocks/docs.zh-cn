@@ -30,13 +30,12 @@ mysql > show databases;
 2 rows in set (0.00 sec)
 ```
 
-information_schema是为了兼容mysql协议而存在，实际中信息可能不是很准确，所以关于具体数据库的信息建议通过直接查询相应数据库而获得。
-
+Information_schema的表结构类似MySQL，但是部分统计信息还不完善，当前推荐通过`desc tablename`等命令来获取数据库元数据信息。
 <br/>
 
 ## 建表
 
-StarRocks支持[多种表模型](../table_design/Data_model.md)，分别适用于不同的应用场景，以[明细表](../table_design/Data_model.md#明细模型)为例书写建表语句：
+StarRocks支持[多种数据模型](../table_design/Data_model.md)，分别适用于不同的应用场景，以[明细表](../table_design/Data_model.md#明细模型)为例书写建表语句：
 
 ```sql
 use example_db;
@@ -76,11 +75,11 @@ PROPERTIES(
 
 表创建成功后，可以参考[导入查询](/quick_start/Import_and_query.md)章节[Stream load Demo](/quick_start/Import_and_query.md#stream-load%E5%AF%BC%E5%85%A5demo)进行数据导入及查询操作。
 
-更改建表语法详见[CREATE TABLE](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md)章节。
+更多建表语法详见[CREATE TABLE](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md)章节。
 
 <br/>
 
-### 建表语句详解
+### 建表语句说明
 
 <br/>
 
@@ -108,7 +107,7 @@ StarRocks表中支持多种字段类型，除demo中已经列举的字段类型�
 
 <br/>
 
-#### 表模型
+#### 数据模型
 
 `DUPLICATE`关键字表示当前表为明细模型，`KEY`中的列表示当前表的排序列。StarRocks支持多种数据模型，分别为[明细模型](/table_design/Data_model.md#明细模型)，[聚合模型](/table_design/Data_model.md#聚合模型)，[更新模型](/table_design/Data_model.md#更新模型)，[主键模型](/table_design/Data_model.md#主键模型)。不同模型的适用于多种业务场景，合理选择可优化查询效率。
 
