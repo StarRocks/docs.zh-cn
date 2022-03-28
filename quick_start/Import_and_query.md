@@ -44,19 +44,20 @@ StarRocks数据导入整体生态图如下。
 
 以Stream load导入方式为例，将文件中的数据导入到[建表](/quick_start/Create_table.md)章节中创建的detailDemo表中。
 
-* 在本地创建数据文件detailDemo\_data，以逗号作为数据之间的分隔符，插入两条数据，具体内容如下：
+* 在本地创建数据文件detailDemo_data，以逗号作为数据之间的分隔符，插入两条数据，具体内容如下：
 
 ```Plain Text
 2022-03-13,1,1212,1231231231,123412341234,123452342342343324,hello,welcome,starrocks,2022-03-15 12:21:32,123.04,21.12345,123456.123456,true
 2022-03-14,2,1212,1231231231,123412341234,123452342342343324,hello,welcome,starrocks,2022-03-15 12:21:32,123.04,21.12345,123456.123456,false
 ```
 
-* 以 "streamDemo"为Label，使用本地文件detailDemo\_data导入detailDemo表。
+* 以 "streamDemo"为Label，使用本地文件detailDemo_data导入detailDemo表。
 利用curl命令封装HTTP请求，完成数据的导入：
 
 ```bash
-curl --location-trusted -u root: -T detailDemo\_data -H "label: streamDemo" \ -H "column_separator:," \
-http://127.0.0.1:8030/api/example\_db/detailDemo/_stream_load
+curl --location-trusted -u root: -T detailDemo_data -H "label: streamDemo" \
+-H "column_separator:," \
+http://127.0.0.1:8030/api/example_db/detailDemo_stream_load
 ```
 
 > 注意：这里root是fe的用户名，默认密码为空，使用用户有密码时需在冒号后面补充密码；http中ip为fe节点ip，端口8030是fe.conf中配置的http port。
@@ -71,21 +72,20 @@ StarRocks兼容Mysql协议，查询语句基本符合SQL92标准。
 
 示例:查询表中全部数据
 
-```Plain Text
-mysql> select * from detailDemo;
+```Plain SQL
+select * from detailDemo;
 ```
 
 ### order by查询
 
 示例:查询结果以mache_verson字段降序排列
 
-```Plain Text
-mysql> select * from detailDemo order by mache_verson desc;
+```Plain SQL
+select * from detailDemo order by mache_verson desc;
 ```
 
 StarRocks支持多种select用法，包括：[Join](/sql-reference/sql-statements/data-manipulation/SELECT.md#%E8%BF%9E%E6%8E%A5join)，[子查询](/sql-reference/sql-statements/data-manipulation/SELECT.md#子查询)，[With子表](/sql-reference/sql-statements/data-manipulation/SELECT.md#with%E5%AD%90%E5%8F%A5)等，详见[查询章节](/sql-reference/sql-statements/data-manipulation/SELECT.md)。
 
-</br>
 
 ## 建模优化
 
@@ -93,19 +93,16 @@ StarRocks支持多种select用法，包括：[Join](/sql-reference/sql-statement
 
 StarRocks中支持多种函数，包括：[日期函数](/sql-reference/sql-functions/date-time-functions/)，[地理位置函数](/sql-reference/sql-functions/spatial-functions)，[字符串函数](/sql-reference/sql-functions/string-functions/)，[聚合函数](/sql-reference/sql-functions/aggregate-functions/)，[Bitmap函数](/sql-reference/sql-functions/bitmap-functions/)，[数组函数](/sql-reference/sql-functions/array-functions/)，[cast函数](/sql-reference/sql-functions/cast.md)，[hash函数](/sql-reference/sql-functions/hash-functions/)，[加密函数](/sql-reference/sql-functions/encryption-functions/)，[开窗函数等](/using_starrocks/Window_function.md)等。
 
-<br/>
 
 ### 视图，物化视图
 
 StarRocks支持创建[逻辑视图](/sql-reference/sql-statements/data-definition/CREATE%20VIEW.md#description)和[物化视图](/using_starrocks/Materialized_view.md#物化视图)。具体应用及原理详见对应章节。
 
-<br/>
 
 ### 外部表
 
 StarRocks支持多种外部表：[MySQL外部表](/using_starrocks/External_table.md#MySQL外部表)，[ElasticSearch外部表](/using_starrocks/External_table.md#ElasticSearch外部表)，[Hive外表](/using_starrocks/External_table.md#Hive外表)，[StarRocks外部表](/using_starrocks/External_table.md#StarRocks外部表)，[Apache Iceberg外表](/using_starrocks/External_table.md#apache-iceberg%E5%A4%96%E8%A1%A8)。成功创建外部表后，可通过查询外部表的方式接入其他数据源。
 
-<br/>
 
 ## 慢查询分析
 
@@ -115,8 +112,8 @@ StarRocks支持多种外部表：[MySQL外部表](/using_starrocks/External_tabl
 
 ### 如何查看Profile分析查询瓶颈
 
-* 通过explain sql命令可以查看查询计划。
-* 通过 set is\_report\_success = true 可以打开profile的上报。
-* 社区版用户在 http:FE\_IP:FE\_HTTP\_PORT/query 可以看到当前的查询和Profile信息
+* 通过`explain sql`命令可以查看查询计划。
+* 通过 `set is_report_success = true`可以打开profile的上报。
+* 社区版用户在 `http:FE\_IP:FE\_HTTP\_PORT/query` 可以看到当前的查询和Profile信息
 * 企业版用户在StarRocksManager的查询页面可以看到图形化的Profille展示，点击查询链接可以在“执行时间“页面看到树状展示，可以在“执行详情“页面看到完整的Profile详细信息。如果达不到预期可以发送执行详情页面的文本到社区或者技术支持的群里寻求帮助
 * Plan和Profile参考[查询分析](../administration/Query_planning.md) 和[性能优化](../administration/Profiling.md)章节
