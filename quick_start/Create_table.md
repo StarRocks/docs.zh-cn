@@ -13,13 +13,13 @@ mysql -h fe_host -P9030 -u root
 使用 root 用户建立 example\_db 数据库:
 
 ```sql
-mysql > create database example_db;
+create database example_db;
 ```
 
 通过 `show databases;` 查看数据库信息：
 
 ```Plain Text
-mysql > show databases;
+show databases;
 
 +--------------------+
 | Database           |
