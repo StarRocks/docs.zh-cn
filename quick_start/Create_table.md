@@ -77,7 +77,6 @@ PROPERTIES(
 
 更多建表语法详见 [CREATE TABLE](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md) 章节。
 
-
 ### 建表语句说明
 
 #### 排序键
