@@ -270,7 +270,7 @@
         + [json_query](/sql-reference/sql-functions/json-functions/json-processing-functions/json_query.md)
         + [json_exist](/sql-reference/sql-functions/json-functions/json-processing-functions/json_exist.md)
         + [json_each](/sql-reference/sql-functions/json-functions/json-processing-functions/json_each.md)
-        + [JSON类型转换](/sql-reference/sql-functions/json-functions/json-processing-functions/cast-from-or-to-json.md)
+        + [JSON 类型转换](/sql-reference/sql-functions/json-functions/json-processing-functions/cast-from-or-to-json.md)
       + [JSON 运算符](/sql-reference/sql-functions/json-functions/json-operators.md)
     + 聚合函数
       + [approx_count_distinct](/sql-reference/sql-functions/aggregate-functions/approx_count_distinct.md)
