@@ -68,7 +68,7 @@ StarRocks 兼容 Mysql 协议，查询语句基本符合 SQL92 标准。
 
 示例: 查询表中全部数据
 
-```Plain SQL
+```sql
 select * from detailDemo;
 ```
 
@@ -76,7 +76,7 @@ select * from detailDemo;
 
 示例: 查询结果以 mache_verson 字段降序排列
 
-```Plain SQL
+```sql
 select * from detailDemo order by mache_verson desc;
 ```
 
