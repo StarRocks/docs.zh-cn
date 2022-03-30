@@ -16,6 +16,8 @@ Broker Load 适用于源数据在 Broker 进程可访问的存储系统（如 HD
 
 Spark Load 适用于初次迁移大数据量（可到 TB 级别）到 StarRocks 的场景，且源数据在 Spark 可访问的存储系统（如 HDFS）中。
 
+通过 Spark load 可以基于 Hive 表实现[全局字典](/loading/SparkLoad.md#全局字典)的数据结构，对输入数据进行类型转换，保存原始值到编码值的映射。例如将字符串类型映射成整型。
+
 ### Stream Load
 
 [Stream Load](/loading/StreamLoad.md) 是一种同步执行的导入方式。用户通过 HTTP 协议发送请求将本地文件或数据流导入到 StarRocks 中，并等待系统返回导入的结果状态，从而判断导入是否成功。
