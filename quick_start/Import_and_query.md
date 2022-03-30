@@ -84,7 +84,7 @@ StarRocks 支持多种 select 用法，包括：[Join](/sql-reference/sql-statem
 
 ### 函数支持
 
-StarRocks 中支持多种函数，包括：[日期函数](/sql-reference/sql-functions/date-time-functions/)，[地理位置函数](/sql-reference/sql-functions/spatial-functions)，[字符串函数](/sql-reference/sql-functions/string-functions/)，[聚合函数](/sql-reference/sql-functions/aggregate-functions/)，[Bitmap 函数](/sql-reference/sql-functions/bitmap-functions/)，[数组函数](/sql-reference/sql-functions/array-functions/)，[cast 函数](/sql-reference/sql-functions/cast.md)，[hash 函数](/sql-reference/sql-functions/hash-functions/)，[加密函数](/sql-reference/sql-functions/encryption-functions/)，[开窗函数等](/using_starrocks/Window_function.md) 等。
+StarRocks 中支持多种函数，包括：[日期函数](/sql-reference/sql-functions/date-time-functions/)，[地理位置函数](/sql-reference/sql-functions/spatial-functions)，[字符串函数](/sql-reference/sql-functions/string-functions/)，[聚合函数](/sql-reference/sql-functions/aggregate-functions/)，[Bitmap 函数](/sql-reference/sql-functions/bitmap-functions/)，[数组函数](/sql-reference/sql-functions/array-functions/)，[cast 函数](/sql-reference/sql-functions/cast.md)，[hash 函数](/sql-reference/sql-functions/hash-functions/)，[加密函数](/sql-reference/sql-functions/encryption-functions/)，[开窗函数](/using_starrocks/Window_function.md) 等。
 
 ### 视图，物化视图
 
@@ -98,12 +98,12 @@ StarRocks 支持多种外部表：[MySQL 外部表](/using_starrocks/External_ta
 
 ### 通过调整并行度优化查询效率
 
-您可以通过设置 Pipeline 执行引擎变量（推荐），或者设置一个 Fragment 实例的并行数量，来设置查询并行度，从而提高 CPU 资源利用率和查询效率。设置方式，请参见 [查询并行度相关参数](/administration/Query_management.md/#查询相关的session变量)。
+您可以通过设置 Pipeline 执行引擎变量（推荐），或者调整一个 Fragment 实例的并行数量`set  parallel_fragment_exec_instance_num = 8;`，来设置查询并行度，从而提高 CPU 资源利用率和查询效率。详细的参数介绍及设置，请参见 [查询并行度相关参数](/administration/Query_management.md/#查询相关的session变量)。
 
 ### 如何查看 Profile 分析查询瓶颈
 
 * 通过 `explain sql` 命令可以查看查询计划。
 * 通过 `set is_report_success = true` 可以打开 profile 的上报。
 * 社区版用户在 `http:FE_IP:FE_HTTP_PORT/query` 可以看到当前的查询和 Profile 信息
-* 企业版用户在 StarRocksManager 的查询页面可以看到图形化的 Profille 展示，点击查询链接可以在“执行时间“页面看到树状展示，可以在“执行详情“页面看到完整的 Profile 详细信息。如果达不到预期可以发送执行详情页面的文本到社区或者技术支持的群里寻求帮助
+* 企业版用户在 StarRocksManager 的查询页面可以看到图形化的 Profille 展示，点击查询链接可以在**执行时间**页面看到树状展示，可以在**执行详情**页面看到完整的 Profile 详细信息。如果达不到预期可以发送执行详情页面的文本到社区或者技术支持的群里寻求帮助
 * Plan 和 Profile 参考 [查询分析](../administration/Query_planning.md) 和 [性能优化](../administration/Profiling.md) 章节
