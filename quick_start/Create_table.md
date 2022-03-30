@@ -113,9 +113,11 @@ StarRocks 默认会给 Key 列创建稀疏索引加速查询，具体规则见 [
 
 </br>
 
-## Schema 修改
+## 其他操作
 
-### 修改 Schema
+表创建成功后即可进行[数据导入查询](/quick_start/Import_and_query.md) 。StarRocks支持[用户创建授权](/sql-reference/sql-statements/account-management)及多种[DDL操作](/sql-reference/sql-statements/data-definition)，此处仅简单介绍部分Schema Change 操作和如何创建用户并授权。
+
+### Schema 修改
 
 使用 [ALTER TABLE](/sql-reference/sql-statements/data-definition/ALTER%20TABLE.md) 命令可以修改表的 Schema，包括增加列，删除列，修改列类型（暂不支持修改列名称），改变列顺序。
 
@@ -171,9 +173,7 @@ mysql> desc table1;
 CANCEL ALTER TABLE COLUMN FROM table1\G
 ```
 
-</br>
-
-## 创建用户并授权
+### 创建用户并授权
 
 StarRocks 中拥有 [Create_priv 权限](../administration/User_privilege.md#权限类型) 的用户才可建立数据库。
 
