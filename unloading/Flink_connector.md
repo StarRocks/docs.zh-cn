@@ -64,7 +64,7 @@ Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks �
    > - 支持谓词下推。使用 SQL 语句时，支持自动进行谓词下推，比如上述例子中的过滤条件 `char_1 <> 'A' and int_1 = -126`，会下推到 connector 中转换成适用于 StarRocks 的语句进行查询，不需要额外配置。
    > - 不支持limit语句
    > - 在任务失败的情况下，由于暂时没有 checkpoint 机制，无法保证数据一致性
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+
 - 如您使用 Flink DataStream ，则需要先添加依赖，然后调用 flink-connector-starrocks，读取 StarRocks 的数据。
 
 1. 在 pom.xml 文件中添加如下依赖。
