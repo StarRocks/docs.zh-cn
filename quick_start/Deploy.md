@@ -1,7 +1,5 @@
 # 手动部署
 
-StarRocks 可通过 [Mysql 客户端进行连接](#%E4%BD%BF%E7%94%A8mysql%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AE%BF%E9%97%AEstarrocks)，使用 Alter/Drop 命令添加/删除 fe/be 节点，实现对集群的 [扩容/缩容](../administration/Scale_up_down.md) 操作。
-
 ## 环境准备
 
 集群节点需要以下环境支持：
@@ -15,9 +13,21 @@ StarRocks 可通过 [Mysql 客户端进行连接](#%E4%BD%BF%E7%94%A8mysql%E5%AE
 
 通过 `cat /proc/cpuinfo |grep avx2` 命令查看节点配置，有结果则 cpu 支持 AVX2 指令集。
 
-测试集群建议节点配置：BE 推荐 16 核 64GB 以上，FE 推荐 8 核 16GB 以上。
+测试集群建议节点配置：BE 推荐 16 核 64GB 以上，FE 推荐 8 核 16GB 以上。建议 FE，BE 独立部署。
 
-系统参数配置建议请参考文末 [参数配置](#参数设置);
+系统参数配置建议：
+
+关闭交换区，消除交换内存到虚拟内存时对性能的扰动。
+
+```shell
+echo 0 | sudo tee /proc/sys/vm/swappiness
+```
+
+建议使用 Overcommit，把 cat /proc/sys/vm/overcommit_memory 设成  1。
+
+```shell
+echo 1 | sudo tee /proc/sys/vm/overcommit_memory
+```
 
 ## 下载 StarRocks
 
@@ -116,6 +126,8 @@ bin/start_fe.sh --daemon
 
 ### 使用 MySQL 客户端访问 FE
 
+StarRocks 可通过 [Mysql 客户端进行连接](#%E4%BD%BF%E7%94%A8mysql%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AE%BF%E9%97%AEstarrocks)，使用 Add/Drop 命令添加/删除 fe/be 节点，实现对集群的 [扩容/缩容](../administration/Scale_up_down.md) 操作。
+
 第一步: 安装 mysql 客户端，版本建议 5.5+(如果已经安装，可忽略此步)：
 
 Ubuntu：sudo apt-get install mysql-client
@@ -138,8 +150,8 @@ mysql -h 127.0.0.1 -P9030 -uroot
 mysql> SHOW PROC '/frontends'\G
 
 ************************* 1. row ************************
-             Name: 172.16.139.24_9010_1594200991015
-               IP: 172.16.139.24
+             Name: 172.16.139.11_9010_1594200991015
+               IP: 172.16.139.11
          HostName: starrocks-sandbox01
       EditLogPort: 9010
          HttpPort: 8030
@@ -221,7 +233,7 @@ mysql> SHOW PROC '/backends'\G
 ********************* 1. row **********************
             BackendId: 10002
               Cluster: default_cluster
-                   IP: 172.16.139.24
+                   IP: 172.16.139.11
              HostName: starrocks-sandbox01
         HeartbeatPort: 9050
                BePort: 9060
@@ -248,10 +260,10 @@ ClusterDecommissioned: false
 如果 isAlive 为 true，则说明 BE 正常接入集群。如果 BE 没有正常接入集群，请查看 log 目录下的 be.WARNING 日志文件确定原因。
 <br/>
 
-如果日志中出现类似以下的信息，说明 priority\_networks 的配置存在问题。
+如果日志中出现类似以下的信息，说明 priority_networks 的配置存在问题。
 
 ```Plain Text
-W0708 17:16:27.308156 11473 heartbeat\_server.cpp:82\] backend ip saved in master does not equal to backend local ip127.0.0.1 vs. 172.16.179.26
+W0708 17:16:27.308156 11473 heartbeat_server.cpp:82\] backend ip saved in master does not equal to backend local ip127.0.0.1 vs. 172.16.179.26
 ```
 
 <br/>
@@ -259,7 +271,7 @@ W0708 17:16:27.308156 11473 heartbeat\_server.cpp:82\] backend ip saved in maste
 此时需要，先用以下命令 drop 掉原来加进去的 be，然后重新以正确的 IP 添加 BE。
 
 ```sql
-mysql> ALTER SYSTEM DROPP BACKEND "172.16.139.24:9050";
+MySQL> ALTER SYSTEM DROPP BACKEND "172.16.139.11:9050";
 ```
 
 <br/>
@@ -268,9 +280,9 @@ mysql> ALTER SYSTEM DROPP BACKEND "172.16.139.24:9050";
 
 ## 部署 Broker
 
-配置文件为 apache\_hdfs\_broker/conf/apache\_hdfs\_broker.conf
+配置文件为 apache_hdfs_broker/conf/apache_hdfs_broker.conf
 
-> 注意：Broker 没有也不需要 priority\_networks 参数，Broker 的服务默认绑定在 0.0.0.0 上，只需要在 ADD BROKER 时，填写正确可访问的 Broker IP 即可。
+> 注意：Broker 没有也不需要 priority_networks 参数，Broker 的服务默认绑定在 0.0.0.0 上，只需要在 ADD BROKER 时，填写正确可访问的 Broker IP 即可。
 
 如果有特殊的 hdfs 配置，复制线上的 hdfs-site.xml 到 conf 目录下
 
@@ -283,7 +295,7 @@ mysql> ALTER SYSTEM DROPP BACKEND "172.16.139.24:9050";
 添加 broker 节点到集群中：
 
 ```sql
-MySQL> ALTER SYSTEM ADD BROKER broker1 "172.16.139.24:8000";
+MySQL> ALTER SYSTEM ADD BROKER broker1 "172.16.139.11:8000";
 ```
 
 查看 broker 状态：
@@ -292,7 +304,7 @@ MySQL> ALTER SYSTEM ADD BROKER broker1 "172.16.139.24:8000";
 MySQL> SHOW PROC "/brokers"\G
 *************************** 1. row ***************************
           Name: broker1
-            IP: 172.16.139.24
+            IP: 172.16.139.11
           Port: 8000
          Alive: true
  LastStartTime: 2020-04-01 19:08:35
@@ -305,32 +317,12 @@ Alive 为 true 代表状态正常。
 
 </br>
 
-## FE 的高可用集群部署
+## 扩展内容
 
-StarRocks FE 支持 HA 模型部署，保证集群的高可用，详细设置方式请参考 [FE 高可用集群部署](/administration/Deployment.md#FE高可用部署)
+### FE 的高可用集群部署
 
-</br>
+StarRocks FE 支持 HA 模型部署，保证集群的高可用，详细设置方式请参考 [FE 高可用集群部署](/administration/Deployment.md#FE高可用部署)。
 
-## 集群升级
+### 集群升级
 
 StarRocks 支持平滑升级，并支持回滚（1.18.2 及以后的版本无法回滚到其之前的版本），详细操作步骤请参考 [集群升级](../administration/Cluster_administration.md#集群升级)。
-
-</br>
-
-## 参数设置
-
-* **Swappiness**
-
-关闭交换区，消除交换内存到虚拟内存时对性能的扰动。
-
-```shell
-echo 0 | sudo tee /proc/sys/vm/swappiness
-```
-
-* **Overcommit**
-
-建议使用 Overcommit，把 cat /proc/sys/vm/overcommit_memory 设成  1。
-
-```shell
-echo 1 | sudo tee /proc/sys/vm/overcommit_memory
-```
