@@ -93,32 +93,43 @@ Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks �
 2. 参考如下示例代码，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见[参数说明](#参数说明)。
 
 ```Java
-StarRocksSourceOptions options = StarRocksSourceOptions.builder()
-       .withProperty("scan-url", "192.168.xxx.xxx:8030,192.168.xxx.xxx:8030")
-       .withProperty("jdbc-url", "jdbc:mysql://192.168.xxx.xxx:9030")
-       .withProperty("username", "root")
-       .withProperty("password", "xxxxxx")
-       .withProperty("table-name", "flink_test")
-       .withProperty("database-name", "test")
-       .build();
-TableSchema tableSchema = TableSchema.builder()
-       .field("date_1", DataTypes.DATE())
-       .field("datetime_1", DataTypes.TIMESTAMP(6))
-       .field("char_1", DataTypes.CHAR(20))
-       .field("varchar_1", DataTypes.STRING())
-       .field("boolean_1", DataTypes.BOOLEAN())
-       .field("tinyint_1", DataTypes.TINYINT())
-       .field("smallint_1", DataTypes.SMALLINT())
-       .field("int_1", DataTypes.INT())
-       .field("bigint_1", DataTypes.BIGINT())
-       .field("largeint_1", DataTypes.STRING())
-       .field("float_1", DataTypes.FLOAT())
-       .field("double_1", DataTypes.DOUBLE())
-       .field("decimal_1", DataTypes.DECIMAL(27, 9))
-       .build();
-StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-env.addSource(StarRocksSource.source(options, tableSchema)).setParallelism(5).print();
-env.execute("StarRocks flink source");
+import com.starrocks.connector.flink.StarRocksSource;
+import com.starrocks.connector.flink.table.source.StarRocksSourceOptions;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.table.api.DataTypes;
+import org.apache.flink.table.api.TableSchema;
+
+public class StarRocksSourceApp {
+    public static void main(String[] args) {
+        StarRocksSourceOptions options = StarRocksSourceOptions.builder()
+               .withProperty("scan-url", "192.168.xxx.xxx:8030,192.168.xxx.xxx:8030")
+               .withProperty("jdbc-url", "jdbc:mysql://192.168.xxx.xxx:9030")
+               .withProperty("username", "root")
+               .withProperty("password", "xxxxxx")
+               .withProperty("table-name", "flink_test")
+               .withProperty("database-name", "test")
+               .build();
+        TableSchema tableSchema = TableSchema.builder()
+               .field("date_1", DataTypes.DATE())
+               .field("datetime_1", DataTypes.TIMESTAMP(6))
+               .field("char_1", DataTypes.CHAR(20))
+               .field("varchar_1", DataTypes.STRING())
+               .field("boolean_1", DataTypes.BOOLEAN())
+               .field("tinyint_1", DataTypes.TINYINT())
+               .field("smallint_1", DataTypes.SMALLINT())
+               .field("int_1", DataTypes.INT())
+               .field("bigint_1", DataTypes.BIGINT())
+               .field("largeint_1", DataTypes.STRING())
+               .field("float_1", DataTypes.FLOAT())
+               .field("double_1", DataTypes.DOUBLE())
+               .field("decimal_1", DataTypes.DECIMAL(27, 9))
+               .build();
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        env.addSource(StarRocksSource.source(options, tableSchema)).setParallelism(5).print();
+        env.execute("StarRocks flink source");
+    }
+
+}
 ```
 
 ## 参数说明
