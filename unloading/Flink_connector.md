@@ -62,7 +62,9 @@ Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks �
 
    > - 仅支持使用部分 SQL 语句读取 StarRocks 数据，如`select ... from table_name where ...`。暂不支持除 COUNT 外的聚合函数。
    > - 支持谓词下推。使用 SQL 语句时，支持自动进行谓词下推，比如上述例子中的过滤条件 `char_1 <> 'A' and int_1 = -126`，会下推到 connector 中转换成适用于 StarRocks 的语句进行查询，不需要额外配置。
-
+   > - 不支持limit语句
+   > - 在任务失败的情况下，由于暂时没有 checkpoint 机制，无法保证数据一致性
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 - 如您使用 Flink DataStream ，则需要先添加依赖，然后调用 flink-connector-starrocks，读取 StarRocks 的数据。
 
 1. 在 pom.xml 文件中添加如下依赖。
@@ -90,36 +92,34 @@ Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks �
 
 2. 参考如下示例代码，调用 flink-connector-starrocks，读取 StarRocks 的数据。相关参数说明，请参见[参数说明](#参数说明)。
 
-   ```Java
-   StarRocksSourceOptions options = StarRocksSourceOptions.builder()
-           .withProperty("scan-url", "192.168.xxx.xxx:8030,192.168.xxx.xxx:8030")
-           .withProperty("jdbc-url", "jdbc:mysql://192.168.xxx.xxx:9030")
-           .withProperty("username", "root")
-           .withProperty("password", "xxxxxx")
-           .withProperty("table-name", "flink_test")
-           .withProperty("database-name", "test")
-           .withProperty("cloumns", "char_1, date_1")        
-           .withProperty("filters", "int_1 = 10")
-           .build();
-   TableSchema tableSchema = TableSchema.builder()
-           .field("date_1", DataTypes.DATE())
-           .field("datetime_1", DataTypes.TIMESTAMP(6))
-           .field("char_1", DataTypes.CHAR(20))
-           .field("varchar_1", DataTypes.STRING())
-           .field("boolean_1", DataTypes.BOOLEAN())
-           .field("tinyint_1", DataTypes.TINYINT())
-           .field("smallint_1", DataTypes.SMALLINT())
-           .field("int_1", DataTypes.INT())
-           .field("bigint_1", DataTypes.BIGINT())
-           .field("largeint_1", DataTypes.STRING())
-           .field("float_1", DataTypes.FLOAT())
-           .field("double_1", DataTypes.DOUBLE())
-           .field("decimal_1", DataTypes.DECIMAL(27, 9))
-           .build();
-   StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-   env.addSource(StarRocksSource.source(options, tableSchema)).setParallelism(5).print();
-   env.execute("StarRocks flink source");
-   ```
+```Java
+StarRocksSourceOptions options = StarRocksSourceOptions.builder()
+       .withProperty("scan-url", "192.168.xxx.xxx:8030,192.168.xxx.xxx:8030")
+       .withProperty("jdbc-url", "jdbc:mysql://192.168.xxx.xxx:9030")
+       .withProperty("username", "root")
+       .withProperty("password", "xxxxxx")
+       .withProperty("table-name", "flink_test")
+       .withProperty("database-name", "test")
+       .build();
+TableSchema tableSchema = TableSchema.builder()
+       .field("date_1", DataTypes.DATE())
+       .field("datetime_1", DataTypes.TIMESTAMP(6))
+       .field("char_1", DataTypes.CHAR(20))
+       .field("varchar_1", DataTypes.STRING())
+       .field("boolean_1", DataTypes.BOOLEAN())
+       .field("tinyint_1", DataTypes.TINYINT())
+       .field("smallint_1", DataTypes.SMALLINT())
+       .field("int_1", DataTypes.INT())
+       .field("bigint_1", DataTypes.BIGINT())
+       .field("largeint_1", DataTypes.STRING())
+       .field("float_1", DataTypes.FLOAT())
+       .field("double_1", DataTypes.DOUBLE())
+       .field("decimal_1", DataTypes.DECIMAL(27, 9))
+       .build();
+StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+env.addSource(StarRocksSource.source(options, tableSchema)).setParallelism(5).print();
+env.execute("StarRocks flink source");
+```
 
 ## 参数说明
 
@@ -137,6 +137,14 @@ Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks �
 | scan.params.query-timeout-s | 否       | String   | 查询任务的超时时间，单位为秒，默认值为600。如果超过该时间，仍未返回查询结果，则停止查询任务。  |
 | scan.params.mem-limit-byte  | 否       | String   | BE 节点中单个查询的内存上限，单位为字节，默认值为1073741824（1G）。 |
 | scan.max-retries            | 否       | String   | 查询失败时的最大重试次数，默认值为1。超过该数量上限，则将报错。 |
+
+### Streaming中特有参数
+
+| 参数                        | 是否必填 | 数据类型 | 描述                                                         |
+| --------------------------- | -------- | -------- | ------------------------------------------------------------ |
+| scan.columns                | 否       | String   | 选择特定的columns。不同columns之间以逗号分隔。                                      |
+| scan.filter                 | 否       | String   | 在SQL中设置过滤方式。ps:"tinyint_1 = 100" |
+
 
 ## Flink 与 StarRocks 的数据类型映射关系
 
