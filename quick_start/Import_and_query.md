@@ -82,7 +82,7 @@ select * from detailDemo order by mache_verson desc;
 
 StarRocks 支持多种 select 用法，包括：[Join](/sql-reference/sql-statements/data-manipulation/SELECT.md#%E8%BF%9E%E6%8E%A5join)，[子查询](/sql-reference/sql-statements/data-manipulation/SELECT.md#子查询)，[With 子表](/sql-reference/sql-statements/data-manipulation/SELECT.md#with%E5%AD%90%E5%8F%A5) 等，详见 [查询章节](/sql-reference/sql-statements/data-manipulation/SELECT.md)。
 
-## 建模优化
+## 扩展内容
 
 ### 函数支持
 
@@ -102,10 +102,10 @@ StarRocks 支持多种外部表：[MySQL 外部表](/using_starrocks/External_ta
 
 您可以通过设置 Pipeline 执行引擎变量（推荐），或者调整一个 Fragment 实例的并行数量`set  parallel_fragment_exec_instance_num = 8;`，来设置查询并行度，从而提高 CPU 资源利用率和查询效率。详细的参数介绍及设置，请参见 [查询并行度相关参数](/administration/Query_management.md/#查询相关的session变量)。
 
-### 如何查看 Profile 分析查询瓶颈
+### 如何查看 Profile 并通过 Profile 分析查询瓶颈
 
-* 通过 `explain sql` 命令可以查看查询计划。
+* 通过 `explain costs sql` 命令可以查看查询计划，1.19版本以前使用 `explain sql`。
 * 通过 `set is_report_success = true` 可以打开 profile 的上报。
 * 社区版用户在 `http:FE_IP:FE_HTTP_PORT/query` 可以看到当前的查询和 Profile 信息
-* 企业版用户在 StarRocksManager 的查询页面可以看到图形化的 Profille 展示，点击查询链接可以在**执行时间**页面看到树状展示，可以在**执行详情**页面看到完整的 Profile 详细信息。如果达不到预期可以发送执行详情页面的文本到社区或者技术支持的群里寻求帮助
+* 企业版用户在 StarRocksManager 的查询页面可以看到图形化的 Profile 展示，点击查询链接可以在**执行时间**页面看到树状展示，可以在**执行详情**页面看到完整的 Profile 详细信息。如果达不到预期可以发送执行详情页面的文本到社区或者技术支持的群里寻求帮助
 * Plan 和 Profile 参考 [查询分析](../administration/Query_planning.md) 和 [性能优化](../administration/Profiling.md) 章节
