@@ -4,6 +4,10 @@
 
 ## FE 配置项
 
+FE 部分配置项为动态参数，支持在线修改，部分配置项为静态参数，修改后需要重启fe服务，才能生效。
+
+### FE 动态参数
+
 FE 部分配置项即动态参数支持在线修改，可通过
 
 ~~~sql
@@ -14,19 +18,19 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 
 以下是 FE 动态参数列表：
 
-* LOG
+* **LOG**
 
 |配置项|默认值|作用|
 |---|---|---|
 |qe_slow_log_ms|5000|Slow query 的认定时长，默认 5000ms|
 
-* Server
+* **Server**
 
 |配置项|默认值|作用|
 |---|---|---|
 |shutdown_hook_timeout_sec|60|FE 优雅退出的等待时间
 
-* 元数据与集群管理
+* **元数据与集群管理**
 
 |配置项|默认值|作用|
 |---|---|---|
@@ -40,7 +44,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |drop_backend_after_decommission|TRUE|BE 被下线后，是否删除该 BE|
 |catalog_try_lock_timeout_ms|5000|Catalog Lock 获取的超时时长|
 
-* Query Engine
+* **Query Engine**
 
 |配置项|默认值|作用|
 |---|---|---|
@@ -67,7 +71,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |enable_local_replica_selection|FALSE|优化器优先选择与这个 FE 相同 IP 的 BE 节点上的 tablet|
 |max_distribution_pruner_recursion_depth|100|分区裁剪允许的最大递归深度|
 
-* 导入和导出
+* **导入和导出**
 
 |配置项|默认值|作用|
 |---|---|---|
@@ -107,7 +111,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |export_running_job_num_limit|5|导出作业最大的运行数目|
 |export_task_default_timeout_second|7200|导出作业超时时长，默认 2 小时|
 
-* 存储相关
+* **存储相关**
 
 |配置项|默认值|作用|
 |---|---|---|
@@ -135,7 +139,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |consistency_check_end_time|4|FE 发起副本一致性检测的终止时间|
 |check_consistency_default_timeout_second|600|副本一致性检测的超时时间|
 
-* 其他
+* **其他**
 
 |配置项|默认值|作用|
 |---|---|---|
@@ -146,9 +150,11 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |backup_job_default_timeout_ms|86400*1000|Backup 作业的超时时间|
 |report_queue_size|100|Disk/Task/Tablet 的 Report 的等待队列长度|
 
+### FE 静态参数
+
 以下 FE 配置项为静态参数，不支持在线修改，生效需在 fe.conf 中修改并重启 fe 服务。
 
-* LOG
+* **LOG**
 
 |配置项|默认值|作用|
 |---|---|---|
@@ -172,7 +178,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |dump_log_roll_num|90|每个 dump_log_roll_interval 时间内，保留的 Dump 日志文件数目|
 |dump_log_delete_age|30d|Dump 日志保留的时间长度|
 
-* Server
+* **Server**
 
 |配置项|默认值|作用|
 |---|---|---|
@@ -199,7 +205,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |qe_max_connection|1024|FE 上最多接收的连接数，适用于所有用户|
 |check_java_version|TRUE|检查执行时的版本与编译的 Java 版本是否兼容|
 
-* 元数据与集群管理
+* **元数据与集群管理**
 
 |配置项|默认值|作用|
 |---|---|---|
@@ -220,7 +226,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |meta_delay_toleration_second|300|非 master 节点容忍的最大元数据落后的时间|
 |cluster_id|-1|相同 cluster_id 的 FE/BE 节点属于同一个集群。等于-1 则在 master FE 第一次启动时随机生成一个|
 
-* Query Engine
+* **Query Engine**
 
 |配置项|默认值|作用|
 |---|---|---|
@@ -229,7 +235,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |publish_version_interval_ms|10|发送版本生效任务的时间间隔|
 |statistic_cache_columns|10_0000|缓存统计信息表的行数|
 
-* 导入和导出
+* **导入和导出**
 
 |配置项|默认值|作用|
 |---|---|---|
@@ -246,7 +252,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |export_task_pool_size|5|导出任务线程池大小，默认 5 个|
 |export_checker_interval_second|5|导出作业调度器的调度周期|
 
-* 存储相关
+* **存储相关**
 
 |配置项|默认值|作用|
 |---|---|---|
@@ -256,7 +262,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |tablet_balancer_strategy|disk_and_tablet|Tablet 均衡策略，值为 disk_and_tablet 或 be_load_score|
 |tablet_stat_update_interval_second 300 FE 向每个 BE 请求收集 tablet 信息的时间间隔，默认 5min|
 
-* 其他
+* **其他**
 
 |配置项|默认值|作用|
 |---|---|---|
@@ -400,17 +406,17 @@ BE 配置项暂不支持在线修改，生效需在 be.conf 中修改并重启 b
 
 ## 系统参数
 
-* Linux Kernel
+* **Linux Kernel**
 
 建议 3.10 以上的内核。
 
-* CPU
+* **CPU**
 
 |参数名称|描述|建议值|修改方式|
 |---|---|---|---|
 |performance|scaling governor 用于控制 CPU 的能耗模式，默认是 on-demand 模式，使用 performance 能耗最高，性能也最好，StarRocks 部署建议采用 performance 模式|performance|echo 'performance' \| sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor|
 
-* 内存
+* **内存**
 
 |参数名称|描述|建议值|修改方式|
 |---|---|---|---|
@@ -418,7 +424,7 @@ BE 配置项暂不支持在线修改，生效需在 be.conf 中修改并重启 b
 |Huge Pages|禁止 transparent huge pages，这个会干扰内存分配器，导致性能下降|madvise|echo 'madvise' \| sudo tee /sys/kernel/mm/transparent_hugepage/enabled|
 |Swappiness|关闭交换区，消除交换内存到虚拟内存时对性能的扰动|0|echo 0 \| sudo tee /proc/sys/vm/swappiness|
 
-* 磁盘
+* **磁盘**
 
 |参数名称|描述|建议值|修改方式|
 |---|---|---|---|
@@ -426,11 +432,11 @@ BE 配置项暂不支持在线修改，生效需在 be.conf 中修改并重启 b
 |调度算法|kyber 调度算法适用于延迟低的设备，例如 NVME/SSD|kyber|echo kyber \| sudo tee /sys/block/vdb/queue/scheduler|
 |调度算法|如果系统不支持 kyber，建议使用 none 调度算法|none|echo none \| sudo tee /sys/block/vdb/queue/scheduler|
 
-* 网络
+* **网络**
 
 请至少使用 10 GB 网络，1GB 网络也能工作，但是会导致达不到预期性能。可以使用 iperf 测试系统带宽，确认是否是 10GB 网络。
 
-* 文件系统
+* **文件系统**
 
 建议使用 Ext4 文件系统，可用相关命令进行查看挂载类型。
 
@@ -440,7 +446,7 @@ Filesystem     Type      Size  Used Avail Use% Mounted on
 /dev/vdb1      ext4     1008G  903G   55G  95% /home/disk1
 ~~~
 
-* 高并发配置
+* **高并发配置**
 
 如果集群负载的并发度较高，建议添加以下配置
 
@@ -450,17 +456,17 @@ echo 60000  > /proc/sys/vm/max_map_count
 echo 200000  > /proc/sys/kernel/pid_max
 ~~~
 
-* max user processes
+* **max user processes**
 
 ~~~shell
 ulimit -u 40960
 ~~~
 
-* 文件句柄
+* **文件句柄**
 
 在部署的机器上运行 ulimit -n 65535，把文件句柄设为 65535。如果 ulimit 值重新登录后失效，尝试修改 /etc/ssh/sshd_config 中的 `UsePAM yes` ，然后重启 sshd 服务即可。
 
-* 其他系统配置
+* **其他系统配置**
 
 |参数名称|建议值|修改方式|
 |---|---|---|
