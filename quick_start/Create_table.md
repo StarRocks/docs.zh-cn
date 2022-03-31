@@ -4,7 +4,7 @@
 
 安装部署好 StarRocks 集群后，可使用 MySQL 客户端连接某一个 FE 实例的 query_port(默认 9030)连接 StarRocks， StarRocks 内置 root 用户，密码默认为空：
 
-```shell
+```sql
 mysql -h fe_host -P9030 -u root
 ```
 
@@ -115,7 +115,9 @@ StarRocks 默认会给 Key 列创建稀疏索引加速查询，具体规则见 [
 
 ## 其他操作
 
-表创建成功后即可进行[数据导入查询](/quick_start/Import_and_query.md) 。StarRocks支持[用户创建授权](/sql-reference/sql-statements/account-management)及多种[DDL操作](/sql-reference/sql-statements/data-definition)，此处仅简单介绍部分Schema Change 操作和如何创建用户并授权。
+表创建成功后即可进行[数据导入查询](/quick_start/Import_and_query.md)。
+
+StarRocks支持[用户创建授权](/sql-reference/sql-statements/account-management)及多种[DDL操作](/sql-reference/sql-statements/data-definition)，此处仅简单介绍部分Schema Change 操作和如何创建用户并授权。
 
 ### Schema 修改
 
