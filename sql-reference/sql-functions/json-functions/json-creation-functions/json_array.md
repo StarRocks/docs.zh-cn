@@ -6,7 +6,7 @@
 
 ## 语法
 
-```Plain%20Text
+```Plain Text
 JSON_ARRAY(value, ...)
 ```
 
@@ -22,14 +22,14 @@ JSON_ARRAY(value, ...)
 
 示例一：构造一个由多种数据类型组成的 JSON 数组。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT JSON_ARRAY(1, true, 'starrocks', 1.1);
        -> [1, true, "starrocks", 1.1]
 ```
 
 示例二：构造一个空的 JSON 数组。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT JSON_ARRAY();
        -> []
 ```
