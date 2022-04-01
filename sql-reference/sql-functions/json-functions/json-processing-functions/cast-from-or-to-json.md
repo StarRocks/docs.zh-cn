@@ -45,7 +45,7 @@
 
 示例一：将 JSON 类型的数据转为 SQL 类型。
 
-```Plain%20Text
+```Plain Text
 -- 将JSON转为INT。
 mysql> select cast(parse_json('1') as int);
 +------------------------------+
@@ -81,7 +81,7 @@ mysql> select cast(parse_json('[1,2,3]') as varchar);
 
 示例二：将 SQL 类型的数据转为 JSON 类型。
 
-```Plain%20Text
+```Plain Text
 -- 将INT转成JSON。
 mysql> select cast(1 as json);
 +-----------------+
