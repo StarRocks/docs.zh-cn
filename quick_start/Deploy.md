@@ -94,15 +94,11 @@ JAVA_OPTS = "-Xmx8192m -XX:+UseMembar -XX:SurvivorRatio=8 -XX:MaxTenuringThresho
 mkdir -p meta 
 ```
 
-<br/>
-
 第三步: 启动 FE 进程:
 
 ```bash
 bin/start_fe.sh --daemon
 ```
-
-<br/>
 
 第四步: 确认启动 FE 启动成功。
 
@@ -110,19 +106,15 @@ bin/start_fe.sh --daemon
 
 ```Plain Text
 2020-03-16 20:32:14,686 INFO 1 [FeServer.start():46] thrift server started.
-
 2020-03-16 20:32:14,696 INFO 1 [NMysqlServer.start():71] Open mysql server success on 9030
-
 2020-03-16 20:32:14,696 INFO 1 [QeService.start():60] QE service start.
-
 2020-03-16 20:32:14,825 INFO 76 [HttpServer$HttpServerThread.run():210] HttpServer started with port 8030
-
 ...
 ```
 
 * 如果 FE 启动失败，可能是由于端口号被占用，可修改配置文件 conf/fe.conf 中的端口号 http_port。
 * 使用 jps 命令查看 java 进程确认 "StarRocksFe" 存在。
-* 使用浏览器访问 FE ip: http_port（默认8030）， 打开 StarRocks 的 WebUI， 用户名为 root， 密码为空。
+* 使用浏览器访问 `FE ip:http_port`（默认8030），打开 StarRocks 的 WebUI， 用户名为 root， 密码为空。
 
 ### 使用 MySQL 客户端访问 FE
 
@@ -130,10 +122,10 @@ StarRocks 可通过 [Mysql 客户端进行连接](#%E4%BD%BF%E7%94%A8mysql%E5%AE
 
 第一步: 安装 mysql 客户端，版本建议 5.5+(如果已经安装，可忽略此步)：
 
+```shell
 Ubuntu：sudo apt-get install mysql-client
-
 Centos：sudo yum install mysql-client
-<br/>
+```
 
 第二步: FE 进程启动后，使用 mysql 客户端连接 FE 实例：
 
@@ -142,7 +134,6 @@ mysql -h 127.0.0.1 -P9030 -uroot
 ```
 
 注意：这里默认 root 用户密码为空，端口为 fe/conf/fe.conf 中的 query\_port 配置项，默认为 9030
-<br/>
 
 第三步: 查看 FE 状态：
 
@@ -169,10 +160,9 @@ ReplayedJournalId: 64
 1 row in set (0.03 sec)
 ```
 
-<br/>
+**Role** 为 **FOLLOWER** 说明这是一个能参与选主的 FE；
 
-Role 为 FOLLOWER 说明这是一个能参与选主的 FE；IsMaster 为 true，说明该 FE 当前为主节点。
-<br/>
+**IsMaster** 为 **true**，说明该 FE 当前为主节点。
 
 如果 MySQL 客户端连接不成功，请查看 log/fe.warn.log 日志文件，确认问题。由于是初次启动，如果在操作过程中遇到任何意外问题，都可以删除并重新创建 FE 的元数据目录，再从头开始操作。
 <br/>
@@ -196,8 +186,6 @@ cd StarRocks-XX-1.0.0/be
 mkdir -p storage
 ```
 
-<br/>
-
 第二步: 通过 mysql 客户端添加 BE 节点：
 
 * host 为与 priority_networks 设置相匹配的 IP，port 为 BE 配置文件中的 heartbeat_service_port，默认为 9050。
@@ -206,8 +194,6 @@ mkdir -p storage
 mysql> ALTER SYSTEM ADD BACKEND "host:port";
 ```
 
-<br/>
-
 如出现错误，需要删除 BE 节点，可通过以下命令将 BE 节点从集群移除，host 和 port 与添加时一致：
 
 ```sql
@@ -215,15 +201,12 @@ mysql> ALTER SYSTEM decommission BACKEND "host:port";
 ```
 
 具体参考 [扩容缩容](../administration/Scale_up_down.md#be%E6%89%A9%E7%BC%A9%E5%AE%B9)。
-<br/>
 
 第三步: 启动 BE：
 
 ```shell
 bin/start_be.sh --daemon
 ```
-
-<br/>
 
 第四步: 查看 BE 状态, 确认 BE 就绪:
 
@@ -258,7 +241,6 @@ ClusterDecommissioned: false
 <br/>
 
 如果 isAlive 为 true，则说明 BE 正常接入集群。如果 BE 没有正常接入集群，请查看 log 目录下的 be.WARNING 日志文件确定原因。
-<br/>
 
 如果日志中出现类似以下的信息，说明 priority_networks 的配置存在问题。
 
@@ -266,15 +248,11 @@ ClusterDecommissioned: false
 W0708 17:16:27.308156 11473 heartbeat_server.cpp:82\] backend ip saved in master does not equal to backend local ip127.0.0.1 vs. 172.16.179.26
 ```
 
-<br/>
-
 此时需要，先用以下命令 drop 掉原来加进去的 be，然后重新以正确的 IP 添加 BE。
 
 ```sql
 MySQL> ALTER SYSTEM DROPP BACKEND "172.16.139.11:9050";
 ```
-
-<br/>
 
 由于是初次启动，如果在操作过程中遇到任何意外问题，都可以删除并重新创建 storage 目录，再从头开始操作。
 
