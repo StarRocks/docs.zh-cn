@@ -26,28 +26,28 @@ JSON_QUERY(json_object_expr, json_path)
 
 示例一：查询 JSON 对象中路径表达式 `'$.a.b'` 指定的值，返回 JSON 类型的 1。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT JSON_QUERY(PARSE_JSON('{"a": {"b": 1}}'), '$.a.b') ;
        -> 1
 ```
 
 示例二：查询 JSON 对象中路径表达式 `'$.a.c'` 指定的值，由于不存在该值，因此返回 SQL 类型的 NULL。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT JSON_QUERY(PARSE_JSON('{"a": {"b": 1}}'), '$.a.c') ;
        -> NULL
 ```
 
 示例三：查询 JSON 对象中路径表达式 `'$.a[2]'` （a 数组的第 2 个元素）指定的值，返回 JSON 类型的 3。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT JSON_QUERY(PARSE_JSON('{"a": [1,2,3]}'), '$.a[2]') ;
        -> 3
 ```
 
 示例四：查询 JSON 对象中路径表达式 `'$.a[3]'` （a 数组的第 3 个元素）指定的值，由于不存在该值，因此返回 SQL 类型的 NULL。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT JSON_QUERY(PARSE_JSON('{"a": [1,2,3]}'), '$.a[3]') ;
        -> NULL
 ```
