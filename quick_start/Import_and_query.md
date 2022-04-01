@@ -102,7 +102,7 @@ StarRocks 支持多种外部表：[MySQL 外部表](/using_starrocks/External_ta
 
 您可以通过设置 Pipeline 执行引擎变量（推荐），或者调整一个 Fragment 实例的并行数量`set  parallel_fragment_exec_instance_num = 8;`，来设置查询并行度，从而提高 CPU 资源利用率和查询效率。详细的参数介绍及设置，请参见 [查询并行度相关参数](/administration/Query_management.md/#查询相关的session变量)。
 
-### 如何查看 Profile 并通过 Profile 分析查询瓶颈
+### 如何查看 Profile 并分析查询瓶颈
 
 * 通过 `explain costs sql` 命令可以查看查询计划，1.19版本以前使用 `explain sql`。
 * 通过 `set is_report_success = true` 可以打开 profile 的上报。
