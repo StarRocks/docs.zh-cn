@@ -6,7 +6,7 @@
 
 ## 语法
 
-```Plain%20Text
+```Plain Text
 json_object_expr -> json_path
 ```
 
@@ -26,7 +26,7 @@ json_object_expr -> json_path
 
 示例一：查询 JSON 对象中路径表达式 `'$.a.b'` 指定的值。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT PARSE_JSON('{"a": {"b": 1}}') -> '$.a.b';
        -> 1
 ```
@@ -35,7 +35,7 @@ mysql> SELECT PARSE_JSON('{"a": {"b": 1}}') -> '$.a.b';
 
 > 此示例中的 `json_path` 省略根元素$。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT PARSE_JSON('{"a": {"b": 1}}')->'a'->'b';
        -> 1
 ```
@@ -44,7 +44,7 @@ mysql> SELECT PARSE_JSON('{"a": {"b": 1}}')->'a'->'b';
 
 > 此示例中的 `json_path` 省略根元素$。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT PARSE_JSON('{"a": "b"}') -> 'a';
        -> "b"
 ```
