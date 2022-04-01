@@ -18,21 +18,21 @@ JSON 运算符遵循以下规则：
 
 比如，对于 JSON 对象 `{"a": 1, "c": 2}` 和 `{"b": 1, "a": 2}`，按照运算符左侧 JSON 对象中键的字典序进行对比。对比节点 `a`，由于左边的值 `1` < 右边的值 `2` ，因此`{" a ": 1, " c ": 2}` < `{" b ": 1, " a ": 2}`。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT PARSE_JSON('{"a": 1, "c": 2}') < PARSE_JSON('{"b": 1, "a": 2} ');
        -> 1
 ```
 
 对于 JSON 对象 `{"a": 1, "c": 2}` 和 `{"b": 1, "a": 1}`，按照运算符左侧 JSON 对象中键的字典序进行对比。首先对比节点 `a`， 左右的值均为 `1`。对比节点 `c`，由于右侧不存在该值，因此 `{"a": 1, "c": 2}` > `{"b": 1, "a": 1}`。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT PARSE_JSON('{"a": 1, "c": 2}') < PARSE_JSON('{"b": 1, "a": 1}');
        -> 0
 ```
 
 - 当运算符两边 JSON 数据的值为不同的数据类型时，则运算时，按照类型排序，进行比较。目前类型排序为 NULL < BOOLEAN < ARRAY < OBJECT < DOUBLE < INT < STRING。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT PARSE_JSON('"a"') < PARSE_JSON('{"a": 1, "c": 2}');
        -> 0
 ```
