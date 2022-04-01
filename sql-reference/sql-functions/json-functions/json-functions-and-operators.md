@@ -16,12 +16,12 @@ JSON 构造函数可以构造 JSON 类型的数据。例如 JSON 类型的对象
 
 JSON 处理函数可以处理 JSON 类型的数据。例如查询 JSON 对象中指定路径下的值。
 
-| 函数名称    | 功能                                                         | 示例                                                      | 返回结果                                                     |
-| ----------- | ------------------------------------------------------------ | --------------------------------------------------------- | ------------------------------------------------------------ |
+| 函数名称                                                     | 功能                                 | 示例                                                      | name<img width=400/>                               |
+| ------------------------------------------------------------ | ------------------------------------ | --------------------------------------------------------- | -------------------------------------- |
 | [箭头函数](../../sql-functions/json-functions/json-processing-functions/arrow-function.md) | 查询 JSON 对象中指定路径下的值。                       | SELECT {"a": {"b": 1}} -> '$.a.b'                         | 1                                                            |
 | [JSON_QUERY](../../sql-functions/json-functions/json-processing-functions/json_query.md) | 查询 JSON 对象中指定路径下的值。                             | SELECT JSON_QUERY({"a": 1}, '$.a')                        | 1                                                            |
 | [JSON_EXISTS](../../sql-functions/json-functions/json-processing-functions/json_exist.md)| 查询 JSON 对象中是否存在某个值。如果存在，则返回 1；如果不存在，则返回 0。 | SELECT JSON_EXISTS({"a": 1}, '$.a')             | 1                                                            |
-| [JSON_EACH](../../sql-functions/json-functions/json-processing-functions/json_each.md)   | 将最外层的 JSON 对象展开为键值对。      | SELECT * FROM JSON_EACH('{"a": 1, "b":{"c": 3, "d": null}} |  key ｜ value <br> ----+------ <br>     a   \|    1 <br>    b     \|    {"c": 3, "d": null} <br> |
+| [JSON_EACH](../../sql-functions/json-functions/json-processing-functions/json_each.md)   | 将最外层的 JSON 对象展开为键值对。      | SELECT * FROM JSON_EACH('{"a": 1, "b":{"c": 3, "d": null}} | &ensp; &ensp;  key &ensp;   &#124; &ensp; &ensp; value  <br> ---------+---------- <br> &ensp; &ensp; &ensp; a &ensp; &ensp;&#124;&ensp;&ensp; &ensp;  1 <br> &ensp; &ensp; &ensp; b &ensp; &ensp;&#124;&ensp;&ensp; &ensp;{"c": 3, "d": null}  |
 | [JSON 类型转换](../../sql-functions/json-functions/json-processing-functions/cast-from-or-to-json.md)| 将实现 JSON 类型的数据与 SQL 类型间的互相转换。      | SELECT CAST(PARSE_JSON('1') as INT); |  1 |
 
 ## JSON 运算符
