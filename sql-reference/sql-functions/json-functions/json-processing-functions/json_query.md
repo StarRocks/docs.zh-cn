@@ -6,7 +6,7 @@
 
 ## **语法**
 
-```Plain%20Text
+```Plain Text
 JSON_QUERY(json_object_expr, json_path)
 ```
 
