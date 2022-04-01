@@ -4,7 +4,7 @@
 
 安装部署好 StarRocks 集群后，可使用 MySQL 客户端连接某一个 FE 实例的 query_port(默认 9030)连接 StarRocks， StarRocks 内置 root 用户，密码默认为空：
 
-```sql
+```shell
 mysql -h fe_host -P9030 -u root
 ```
 
