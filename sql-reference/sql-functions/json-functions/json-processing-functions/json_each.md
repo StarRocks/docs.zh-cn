@@ -6,7 +6,7 @@
 
 ## 语法
 
-```Plain%20Text
+```Plain Text
 JSON_EACH(json_object_expr)
 ```
 
@@ -24,7 +24,7 @@ JSON_EACH 属于表函数，返回的是行的集合。因此 JSON_EACH 必须�
 
 ## 示例
 
-```Plain%20Text
+```Plain Text
 -- 本示例以表tj进行说明。
 mysql> SELECT * FROM tj;
 +------+------------------+
