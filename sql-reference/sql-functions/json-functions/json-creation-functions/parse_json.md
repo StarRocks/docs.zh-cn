@@ -6,7 +6,7 @@
 
 ## 语法
 
-```Plain%20Text
+```Plain Text
 PARSE_JSON(string_expr)
 ```
 
@@ -24,35 +24,35 @@ PARSE_JSON(string_expr)
 
 示例一： 将字符串类型的 1 构造为 JSON 类型的 1。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT PARSE_JSON('1');
        -> 1
 ```
 
 示例二：将一个字符串类型的数组构造为一个 JSON 类型的数组。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT PARSE_JSON('[1,2,3]');
        -> [1, 2, 3]   
 ```
 
 示例三：将一个字符串类型的对象构造为一个 JSON 类型的对象。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT PARSE_JSON('{"star": "rocks"}');
        -> {"star": "rocks"}
 ```
 
 示例四：构造一个 JSON 类型的 NULL。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT PARSE_JSON('null');
        -> NULL
 ```
 
 示例五：如果字符串不能解析为规范的 JSON，则返回 NULL。 如下示例中，star 没有用双引号括起来，无法解析为合法的 JOSN，因此返回 NULL。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT PARSE_JSON('{star: "rocks"}');
        -> NULL
 ```
