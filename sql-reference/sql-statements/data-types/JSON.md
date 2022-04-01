@@ -16,7 +16,7 @@ StarRocks 支持存储和高效查询分析 JSON 数据。StarRocks 采用二进
 
 建表时，通过关键字 `JSON`，指定列 `j` 为 JSON 类型。
 
-```Plain%20Text
+```Plain Text
 CREATE TABLE `tj` (
     `id` INT(11) NOT NULL COMMENT "",
     `j`  JSON NULL COMMENT ""
@@ -39,7 +39,7 @@ StarRocks 支持如下三种方式导入数据并存储为 JSON 类型。
 
 - 方式一：通过 `INSERT INTO` 将数据写入至 JSON 类型的列（例如列 `j`）。
 
-```Plain%20Text
+```Plain Text
 INSERT INTO tj (id, j) VALUES (1, parse_json('{"a": 1, "b": true}'));
 INSERT INTO tj (id, j) VALUES (2, parse_json('{"a": 2, "b": false}'));
 INSERT INTO tj (id, j) VALUES (3, parse_json('{"a": 3, "b": true}'));
@@ -72,7 +72,7 @@ StarRocks 支持查询和处理 JSON 类型的数据，并且支持使用 JSON �
 
 本示例以表 tj 进行说明。
 
-```Plain%20Text
+```Plain Text
 mysql> select * from tj;
 +------+----------------------+
 | id   |          j           |
@@ -86,7 +86,7 @@ mysql> select * from tj;
 
 示例一：按照过滤条件 `id=1`，筛选出 JSON 类型的列中满足条件的数据。
 
-```Plain%20Text
+```Plain Text
 mysql> select * from tj where id = 1;
 +------+---------------------+
 | id   |           j         |
@@ -99,7 +99,7 @@ mysql> select * from tj where id = 1;
 
 > `j->'a'` 返回数据的类型是 JSON，您可以使用 PARSE_JSON 将 SQL 类型数据构造为 JSON 类型，然后进行对比。或者，您可以使用 CAST 函数将 JSON 类型数据来构造为 INT，然后进行对比。
 
-```Plain%20Text
+```Plain Text
 mysql> select * from tj where j->'a' = parse_json('1');
 +------+---------------------+
 |   id |         j           |
@@ -117,7 +117,7 @@ mysql> select * from tj where cast(j->'a' as INT) = 1;
 
 示例三：根据 JSON 类型的列进行过滤（您可以使用 CAST 函数将 JSON 类型的列构造为 BOOLEAN 类型），过滤出表中满足条件的数据。
 
-```Plain%20Text
+```Plain Text
 mysql> select * from tj where cast(j->'b' as boolean);
 +------+---------------------+
 |  id  |          j          |
@@ -129,7 +129,7 @@ mysql> select * from tj where cast(j->'b' as boolean);
 
 示例四：根据 JSON 类型的列进行过滤（您可以使用 CAST 函数将 JSON 类型的列构造为 BOOLEAN 类型），过滤出 JSON 类型的列满足条件的数据，并进行数值运算。
 
-```Plain%20Text
+```Plain Text
 mysql> select cast(j->'a' as int) from tj where cast(j->'b' as boolean);
 +-----------------------+
 |  CAST(j->'a' AS INT)  |
@@ -148,13 +148,10 @@ mysql> select sum(cast(j->'a' as int)) from tj where cast(j->'b' as boolean);
 
 示例五：按照 JSON 类型的列进行排序。
 
-```Plain%20Text
+```Plain Text
 mysql> select * from tj
-
        where j->'a' <= parse_json('3')
-
        order by cast(j->'a' as int);
-
 +------+----------------------+
 | id   |           j          |
 +------+----------------------+
