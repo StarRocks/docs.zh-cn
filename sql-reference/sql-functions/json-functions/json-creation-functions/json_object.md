@@ -40,7 +40,7 @@ mysql> SELECT JSON_OBJECT('k1', 1, 'k2', json_object('k2', 2), 'k3', json_array(
 
 示例三：构造一个空的JSON对象。
 
-```Plain% Text
+```Plain Text
 mysql> SELECT JSON_OBJECT();
        -> {}
 ```
