@@ -122,7 +122,7 @@ bin/start_fe.sh --daemon
 
 * 如果 FE 启动失败，可能是由于端口号被占用，可修改配置文件 conf/fe.conf 中的端口号 http_port。
 * 使用 jps 命令查看 java 进程确认 "StarRocksFe" 存在。
-* 使用浏览器访问 FE ip: 8030， 打开 StarRocks 的 WebUI， 用户名为 root， 密码为空。
+* 使用浏览器访问 FE ip: http_port（默认8030）， 打开 StarRocks 的 WebUI， 用户名为 root， 密码为空。
 
 ### 使用 MySQL 客户端访问 FE
 
