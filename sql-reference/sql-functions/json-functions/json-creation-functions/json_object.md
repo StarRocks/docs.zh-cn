@@ -6,7 +6,7 @@
 
 ## 语法
 
-```Plain%20Text
+```Plain Text
 JSON_OBJECT(key, value, ...)
 ```
 
@@ -26,21 +26,21 @@ JSON_OBJECT(key, value, ...)
 
 示例一：构造一个由多种数据类型组成的 JSON 对象。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT JSON_OBJECT('name', 'starrocks', 'active', true, 'published', 2020);
        -> {"active": true, "name": "starrocks", "published": 2020}            
 ```
 
 示例二：构造一个多层嵌套的 JSON 对象。
 
-```Plain%20Text
+```Plain Text
 mysql> SELECT JSON_OBJECT('k1', 1, 'k2', json_object('k2', 2), 'k3', json_array(4, 5));
        -> {"k1": 1, "k2": {"k2": 2}, "k3": [4, 5]} 
 ```
 
 示例三：构造一个空的JSON对象。
 
-```Plain%20Text
+```Plain% Text
 mysql> SELECT JSON_OBJECT();
        -> {}
 ```
