@@ -18,7 +18,7 @@
 
 ## 示例
 
-```Plain%20Text
+```Plain Text
 MySQL > select bitmap_max(bitmap_from_string("0, 1, 2, 3"));
 +-------------------------------------------------+
 |    bitmap_max(bitmap_from_string("0, 1, 2, 3")) |
