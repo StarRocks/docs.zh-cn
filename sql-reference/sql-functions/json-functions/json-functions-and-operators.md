@@ -1,6 +1,6 @@
 # JSON 函数和运算符
 
-StarRocks 支持如下 JSON 构造函数、JSON 处理函数、JSON 运算符以及查询 JSON 对象的 JSON Path。
+StarRocks 支持如下 JSON 构造函数、JSON 查询和处理函数、JSON 运算符以及查询 JSON 对象的 JSON Path。
 
 ## JSON 构造函数
 
@@ -12,9 +12,9 @@ JSON 构造函数可以构造 JSON 类型的数据。例如 JSON 类型的对象
 | [JSON_ARRAY](../../sql-functions/json-functions/json-creation-functions/json_array.md)   | 构造 JSON 类型的数组。                | SELECT JSON_ARRAY(1, 2, 3)                                | [1,2,3]                                |
 | [PARSE_JSON](../../sql-functions/json-functions/json-creation-functions/parse_json.md)   | 从字符串解析并构造出 JSON 类型的数据。    | SELECT PARSE_JSON('{"a": 1}')                             | {"a": 1}                               |
 
-## JSON 处理函数
+## JSON 查询和处理函数
 
-JSON 处理函数可以处理 JSON 类型的数据。例如查询 JSON 对象中指定路径下的值。
+JSON 查询和处理函数可以查询和处理 JSON 类型的数据。例如查询 JSON 对象中指定路径下的值。
 
 | 函数名称                                                     | 功能                                 | 示例                                                      | name<img width=400/>                               |
 | ------------------------------------------------------------ | ------------------------------------ | --------------------------------------------------------- | -------------------------------------- |
