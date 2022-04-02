@@ -12,12 +12,13 @@ array_remove(any_array, any_element)
 
 ## 参数说明
 
-* any_array: 目标数组
-* any_element: 需要被移除的元素
+`any_array`: 原数组, 支持的数据类型为 ARRAY 类型
+
+`any_element`: 目标元素, 支持数据类型与 `any_array` 包含元素类型一致
 
 ## 返回值说明
 
-返回移除元素后的数组
+返回值的数据类型为 ARRAY
 
 ## 示例
 

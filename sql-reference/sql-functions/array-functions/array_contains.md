@@ -1,16 +1,26 @@
 # array_contains
 
-## description
+## 功能
 
-### Syntax
+检查数组中是否包含某个元素, 包含返回 1, 否则返回 0
+
+## 语法
 
 ```Haskell
 array_contains(any_array, any_element)
 ```
 
-检查数组中是否包含某个元素，是的话返回1，否则返回0.
+## 参数说明
 
-## example
+`any_array`: 原数组, 支持的数据类型为 ARRAY 类型
+
+`any_element`: 目标元素, 可为 NULL, 支持数据类型与 `any_array` 包含元素类型一致
+
+## 返回值说明
+
+返回值的数据类型为 BOOLEAN
+
+## 示例
 
 ```plain text
 mysql> select array_contains(["apple","orange","pear"], "orange");
@@ -22,7 +32,7 @@ mysql> select array_contains(["apple","orange","pear"], "orange");
 1 row in set (0.01 sec)
 ```
 
-也可以检查数组中是否包含NULL
+也可以检查数组中是否包含 NULL
 
 ```plain text
 mysql> select array_contains([1, NULL], NULL);
@@ -34,7 +44,7 @@ mysql> select array_contains([1, NULL], NULL);
 1 row in set (0.00 sec)
 ```
 
-可以检查多维数组中是否包含某个子数组，此时要求子数组元素完全匹配，包括元素排列顺序
+可以检查多维数组中是否包含某个子数组, 此时要求子数组元素完全匹配, 包括元素排列顺序
 
 ```plain text
 mysql> select array_contains([[1,2,3], [4,5,6]], [4,5,6]);
@@ -54,6 +64,6 @@ mysql> select array_contains([[1,2,3], [4,5,6]], [4,6,5]);
 1 row in set (0.00 sec)
 ```
 
-## keyword
+## 关键词
 
-ARRAY_CONTAINS,ARRAY
+ARRAY_CONTAINS, ARRAY
