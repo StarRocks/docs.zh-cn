@@ -33,7 +33,6 @@ mysql> select array_append([1, 2], 3);
 
 ```
 
-
 ```plain text
 mysql> select array_append([1, 2], NULL);
 +---------------------------+
