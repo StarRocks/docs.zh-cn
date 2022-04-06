@@ -20,45 +20,45 @@ StarRocks 目前不会区分 `insert`/`upsert`，所有的操作默认都为 `up
 
 Stream load 和 broker load 的操作方式类似，根据导入的数据文件的操作形式有如下几种情况。这里通过一些例子来展示具体的导入操作：
 
-*1.* 当导入的数据文件只有 `upsert` 操作时可以不添加 `__op` 列。可以指定 `__op` 为 `upsert`，也可以不做任何指定，StarRocks 会默认导入为 `upsert`。例如想要向表 t 中导入如下内容：
+**1.** 当导入的数据文件只有 `upsert` 操作时可以不添加 `__op` 列。可以指定 `__op` 为 `upsert`，也可以不做任何指定，StarRocks 会默认导入为 `upsert`。例如想要向表 t 中导入如下内容：
 
 ~~~text
 # 导入内容
-0, aaaa
-1, bbbb
+0,aaaa
+1,bbbb
 2,\N
-4, dddd
+4,dddd
 ~~~
 
 Stream Load 导入语句：
 
 ~~~Bash
 #不指定__op
-curl --location-trusted -u root: -H "label: lineorder" -H "column_separator:," -T demo.csv http://localhost: 8030/api/demo_db/demo_tbl1/_stream_load
+curl --location-trusted -u root: -H "label:lineorder" -H "column_separator:," -T demo.csv http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
 #指定__op
-curl --location-trusted -u root: -H "label: lineorder" -H "column_separator:," -H " columns:__op ='upsert'" -T demo.csv http://localhost: 8030/api/demo_db/demo_tbl1/_stream_load
+curl --location-trusted -u root: -H "label:lineorder" -H "column_separator:," -H " columns:__op ='upsert'" -T demo.csv http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
 ~~~
 
 Broker Load 导入语句：
 
-~~~Bash
+~~~sql
 #不指定__op
 load label demo_db.label1 (
-    data infile("hdfs://localhost: 9000/demo.csv")
+    data infile("hdfs://localhost:9000/demo.csv")
     into table demo_tbl1
     format as "csv"
 ) with broker "broker1";
 
 #指定__op
 load label demo_db.label2 (
-    data infile("hdfs://localhost: 9000/demo.csv")
+    data infile("hdfs://localhost:9000/demo.csv")
     into table demo_tbl1
     format as "csv"
     set (__op ='upsert')
 ) with broker "broker1";
 ~~~
 
-*2.* 当导入的数据文件只有 delete 操作时，也可以不添加 `__op` 列，只需指定 `__op` 为 delete。例如想要删除如下内容：
+**2.** 当导入的数据文件只有 delete 操作时，也可以不添加 `__op` 列，只需指定 `__op` 为 delete。例如想要删除如下内容：
 
 ~~~text
 #导入内容
@@ -71,38 +71,42 @@ load label demo_db.label2 (
 Stream Load 导入语句：
 
 ~~~bash
-curl --location-trusted -u root: -H "label: lineorder" -H "column_separator:," -H " columns:__op ='delete'" -T demo.csv http://localhost: 8030/api/demo_db/demo_tbl1/_stream_load
+curl --location-trusted -u root: -H "label:lineorder" -H "column_separator:," \
+-H " columns:__op ='delete'" -T demo.csv \
+http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
 ~~~
 
 Broker Load 导入语句：
 
-~~~bash
+~~~sql
 load label demo_db.label3 (
-data infile("hdfs://localhost: 9000/demo.csv")
-into table demo_tbl1
-format as "csv"
-set (__op ='delete')
+    data infile("hdfs://localhost:9000/demo.csv")
+    into table demo_tbl1
+    format as "csv"
+    set (__op ='delete')
 ) with broker "broker1";  
 ~~~
 
-*3.* 当导入的数据文件中包含 upsert 和 delete 混合时，需要指定额外的 `__op` 来表明操作类型。例如想要导入如下内容：
+**3.** 当导入的数据文件中包含 upsert 和 delete 混合时，需要指定额外的 `__op` 来表明操作类型。例如想要导入如下内容：
 
 ~~~text
-1, bbbb,1
-4, dddd,1
-5, eeee,0
-6, ffff,0
+1,bbbb,1
+4,dddd,1
+5,eeee,0
+6,ffff,0
 ~~~
 
 注意：
 
 * `delete` 虽然只用到 primary key 列，但同样要提供全部的列，与 `upsert` 保持一致
-* 上述导入内容表示删除 1、4 行，添加 5、6 行
+* 上述导入内容表示删除 id 为 1、4 的行，添加 id 为 5、6 的行
 
 Stream Load 导入语句：
 
 ~~~bash
-curl --location-trusted -u root: -H "label: lineorder" -H "column_separator:," -H " columns: c1, c2, c3, pk = c1, col0 = c2,__op = c3 " -T demo.csv http://localhost: 8030/api/demo_db/demo_tbl1/_stream_load
+curl --location-trusted -u root: -H "label:lineorder" -H "column_separator:," \
+-H " columns: c1,c2,c3,pk=c1, col0=c2,__op=c3 " -T demo.csv \
+http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
 ~~~
 
 其中，指定了 `__op` 为第三列。
@@ -111,11 +115,11 @@ Brokder Load 导入语句：
 
 ~~~bash
 load label demo_db.label4 (
-    data infile("hdfs://localhost: 9000/demo.csv")
+    data infile("hdfs://localhost:9000/demo.csv")
     into table demo_tbl1
     format as "csv"
-    (c1, c2, c3)
-    set (pk = c1, col0 = c2, __op = c3)
+    (c1,c2,c3)
+    set (pk=c1, col0=c2, __op=c3)
 ) with broker "broker1";
 ~~~
 
@@ -127,7 +131,7 @@ load label demo_db.label4 (
 
 可以在创建 routine load 的语句中，在 columns 最后增加一列，指定为在 `__op`。在真实导入中，`__op` 为 0 则表示 `upsert` 操作，为 1 则表示 `delete` 操作。例如导入如下内容：
 
-*示例 1* 导入 CSV 数据
+**示例 1** 导入 CSV 数据
 
 ~~~bash
 2020-06-23  2020-06-23 00: 00: 00 beijing haidian 1   -128    -32768  -2147483648    0
@@ -141,20 +145,20 @@ Routine Load 导入语句：
 
 ~~~bash
 CREATE ROUTINE LOAD routine_load_basic_types_1631533306858 on primary_table_without_null 
-COLUMNS (k1, k2, k3, k4, k5, v1, v2, v3,__op),
+COLUMNS (k1, k2, k3, k4, k5, v1, v2, v3, __op),
 COLUMNS TERMINATED BY '\t' 
 PROPERTIES (
     "desired_concurrent_number" = "1",
     "max_error_number" = "1000",
     "max_batch_interval" = "5"
 ) FROM KAFKA (
-    "kafka_broker_list" = "localhgost: 9092",
+    "kafka_broker_list" = "localhgost:9092",
     "kafka_topic" = "starrocks-data"
     "kafka_offsets" = "OFFSET_BEGINNING"
 );
 ~~~
 
-*示例 2* 导入 JSON 数据，源数据中有字段表示 upsert 或者 delete，比如下面常见的 Canal 同步到 Kafka 的数据样例，`type` 可以表示本次操作的类型（当前还不支持同步 DDL 语句）。
+**示例 2** 导入 JSON 数据，源数据中有字段表示 upsert 或者 delete，比如下面常见的 Canal 同步到 Kafka 的数据样例，`type` 可以表示本次操作的类型（当前还不支持同步 DDL 语句）。
 
 数据样例：
 
@@ -164,8 +168,8 @@ PROPERTIES (
         "query_id": "3c7ebee321e94773-b4d79cc3f08ca2ac",
         "conn_id": "34434",
         "user": "zhaoheng",
-        "start_time": "2020-10-19 20: 40: 10.578",
-        "end_time": "2020-10-19 20: 40: 10"
+        "start_time": "2020-10-19 20:40:10.578",
+        "end_time": "2020-10-19 20:40:10"
     }],
     "database": "center_service_lihailei",
     "es": 1603111211000,
@@ -197,7 +201,7 @@ PROPERTIES (
 导入语句:
 
 ~~~sql
-CREATE ROUTINE LOAD cdc_db.task2 ON cdc_table
+CREATE ROUTINE LOAD cdc_db.label5 ON cdc_table
 COLUMNS(pk, col0, temp,__op =(CASE temp WHEN "DELETE" THEN 1 ELSE 0 END))
 PROPERTIES
 (
@@ -210,7 +214,7 @@ PROPERTIES
 )
 FROM KAFKA
 (
-    "kafka_broker_list" = "localhost: 9092",
+    "kafka_broker_list" = "localhost:9092",
     "kafka_topic" = "cdc-data",
     "property.group.id" = "starrocks-group",
     "property.client.id" = "starrocks-client",
@@ -218,7 +222,7 @@ FROM KAFKA
 );
 ~~~
 
-*示例 2* 导入 JSON 数据，源数据中有字段可以分别表示 upsert(0)和 delete(1)类型，可以不指定__op。
+**示例 3** 导入 JSON 数据，源数据中有字段可以分别表示 upsert(0)和 delete(1)类型，可以不指定__op。
 
 数据样例：op_type 字段的取值只有 0 和 1，分别表示 upsert 和 delete。
 
@@ -243,7 +247,7 @@ DISTRIBUTED BY HASH(`pk`) BUCKETS 3
 导入语句：
 
 ~~~sql
-CREATE ROUTINE LOAD demo_db.label5 ON demo_tbl2
+CREATE ROUTINE LOAD demo_db.label6 ON demo_tbl2
 COLUMNS(pk, col0,__op)
 PROPERTIES
 (
@@ -256,7 +260,7 @@ PROPERTIES
 )
 FROM KAFKA
 (
-    "kafka_broker_list" = "localhost: 9092",
+    "kafka_broker_list" = "localhost:9092",
     "kafka_topic" = "pk-data",
     "property.group.id" = "starrocks-group",
     "property.client.id" = "starrocks-client",
