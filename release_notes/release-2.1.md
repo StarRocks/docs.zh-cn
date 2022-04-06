@@ -56,11 +56,11 @@ flink-source-connector 支持 Flink 批量读取 StarRocks 数据，实现了直
 
 ## 2.1.3
 
-发布日期：2022年3月19日
+发布日期： 2022年3月19日
 
 ### Bug Fixes
 
 - 通过改进为批量 publish version，解决 BE 可能因宕机而导致数据丢失的问题。[#3140](https://github.com/StarRocks/starrocks/issues/3140)
 - 修复某些查询可能因为执行计划不合理而导致内存超限的问题。
-- 修复分片副本的校验和（checksum ）在不同的 compaction 过程下结果可能不一致的问题。[#3438](https://github.com/StarRocks/starrocks/issues/3438)
+- 修复分片副本的校验和（checksum）在不同的 compaction 过程下结果可能不一致的问题。[#3438](https://github.com/StarRocks/starrocks/issues/3438)
 - 修复因 JOIN reorder projection 未正确处理而导致查询可能报错的问题。[#4056](https://github.com/StarRocks/starrocks/pull/4056)
