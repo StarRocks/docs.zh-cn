@@ -10,7 +10,7 @@
 
 ## 参数说明
 
-`bitmap_expr`：Bitmap的表达式，可以由 BITMAP_FROM_STRING 等函数构造。
+`bitmap_expr`：Bitmap的表达式，可以由 [BITMAP_FROM_STRING](./bitmap_from_string.md)等函数构造。
 
 ## 返回值说明
 
