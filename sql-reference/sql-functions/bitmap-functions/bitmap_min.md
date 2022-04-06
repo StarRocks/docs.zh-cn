@@ -17,6 +17,7 @@
 返回 BIGINT 类型的值。
 
 ## 示例
+
 ```Plain Text
 MySQL > select bitmap_min(bitmap_from_string("0, 1, 2, 3"));
 +-------------------------------------------------+
