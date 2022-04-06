@@ -20,7 +20,7 @@ UTC_TIMESTAMP()
 
 ## 示例
 
-该函数用在字符串语境("YYYY-MM-DD HH: MM: SS")中和用在数字语境中("YYYYMMDDHHMMSS")返回的两种格式
+该函数用在字符串语境("YYYY-MM-DD HH:MM:SS")中和用在数字语境中("YYYYMMDDHHMMSS")返回的两种格式
 
 ```Plain Text
 MySQL > select utc_timestamp(),utc_timestamp() + 1;
