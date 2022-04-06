@@ -56,7 +56,7 @@ flink-source-connector 支持 Flink 批量读取 StarRocks 数据，实现了直
 
 ## 2.1.3
 
-发布日期：2022年3月19日
+发布日期： 2022年3月19日
 
 ### Bug Fixes
 
