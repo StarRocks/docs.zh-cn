@@ -280,7 +280,7 @@ Spark Load 导入方式同 Broker Load 一样都是异步的，用户必须将�
 
 ~~~sql
 mysql > show load order by createtime desc limit 1\G
-**** **** **** **** **** **** *** 1. row *** **** **** **** **** **** ****
+*************************** 1. row ***************************
          JobId: 76391
          Label: label1
          State: FINISHED
@@ -295,7 +295,7 @@ mysql > show load order by createtime desc limit 1\G
  LoadStartTime: 2019-07-27 11: 49: 44
 LoadFinishTime: 2019-07-27 11: 50: 16
            URL: http://1.1.1.1: 8089/proxy/application_1586619723848_0035/
-    JobDetails: {"ScannedRows": 28133395, "TaskNumber": 1, "FileNumber": 1, "FileSize": 200000}
+    JobDetails: {"ScannedRows": 28133395, "TaskNumber": 1, "FileNumber": 1,"FileSize": 200000}
 ~~~
 
 返回结果集中参数的意义可参考 [查看导入状态](../loading/BrokerLoad#查看导入任务状态)。

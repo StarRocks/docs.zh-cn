@@ -25,7 +25,7 @@ PROPERTIES
 )
 FROM KAFKA
 (
-  "kafka_broker_list" = "localhost: 9092",
+  "kafka_broker_list" = "localhost:9092",
   "kafka_topic" = "starrocks-load"
 );
 ~~~
@@ -82,7 +82,7 @@ FROM KAFKA
 MySQL [load_test] > USE load_test;
 MySQL [load_test] > SHOW ROUTINE LOAD\G;
 
-**** **** **** **** **** **** *** 1. row *** **** **** **** **** **** ****
+*************************** 1. row ***************************
 
                   Id: 14093
                 Name: routine_load_wikipedia
@@ -137,7 +137,7 @@ ReasonOfStateChanged:
 MySQL [load_test] > PAUSE ROUTINE LOAD FOR routine_load_wikipedia;
 Query OK, 0 rows affected (0.01 sec)
 MySQL [load_test] > SHOW ROUTINE LOAD\G;
-**** **** **** **** **** **** *** 1. row *** **** **** **** **** **** ****
+*************************** 1. row ***************************
                   Id: 14093
                 Name: routine_load_wikipedia
           CreateTime: 2020-05-16 16: 00: 48
@@ -177,7 +177,7 @@ ReasonOfStateChanged: ErrorReason{code = errCode = 100, msg ='User root pauses r
 MySQL [load_test] > RESUME ROUTINE LOAD FOR routine_load_wikipedia;
 Query OK, 0 rows affected (0.01 sec)
 MySQL [load_test] > SHOW ROUTINE LOAD\G;
-**** **** **** **** **** **** *** 1. row *** **** **** **** **** **** ****
+*************************** 1. row ***************************
                   Id: 14093
                 Name: routine_load_wikipedia
           CreateTime: 2020-05-16 16: 00: 48
@@ -201,7 +201,7 @@ ReasonOfStateChanged:
 
 ~~~sql
 MySQL [load_test] > SHOW ROUTINE LOAD\G;
-**** **** **** **** **** **** *** 1. row *** **** **** **** **** **** ****
+*************************** 1. row ***************************
                   Id: 14093
                 Name: routine_load_wikipedia
           CreateTime: 2020-05-16 16: 00: 48
@@ -289,11 +289,13 @@ ReasonOfStateChanged:
 
 ### json 文本
 
+下面每个`{}`代表一行数据，`[]`中表示有3行数据。
+
 ~~~json
 [
-{"category": "11", "title": "SayingsoftheCentury", "price": 895, "timestamp": 1589191587},
-{"category": "22", "author": "2avc", "price": 895, "timestamp": 1589191487},
-{"category": "33", "author": "3avc", "title": "SayingsoftheCentury", "timestamp": 1589191387}
+  {"category": "11", "title": "SayingsoftheCentury", "price": 895, "timestamp": 1589191587},
+  {"category": "22", "author": "2avc", "price": 895, "timestamp": 1589191487},
+  {"category": "33", "author": "3avc", "title": "SayingsoftheCentury", "timestamp": 1589191387}
 ]
 ~~~
 
