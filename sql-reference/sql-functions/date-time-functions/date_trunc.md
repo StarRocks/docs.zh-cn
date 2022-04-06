@@ -14,7 +14,7 @@ from xxx group 1 ;
 
 ## 动机
 
-为了更快实现对时间数据的截断, 提供向量化的 date_trunc 系列函数
+为了更快实现对时间数据的截断, 提供了 date_trunc 系列函数
 
 原本我们已经有了 year/month/day 等直接截取部分的时间函数
 
