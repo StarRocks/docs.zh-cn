@@ -24,7 +24,7 @@ UNIX_TIMESTAMP(date,fmt)
 
 `date`: 待转化的参数, 支持数据类型为 DATE 或 DATETIME, 对于在 `1970-01-01 00:00:00` 之前或 `2038-01-19 03:14:07` 之后的时间, 将返回 0
 
-`fmt`: 格式请参阅 `date_format` 函数的格式说明, 支持数据类型为 STRING
+`fmt`: 格式请参阅  [date_format](../date-time-functions/date_format.md) 函数的格式说明, 支持数据类型为 STRING
 
 ## 返回值说明
 
