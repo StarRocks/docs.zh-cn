@@ -1,18 +1,24 @@
 # weekofyear
 
-## description
+## 功能
 
-### Syntax
+获取一年中的第几周
+
+## 语法
 
 ```Haskell
-INT WEEKOFYEAR(DATETIME date)
+WEEKOFYEAR(date)
 ```
 
-获得一年中的第几周
+## 参数说明
 
-参数为Date或者Datetime类型
+`date`: 支持的数据类型为 DATE 或 DATETIME 类型  
 
-## example
+## 返回值说明
+
+返回值的数据类型为 INT
+
+## 示例
 
 ```Plain Text
 MySQL > select weekofyear('2008-02-20 00:00:00');
@@ -23,6 +29,6 @@ MySQL > select weekofyear('2008-02-20 00:00:00');
 +-----------------------------------+
 ```
 
-## keyword
+## 关键词
 
 WEEKOFYEAR

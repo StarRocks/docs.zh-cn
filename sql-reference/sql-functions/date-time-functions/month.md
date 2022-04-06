@@ -1,18 +1,24 @@
 # month
 
-## description
+## 功能
 
-### Syntax
+返回时间类型中的月份信息, 范围是 1-12
+
+## 语法
 
 ```Haskell
-INT MONTH(DATETIME date)
+MONTH(date)
 ```
 
-返回时间类型中的月份信息，范围是1, 12
+## 参数说明
 
-参数为Date或者Datetime类型
+`date`: 支持的数据类型为 DATE 或 DATETIME 类型
 
-## example
+## 返回值说明
+
+返回值的数据类型为 INT
+
+## 示例
 
 ```Plain Text
 MySQL > select month('1987-01-01');
@@ -23,6 +29,6 @@ MySQL > select month('1987-01-01');
 +-----------------------------+
 ```
 
-## keyword
+## 关键词
 
 MONTH

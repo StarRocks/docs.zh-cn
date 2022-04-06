@@ -1,18 +1,28 @@
 # str_to_date
 
-## description
+## 功能
 
-### Syntax
+通过 format 指定的方式将 str 转化为 DATE 类型, 如果转化结果不对返回 NULL
+
+## 语法
 
 ```Haskell
-DATETIME STR_TO_DATE(VARCHAR str, VARCHAR format)
+STR_TO_DATE(str, format)
 ```
 
-通过format指定的方式将str转化为DATE类型，如果转化结果不对返回NULL
+## 参数说明
 
-支持的format格式与 date_format 一致
+`str`: 转化前的字符串, 支持的数据类型为 VARCHAR
 
-## example
+`format`: 转化格式, 支持的数据类型为 VARCHAR
+
+注: 支持的 format 格式与 date_format 一致
+
+## 返回值说明
+
+返回值的数据类型为 DATETIME
+
+## 示例
 
 ```Plain Text
 MySQL > select str_to_date('2014-12-21 12:34:56', '%Y-%m-%d %H:%i:%s');
@@ -22,13 +32,6 @@ MySQL > select str_to_date('2014-12-21 12:34:56', '%Y-%m-%d %H:%i:%s');
 | 2014-12-21 12:34:56                                     |
 +---------------------------------------------------------+
 
-MySQL > select str_to_date('2014-12-21 12:34:56', '%Y-%m-%d %H:%i:%s');
-+--------------------------------------------------------------+
-| str_to_date('2014-12-21 12:34%3A56', '%Y-%m-%d %H:%i:%s') |
-+--------------------------------------------------------------+
-| 2014-12-21 12:34:56                                          |
-+--------------------------------------------------------------+
-
 MySQL > select str_to_date('200442 Monday', '%X%V %W');
 +-----------------------------------------+
 | str_to_date('200442 Monday', '%X%V %W') |
@@ -37,6 +40,6 @@ MySQL > select str_to_date('200442 Monday', '%X%V %W');
 +-----------------------------------------+
 ```
 
-## keyword
+## 关键词
 
-STR_TO_DATE,STR,TO,DATE
+STR_TO_DATE, STR, TO, DATE

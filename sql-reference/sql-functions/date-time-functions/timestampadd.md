@@ -1,20 +1,28 @@
 # timestampadd
 
-## description
+## 功能
 
-### Syntax
+将整数表达式间隔添加到日期或日期时间表达式 datetime_expr 中
+
+## 语法
 
 ```Haskell
-DATETIME TIMESTAMPADD(unit, interval, DATETIME datetime_expr)
+TIMESTAMPADD(unit, interval, datetime_expr)
 ```
 
-将整数表达式间隔添加到日期或日期时间表达式datetime_expr中。
+## 参数说明
 
-interval的单位由unit参数给出，它应该是下列值之一:
+`unit`: 可以是 YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, WEEK 中任一种值
 
-SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, or YEAR。
+`interval`: 整数表达式, 支持 INT 类型
 
-## example
+`datetime_expr`: 日期或日期时间表达式, 支持的数据类型为 DATE 或 DATETIME 类型
+
+## 返回值说明
+
+返回值的数据类型为 DATETIME
+
+## 示例
 
 ```plain text
 
@@ -33,6 +41,6 @@ MySQL > SELECT TIMESTAMPADD(WEEK,1,'2019-01-02');
 +----------------------------------------------+
 ```
 
-## keyword
+## 关键词
 
 TIMESTAMPADD

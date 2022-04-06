@@ -1,18 +1,28 @@
 # datediff
 
-## description
+## 功能
 
-### Syntax
+计算两个表达式之前的差值(expr1-expr2), 结果精确到天
 
-`DATETIME DATEDIFF(DATETIME expr1,DATETIME expr2)`
+## 语法
 
-计算expr1 - expr2，结果精确到天。
+```Haskell
+DATEDIFF(expr1,expr2)
+```
 
-expr1 和 expr2 参数是合法的日期或日期/时间表达式。
+## 参数说明
 
-注释：只有值的日期部分参与计算。
+`expr1`: 合法的日期或日期/时间表达式, 支持的数据类型为 DATETIME
 
-## example
+`expr2`: 合法的日期或日期/时间表达式, 支持的数据类型为 DATETIME
+
+注: 只有值的日期部分参与计算
+
+## 返回值说明
+
+返回值的数据类型为 DATETIME
+
+## 示例
 
 ```Plain Text
 MySQL > select datediff(CAST('2007-12-31 23:59:59' AS DATETIME), CAST('2007-12-30' AS DATETIME));
@@ -30,6 +40,6 @@ MySQL > select datediff(CAST('2010-11-30 23:59:59' AS DATETIME), CAST('2010-12-3
 +-----------------------------------------------------------------------------------+
 ```
 
-## keyword
+## 关键词
 
 DATEDIFF

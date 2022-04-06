@@ -1,18 +1,24 @@
 # dayofyear
 
-## description
+## 功能
 
-### Syntax
+获取日期中对应当年中的哪一天
+
+## 语法
 
 ```Haskell
-INT DAYOFYEAR(DATETIME date)
+DAYOFYEAR(date)
 ```
 
-获得日期中对应当年中的哪一天。
+## 参数说明
 
-参数为Date或者Datetime类型
+`date`: 支持的数据类型为 DATE 或 DATETIME 类型
 
-## example
+## 返回值说明
+
+返回值的数据类型为 INT
+
+## 示例
 
 ```Plain Text
 MySQL > select dayofyear('2007-02-03 00:00:00');
@@ -23,6 +29,6 @@ MySQL > select dayofyear('2007-02-03 00:00:00');
 +----------------------------------+
 ```
 
-## keyword
+## 关键词
 
 DAYOFYEAR

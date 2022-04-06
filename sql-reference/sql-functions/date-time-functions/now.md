@@ -1,16 +1,24 @@
 # now
 
-## description
+## 功能
 
-### Syntax
+获取当前的时间
+
+## 语法
 
 ```Haskell
-DATETIME NOW()
+NOW()
 ```
 
-获得当前的时间，以Datetime类型返回
+## 参数说明
 
-## example
+无
+
+## 返回值说明
+
+返回值的数据类型为 DATETIME
+
+## 示例
 
 ```Plain Text
 MySQL > select now();
@@ -21,6 +29,6 @@ MySQL > select now();
 +---------------------+
 ```
 
-## keyword
+## 关键词
 
 NOW
