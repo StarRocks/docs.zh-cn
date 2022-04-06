@@ -16,7 +16,7 @@ STR_TO_DATE(str, format)
 
 `format`: 转化格式, 支持的数据类型为 VARCHAR
 
-注: 支持的 format 格式与 date_format 一致
+>注: 支持的 format 格式与 [date_format](../date-time-functions/date_format.md) 一致
 
 ## 返回值说明
 
