@@ -12,9 +12,9 @@ FROM_UNIXTIME(unix_timestamp, string_format)
 
 ## 参数说明
 
-`unix_timestamp`: 待转化的 unix 时间戳, 支持的数据类型为 INT, 若给定的时间戳小于 0 或大于 253402271999, 则返回 NULL, 即时间戳范围是: 1970-01-01 00: 00: 00 ~ 9999-12-31 23: 59: 59
+`unix_timestamp`: 待转化的 unix 时间戳, 支持的数据类型为 INT, 若给定的时间戳小于 0 或大于 253402271999, 则返回 NULL, 即时间戳范围是: 1970-01-01 00:00:00 ~ 9999-12-31 23:59:59
 
-`string_format`: 指定的转化后的目标格式, 支持的数据类型为 VARCHAR, 默认为 yyyy-MM-dd HH: mm: ss , 也支持 date_format 中的 format 格式, 目前可选的格式如下列表格
+`string_format`: 指定的转化后的目标格式, 支持的数据类型为 VARCHAR, 默认为 yyyy-MM-dd HH:mm:ss , 也支持 date_format 中的 format 格式, 目前可选的格式如下列表格
 
 |  格式  |  说明  |  例子  |
 | --- | --- | --- |
