@@ -16,7 +16,7 @@ ST_Circle(center_lng, center_lat, radius)
 
 `center_lat`: 表示的是圆心的纬度, 支持的数据类型为 DOUBLE
 
-`radius`: 表示的是圆的半径, 单位是「米」, 最大支持 9999999,, 支持的数据类型为 DOUBLE
+`radius`: 表示的是圆的半径, 单位是「米」, 最大支持 9999999, 支持的数据类型为 DOUBLE
 
 ## 返回值说明
 
