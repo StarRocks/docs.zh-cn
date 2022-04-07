@@ -32,7 +32,7 @@ PROPERTIES
     "type" = "spark",
     "spark.master" = "yarn",
     "spark.submit.deployMode" = "cluster",
-    "spark.jars" = "xxx.jar, yyy.jar",
+    "spark.jars" = "xxx.jar,yyy.jar",
     "spark.files" = "/tmp/aaa,/tmp/bbb",
     "spark.executor.memory" = "1g",
     "spark.yarn.queue" = "queue0",
@@ -163,16 +163,16 @@ LOAD LABEL db1.label1
     DATA INFILE("hdfs://abc.com:8888/user/starRocks/test/ml/file1")
     INTO TABLE tbl1
     COLUMNS TERMINATED BY ","
-    (tmp_c1, tmp_c2)
+    (tmp_c1,tmp_c2)
     SET
     (
-        id = tmp_c2,
-        name = tmp_c1
+        id=tmp_c2,
+        name=tmp_c1
     ),
     DATA INFILE("hdfs://abc.com:8888/user/starRocks/test/ml/file2")
     INTO TABLE tbl2
     COLUMNS TERMINATED BY ","
-    (col1, col2)
+    (col1,col2)
     where col1 > 1
 )
 WITH RESOURCE 'spark0'
