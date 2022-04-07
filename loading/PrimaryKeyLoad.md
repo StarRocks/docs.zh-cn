@@ -1,16 +1,11 @@
 # 主键模型导入
 
-StarRocks 在 1.19 版本推出了主键模型，相较更新模型，主键模型（Primary Key）可以更好地支持实时/频繁更新的功能。该类型的表要求有唯一的主键，支持对表中的行按主键进行更新和删除操作。
+StarRocks 在 1.19 版本推出了主键模型（Primary Key）。相较更新模型，主键模型可以更好地支持实时和频繁更新的场景。该类型的表要求有唯一的主键，支持对表中的行按主键进行更新和删除操作。
 
-## 支持的数据导入方式
 
-* Stream Load
-* Broker Load
-* Routine Load
+## 主键模型如何实现插入、更新和删除数据
 
-## 如何插入、更新和删除数据
-
-主键模型的表支持通过导入任务，来插入、更新和删除数据。目前支持的导入数据方式有Stream Load、Broker Load、Routine Load。
+主键模型的表支持通过导入任务，来插入、更新和删除数据。目前支持的导入数据方式有 Stream Load、Broker Load、Routine Load。
 
 > * 暂不支持通过 Spark Load 插入、更新和删除数据。
 > * 暂不支持通过 SQL DML 语句（INSERT、UPDATE、DELETE）插入、更新和删除数据，将在未来版本中支持。
@@ -24,7 +19,7 @@ StarRocks 在 1.19 版本推出了主键模型，相较更新模型，主键模�
 
 Stream Load 和 Broker Load 导入数据的操作方式类似，根据导入的数据文件的操作形式有如下几种情况。这里通过一些例子来展示具体的导入操作：
 
-**1.** 当导入的数据文件只有 UPSERT 操作时可以不添加 `__op` 列。可以指定 `__op` 为 `upsert`，也可以不做任何指定，StarRocks 会默认导入为 UPSERT 操作。例如想要向表 t 中导入如下内容：
+**1.** 当导入的数据文件只有 UPSERT 操作时可以不添加 `__op` 列。可以指定 `__op` 为 UPSERT 操作，也可以不做任何指定，StarRocks 会默认导入为 UPSERT 操作。例如想要向表 t 中导入如下内容：
 
 ~~~text
 # 导入内容
@@ -106,7 +101,7 @@ load label demo_db.label3 (
 
 注意：
 
-* DELETE 操作虽然只用到 primary key 列，但同样要提供全部的列，与 `upsert` 保持一致。
+* DELETE 操作虽然只用到 primary key 列，但同样要提供全部的列，与 UPSERT 操作保持一致。
 * 上述导入内容表示删除 id 为 1、4 的行，添加 id 为 5、6 的行。
 
 Stream Load 导入语句：
@@ -133,7 +128,7 @@ load label demo_db.label4 (
 
 其中，指定了 `__op` 为第三列。
 
-更多关于 Stream Load 和 Broker Load 使用方法请参考 [STREAM LOAD](../loading/StreamLoad.md) 和 [BROKER LOAD](../loading/BrokerLoad.md)
+更多关于 Stream Load 和 Broker Load 使用方法，请参考 [STREAM LOAD](../loading/StreamLoad.md) 和 [BROKER LOAD](../loading/BrokerLoad.md)
 
 ## 使用 Routine Load 导入
 
@@ -166,7 +161,7 @@ PROPERTIES (
 );
 ~~~
 
-**示例 2** 导入 JSON 数据，源数据中有字段表示 upsert 或者 delete，比如下面常见的 Canal 同步到 Kafka 的数据样例，`type` 可以表示本次操作的类型（当前还不支持同步 DDL 语句）。
+**示例 2** 导入 JSON 数据，源数据中有字段表示 UPSERT 或者 DELETE 操作，比如下面常见的 Canal 同步到 Kafka 的数据样例，`type` 可以表示本次操作的类型（当前还不支持同步 DDL 语句）。
 
 数据样例：
 
@@ -230,9 +225,9 @@ FROM KAFKA
 );
 ~~~
 
-**示例 3** 导入 JSON 数据，源数据中有字段可以分别表示 upsert(0)和 delete(1)类型，可以不指定__op。
+**示例 3** 导入 JSON 数据，源数据中有字段可以分别表示 UPSERT 和 DELETE 操作，可以不指定`__op`。
 
-数据样例：op_type 字段的取值只有 0 和 1，分别表示 upsert 和 delete。
+数据样例：op_type 字段的取值只有 0 和 1，分别表示 UPSERT 和 DELETE 操作。
 
 ~~~json
 {"pk": 1, "col0": "123", "op_type": 0}
