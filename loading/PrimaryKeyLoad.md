@@ -293,13 +293,9 @@ Routine Load 更多使用方法请参考 [ROUTINE LOAD](../loading/RoutineLoad.m
 
 ~~~SQL
 create table demo(
-
     id int not null,
-
     name string null default '',
-
     age int not null default '0'
-
 ) primary key(id)
 ~~~
 
@@ -312,11 +308,8 @@ create table demo(
 
 ~~~Plain Text
 0,aaaa
-
 1,bbbb
-
 2,\N
-
 4,dddd
 ~~~
 
@@ -326,11 +319,8 @@ create table demo(
 
 ~~~Bash
 curl --location-trusted -u root: \
-
     -H "label:lineorder" -H "column_separator:," \
-
     -H "partial_update:true" -H "columns:id,name" \
-
     -T demo.csv http://localhost:8030/api/demo/demo/_stream_load
 ~~~
 
@@ -338,23 +328,14 @@ curl --location-trusted -u root: \
 
 ~~~SQL
 load label demo.demo (
-
     data infile("hdfs://localhost:9000/demo.csv")
-
     into table t
-
     format as "csv"
-
     (c1, c2)
-
     set (id=c1, name=c2)
-
 ) with broker "broker1"
-
 properties (
-
     "partial_update" = "true"
-
 );
 ~~~
 
@@ -362,18 +343,11 @@ properties (
 
 ~~~SQL
 CREATE ROUTINE LOAD routine_load_demo on demo 
-
 COLUMNS (id, name),
-
 COLUMNS TERMINATED BY ','
-
 PROPERTIES (
-
     "partial_update" = "true"
-
 ) FROM KAFKA (
-
     xxx
-
 );
 ~~~
