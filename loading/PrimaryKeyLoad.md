@@ -348,7 +348,9 @@ COLUMNS TERMINATED BY ','
 PROPERTIES (
     "partial_update" = "true"
 ) FROM KAFKA (
-    "kafka_broker_list"= "localhost:9092",
-    "kafka_topic" = "starrocks-load"
+    "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
+    "kafka_topic" = "my_topic",
+    "kafka_partitions" = "0,1,2,3",
+    "kafka_offsets" = "101,0,0,200"
 );
 ~~~
