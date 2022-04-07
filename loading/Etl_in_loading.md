@@ -9,20 +9,22 @@ StarRocks能够在数据导入时完成数据转化的操作。这样在数据�
 
 通过StarRocks提供的能力，用户可以在数据导入时实现以下目标：
 
-1. 选择需要导入的列。一方面通过此功能可以跳过不需要导入的列；另一方面当表中列的顺序与文件中字段顺序不一致时，可以通过此功能建立两者的字段映射，从而导入文件。
-2. 过滤不需要的行。在导入时可以通过指定表达式，从而跳过不需要导入的行，只导入必要的行内容。
-3. 导入时生成衍生列（即通过计算处理产生新的列）导入到StarRocks目标表中。
-4. 支持Hive分区路径命名方式，StarRocks能够从文件路径中获取分区列的内容。
+* 选择需要导入的列。一方面通过此功能可以跳过不需要导入的列；另一方面当表中列的顺序与文件中字段顺序不一致时，可以通过此功能建立两者的字段映射，从而导入文件。
+* 过滤不需要的行。在导入时可以通过指定表达式，从而跳过不需要导入的行，只导入必要的行内容。
+* 导入时生成衍生列（即通过计算处理产生新的列）导入到StarRocks目标表中。
+* 支持Hive分区路径命名方式，StarRocks能够从文件路径中获取分区列的内容。
 
 ---
 
 ## 选择需要导入的列
 
-### 样例数据
+### 准备样例数据
 
 假如需要向下面的表中导入一份数据：
 
 ~~~sql
+CREATE DATABASE test_db;
+USE test_db;
 CREATE TABLE event (
     `event_date` DATE,
     `event_type` TINYINT,
@@ -31,7 +33,7 @@ CREATE TABLE event (
 DISTRIBUTED BY HASH(user_id) BUCKETS 3;
 ~~~
 
-但是数据文件中却包含了四个字段“user_id, user_gender, event_date, event_type”，样例数据如下所示：
+但是数据文件中却包含了四个字段 `user_id, user_gender, event_date, event_type`，样例数据如下所示：
 
 ~~~text
 354,female,2020-05-20,1
@@ -47,7 +49,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 3;
 ~~~bash
 curl --location-trusted -u root -H "column_separator:," \
     -H "columns: user_id, user_gender, event_date, event_type" -T load-columns.txt \
-    http://{FE_HOST}:{FE_HTTP_PORT}/api/test/event/_stream_load
+    http://{FE_HOST}:{FE_HTTP_PORT}/api/test_db/event/_stream_load
 ~~~
 
 CSV 格式的文件中的列，本来是没有命名的，通过 **columns**，可以按顺序对其命名（一些 CSV 中，会在首行给出列名，但其实系统是不感知的，会当做普通数据处理）。在这个 case 中，通过 **columns** 字段，描述了文件中**按顺序**的字段名字分别是 user_id, user_gender, event_date, event_type。然后，columns 的字段，会和系统中导入表的字段做**列名对应**，并将数据导入到表中：
@@ -58,19 +60,21 @@ CSV 格式的文件中的列，本来是没有命名的，通过 **columns**，�
 
 针对这个例子，字段"user_id, event_date, event_type"都能够在表中找到对应的字段，所以对应的内容都会被导入到 StarRocks 表中。而"user_gender"这个字段在表中并不存在，所以导入时会直接忽略掉这个字段。
 
+Stream Load 详细使用请参考 [STREAM LOAD](../loading/StreamLoad.md)
+
 ### HDFS导入
 
 通过下面的命令能够将HDFS的数据导入到对应的表中：
 
 ~~~sql
-LOAD LABEL test.label_load (
+LOAD LABEL test_db.label_load (
     DATA INFILE("hdfs://{HDFS_HOST}:{HDFS_PORT}/tmp/zc/starrocks/data/date=*/*")
     INTO TABLE `event`
     COLUMNS TERMINATED BY ","
     FORMAT AS "csv"
     (user_id, user_gender, event_date, event_type)
 )
-WITH BROKER hdfs;
+WITH BROKER "broker0";
 ~~~
 
 通过"(user_id, user_gender, event_date, event_type)"部分指定文件中的字段名字。StarRocks导入过程中的行为与本地文件导入行为一致。需要的字段会被导入到StarRocks中，不需要的字段会被忽略掉。
@@ -80,7 +84,7 @@ WITH BROKER hdfs;
 通过下面的命令能够将Kafka中的数据导入到对应表中：
 
 ~~~sql
-CREATE ROUTINE LOAD test.event_load ON event
+CREATE ROUTINE LOAD test_db.event_load ON event
     COLUMNS TERMINATED BY ",",
     COLUMNS(user_id, user_gender, event_date, event_type),
 WHERE event_type = 1
@@ -110,7 +114,7 @@ FROM KAFKA (
 
 ## 跳过不需要导入的行
 
-### 样例数据
+### 准备样例数据
 
 假如需要向下面的表中导入一份数据：
 
@@ -141,7 +145,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 3;
 ~~~bash
 curl --location-trusted -u root -H "column_separator:," \
     -H "where:event_type=1" -T load-rows.txt \
-    http://{FE_HOST}:{FE_HTTP_PORT}/test/event/_stream_load
+    http://{FE_HOST}:{FE_HTTP_PORT}/test_db/event/_stream_load
 ~~~
 
 ### HDFS导入
@@ -149,14 +153,14 @@ curl --location-trusted -u root -H "column_separator:," \
 通过下面的命令，能够实现只将HDFS文件中event_type为1的数据导入到StarRocks中。具体方法是通过"WHERE event_type = 1"选项来过滤要导入的数据：
 
 ~~~sql
-LOAD LABEL test.label_load (
+LOAD LABEL test_db.label_load (
     DATA INFILE("hdfs://{HDFS_HOST}:{HDFS_PORT}/tmp/zc/starrocks/data/date=*/*")
     INTO TABLE `event`
     COLUMNS TERMINATED BY ","
     FORMAT AS "csv"
     WHERE event_type = 1
 )
-WITH BROKER hdfs;
+WITH BROKER "broker0";
 ~~~
 
 ### Kafka导入
@@ -164,7 +168,7 @@ WITH BROKER hdfs;
 通过下面的命令，能够将Kafka中event_type为1的数据导入到StarRocks的表中。具体方法是通过指定"WHERE event_type = 1"来过滤要导入的数据：
 
 ~~~sql
-CREATE ROUTINE LOAD test.event_load ON event
+CREATE ROUTINE LOAD test_db.event_load ON event
 COLUMNS TERMINATED BY ",",
 WHERE event_type = 1
 FROM KAFKA (
@@ -189,6 +193,8 @@ FROM KAFKA (
 
 ## 生成衍生列
 
+### 准备样例数据
+
 假如需要向下面的表中导入一份数据：
 
 ~~~sql
@@ -212,14 +218,14 @@ DISTRIBUTED BY HASH(date) BUCKETS 1;
 
 在导入时，通过下面的命令实现数据转化。
 
-### 本地文件导入3
+### 本地文件导入
 
 通过下面的命令，能够在导入本地文件的同时，生成对应的衍生列。方法是指定HTTP请求中的`Header "columns:date, year=year(date), month=month(date), day=day(date)"`，让StarRocks在导入过程中根据文件内容计算生成对应的列。
 
 ~~~bash
 curl --location-trusted -u root -H "column_separator:," \
     -H "columns:date,year=year(date),month=month(date),day=day(date)" -T load-date.txt \
-    http://127.0.0.1:8431/api/test/dim_date/_stream_load
+    http://{FE_HOST}:{FE_HTTP_PORT}/api/test_db/dim_date/_stream_load
 ~~~
 
 这里需要注意：
@@ -233,7 +239,7 @@ curl --location-trusted -u root -H "column_separator:," \
 与前述本地文件导入方式类似，通过下面的命令能够实现HDFS文件导入：
 
 ~~~sql
-LOAD LABEL test.label_load (
+LOAD LABEL test_db.label_load (
     DATA INFILE("hdfs://{HDFS_HOST}:{HDFS_PORT}/tmp/zc/starrocks/data/date=*/*")
     INTO TABLE `event`
     COLUMNS TERMINATED BY ","
@@ -241,7 +247,7 @@ LOAD LABEL test.label_load (
     (date)
     SET(year=year(date), month=month(date), day=day(date))
 )
-WITH BROKER hdfs;
+WITH BROKER "broker0";
 ~~~
 
 ### Kafka导入
@@ -249,7 +255,7 @@ WITH BROKER hdfs;
 类似的，通过下面的命令能够实现从Kafka导入相应数据：
 
 ~~~sql
-CREATE ROUTINE LOAD test.event_load ON event
+CREATE ROUTINE LOAD test_db.event_load ON event
     COLUMNS TERMINATED BY ",",
     COLUMNS(date,year=year(date),month=month(date),day=day(date))
 FROM KAFKA (
@@ -276,7 +282,7 @@ FROM KAFKA (
 
 ## 从文件路径中获取字段内容
 
-### 样例数据
+### 准备样例数据
 
 假设我们要向下面的表中导入数据：
 
@@ -316,7 +322,7 @@ LOAD LABEL test.label_load (
     COLUMNS FROM PATH AS (date)
     SET(event_date = date)
 )
-WITH BROKER hdfs;
+WITH BROKER "broker0";
 ~~~
 
 上述的命令是将匹配路径通配符所有的文件导入到表"event"中。其中文件都为CSV格式，各个列的内容通过“,”进行分割。文件中包含“event_type”，“user_id”两个列。并且能够**通过文件路径中获取 “date” 列的信息**，因为date列在表中对应的名字是"**event_date**"，所以通过SET语句完成映射。

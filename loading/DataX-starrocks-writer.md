@@ -1,4 +1,6 @@
-# 介绍
+# 使用 DataX 导入 StarRocks
+
+## 使用场景
 
 StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能。在底层实现上，StarRocksWriter 通过Stream load以csv或 json 格式导入数据至StarRocks。内部将`reader`读取的数据进行缓存后批量导入至StarRocks，以提高写入性能。总体数据流是 `source -> Reader -> DataX channel -> Writer -> StarRocks`。
 
@@ -7,15 +9,18 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
 [源码地址](https://github.com/StarRocks/DataX)
 
 测试时可以使用如下命令:
- `python datax.py --jvm="-Xms6G -Xmx6G" --loglevel=debug job.json`
 
-## 功能说明
+~~~bash
+  python datax.py --jvm="-Xms6G -Xmx6G" --loglevel=debug job.json
+~~~
+
+## 使用步骤
 
 ### 配置样例
 
 * 这里使用一份从内存Mysql读取数据后导入至StarRocks。
 
-```json
+~~~json
 {
     "job": {
         "setting": {
@@ -71,9 +76,9 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
     }
 }
 
-```
+~~~
 
-### 参数说明
+**参数说明**
 
 * **username**
 
@@ -145,7 +150,7 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
 
 * **jdbcUrl**
 
-  * 描述：目的数据库的 JDBC 连接信息，用于执行`preSql`及`postSql`。
+  * 描述：目的数据库的 JDBC 连接信息，用于执行 `preSql` 及 `postSql`。
 
   * 必选：否
 
@@ -169,7 +174,7 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
 
 * **flushInterval**
 
-  * 描述：上一次StreamLoad结束至下一次开始的时间间隔（单位：ms）。
+  * 描述：上一次 StreamLoad 结束至下一次开始的时间间隔（单位：ms）。
 
   * 必选：否
 
@@ -177,39 +182,41 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
 
 * **loadProps**
 
-  * 描述：StreamLoad 的请求参数，详情参照StreamLoad介绍页面。
+  * 描述：StreamLoad 的请求参数，详情参照 [STREAM LOAD](../sql-reference/sql-statements/data-manipulation/STREAM%20LOAD.md) 介绍页面。
 
   * 必选：否
 
   * 默认值：无
 
-### 导入参数设置
+### 注意事项
+
+#### 导入参数配置
 
 默认传入的数据均会被转为字符串，并以`\t`作为列分隔符，`\n`作为行分隔符，组成`csv`文件进行StreamLoad导入操作。
 如需更改列分隔符，则正确配置 `loadProps` 即可：
 
-```json
+~~~json
 "loadProps": {
     "column_separator": "\\x01",
     "row_delimiter": "\\x02"
 }
-```
+~~~
 
 如需更改导入格式为`json`，则正确配置 `loadProps` 即可：
 
-```json
+~~~json
 "loadProps": {
     "format": "json",
     "strip_outer_array": true
 }
-```
+~~~
 
-## 关于时区
+#### 关于时区
 
 源库与目标库时区不同时，执行datax.py，命令行后面需要加如下参数：
 
-```json
+~~~json
 "-Duser.timezone=xx时区"
-```
+~~~
 
 例如，DataX导入PostgreSQL中的数据，源库是UTC时间，在dataX启动时加参数 "-Duser.timezone=GMT+0"。

@@ -26,6 +26,7 @@
   + [导入过程中完成数据转换](/loading/Etl_in_loading.md)
   + [Json数据导入](/loading/Json_loading.md)
   + [Flink connector](/loading/Flink-connector-starrocks.md)
+  + [MySQL 实时同步](/loading/Flink_cdc_load.md)
   + [DataX writer](/loading/DataX-starrocks-writer.md)
   + [CloudCanal数据导入](/loading/CloudCanal_loading.md)
 + 数据提取
