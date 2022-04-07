@@ -1,16 +1,24 @@
 # reverse
 
-## description
+## 功能
 
-### Syntax
+将字符串反转, 返回字符串的顺序和源字符串的顺序相反
+
+## 语法
 
 ```Haskell
-VARCHAR reverse(VARCHAR str)
+reverse(str)
 ```
 
-将字符串反转，返回的字符串的顺序和源字符串的顺序相反。
+## 参数说明
 
-## example
+`str`: 支持的数据类型为 VARCHAR
+
+## 返回值说明
+
+返回值的数据类型为 VARCHAR
+
+## 示例
 
 ```Plain Text
 MySQL > SELECT REVERSE('hello');
@@ -30,6 +38,6 @@ MySQL > SELECT REVERSE('你好');
 1 row in set (0.00 sec)
 ```
 
-## keyword
+## 关键词
 
 REVERSE
