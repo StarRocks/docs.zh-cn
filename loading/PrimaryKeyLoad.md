@@ -34,9 +34,13 @@ Stream Load 导入语句：
 
 ~~~Bash
 #不指定__op
-curl --location-trusted -u root: -H "label:lineorder" -H "column_separator:," -T demo.csv http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
+curl --location-trusted -u root: -H "label:lineorder" \
+    -H "column_separator:," -T demo.csv \
+    http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
 #指定__op
-curl --location-trusted -u root: -H "label:lineorder" -H "column_separator:," -H " columns:__op ='upsert'" -T demo.csv http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
+curl --location-trusted -u root: -H "label:lineorder" \
+    -H "column_separator:," -H " columns:__op ='upsert'" -T demo.csv \
+    http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
 ~~~
 
 Broker Load 导入语句：
@@ -72,8 +76,8 @@ Stream Load 导入语句：
 
 ~~~bash
 curl --location-trusted -u root: -H "label:lineorder" -H "column_separator:," \
--H " columns:__op ='delete'" -T demo.csv \
-http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
+    -H " columns:__op ='delete'" -T demo.csv \
+    http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
 ~~~
 
 Broker Load 导入语句：
@@ -105,8 +109,8 @@ Stream Load 导入语句：
 
 ~~~bash
 curl --location-trusted -u root: -H "label:lineorder" -H "column_separator:," \
--H " columns: c1,c2,c3,pk=c1, col0=c2,__op=c3 " -T demo.csv \
-http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
+    -H " columns: c1,c2,c3,pk=c1, col0=c2,__op=c3 " -T demo.csv \
+    http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
 ~~~
 
 其中，指定了 `__op` 为第三列。
