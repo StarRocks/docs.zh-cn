@@ -127,13 +127,13 @@ load label demo_db.label4 (
 
 其中，指定了 `__op` 为第三列。
 
-更多关于 Stream Load 和 Broker Load 使用方法，请参考 [STREAM LOAD](../loading/StreamLoad.md) 和 [BROKER LOAD](../loading/BrokerLoad.md)
+更多关于 Stream Load 和 Broker Load 使用方法，请参考 [STREAM LOAD](../loading/StreamLoad.md) 和 [BROKER LOAD](../loading/BrokerLoad.md)。
 
 ## 通过 Routine Load 变更数据
 
 可以在创建 Routine Load 的语句中，在 columns 最后增加一列，指定为 `__op`。在真实导入中，`__op` 为 0 则表示 UPSERT 操作，为 1 则表示 DELETE 操作。例如导入如下内容：
 
-**示例 1** 导入 CSV 数据
+**示例 1** 导入 CSV 数据。
 
 ~~~bash
 2020-06-23  2020-06-23 00: 00: 00 beijing haidian 1   -128    -32768  -2147483648    0
@@ -322,7 +322,7 @@ create table demo(
 
 根据导入方式，执行相关命令。
 
-* 如果通过Stream Load的方式导入，请执行如下命令。注意，需要设置`-H "partial_update:true"`，以指定为部分列更新，并且指定所需更新的列名`"columns:id,name"`。Stream Load的具体设置方式，请参见[Stream Load](xxxx)。
+* 如果通过Stream Load的方式导入，请执行如下命令。注意，需要设置`-H "partial_update:true"`，以指定为部分列更新，并且指定所需更新的列名`"columns:id,name"`。Stream Load的具体设置方式，请参见[STREAM LOAD](../loading/StreamLoad.md)。
 
 ~~~Bash
 curl --location-trusted -u root: \
@@ -334,7 +334,7 @@ curl --location-trusted -u root: \
     -T demo.csv http://localhost:8030/api/demo/demo/_stream_load
 ~~~
 
-* 如果通过Broker Load的方式导入，请执行如下命令。注意，在 properties 中设置`"partial_update" = "true"`，指定为部分列更新，并且指定所需更新的列名`set (id=c1, name=c2)`。Broker Load的具体设置方式，请参见[Broker Load](xxxx)。
+* 如果通过Broker Load的方式导入，请执行如下命令。注意，在 properties 中设置`"partial_update" = "true"`，指定为部分列更新，并且指定所需更新的列名`set (id=c1, name=c2)`。Broker Load的具体设置方式，请参见[BROKER LOAD](../loading/BrokerLoad.md)。
 
 ~~~SQL
 load label demo.demo (
@@ -358,7 +358,7 @@ properties (
 );
 ~~~
 
-* 如果通过Routine Load的方式导入，请执行如下命令。注意，在 properties 中设置`"partial_update" = "true"`，指定为部分列更新，并且指定所需更新的列名`COLUMNS (id, name)`。Routine Load的具体设置方式，请参见[Routine Load](xxxx)。
+* 如果通过Routine Load的方式导入，请执行如下命令。注意，在 properties 中设置`"partial_update" = "true"`，指定为部分列更新，并且指定所需更新的列名`COLUMNS (id, name)`。Routine Load的具体设置方式，请参见 [ROUTINE LOAD](../loading/RoutineLoad.md)。
 
 ~~~SQL
 CREATE ROUTINE LOAD routine_load_demo on demo 
