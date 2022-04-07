@@ -2,7 +2,6 @@
 
 StarRocks 支持通过导入任务，对主键模型的表进行数据变更（插入、更新和删除数据）。
 
-
 ## 内部实现
 
 目前支持的导入数据方式有 Stream Load、Broker Load、Routine Load。
