@@ -1,27 +1,23 @@
 
 # 物化视图
 
-## 背景介绍
+## 物化视图总览
 
-物化视图的一般定义是：它一种包含一个查询结果的数据库对象，它可以是远端数据的一份本地拷贝，也可以是一个表或一个 join 结果的行/列的一个子集，还可以是使用聚合函数的一个汇总。相对于普通的逻辑视图，将数据「物化」后，能够带来查询性能的提升。
+物化视图的一般定义是：一种包含一个查询结果的数据库对象，它可以是远端数据的一份本地拷贝，也可以是一个表或一个 join 结果的行/列的一个子集，还可以是使用聚合函数的一个汇总。相对于普通的逻辑视图，将数据「物化」后，能够带来查询性能的提升。
 
 > 系统目前还不支持join，更多注意事项请参看 [注意事项](#注意事项)。
 
-在本系统中，物化视图会被更多地用来当做一种预先计算的技术，同RollUp表，预先计算是为了减少查询时现场计算量，从而降低查询延迟。RollUp 表有两种使用方式：对明细表的任意维度组合进行预先聚合；采用新的维度列排序方式，以命中更多的前缀查询条件。当然也可以两种方式一起使用。物化视图的功能是 RollUp 表的超集，原有的 RollUp 功能都可通过物化视图来实现。
+在本系统中，物化视图会被更多地用来当做一种预先计算的技术，预先计算是为了减少查询时现场计算量，从而降低查询延迟。
 
-<br/>
+## 名词解释
 
-物化视图的使用场景有：
-
-* 分析需求覆盖明细数据查询以及固定维度聚合查询两方面。
-* 需要做对排序键前缀之外的其他列组合形式做范围条件过滤。
-* 需要对明细表的任意维度做粗粒度聚合分析。
-
-<br/>
+1. Duplicate 数据模型：StarRocks中的用于存放明细数据的数据模型，建表可指定，数据不会被聚合。
+2. Base 表：StarRocks 中通过 CREATE TABLE 命令创建出来的表。
+3. Materialized Views 表：简称 MVs，物化视图。
 
 ## 原理
 
-物化视图的数据组织形式和基表、RollUp表相同。用户可以在新建的基表时添加物化视图，也可以对已有表添加物化视图，这种情况下，基表的数据会自动以**异步**方式填充到物化视图中。基表可以拥有多张物化视图，向基表导入数据时，会**同时**更新基表的所有物化视图。数据导入操作具有**原子性**，因此基表和它的物化视图保持数据一致。
+物化视图的数据组织形式和基表、RollUp 表相同。用户可以在新建的基表时添加物化视图，也可以对已有表添加物化视图，这种情况下，基表的数据会自动以**异步**方式填充到物化视图中。基表可以拥有多张物化视图，向基表导入数据时，会**同时**更新基表的所有物化视图。数据导入操作具有**原子性**，因此基表和它的物化视图保持数据一致。
 
 物化视图创建成功后，用户的原有的查询基表的 SQL 语句保持不变，StarRocks 会自动选择一个最优的物化视图，从物化视图中读取数据并计算。用户可以通过 EXPLAIN 命令来检查当前查询是否使用了物化视图。
 
@@ -42,6 +38,22 @@
 
 <br/>
 
+## 适用场景
+
+* 分析需求覆盖明细数据查询以及固定维度聚合查询两方面。
+* 需要做对排序键前缀之外的其他列组合形式做范围条件过滤。
+* 需要对明细表的任意维度做粗粒度聚合分析。
+
+在实际的业务场景中，通常存在两种场景并存的分析需求：对固定维度的聚合分析 和 对原始明细数据任意维度的分析。
+
+例如，在销售场景中，每条订单数据包含这几个维度信息（item\_id, sold\_time, customer\_id, price）。在这种场景下，有两种分析需求并存：
+
+1. 业务方需要获取某个商品在某天的销售额是多少，那么仅需要在维度（item\_id, sold\_time）维度上对 price 进行聚合即可。
+2. 分析某个人在某天对某个商品的购买明细数据。
+
+在现有的 StarRocks 数据模型中，如果仅建立一个聚合模型的表，比如（item\_id, sold\_time, customer\_id, sum(price)）。由于聚合损失了数据的部分信息，无法满足用户对明细数据的分析需求。如果仅建立一个 Duplicate 模型，虽可以满足任意维度的分析需求，但无法快速完成分析。如果同时建立一个聚合模型和一个 Duplicate 模型，虽可以满足性能和任意维度分析，但两表之间本身无关联，需要业务方自行选择分析表。不灵活也不易用。
+
+
 ## 使用方式
 
 ### 创建物化视图
@@ -52,13 +64,7 @@
 CREATE MATERIALIZED VIEW
 ~~~
 
-具体的语法可以通过下面命令查看：
-
-~~~SQL
-HELP CREATE MATERIALIZED VIEW
-~~~
-
-假设用户有一张销售记录明细表，存储了每个交易的交易id、销售员、售卖门店、销售时间、以及金额。建表语句为：
+假设用户有一张销售记录明细表，存储了每个交易的交易 id 、销售员、售卖门店、销售时间、以及金额。建表语句为：
 
 ~~~SQL
 CREATE TABLE sales_records(
@@ -74,7 +80,7 @@ properties("replication_num" = "1");
 表 sales_records 的结构为:
 
 ~~~PlainText
-MySQL [test]> desc sales_records;
+mysql> desc sales_records;
 
 +-----------+--------+------+-------+---------+-------+
 | Field     | Type   | Null | Key   | Default | Extra |
@@ -96,25 +102,28 @@ FROM sales_records
 GROUP BY store_id;
 ~~~
 
-更详细物化视图创建语法请参看SQL参考手册 [CREATE MATERIALIZED VIEW](../sql-reference/sql-statements/data-definition/CREATE%20MATERIALIZED%20VIEW.md) ，或者在 MySQL 客户端使用命令 `help create materialized view` 获得帮助。
+* **限制：**
+
+  * Base 表中的分区列，必须存在于创建物化视图的 Group by 聚合列中
+    >列如：Base 表按天分区，物化视图则只能按天分区列做 Group by 聚合。不能够建立按月粒度 Group by 的物化视图。
+  * 目前只支持对单表进行构建物化视图，不支持多表 JOIN
+  * 聚合类型表（Aggregation)，不支持对key列执行聚合算子操作，仅支持对 Value 列进行聚合，且聚合算子类型不能改变。
+  * 物化视图中至少包含一个 KEY 列
+  * 不支持表达式计算
+  * 不支持指定物化视图查询
+  * 不支持 Order By
+
+更详细物化视图创建语法请参看 SQL 参考手册 [CREATE MATERIALIZED VIEW](../sql-reference/sql-statements/data-definition/CREATE%20MATERIALIZED%20VIEW.md) 。
 
 <br/>
 
-### 查看物化视图
+### 查看物化视图构建状态
 
 由于创建物化视图是一个异步的操作，用户在提交完创建物化视图任务后，需要通过命令检查物化视图是否构建完成，命令如下:
 
 ~~~SQL
 SHOW ALTER MATERIALIZED VIEW FROM db_name;
 ~~~
-
-或
-
-~~~SQL
-SHOW ALTER TABLE ROLLUP FROM db_name;
-~~~
-
-> db_name：替换成真实的 db name，比如"test"。
 
 查询结果为:
 
@@ -129,6 +138,10 @@ SHOW ALTER TABLE ROLLUP FROM db_name;
 如果 State 为 FINISHED，说明物化视图已经创建完成。
 
 查看物化视图的表结果，需用通过基表名进行：
+
+~~~SQL
+DESC table_name all;
+~~~
 
 ~~~PlainText
 mysql> desc sales_records all;
@@ -145,6 +158,21 @@ mysql> desc sales_records all;
 | store_amt     | AGG_KEYS      | store_id  | INT    | Yes  | true  | NULL    |       |
 |               |               | sale_amt  | BIGINT | Yes  | false | NULL    | SUM   |
 +---------------+---------------+-----------+--------+------+-------+---------+-------+
+~~~
+
+查看该 Database 下的所有物化视图
+
+~~~SQL
+SHOW MATERIALIZED VIEW [IN|FROM db_name]
+~~~
+
+~~~PlainText
+mysql> SHOW MATERIALIZED VIEW IN test;
++-------+-----------+----------------------+--------------------------------------------------------------------------------------------------+------+
+| id    | name      | database_name        | text                                                                                             | rows |
++-------+-----------+----------------------+--------------------------------------------------------------------------------------------------+------+
+| 28931 | store_amt | default_cluster:test | CREATE MATERIALIZED VIEW store_amt ASSELECT event_day, SUM(pv)FROM site_accessGROUP BY event_day | 0    |
++-------+-----------+----------------------+--------------------------------------------------------------------------------------------------+------+
 ~~~
 
 <br/>
@@ -241,9 +269,9 @@ EXPLAIN SELECT store_id, SUM(sale_amt) FROM sales_records GROUP BY store_id;
 DROP MATERIALIZED VIEW IF EXISTS store_amt on sales_records;
 ~~~
 
-删除处于创建中的物化视图，需要先取消异步任务，然后再删除物化视图，以表 `db0.table0` 上的物化视图 mv 为例:
+删除处于创建中的物化视图，需要先取消异步任务，然后再删除物化视图。
 
-首先获得JobId，执行命令:
+首先获得 JobId，执行命令:
 
 ~~~SQL
 show alter table rollup from db0;
@@ -258,10 +286,16 @@ show alter table rollup from db0;
 +-------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+-------------+------+----------+---------+
 ~~~
 
-其中JobId为22478，取消该Job，执行命令:
+取消正在创建的物化视图
 
 ~~~SQL
-cancel alter table rollup from db0.table0 (22478);
+CANCEL ALTER MATERIALIZED VIEW FROM db_name.view_name
+~~~
+
+上述查询得到 JobId 为 22478，若要取消该 Job，则执行命令:
+
+~~~SQL
+CANCEL ALTER MATERIALIZED VIEW FROM db0.table0 (22478);
 ~~~
 
 <br/>
@@ -337,9 +371,62 @@ ORDER BY k3;
 
 ## 注意事项
 
+### **物化视图函数支持**
+
+当前的物化视图只支持对单个表的聚合。目前支持以下聚合函数：
+
+* COUNT
+* MAX
+* MIN
+* SUM
+* PERCENTILE_APPROX
+* HLL_UNION
+
+    对明细数据进行 HLL 聚合并且在查询时，使用 HLL 函数分析数据。主要适用于快速进行非精确去重计算。对明细数据使用HLL\_UNION聚合，需要先调用hll\_hash函数，对原数据进行转换。
+
+    ~~~SQL
+    create materialized view dt_uv as 
+        select dt, page_id, HLL_UNION(hll_hash(user_id)) 
+        from user_view
+        group by dt, page_id;
+    select ndv(user_id) from user_view; 查询可命中该物化视图
+    ~~~
+
+    目前不支持对 DECIMAL/BITMAP/HLL/PERCENTILE 类型的列使用HLL\_UNION聚合算子。
+
+* BITMAP_UNION
+
+    对明细数据进行 BITMAP 聚合并且在查询时，使用 BITMAP 函数分析数据，主要适用于快速计算 count(distinct) 的精确去重。对明细数据使用 BITMAP\_UNION 聚合，需要先调用 to\_bitmap 函数，对原数据进行转换。
+
+    ~~~SQL
+    create materialized view dt_uv  as
+        select dt, page_id, bitmap_union(to_bitmap(user_id))
+        from user_view
+        group by dt, page_id;
+    select count(distinct user_id) from user_view; 查询可命中该物化视图
+    ~~~
+
+    目前仅支持 TINYINT/SMALLINT/INT/BITINT 类型，且存储内容需为正整数（包括0）。
+
+### **物化视图的智能路由**
+
+StarRocks 中，查询时不需要显式指定MV表名称，StarRocks 会根据查询 SQL 智能路由到最佳的 MV 表。在查询时，MV 表的选择规则如下：
+
+1. 选择包含所有查询列的 MV 表
+2. 按照过滤和排序的 Column 筛选最符合的 MV 表
+3. 按照 Join 的 Column 筛选最符合的 MV 表
+4. 行数最小的 MV 表
+5. 列数最小的 MV 表
+
+### **其他限制**
+
 1. 物化视图的聚合函数的参数仅支持单列，比如：`sum(a+b)` 不支持。
 2. 如果删除语句的条件列，在物化视图中不存在，则不能进行删除操作。如果一定要删除数据，则需要先将物化视图删除，然后方可删除数据。
 3. 单表上过多的物化视图会影响导入的效率：导入数据时，物化视图和 base 表数据是同步更新的，如果一张表的物化视图表超过10张，则有可能导致导入速度很慢。这就像单次导入需要同时导入10张表数据是一样的。
 4. 相同列，不同聚合函数，不能同时出现在一张物化视图中，比如：`select sum(a), min(a) from table` 不支持。
 5. 物化视图的创建语句目前不支持 JOIN 和 WHERE ，也不支持 GROUP BY 的 HAVING 子句。
 6. 不能同时创建多个物化视图，只能等待上一个物化视图创建完成，才能创建下一个物化视图。
+7. RollUp表的模型必须和Base表保持一致（聚合表的RollUp表是聚合模型，明细表的RollUp表是明细模型）。
+8. Delete 操作时，如果 Where 条件中的某个 Key 列在某个 RollUp表中不存在，则不允许进行 Delete。这种情况下，可以先删除物化视图，再进行Delete操作，最后再重新增加物化视图。
+9. 如果 物化视图中包含 REPLACE 聚合类型的列，则该物化视图必须包含所有 Key 列。
+
