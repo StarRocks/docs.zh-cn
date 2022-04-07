@@ -1,18 +1,24 @@
 # minute
 
-## description
+## 功能
 
-### Syntax
+获取日期中的分钟的信息, 返回值范围为 0-59
+
+## 语法
 
 ```Haskell
-INT MINUTE(DATETIME date)
+MINUTE(date)
 ```
 
-获得日期中的分钟的信息，返回值范围从0-59。
+## 参数说明
 
-参数为Date或者Datetime类型
+`date`: 支持的数据类型为 DATE 或 DATETIME 类型
 
-## example
+## 返回值说明
+
+返回值的数据类型为 INT
+
+## 示例
 
 ```Plain Text
 MySQL > select minute('2018-12-31 23:59:59');
@@ -23,6 +29,6 @@ MySQL > select minute('2018-12-31 23:59:59');
 +-----------------------------+
 ```
 
-## keyword
+## 关键词
 
 MINUTE

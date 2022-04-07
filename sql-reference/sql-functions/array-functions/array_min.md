@@ -1,16 +1,24 @@
 # array_min
 
-## description
+## 功能
 
-### Syntax
+求取一个 ARRAY 中的所有数据中的最小值，返回这个结果。
+
+## 语法
 
 ```Haskell
 array_min(array(type))
 ```
 
-求取一个ARRAY中的所有数据中的最小值，返回这个结果。
+## 参数说明
 
-## example
+`type`: 支持的数据类型有 BOOLEAN、TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMALV2、DATE、DATETIME、VARCHAR
+
+## 返回值说明
+
+返回值的数据类型与 `type` 类型一致
+
+## 示例
 
 ```plain text
 mysql> select array_min([113, 11, 12]);
@@ -35,6 +43,6 @@ mysql> select array_min([cast('2020-02-25 11:35:17' as datetime), cast('2019-08-
 +--------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
-## keyword
+## 关键词
 
-ARRAY_MIN,ARRAY
+ARRAY_MIN, ARRAY

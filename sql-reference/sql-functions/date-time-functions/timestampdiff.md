@@ -1,18 +1,28 @@
 # timestampdiff
 
-## description
+## 功能
 
-### Syntax
+返回两个 datetime 之间的差值(expr2 − expr1)
 
-`INT TIMESTAMPDIFF(unit,DATETIME datetime_expr1, DATETIME datetime_expr2)`
+## 语法
 
-返回datetime_expr2−datetime_expr1，其中datetime_expr1和datetime_expr2是日期或日期时间表达式。
+```Haskell
+TIMESTAMPDIFF(unit, expr1, expr2)
+```
 
-结果(整数)的单位由unit参数给出。interval的单位由unit参数给出，它应该是下列值之一:
+## 参数说明
 
-SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, or YEAR。
+`unit`: 可以是 YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, WEEK 中任一种值
 
-## example
+`expr1`: 合法的日期或日期/时间表达式, 支持的数据类型为 DATETIME
+
+`expr2`: 合法的日期或日期/时间表达式, 支持的数据类型为 DATETIME
+
+## 返回值说明
+
+返回值的数据类型为 INT
+
+## 示例
 
 ```plain text
 
@@ -39,6 +49,6 @@ MySQL> SELECT TIMESTAMPDIFF(MINUTE,'2003-02-01','2003-05-01 12:05:55');
 
 ```
 
-## keyword
+## 关键词
 
 TIMESTAMPDIFF

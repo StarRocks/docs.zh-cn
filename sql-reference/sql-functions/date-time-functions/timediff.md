@@ -1,16 +1,26 @@
 # timediff
 
-## description
+## 功能
 
-### Syntax
+返回两个 datetime 之间的差值(expr1-expr2)
 
-`TIME TIMEDIFF(DATETIME expr1, DATETIME expr2)`
+## 语法
 
-TIMEDIFF返回两个DATETIME之间的差值
+```Haskell
+TIMEDIFF(expr1, expr2)
+```
 
-TIMEDIFF函数返回表示为时间值的expr1 - expr2的结果，返回值为TIME类型
+## 参数说明
 
-## example
+`expr1`: 合法的日期或日期/时间表达式, 支持的数据类型为 DATETIME
+
+`expr2`: 合法的日期或日期/时间表达式, 支持的数据类型为 DATETIME
+
+## 返回值说明
+
+返回值的数据类型为 TIME
+
+## 示例
 
 ```Plain Text
 MySQL > SELECT TIMEDIFF(now(),utc_timestamp());
@@ -35,6 +45,6 @@ MySQL > SELECT TIMEDIFF('2019-01-01 00:00:00', NULL);
 +---------------------------------------+
 ```
 
-## keyword
+## 关键词
 
 TIMEDIFF

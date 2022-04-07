@@ -1,20 +1,26 @@
 # utc_timestamp
 
-## description
+## 功能
 
-### Syntax
+返回当前 UTC 日期和时间
+
+## 语法
 
 ```Haskell
-DATETIME UTC_TIMESTAMP()
+UTC_TIMESTAMP()
 ```
 
-返回当前UTC日期和时间在 "YYYY-MM-DD HH:MM:SS" 或
+## 参数说明
 
-"YYYYMMDDHHMMSS"格式的一个值
+无
 
-根据该函数是否用在字符串或数字语境中
+## 返回值说明
 
-## example
+返回值的数据类型为 DATETIME
+
+## 示例
+
+该函数用在字符串语境("YYYY-MM-DD HH:MM:SS")中和用在数字语境中("YYYYMMDDHHMMSS")返回的两种格式
 
 ```Plain Text
 MySQL > select utc_timestamp(),utc_timestamp() + 1;
@@ -25,6 +31,6 @@ MySQL > select utc_timestamp(),utc_timestamp() + 1;
 +---------------------+---------------------+
 ```
 
-## keyword
+## 关键词
 
-UTC_TIMESTAMP,UTC,TIMESTAMP
+UTC_TIMESTAMP, UTC, TIMESTAMP

@@ -1,18 +1,24 @@
 # monthname
 
-## description
-
-### Syntax
-
-```Haskell
-VARCHAR MONTHNAME(DATE)
-```
+## 功能
 
 返回日期对应的月份名字
 
-参数为Date或者Datetime类型
+### 语法
 
-## example
+```Haskell
+MONTHNAME(date)
+```
+
+## 参数说明
+
+`date`: 支持的数据类型为 DATE 或 DATETIME 类型
+
+## 返回值说明
+
+返回值的数据类型为 VARCHAR
+
+## 示例
 
 ```Plain Text
 MySQL > select monthname('2008-02-03 00:00:00');
@@ -23,6 +29,6 @@ MySQL > select monthname('2008-02-03 00:00:00');
 +----------------------------------+
 ```
 
-## keyword
+## 关键词
 
 MONTHNAME

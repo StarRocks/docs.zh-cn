@@ -1,14 +1,30 @@
 # convert_tz
 
-## Syntax
+## 功能
 
-`DATETIME CONVERT_TZ(DATETIME dt, VARCHAR from_tz, VARCHAR to_tz)`
+将给定时区的时间转化成指定时区的时间
 
-## Description
+## 语法
 
-转换datetime值dt，从 from_tz 由给定转到 to_tz 时区给出的时区，并返回的结果值。 如果参数无效该函数返回NULL。
+```Haskell
+CONVERT_TZ(dt, from_tz, to_tz)
+```
 
-## Example
+## 参数说明
+
+`dt`: 需要转化的时间, 支持的数据类型为 DATETIME
+
+`from_tz`: 原时区名称, 时区可以使用两种格式: timezone database name(类似'Asia/Shanghai')或 UTC offset(类似'+08: 00'), 支持数据类型为 VARCHAR
+
+`to_tz`: 目标时区名称, 格式同上, 支持数据类型为 VARCHAR
+
+## 返回值说明
+
+返回值的数据类型为 DATETIME
+
+## 示例
+
+将上海时间转化成洛杉矶时间
 
 ```Plain Text
 MySQL > select convert_tz('2019-08-01 13:21:03', 'Asia/Shanghai', 'America/Los_Angeles');
@@ -17,7 +33,11 @@ MySQL > select convert_tz('2019-08-01 13:21:03', 'Asia/Shanghai', 'America/Los_A
 +---------------------------------------------------------------------------+
 | 2019-07-31 22:21:03                                                       |
 +---------------------------------------------------------------------------+
+```
 
+将东八区时间转化为洛杉矶时间
+
+```Plain Text
 MySQL > select convert_tz('2019-08-01 13:21:03', '+08:00', 'America/Los_Angeles');
 +--------------------------------------------------------------------+
 | convert_tz('2019-08-01 13:21:03', '+08:00', 'America/Los_Angeles') |
@@ -26,6 +46,6 @@ MySQL > select convert_tz('2019-08-01 13:21:03', '+08:00', 'America/Los_Angeles'
 +--------------------------------------------------------------------+
 ```
 
-## keyword
+## 关键词
 
 CONVERT_TZ

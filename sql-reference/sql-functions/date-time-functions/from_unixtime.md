@@ -1,35 +1,37 @@
 # from_unixtime
 
-## description
+## 功能
 
-### Syntax
+将 unix 时间戳转化为对应的 time 格式
 
-`DATETIME FROM_UNIXTIME(INT unix_timestamp[, VARCHAR string_format])`
+## 语法
 
-将 unix 时间戳转化为对应的 time 格式，返回的格式由 `string_format` 指定
-
-默认为 yyyy-MM-dd HH:mm:ss ,也支持date_format中的format格式
-
-传入的是整形，返回的是字符串类型
-
-目前 `string_format` 支持格式：
-
-```plain text
-%Y：年。例：2014，1900
-%m：月。例：12，09
-%d：日。例：11，01
-%H：时。例：23，01，12
-%i：分。例：05，11
-%s：秒。例：59，01
+```Haskell
+FROM_UNIXTIME(unix_timestamp, string_format)
 ```
 
-其余 `string_format` 格式是非法的，返回NULL
+## 参数说明
 
-如果给定的时间戳小于 0 或大于 253402271999，则返回 NULL。即时间戳范围是：
+`unix_timestamp`: 待转化的 unix 时间戳, 支持的数据类型为 INT, 若给定的时间戳小于 0 或大于 253402271999, 则返回 NULL, 即时间戳范围是: 1970-01-01 00:00:00 ~ 9999-12-31 23:59:59
 
-1970-01-01 00:00:00 ~ 9999-12-31 23:59:59
+`string_format`: 指定的转化后的目标格式, 支持的数据类型为 VARCHAR, 默认为 yyyy-MM-dd HH:mm:ss , 也支持 date_format 中的 format 格式, 目前可选的格式如下列表格
 
-## example
+|  格式  |  说明  |  例子  |
+| --- | --- | --- |
+| %Y | 年 | 2014,1900 |
+| %m | 月 | 12,09 |
+| %d | 日 | 11,01 |
+| %H | 时 | 23,02 |
+| %i | 分 | 05,11 |
+| %s | 秒 | 59，01 |
+
+其余 `string_format` 格式是非法的, 返回 NULL
+
+## 返回值说明
+
+返回值的数据类型为 DATETIME
+
+## 示例
 
 ```plain text
 MySQL > select from_unixtime(1196440219);
@@ -61,6 +63,6 @@ MySQL > select from_unixtime(1196440219, '%Y-%m-%d %H:%i:%s');
 +--------------------------------------------------+
 ```
 
-## keyword
+## 关键词
 
-FROM_UNIXTIME,FROM,UNIXTIME
+FROM_UNIXTIME, FROM, UNIXTIME

@@ -1,16 +1,26 @@
 # array_position
 
-## description
+## 功能
 
-### Syntax
+获取数组中某个元素位置, 是的话返回位置(默认第一个元素的位置为1), 否则返回 0
+
+## 语法
 
 ```Haskell
 array_position(any_array, any_element)
 ```
 
-获取数组中某个元素位置，是的话返回位置，否则返回0.
+## 参数说明
 
-## example
+`any_array`: 原数组, 支持的数据类型为 ARRAY 类型
+
+`any_element`: 目标元素, 可为 NULL, 支持数据类型与 `any_array` 包含元素类型一致
+
+## 返回值说明
+
+返回值的数据类型为 INT
+
+## 示例
 
 ```plain text
 mysql> select array_position(["apple","orange","pear"], "orange");
@@ -22,7 +32,7 @@ mysql> select array_position(["apple","orange","pear"], "orange");
 1 row in set (0.01 sec)
 ```
 
-也可以获取数组NULL的位置
+也可以获取数组 NULL 的位置
 
 ```plain text
 mysql> select array_position([1, NULL], NULL);
@@ -34,7 +44,7 @@ mysql> select array_position([1, NULL], NULL);
 1 row in set (0.00 sec)
 ```
 
-也可以应用在多维数组中, 获取某个子数组的位置，此时要求子数组元素完全匹配，包括元素排列顺序
+也可以应用在多维数组中, 获取某个子数组的位置, 此时要求子数组元素完全匹配, 包括元素排列顺序
 
 ```plain text
 mysql> select array_position([[1,2,3], [4,5,6]], [4,5,6]);
@@ -54,6 +64,6 @@ mysql> select array_position([[1,2,3], [4,5,6]], [4,6,5]);
 1 row in set (0.00 sec)
 ```
 
-## keyword
+## 关键词
 
-ARRAY_POSITION,ARRAY
+ARRAY_POSITION, ARRAY

@@ -1,16 +1,24 @@
 # time_to_sec
 
-## Description
+## 功能
 
-函数返回将参数time 转换为秒数的时间值，转换公式为  小时*3600 + 分钟*60+ 秒
+函数返回将参数 date 转换为秒数的时间值, 转换公式为: `(小时 * 3600 + 分钟 * 60 + 秒)`
 
-## Syntax
+## 语法
 
 ```Haskell
-INT time_to_sec(DATETIME date)
+time_to_sec(date)
 ```
 
-## Example
+## 参数说明
+
+`date`: 支持的数据类型为 DATETIME 类型
+
+## 返回值说明
+
+返回值的数据类型为 INT
+
+## 示例
 
 ```plain text
 mysql> select time_to_sec('12:13:14');
@@ -21,6 +29,6 @@ mysql> select time_to_sec('12:13:14');
 +-----------------------------+
 ```
 
-## keyword
+## 关键词
 
 `TIME_TO_SEC`

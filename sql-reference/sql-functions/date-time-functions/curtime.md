@@ -1,14 +1,24 @@
-# curtime,current_time
+# curtime, current_time
 
-## Syntax
+## 功能
 
-`TIME CURTIME()`
+获取当前的时间
 
-## Description
+## 语法
 
-获得当前的时间，以TIME类型返回
+```Haskell
+TIME CURTIME()
+```
 
-## Examples
+## 参数说明
+
+无
+
+## 返回值说明
+
+返回值的数据类型为 TIME
+
+## 示例
 
 ```Plain Text
 MySQL > select current_time();
@@ -19,6 +29,6 @@ MySQL > select current_time();
 +----------------+
 ```
 
-## keyword
+## 关键词
 
-CURTIME,CURRENT_TIME
+CURTIME, CURRENT_TIME

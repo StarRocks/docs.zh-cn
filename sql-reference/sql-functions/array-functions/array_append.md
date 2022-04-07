@@ -1,14 +1,24 @@
 # array_append
 
-## description
+## 功能
 
-### Syntax
+在数组末尾添加一个新的元素
+
+## 语法
 
 ```Haskell
 array_append(any_array, any_element)
 ```
 
-在数组末尾添加一个新的元素
+## 参数说明
+
+`any_array`: 原数组, 支持的数据类型为 ARRAY 类型
+
+`any_element`: 要添加的目标元素, 可为 NULL，支持数据类型与 `any_array` 内元素类型一致
+
+## 返回值说明
+
+返回值的数据类型为 ARRAY
 
 ## example
 
@@ -23,8 +33,6 @@ mysql> select array_append([1, 2], 3);
 
 ```
 
-可以向数组中添加NULL
-
 ```plain text
 mysql> select array_append([1, 2], NULL);
 +---------------------------+
@@ -38,4 +46,4 @@ mysql> select array_append([1, 2], NULL);
 
 ## keyword
 
-ARRAY_APPEND,ARRAY
+ARRAY_APPEND, ARRAY

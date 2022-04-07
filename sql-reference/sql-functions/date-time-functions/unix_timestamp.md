@@ -1,28 +1,36 @@
 # unix_timestamp
 
-## description
+## 功能
 
-### Syntax
+将给定时间转化为 unix 时间戳, 该函数受时区影响
+
+## 语法
 
 ```Haskell
-INT UNIX_TIMESTAMP()
-INT UNIX_TIMESTAMP(DATETIME date)
-INT UNIX_TIMESTAMP(DATETIME date, STRING fmt)
+UNIX_TIMESTAMP()
 ```
 
-将 Date 或者 Datetime 类型转化为 unix 时间戳。
+```Haskell
+`UNIX_TIMESTAMP(date)
+```
 
-如果没有参数，则是将当前的时间转化为时间戳。
+```Haskell
+UNIX_TIMESTAMP(date,fmt)
+```
 
-参数需要是 Date 或者 Datetime 类型。
+## 参数说明
 
-对于在 1970-01-01 00:00:00 之前或 2038-01-19 03:14:07 之后的时间，该函数将返回 0。
+如果没有参数, 则将当前的时间转化为 unix 时间戳
 
-Format 的格式请参阅 `date_format` 函数的格式说明。
+`date`: 待转化的参数, 支持数据类型为 DATE 或 DATETIME, 对于在 `1970-01-01 00:00:00` 之前或 `2038-01-19 03:14:07` 之后的时间, 将返回 0
 
-该函数受时区影响。
+`fmt`: 格式请参阅  [date_format](../date-time-functions/date_format.md) 函数的格式说明, 支持数据类型为 STRING
 
-## example
+## 返回值说明
+
+返回值的数据类型为 INT
+
+## 示例
 
 ```Plain Text
 MySQL > select unix_timestamp();
@@ -61,6 +69,6 @@ MySQL > select unix_timestamp('1969-01-01 00:00:00');
 +---------------------------------------+
 ```
 
-## keyword
+## 关键词
 
-UNIX_TIMESTAMP,UNIX,TIMESTAMP
+UNIX_TIMESTAMP, UNIX, TIMESTAMP
