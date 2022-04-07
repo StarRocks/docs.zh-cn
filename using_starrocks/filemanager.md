@@ -12,7 +12,7 @@ StarRocks 中的一些功能需要使用一些用户自定义的文件。比如�
 
 ## 具体操作
 
-文件管理主要有三个命令：`CREATE FILE`，`SHOW FILE` 和 `DROP FILE`，分别为创建、查看和删除文件。这三个命令的具体语法可以通过连接到 StarRocks 后，执行 `HELP cmd;` 的方式查看帮助。
+文件管理主要有三个命令：`CREATE FILE`，`SHOW FILE` 和 `DROP FILE`，分别为创建、查看和删除文件。
 
 1. CREATE FILE
 
@@ -67,7 +67,7 @@ StarRocks 中的一些功能需要使用一些用户自定义的文件。比如�
     );
     ~~~
 
-    文件创建成功后，文件相关的信息将持久化在 StarRocks 中。用户可以通过 `SHOW FILE` 命令查看已经创建成功的文件。
+    文件创建成功后，文件相关的信息将持久化在 StarRocks 中。
 
 2. SHOW FILE
 
