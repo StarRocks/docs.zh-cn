@@ -2,7 +2,7 @@
 
 ## 功能
 
-获取Bitmap中的最小值。如果Bitmap为NULL，则返回NULL。如果Bitmap为空，默认返回0。
+获取Bitmap中的最小值。如果Bitmap为NULL，则返回NULL。如果Bitmap为空，默认返回-1。
 
 ## 语法
 
