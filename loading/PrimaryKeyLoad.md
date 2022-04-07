@@ -8,19 +8,22 @@ StarRocks 在 1.19 版本推出了主键模型，相较更新模型，主键模�
 * Broker Load
 * Routine Load
 
-## 内部实现
+## 如何插入、更新和删除数据
 
-插入/更新/删除目前支持使用导入的方式完成，通过 SQL 语句(`insert`/`update`/`delete`)来操作数据的功能会在未来版本中支持。目前支持的导入方式有 stream load、broker load、routine load、Json 数据导入。当前 Spark load 还未支持。
+主键模型的表支持通过导入任务，来插入、更新和删除数据。目前支持的导入数据方式有Stream Load、Broker Load、Routine Load。
+> - 暂不支持通过 Spark Load 插入、更新和删除数据。
+> - 暂不支持通过 SQL DML 语句（INSERT、UPDATE、DELETE）插入、更新和删除数据，将在未来版本中支持。
 
-StarRocks 目前不会区分 `insert`/`upsert`，所有的操作默认都为 `upsert` 操作，使用原有的 stream load/broker load 功能导入数据时默认为 upsert 操作。
+导入时，所有操作默认为 UPSERT 操作，暂不支持区分 INSERT 和 UPDATE 操作。
+值得注意的是，导入时，为同时支持 UPSERT 和 DELETE 操作，StarRocks 在 Stream Load、Broker Load 的创建任务语法中增加op字段，用于存储操作类型。在导入时，可以新增一列`__op`，用于存储操作类型，取值为 0 时，代表 UPSERT 操作，取值为 1 时，代表 DELETE 操作。
+> 建表时无需添加列`__op`。
 
-为了在导入中同时支持 upsert 和 delete 操作，StarRocks 在 stream load 和 broker load 语法中加入了特殊字段 `__op`。该字段用来表示该行的操作类型，其取值为 0 时代表 `upsert` 操作，取值为 1 时为 `delete` 操作。在导入的数据中, 可以添加一列, 用来存储 `__op` 操作类型, 其值只能是 0(表示 `upsert`)或者 1(表示 `delete`)。
 
-## 使用 Stream Load / Broker Load 导入
+## 使用 Stream Load 或 Broker Load 导入数据
 
-Stream load 和 broker load 的操作方式类似，根据导入的数据文件的操作形式有如下几种情况。这里通过一些例子来展示具体的导入操作：
+Stream Load 和 Broker Load 导入数据的操作方式类似，根据导入的数据文件的操作形式有如下几种情况。这里通过一些例子来展示具体的导入操作：
 
-**1.** 当导入的数据文件只有 `upsert` 操作时可以不添加 `__op` 列。可以指定 `__op` 为 `upsert`，也可以不做任何指定，StarRocks 会默认导入为 `upsert`。例如想要向表 t 中导入如下内容：
+**1.** 当导入的数据文件只有 UPSERT 操作时可以不添加 `__op` 列。可以指定 `__op` 为 `upsert`，也可以不做任何指定，StarRocks 会默认导入为 UPSERT 操作。例如想要向表 t 中导入如下内容：
 
 ~~~text
 # 导入内容
@@ -62,7 +65,7 @@ load label demo_db.label2 (
 ) with broker "broker1";
 ~~~
 
-**2.** 当导入的数据文件只有 delete 操作时，也可以不添加 `__op` 列，只需指定 `__op` 为 delete。例如想要删除如下内容：
+**2.** 当导入的数据文件只有 DELETE 操作时，只需指定`__op`为 DELETE 操作。例如想要删除如下内容：
 
 ~~~text
 #导入内容
@@ -70,7 +73,7 @@ load label demo_db.label2 (
 4, dddd
 ~~~
 
-注意：`delete` 虽然只用到 primary key 列，但同样要提供全部的列，与 `upsert` 保持一致。
+注意：DELETE 操作虽然只用到 Primary Key 列，但同样要提供全部的列，与 UPSERT 操作保持一致。
 
 Stream Load 导入语句：
 
@@ -91,7 +94,7 @@ load label demo_db.label3 (
 ) with broker "broker1";  
 ~~~
 
-**3.** 当导入的数据文件中包含 upsert 和 delete 混合时，需要指定额外的 `__op` 来表明操作类型。例如想要导入如下内容：
+**3.** 当导入的数据文件中同时包含 UPSERT 和 DELETE 操作时，需要指定额外的 `__op` 来表明操作类型。例如想要导入如下内容：
 
 ~~~text
 1,bbbb,1
@@ -102,8 +105,8 @@ load label demo_db.label3 (
 
 注意：
 
-* `delete` 虽然只用到 primary key 列，但同样要提供全部的列，与 `upsert` 保持一致
-* 上述导入内容表示删除 id 为 1、4 的行，添加 id 为 5、6 的行
+* DELETE 操作虽然只用到 primary key 列，但同样要提供全部的列，与 `upsert` 保持一致。
+* 上述导入内容表示删除 id 为 1、4 的行，添加 id 为 5、6 的行。
 
 Stream Load 导入语句：
 
@@ -115,7 +118,7 @@ curl --location-trusted -u root: -H "label:lineorder" -H "column_separator:," \
 
 其中，指定了 `__op` 为第三列。
 
-Brokder Load 导入语句：
+Broker Load 导入语句：
 
 ~~~bash
 load label demo_db.label4 (
@@ -133,7 +136,7 @@ load label demo_db.label4 (
 
 ## 使用 Routine Load 导入
 
-可以在创建 routine load 的语句中，在 columns 最后增加一列，指定为在 `__op`。在真实导入中，`__op` 为 0 则表示 `upsert` 操作，为 1 则表示 `delete` 操作。例如导入如下内容：
+可以在创建 Routine Load 的语句中，在 columns 最后增加一列，指定为 `__op`。在真实导入中，`__op` 为 0 则表示 UPSERT 操作，为 1 则表示 DELETE 操作。例如导入如下内容：
 
 **示例 1** 导入 CSV 数据
 
@@ -147,7 +150,7 @@ load label demo_db.label4 (
 
 Routine Load 导入语句：
 
-~~~bash
+~~~sql
 CREATE ROUTINE LOAD routine_load_basic_types_1631533306858 on primary_table_without_null 
 COLUMNS (k1, k2, k3, k4, k5, v1, v2, v3, __op),
 COLUMNS TERMINATED BY '\t' 
