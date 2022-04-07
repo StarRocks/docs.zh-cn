@@ -172,7 +172,7 @@ LOAD LABEL db1.label1
     DATA INFILE("hdfs://abc.com:8888/user/starRocks/test/ml/file2")
     INTO TABLE tbl2
     COLUMNS TERMINATED BY ","
-    (col1,col2)
+    (col1, col2)
     where col1 > 1
 )
 WITH RESOURCE 'spark0'
@@ -211,14 +211,14 @@ CREATE EXTERNAL TABLE hive_t1
     k3 varchar(50),
     uuid varchar(100)
 )
-ENGINE = hive
+ENGINE=hive
 properties
 ( 
     "resource" = "hive0",
     "database" = "tmp",
     "table" = "t1"
 );
-    ~~~
+~~~
 
 * step 3: 提交 load 命令，要求导入的 StarRocks 表中的列必须在 hive 外部表中存在。
 
@@ -229,7 +229,7 @@ LOAD LABEL db1.label1
     INTO TABLE tbl1
     SET
     (
-        uuid = bitmap_dict(uuid)
+        uuid=bitmap_dict(uuid)
     )
 )
 WITH RESOURCE 'spark0'
