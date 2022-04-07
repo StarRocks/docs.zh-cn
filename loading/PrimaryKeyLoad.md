@@ -12,8 +12,8 @@ StarRocks 在 1.19 版本推出了主键模型，相较更新模型，主键模�
 
 主键模型的表支持通过导入任务，来插入、更新和删除数据。目前支持的导入数据方式有Stream Load、Broker Load、Routine Load。
 
-> - 暂不支持通过 Spark Load 插入、更新和删除数据。
-> - 暂不支持通过 SQL DML 语句（INSERT、UPDATE、DELETE）插入、更新和删除数据，将在未来版本中支持。
+> * 暂不支持通过 Spark Load 插入、更新和删除数据。
+> * 暂不支持通过 SQL DML 语句（INSERT、UPDATE、DELETE）插入、更新和删除数据，将在未来版本中支持。
 
 导入时，所有操作默认为 UPSERT 操作，暂不支持区分 INSERT 和 UPDATE 操作。
 值得注意的是，导入时，为同时支持 UPSERT 和 DELETE 操作，StarRocks 在 Stream Load、Broker Load 的创建任务语法中增加op字段，用于存储操作类型。在导入时，可以新增一列`__op`，用于存储操作类型，取值为 0 时，代表 UPSERT 操作，取值为 1 时，代表 DELETE 操作。
