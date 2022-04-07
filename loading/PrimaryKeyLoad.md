@@ -1,10 +1,11 @@
 # 主键模型导入
 
-StarRocks 在 1.19 版本推出了主键模型（Primary Key）。相较更新模型，主键模型可以更好地支持实时和频繁更新的场景。该类型的表要求有唯一的主键，支持对表中的行按主键进行更新和删除操作。
+StarRocks支持通过导入任务，来变更主键模型的表的数据（插入、更新和删除数据）。
 
-## 主键模型如何实现插入、更新和删除数据
 
-主键模型的表支持通过导入任务，来插入、更新和删除数据。目前支持的导入数据方式有 Stream Load、Broker Load、Routine Load。
+## 内部实现
+
+目前支持的导入数据方式有 Stream Load、Broker Load、Routine Load。
 
 > * 暂不支持通过 Spark Load 插入、更新和删除数据。
 > * 暂不支持通过 SQL DML 语句（INSERT、UPDATE、DELETE）插入、更新和删除数据，将在未来版本中支持。
@@ -14,7 +15,7 @@ StarRocks 在 1.19 版本推出了主键模型（Primary Key）。相较更新�
 
 > 建表时无需添加列`__op`。
 
-## 使用 Stream Load 或 Broker Load 导入数据
+## 	通过 Stream Load 或 Broker Load 变更数据
 
 Stream Load 和 Broker Load 导入数据的操作方式类似，根据导入的数据文件的操作形式有如下几种情况。这里通过一些例子来展示具体的导入操作：
 
@@ -129,7 +130,7 @@ load label demo_db.label4 (
 
 更多关于 Stream Load 和 Broker Load 使用方法，请参考 [STREAM LOAD](../loading/StreamLoad.md) 和 [BROKER LOAD](../loading/BrokerLoad.md)
 
-## 使用 Routine Load 导入
+## 通过 Routine Load 变更数据
 
 可以在创建 Routine Load 的语句中，在 columns 最后增加一列，指定为 `__op`。在真实导入中，`__op` 为 0 则表示 UPSERT 操作，为 1 则表示 DELETE 操作。例如导入如下内容：
 
