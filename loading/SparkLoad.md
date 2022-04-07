@@ -36,9 +36,9 @@ PROPERTIES
     "spark.files" = "/tmp/aaa,/tmp/bbb",
     "spark.executor.memory" = "1g",
     "spark.yarn.queue" = "queue0",
-    "spark.hadoop.yarn.resourcemanager.address" = "resourcemanager_host: 8032",
-    "spark.hadoop.fs.defaultFS" = "hdfs://namenode_host: 9000",
-    "working_dir" = "hdfs://namenode_host: 9000/tmp/starrocks",
+    "spark.hadoop.yarn.resourcemanager.address" = "resourcemanager_host:8032",
+    "spark.hadoop.fs.defaultFS" = "hdfs://namenode_host:9000",
+    "working_dir" = "hdfs://namenode_host:9000/tmp/starrocks",
     "broker" = "broker0",
     "broker.username" = "user0",
     "broker.password" = "password0"
@@ -52,11 +52,11 @@ PROPERTIES
     "spark.master" = "yarn",
     "spark.submit.deployMode" = "cluster",
     "spark.hadoop.yarn.resourcemanager.ha.enabled" = "true",
-    "spark.hadoop.yarn.resourcemanager.ha.rm-ids" = "rm1, rm2",
+    "spark.hadoop.yarn.resourcemanager.ha.rm-ids" = "rm1,rm2",
     "spark.hadoop.yarn.resourcemanager.hostname.rm1" = "host1",
     "spark.hadoop.yarn.resourcemanager.hostname.rm2" = "host2",
-    "spark.hadoop.fs.defaultFS" = "hdfs://namenode_host: 9000",
-    "working_dir" = "hdfs://namenode_host: 9000/tmp/starrocks",
+    "spark.hadoop.fs.defaultFS" = "hdfs://namenode_host:9000",
+    "working_dir" = "hdfs://namenode_host:9000/tmp/starrocks",
     "broker" = "broker1"
 );
 
@@ -66,19 +66,19 @@ PROPERTIES
 (
     "type" = "spark", 
     "spark.master" = "yarn",
-    "spark.hadoop.yarn.resourcemanager.address" = "resourcemanager_host: 8032",
+    "spark.hadoop.yarn.resourcemanager.address" = "resourcemanager_host:8032",
     "spark.hadoop.fs.defaultFS" = "hdfs://myha",
     "spark.hadoop.dfs.nameservices" = "myha",
-    "spark.hadoop.dfs.ha.namenodes.myha" = "mynamenode1, mynamenode2",
-    "spark.hadoop.dfs.namenode.rpc-address.myha.mynamenode1" = "nn1_host: rpc_port",
-    "spark.hadoop.dfs.namenode.rpc-address.myha.mynamenode2" = "nn2_host: rpc_port",
+    "spark.hadoop.dfs.ha.namenodes.myha" = "mynamenode1,mynamenode2",
+    "spark.hadoop.dfs.namenode.rpc-address.myha.mynamenode1" = "nn1_host:rpc_port",
+    "spark.hadoop.dfs.namenode.rpc-address.myha.mynamenode2" = "nn2_host:rpc_port",
     "spark.hadoop.dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider",
     "working_dir" = "hdfs://myha/tmp/starrocks",
     "broker" = "broker2",
     "broker.dfs.nameservices" = "myha",
-    "broker.dfs.ha.namenodes.myha" = "mynamenode1, mynamenode2",
-    "broker.dfs.namenode.rpc-address.myha.mynamenode1" = "nn1_host: rpc_port",
-    "broker.dfs.namenode.rpc-address.myha.mynamenode2" = "nn2_host: rpc_port",
+    "broker.dfs.ha.namenodes.myha" = "mynamenode1,mynamenode2",
+    "broker.dfs.namenode.rpc-address.myha.mynamenode1" = "nn1_host:rpc_port",
+    "broker.dfs.namenode.rpc-address.myha.mynamenode2" = "nn2_host:rpc_port",
     "broker.dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
 );
 ~~~
@@ -160,7 +160,7 @@ yarn_config_dir: FE 配置，默认会在 FE 根目录下的 `lib/yarn-config` �
 ~~~sql
 LOAD LABEL db1.label1
 (
-    DATA INFILE("hdfs://abc.com: 8888/user/starRocks/test/ml/file1")
+    DATA INFILE("hdfs://abc.com:8888/user/starRocks/test/ml/file1")
     INTO TABLE tbl1
     COLUMNS TERMINATED BY ","
     (tmp_c1, tmp_c2)
@@ -169,7 +169,7 @@ LOAD LABEL db1.label1
         id = tmp_c2,
         name = tmp_c1
     ),
-    DATA INFILE("hdfs://abc.com: 8888/user/starRocks/test/ml/file2")
+    DATA INFILE("hdfs://abc.com:8888/user/starRocks/test/ml/file2")
     INTO TABLE tbl2
     COLUMNS TERMINATED BY ","
     (col1, col2)
@@ -197,7 +197,7 @@ CREATE EXTERNAL RESOURCE hive0
 properties
 ( 
     "type" = "hive",
-    "hive.metastore.uris" = "thrift://0.0.0.0: 8080"
+    "hive.metastore.uris" = "thrift://0.0.0.0:8080"
 );
 ~~~
 
@@ -284,18 +284,18 @@ mysql > show load order by createtime desc limit 1\G
          JobId: 76391
          Label: label1
          State: FINISHED
-      Progress: ETL: 100%; LOAD: 100%
+      Progress: ETL:100%; LOAD:100%
           Type: SPARK
-       EtlInfo: unselected.rows = 4; dpp.abnorm.ALL = 15; dpp.norm.ALL = 28133376
-      TaskInfo: cluster: cluster0; timeout(s): 10800; max_filter_ratio: 5.0E-5
+       EtlInfo: unselected.rows=4; dpp.abnorm.ALL=15; dpp.norm.ALL=28133376
+      TaskInfo: cluster:cluster0; timeout(s):10800; max_filter_ratio:5.0E-5
       ErrorMsg: N/A
-    CreateTime: 2019-07-27 11: 46: 42
-  EtlStartTime: 2019-07-27 11: 46: 44
- EtlFinishTime: 2019-07-27 11: 49: 44
- LoadStartTime: 2019-07-27 11: 49: 44
-LoadFinishTime: 2019-07-27 11: 50: 16
-           URL: http://1.1.1.1: 8089/proxy/application_1586619723848_0035/
-    JobDetails: {"ScannedRows": 28133395, "TaskNumber": 1, "FileNumber": 1,"FileSize": 200000}
+    CreateTime: 2019-07-27 11:46:42
+  EtlStartTime: 2019-07-27 11:46:44
+ EtlFinishTime: 2019-07-27 11:49:44
+ LoadStartTime: 2019-07-27 11:49:44
+LoadFinishTime: 2019-07-27 11:50:16
+           URL: http://1.1.1.1:8089/proxy/application_1586619723848_0035/
+    JobDetails: {"ScannedRows":28133395, "TaskNumber":1, "FileNumber":1,"FileSize":200000}
 ~~~
 
 返回结果集中参数的意义可参考 [查看导入状态](../loading/BrokerLoad#查看导入任务状态)。

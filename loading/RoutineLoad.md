@@ -86,21 +86,21 @@ MySQL [load_test] > SHOW ROUTINE LOAD\G;
 
                   Id: 14093
                 Name: routine_load_wikipedia
-          CreateTime: 2020-05-16 16: 00: 48
+          CreateTime: 2020-05-16 16:00:48
            PauseTime: N/A
              EndTime: N/A
-              DbName: default_cluster: load_test
+              DbName: default_cluster:load_test
            TableName: routine_wiki_edit
                State: RUNNING
       DataSourceType: KAFKA
       CurrentTaskNum: 1
-       JobProperties: {"partitions": "*"," columnToColumnExpr ":" event_time, channel, user, is_anonymous, is_minor, is_new, is_robot, is_unpatrolled, delta, added, deleted "," maxBatchIntervalS ":" 10 "," whereExpr ":"*", "maxBatchSizeBytes": "104857600", "columnSeparator": "','", "maxErrorNum": "1000", "currentTaskConcurrentNum": "1", "maxBatchRows": "200000"}
-DataSourceProperties: {"topic": "starrocks-load", "currentKafkaPartitions": "0", "brokerList": "localhost: 9092"}
+       JobProperties: {"partitions":"*","columnToColumnExpr":"event_time,channel,user,is_anonymous,is_minor,is_new,is_robot,is_unpatrolled,delta,added,deleted","maxBatchIntervalS":"10","whereExpr":"*","maxBatchSizeBytes":"104857600","columnSeparator":"','","maxErrorNum":"1000","currentTaskConcurrentNum":"1","maxBatchRows":"200000"}
+DataSourceProperties: {"topic":"starrocks-load","currentKafkaPartitions":"0","brokerList":"localhost:9092"}
     CustomProperties: {}
-           Statistic: {"receivedBytes": 150821770, "errorRows": 122, "committedTaskNum": 12, "loadedRows": 2399878, "loadRowsRate": 199000, "abortedTaskNum": 1, "totalRows": 2400000, "unselectedRows": 0, "receivedBytesRate": 12523000, "taskExecuteTimeMs": 12043}
-            Progress: {"0": "13634667"}
+           Statistic: {"receivedBytes":150821770,"errorRows": 122,"committedTaskNum": 12,"loadedRows":2399878,"loadRowsRate":199000,"abortedTaskNum":1,"totalRows":2400000,"unselectedRows":0,"receivedBytesRate":12523000,"taskExecuteTimeMs":12043}
+            Progress: {"0":"13634667"}
 ReasonOfStateChanged:
-        ErrorLogUrls: http://172.26.108.172: 9122/api/_load_error_log?file =__shard_53/error_log_insert_stmt_47e8a1d107ed4932-8f1ddf7b01ad2fee_47e8a1d107ed4932_8f1ddf7b01ad2fee
+        ErrorLogUrls: http://172.26.108.172:9122/api/_load_error_log?file=__shard_53/error_log_insert_stmt_47e8a1d107ed4932-8f1ddf7b01ad2fee_47e8a1d107ed4932_8f1ddf7b01ad2fee
             OtherMsg:
 1 row in set (0.00 sec)
 ~~~
@@ -140,21 +140,21 @@ MySQL [load_test] > SHOW ROUTINE LOAD\G;
 *************************** 1. row ***************************
                   Id: 14093
                 Name: routine_load_wikipedia
-          CreateTime: 2020-05-16 16: 00: 48
-           PauseTime: 2020-05-16 16: 03: 39
+          CreateTime: 2020-05-16 16:00:48
+           PauseTime: 2020-05-16 16:03:39
              EndTime: N/A
               DbName: default_cluster: load_test
            TableName: routine_wiki_edit
                State: PAUSED
       DataSourceType: KAFKA
       CurrentTaskNum: 0
-       JobProperties: {"partitions": "*"," columnToColumnExpr ":" event_time, channel, user, is_anonymous, is_minor, is_new, is_robot, is_unpatrolled, delta, added, deleted "," maxBatchIntervalS ":" 10 "," whereExpr ":"*", "maxBatchSizeBytes": "104857600", "columnSeparator": "','", "maxErrorNum": "1000", "currentTaskConcurrentNum": "1", "maxBatchRows": "200000"}
-DataSourceProperties: {"topic": "starrocks-load", "currentKafkaPartitions": "0", "brokerList": "localhost: 9092"}
+       JobProperties: {"partitions":"*","columnToColumnExpr":"event_time,channel,user,is_anonymous,is_minor,is_new,is_robot,is_unpatrolled,delta,added,deleted","maxBatchIntervalS":"10","whereExpr":"*","maxBatchSizeBytes":"104857600","columnSeparator":"','","maxErrorNum":"1000","currentTaskConcurrentNum":"1","maxBatchRows":"200000"}
+DataSourceProperties: {"topic":"starrocks-load","currentKafkaPartitions":"0","brokerList":"localhost:9092"}
     CustomProperties: {}
-           Statistic: {"receivedBytes": 162767220, "errorRows": 132, "committedTaskNum": 13, "loadedRows": 2589972, "loadRowsRate": 115000, "abortedTaskNum": 7, "totalRows": 2590104, "unselectedRows": 0, "receivedBytesRate": 7279000, "taskExecuteTimeMs": 22359}
-            Progress: {"0": "13824771"}
+           Statistic: {"receivedBytes":162767220,"errorRows":132, "committedTaskNum": 13,"loadedRows":2589972,"loadRowsRate":115000,"abortedTaskNum":7,"totalRows":2590104,"unselectedRows":0,"receivedBytesRate":7279000,"taskExecuteTimeMs":22359}
+            Progress: {"0":"13824771"}
 ReasonOfStateChanged: ErrorReason{code = errCode = 100, msg ='User root pauses routine load job'}
-        ErrorLogUrls: http://172.26.108.172: 9122/api/_load_error_log?file =__shard_54/error_log_insert_stmt_e0c0c6b040c044fd-a162b16f6bad53e6_e0c0c6b040c044fd_a162b16f6bad53e6
+        ErrorLogUrls: http://172.26.108.172:9122/api/_load_error_log?file=__shard_54/error_log_insert_stmt_e0c0c6b040c044fd-a162b16f6bad53e6_e0c0c6b040c044fd_a162b16f6bad53e6
             OtherMsg:
 1 row in set (0.01 sec)
 ~~~
@@ -180,7 +180,7 @@ MySQL [load_test] > SHOW ROUTINE LOAD\G;
 *************************** 1. row ***************************
                   Id: 14093
                 Name: routine_load_wikipedia
-          CreateTime: 2020-05-16 16: 00: 48
+          CreateTime: 2020-05-16 16:00:48
            PauseTime: N/A
              EndTime: N/A
               DbName: default_cluster: load_test
@@ -188,13 +188,13 @@ MySQL [load_test] > SHOW ROUTINE LOAD\G;
                State: NEED_SCHEDULE
       DataSourceType: KAFKA
       CurrentTaskNum: 0
-       JobProperties: {"partitions": "*"," columnToColumnExpr ":" event_time, channel, user, is_anonymous, is_minor, is_new, is_robot, is_unpatrolled, delta, added, deleted "," maxBatchIntervalS ":" 10 "," whereExpr ":"*", "maxBatchSizeBytes": "104857600", "columnSeparator": "','", "maxErrorNum": "1000", "currentTaskConcurrentNum": "1", "maxBatchRows": "200000"}
-DataSourceProperties: {"topic": "starrocks-load", "currentKafkaPartitions": "0", "brokerList": "localhost: 9092"}
+       JobProperties: {"partitions":"*","columnToColumnExpr":"event_time,channel,user,is_anonymous,is_minor,is_new,is_robot,is_unpatrolled,delta,added,deleted","maxBatchIntervalS":"10","whereExpr":"*","maxBatchSizeBytes":"104857600","columnSeparator":"','","maxErrorNum":"1000","currentTaskConcurrentNum":"1","maxBatchRows":"200000"}
+DataSourceProperties: {"topic":"starrocks-load","currentKafkaPartitions":"0","brokerList":"localhost:9092"}
     CustomProperties: {}
-           Statistic: {"receivedBytes": 162767220, "errorRows": 132, "committedTaskNum": 13, "loadedRows": 2589972, "loadRowsRate": 115000, "abortedTaskNum": 7, "totalRows": 2590104, "unselectedRows": 0, "receivedBytesRate": 7279000, "taskExecuteTimeMs": 22359}
-            Progress: {"0": "13824771"}
+           Statistic: {"receivedBytes":162767220,"errorRows":132,"committedTaskNum": 13,"loadedRows":2589972,"loadRowsRate":115000,"abortedTaskNum":7,"totalRows":2590104,"unselectedRows":0,"receivedBytesRate":7279000,"taskExecuteTimeMs":22359}
+            Progress: {"0":"13824771"}
 ReasonOfStateChanged:
-        ErrorLogUrls: http://172.26.108.172: 9122/api/_load_error_log?file =__shard_54/error_log_insert_stmt_e0c0c6b040c044fd-a162b16f6bad53e6_e0c0c6b040c044fd_a162b16f6bad53e6
+        ErrorLogUrls: http://172.26.108.172:9122/api/_load_error_log?file=__shard_54/error_log_insert_stmt_e0c0c6b040c044fd-a162b16f6bad53e6_e0c0c6b040c044fd_a162b16f6bad53e6
             OtherMsg:
 1 row in set (0.00 sec)
 ~~~
@@ -204,21 +204,21 @@ MySQL [load_test] > SHOW ROUTINE LOAD\G;
 *************************** 1. row ***************************
                   Id: 14093
                 Name: routine_load_wikipedia
-          CreateTime: 2020-05-16 16: 00: 48
+          CreateTime: 2020-05-16 16:00:48
            PauseTime: N/A
              EndTime: N/A
-              DbName: default_cluster: load_test
+              DbName: default_cluster:load_test
            TableName: routine_wiki_edit
                State: RUNNING
       DataSourceType: KAFKA
       CurrentTaskNum: 1
-       JobProperties: {"partitions": "*"," columnToColumnExpr ":" event_time, channel, user, is_anonymous, is_minor, is_new, is_robot, is_unpatrolled, delta, added, deleted "," maxBatchIntervalS ":" 10 "," whereExpr ":"*", "maxBatchSizeBytes": "104857600", "columnSeparator": "','", "maxErrorNum": "1000", "currentTaskConcurrentNum": "1", "maxBatchRows": "200000"}
-DataSourceProperties: {"topic": "starrocks-load", "currentKafkaPartitions": "0", "brokerList": "localhost: 9092"}
+       JobProperties: {"partitions":"*","columnToColumnExpr":"event_time,channel,user,is_anonymous,is_minor,is_new,is_robot,is_unpatrolled,delta,added,deleted","maxBatchIntervalS":"10","whereExpr":"*","maxBatchSizeBytes":"104857600","columnSeparator":"','","maxErrorNum":"1000","currentTaskConcurrentNum":"1","maxBatchRows":"200000"}
+DataSourceProperties: {"topic":"starrocks-load","currentKafkaPartitions":"0","brokerList":"localhost:9092"}
     CustomProperties: {}
-           Statistic: {"receivedBytes": 175337712, "errorRows": 142, "committedTaskNum": 14, "loadedRows": 2789962, "loadRowsRate": 118000, "abortedTaskNum": 7, "totalRows": 2790104, "unselectedRows": 0, "receivedBytesRate": 7422000, "taskExecuteTimeMs": 23623}
-            Progress: {"0": "14024771"}
+           Statistic: {"receivedBytes":175337712,"errorRows":142,"committedTaskNum": 14,"loadedRows":2789962,"loadRowsRate":118000,"abortedTaskNum":7,"totalRows":2790104,"unselectedRows":0,"receivedBytesRate":7422000,"taskExecuteTimeMs":23623}
+            Progress: {"0":"14024771"}
 ReasonOfStateChanged:
-        ErrorLogUrls: http://172.26.108.172: 9122/api/_load_error_log?file =__shard_55/error_log_insert_stmt_ce4c95f0c72440ef-a442bb300bd743c8_ce4c95f0c72440ef_a442bb300bd743c8
+        ErrorLogUrls: http://172.26.108.172:9122/api/_load_error_log?file=__shard_55/error_log_insert_stmt_ce4c95f0c72440ef-a442bb300bd743c8_ce4c95f0c72440ef_a442bb300bd743c8
             OtherMsg:
 1 row in set (0.00 sec)
 ~~~
@@ -265,21 +265,21 @@ MySQL [load_test] > SHOW ALL ROUTINE LOAD\G;
 **** **** **** **** **** **** *** 1. row *** **** **** **** **** **** ****
                   Id: 14093
                 Name: routine_load_wikipedia
-          CreateTime: 2020-05-16 16: 00: 48
+          CreateTime: 2020-05-16 16:00:48
            PauseTime: N/A
-             EndTime: 2020-05-16 16: 08: 25
+             EndTime: 2020-05-16 16:08:25
               DbName: default_cluster: load_test
            TableName: routine_wiki_edit
                State: STOPPED
       DataSourceType: KAFKA
       CurrentTaskNum: 0
-       JobProperties: {"partitions": "*"," columnToColumnExpr ":" event_time, channel, user, is_anonymous, is_minor, is_new, is_robot, is_unpatrolled, delta, added, deleted "," maxBatchIntervalS ":" 10 "," whereExpr ":"*", "maxBatchSizeBytes": "104857600", "columnSeparator": "','", "maxErrorNum": "1000", "currentTaskConcurrentNum": "1", "maxBatchRows": "200000"}
-DataSourceProperties: {"topic": "starrocks-load", "currentKafkaPartitions": "0", "brokerList": "localhost: 9092"}
+       JobProperties: {"partitions":"*","columnToColumnExpr":"event_time,channel,user,is_anonymous,is_minor,is_new,is_robot,is_unpatrolled,delta,added,deleted","maxBatchIntervalS":"10","whereExpr":"*","maxBatchSizeBytes":"104857600","columnSeparator":"','","maxErrorNum":"1000","currentTaskConcurrentNum":"1","maxBatchRows":"200000"}
+DataSourceProperties: {"topic":"starrocks-load","currentKafkaPartitions":"0","brokerList":"localhost:9092"}
     CustomProperties: {}
-           Statistic: {"receivedBytes": 325534440, "errorRows": 264, "committedTaskNum": 26, "loadedRows": 5179944, "loadRowsRate": 109000, "abortedTaskNum": 18, "totalRows": 5180208, "unselectedRows": 0, "receivedBytesRate": 6900000, "taskExecuteTimeMs": 47173}
-            Progress: {"0": "16414875"}
+           Statistic: {"receivedBytes":325534440,"errorRows":264,"committedTaskNum": 26,"loadedRows":5179944,"loadRowsRate":109000,"abortedTaskNum":18,"totalRows":5180208,"unselectedRows":0,"receivedBytesRate":6900000,"taskExecuteTimeMs":47173}
+            Progress: {"0":"16414875"}
 ReasonOfStateChanged:
-        ErrorLogUrls: http://172.26.108.172: 9122/api/_load_error_log?file =__shard_67/error_log_insert_stmt_79e9504cafee4fbd-b3981a65fb158cde_79e9504cafee4fbd_b3981a65fb158cde
+        ErrorLogUrls: http://172.26.108.172:9122/api/_load_error_log?file=__shard_67/error_log_insert_stmt_79e9504cafee4fbd-b3981a65fb158cde_79e9504cafee4fbd_b3981a65fb158cde
             OtherMsg:
 ~~~
 
@@ -303,7 +303,7 @@ ReasonOfStateChanged:
 
 ~~~sql
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl
-COLUMNS(category, author, price, timestamp, dt = from_unixtime(timestamp, '%Y%m%d'))
+COLUMNS(category, author, price, timestamp, dt=from_unixtime(timestamp, '%Y%m%d'))
 PROPERTIES
 (
     "desired_concurrent_number" = "3",
@@ -315,7 +315,7 @@ PROPERTIES
 )
 FROM KAFKA
 (
-    "kafka_broker_list" = "localhost: 9092",
+    "kafka_broker_list" = "localhost:9092",
     "kafka_topic" = "my_topic",
 );
 ~~~
