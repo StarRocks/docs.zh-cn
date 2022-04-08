@@ -6,11 +6,11 @@
 
 ## 语法
 
-`BITMAP_MIN(bitmap_expr)`
+`BITMAP_MIN(bitmap)`
 
 ## 参数说明
 
-`bitmap_expr`：Bitmap的表达式，可以由 [BITMAP_FROM_STRING](./bitmap_from_string.md) 等函数构造。
+`bitmap`：支持的数据类型为 BITMAP，可以由 [BITMAP_FROM_STRING](./bitmap_from_string.md) 等函数构造。
 
 ## 返回值说明
 
