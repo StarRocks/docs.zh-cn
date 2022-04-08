@@ -154,7 +154,7 @@ FROM data_source
     ```sql
     ALTER ROUTINE LOAD FOR db1.label1
     WHERE a > 0
-    PARTITION (p1)
+    PARTITION (p1);
     ```
 
 ## keyword

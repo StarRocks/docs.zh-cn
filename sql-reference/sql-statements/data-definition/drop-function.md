@@ -22,7 +22,7 @@ DROP FUNCTION function_name
 1. 删除掉一个函数
 
     ```sql
-    DROP FUNCTION my_add(INT, INT)
+    DROP FUNCTION my_add(INT, INT);
     ```
 
 ## keyword

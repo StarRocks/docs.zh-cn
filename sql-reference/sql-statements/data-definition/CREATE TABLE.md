@@ -526,7 +526,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
         "password" = "mysql_passwd",
         "database" = "mysql_db_test",
         "table" = "mysql_table_test"
-    )
+    );
     ```
 
 5. 创建一张含有HLL列的表

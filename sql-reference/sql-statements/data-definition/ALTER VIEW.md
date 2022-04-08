@@ -31,5 +31,5 @@ AS query_stmt
     )
     AS SELECT k1, k2, SUM(v1) 
     FROM example_table
-    GROUP BY k1, k2
+    GROUP BY k1, k2;
     ```

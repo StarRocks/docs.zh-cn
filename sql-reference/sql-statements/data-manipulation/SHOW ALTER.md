@@ -31,7 +31,7 @@ CLUSTER: 展示集群操作相关任务情况（仅管理员使用！待实现..
 2. 展示某个表最近一次修改列的任务执行情况
 
     ```sql
-    SHOW ALTER TABLE COLUMN WHERE TableName = "table1" ORDER BY CreateTime DESC LIMIT 
+    SHOW ALTER TABLE COLUMN WHERE TableName = "table1" ORDER BY CreateTime DESC LIMIT;
     ```
 
 3. 展示指定 db 的创建或删除 ROLLUP index 的任务执行情况

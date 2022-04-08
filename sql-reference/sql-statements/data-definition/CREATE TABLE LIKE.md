@@ -21,19 +21,19 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [database.]ta
 1. 在test1库下创建一张表结构和table1相同的空表，表名为table2
 
     ```sql
-    CREATE TABLE test1.table2 LIKE test1.table1
+    CREATE TABLE test1.table2 LIKE test1.table1;
     ```
 
 2. 在test2库下创建一张表结构和test1.table1相同的空表，表名为table2
 
     ```sql
-    CREATE TABLE test2.table2 LIKE test1.table1
+    CREATE TABLE test2.table2 LIKE test1.table1;
     ```
 
 3. 在test1库下创建一张表结构和MySQL外表table1相同的空表，表名为table2
 
     ```sql
-    CREATE TABLE test1.table2 LIKE test1.table1
+    CREATE TABLE test1.table2 LIKE test1.table1;
     ```
 
 ## keyword

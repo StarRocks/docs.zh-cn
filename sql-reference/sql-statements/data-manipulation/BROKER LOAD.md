@@ -251,7 +251,7 @@ WITH BROKER broker_name
         "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
         "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
         "dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
-    )
+    );
     ```
 
 3. 从 HDFS 导入一批“负”数据。同时使用 kerberos 认证方式。提供 keytab 文件路径。
@@ -269,7 +269,7 @@ WITH BROKER broker_name
         "hadoop.security.authentication" = "kerberos",
         "kerberos_principal"="starrocks@YOUR.COM",
         "kerberos_keytab"="/home/starRocks/starRocks.keytab"
-    )
+    );
     ````
 
 4. 从 HDFS 导入一批数据，指定分区。同时使用 kerberos 认证方式。提供 base64 编码后的 keytab 文件内容。
@@ -288,7 +288,7 @@ WITH BROKER broker_name
         "hadoop.security.authentication"="kerberos",
         "kerberos_principal"="starrocks@YOUR.COM",
         "kerberos_keytab_content"="BQIAAABEAAEACUJBSURVLkNPTQAEcGFsbw"
-    )
+    );
     ```
 
 5. 从 BOS 导入一批数据，指定分区, 并对导入文件的列做一些转化，如下：
@@ -325,7 +325,7 @@ WITH BROKER broker_name
         "bos_endpoint" = "http://bj.bcebos.com",
         "bos_accesskey" = "xxxxxxxxxxxxxxxxxxxxxxxxxx",
         "bos_secret_accesskey"="yyyyyyyyyyyyyyyyyyyy"
-    )
+    );
     ```
 
 6. 导入数据到含有HLL列的表，可以是表中的列或者数据里面的列
@@ -409,7 +409,7 @@ WITH BROKER broker_name
     DATA INFILE("hdfs://hdfs_host:hdfs_port/user/starRocks/data/input/file")
     INTO TABLE `my_table`
     where k1 > k2
-    )
+    );
     ```
 
 10. 提取文件路径中的时间分区字段，并且时间包含 %3A (在 hdfs 路径中，不允许有 ':'，所有 ':' 会由 %3A 替换)
@@ -454,7 +454,7 @@ WITH BROKER broker_name
         "fs.oss.accessKeyId" = "xxxxxxxxxxxxxxxxxxxxxxxxxx",
         "fs.oss.accessKeySecret" = "yyyyyyyyyyyyyyyyyyyy",
         "fs.oss.endpoint" = "oss-cn-zhangjiakou-internal.aliyuncs.com"
-    )
+    );
     ```
 
 12. 从腾讯云 COS 导入 csv 格式的数据
@@ -471,7 +471,7 @@ WITH BROKER broker_name
         "fs.cosn.userinfo.secretId" = "xxxxxxxxxxxxxxxxxxxxxxxxxx",
         "fs.cosn.userinfo.secretKey" = "yyyyyyyyyyyyyyyyyyyy",
         "fs.cosn.bucket.endpoint_suffix" = "cos.ap-beijing.myqcloud.com"
-    )
+    );
     ```
 
 13. 从 Amazon S3 导入 csv 格式的数据
@@ -488,7 +488,7 @@ WITH BROKER broker_name
         "fs.s3a.access.key" = "xxxxxxxxxxxxxxxxxxxxxxxxxx",
         "fs.s3a.secret.key" = "yyyyyyyyyyyyyyyyyyyy",
         "fs.s3a.endpoint" = "s3-ap-northeast-1.amazonaws.com"
-    )
+    );
     ```
 
 ## keyword

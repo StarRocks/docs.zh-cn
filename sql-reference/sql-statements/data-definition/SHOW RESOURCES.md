@@ -7,7 +7,7 @@
 语法
 
 ```sql
-SHOW RESOURCES
+SHOW RESOURCES;
 ```
 
 ## keyword

@@ -26,7 +26,7 @@ function_pattern`: 用来过滤函数名称的参数
 ## example
 
 ```Plain Text
-mysql> show full functions in testDb\G
+mysql> show full functions in testDb\G;
 *************************** 1. row ***************************
         Signature: my_add(INT,INT)
       Return Type: INT

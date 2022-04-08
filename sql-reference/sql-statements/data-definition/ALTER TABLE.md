@@ -89,7 +89,7 @@ rollup 支持如下几种创建方式：
     例子：
 
     ```SQL
-    ADD ROLLUP r1(col1,col2) from r0
+    ADD ROLLUP r1(col1,col2) from r0;
     ```
 
 2. 批量创建 rollup index
@@ -105,7 +105,7 @@ rollup 支持如下几种创建方式：
     例子：
 
     ```SQL
-    ADD ROLLUP r1(col1,col2) from r0, r2(col3,col4) from r0
+    ADD ROLLUP r1(col1,col2) from r0, r2(col3,col4) from r0;
     ```
 
 3. 注意：
@@ -578,7 +578,7 @@ bitmap index 支持如下几种修改方式
 1. 将table1与table2原子替换
 
     ```sql
-    ALTER TABLE table1 SWAP WITH table2
+    ALTER TABLE table1 SWAP WITH table2;
     ```
 
 ## keyword

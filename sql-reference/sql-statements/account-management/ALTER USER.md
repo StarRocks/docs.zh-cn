@@ -60,7 +60,7 @@ auth_option指定用户的认证方式，目前支持mysql_native_password和aut
 3. 修改用户为ldap认证
 
     ```SQL
-    ALTER USER 'jack' IDENTIFIED WITH authentication_ldap_simple
+    ALTER USER 'jack' IDENTIFIED WITH authentication_ldap_simple;
     ```
 
 4. 修改用户为ldap认证，并指定用户在ldap中的DN(Distinguished Name)

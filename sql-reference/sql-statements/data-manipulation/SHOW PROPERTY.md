@@ -15,13 +15,13 @@ SHOW PROPERTY [FOR user] [LIKE key]
 1. 查看 jack 用户的属性
 
     ```sql
-    SHOW PROPERTY FOR 'jack'
+    SHOW PROPERTY FOR 'jack';
     ```
 
 2. 查看 jack 用户导入cluster相关属性
 
     ```sql
-    SHOW PROPERTY FOR 'jack' LIKE '%load_cluster%'
+    SHOW PROPERTY FOR 'jack' LIKE '%load_cluster%';
     ```
 
 ## keyword

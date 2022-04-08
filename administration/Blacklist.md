@@ -8,15 +8,15 @@ StarRocks的客户可以维护一个SQL黑名单，在某些场景下禁止指�
 这个功能通过FE配置enable_sql_blacklist控制(默认关闭)，开启命令如下：
 
 ~~~sql
-admin set frontend config ("enable_sql_blacklist" = "true")
+admin set frontend config ("enable_sql_blacklist" = "true");
 ~~~
 
 Admin用户(拥有ADMIN_PRIV权限的用户)可以执行以下命令设置黑名单：
 
 ~~~sql
-ADD SQLBLACKLIST #sql#
-DELETE SQLBLACKLIST #sql#
-SHOW SQLBLACKLISTS
+ADD SQLBLACKLIST; #sql#
+DELETE SQLBLACKLIST; #sql#
+SHOW SQLBLACKLISTS;
 ~~~
 
 * 当 enable\_sql\_blacklist 为true时，每条查询SQL都会和sqlblacklist进行匹配，对于匹配成功的SQL会直接返回错误信息：通报此条SQL处于黑名单之中；匹配失败的SQL会正常执行并输出结果。错误信息示例如下：
@@ -25,7 +25,7 @@ SHOW SQLBLACKLISTS
 ## 增加黑名单
 
 ~~~sql
-ADD SQLBLACKLIST #sql#
+ADD SQLBLACKLIST; #sql#
 ~~~
 
 **#sql#** 是某类sql的正则表达式，由于SQL常用字符里面就包含 "(", ")", "*", "."等字符，这些会和正则表达式中的语义混淆，所以在设置黑名单的时候需要通过转义符作出区分，鉴于"("和")"在SQL中使用频率过高，我们内部进行了处理，设置的时候不需要转义，其他特殊字符需要使用转义字符"\"作为前缀。例如:
@@ -57,7 +57,7 @@ ADD SQLBLACKLIST #sql#
 ## 展示黑名单列表
 
 ~~~sql
-SHOW SQLBLACKLIST
+SHOW SQLBLACKLIST;
 ~~~
 
 结果格式：`Index | Forbidden SQL`
@@ -82,7 +82,7 @@ Forbidden SQL中展示的sql对于所有sql语义的字符做了转义处理。
 ## 删除黑名单
 
 ~~~sql
-DELETE SQLBLACKLIST #indexlist#
+DELETE SQLBLACKLIST; #indexlist#
 ~~~
 
 比如对`SHOW SQLBLACKLIST`中的sqlblacklist做delete:
