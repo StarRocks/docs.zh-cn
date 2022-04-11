@@ -142,6 +142,7 @@ tEnv.executeSql(
 | sink.max-retries | NO | 1 | String | max retry times of the stream load request, range: **[0, 10]**. |
 | sink.connect.timeout-ms | NO | 1000 | String | Timeout in millisecond for connecting to the `load-url`, range: **[100, 60000]**. |
 | sink.properties.* | NO | NONE | String | the stream load properties like **'sink.properties.columns' = 'k1, k2, k3'**. |
+| sink.properties.ignore_json_size | NO |false| String | ignore the batching size (100MB) of json data |
 
 sink.properties.* 可以配置为 `sink.properties.columns' = 'k1, k2, k3'`，其他支持的参数请参考 [STREAM LOAD](../sql-reference/sql-statements/data-manipulation/STREAM%20LOAD.md)。
 
