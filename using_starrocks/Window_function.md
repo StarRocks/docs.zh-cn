@@ -126,7 +126,7 @@ from stock_ticker;
 语法：
 
 ~~~SQL
-AVG([DISTINCT | ALL] *expression*) [OVER (*analytic_clause*)]
+AVG( expression ) [OVER (*analytic_clause*)]
 ~~~
 
 举例：
@@ -169,7 +169,7 @@ where property in ('odd','even');
 语法：
 
 ~~~SQL
-COUNT([DISTINCT | ALL] expression) [OVER (analytic_clause)]
+COUNT( expression ) [OVER (analytic_clause)]
 ~~~
 
 举例：
@@ -433,7 +433,7 @@ order by closing_date;
 语法：
 
 ~~~SQL
-MAX([DISTINCT | ALL] expression) [OVER (analytic_clause)]
+MAX(expression) [OVER (analytic_clause)]
 ~~~
 
 举例：
@@ -472,7 +472,7 @@ where property in ('prime','square');
 语法：
 
 ~~~SQL
-MIN([DISTINCT | ALL] expression) [OVER (analytic_clause)]
+MIN(expression) [OVER (analytic_clause)]
 ~~~
 
 举例：
@@ -583,7 +583,7 @@ from int_t;
 语法：
 
 ~~~SQL
-SUM([DISTINCT | ALL] expression) [OVER (analytic_clause)]
+SUM(expression) [OVER (analytic_clause)]
 ~~~
 
 举例：
