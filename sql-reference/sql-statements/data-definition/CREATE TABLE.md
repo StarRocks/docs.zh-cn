@@ -561,7 +561,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     PROPERTIES ("storage_type"="column");
     ```
 
-7. 创建两张支持Colocat Join的表t1 和t2
+7. 创建两张支持Colocate Join的表t1 和t2
 
     ```sql
     CREATE TABLE `t1` (
@@ -571,7 +571,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 10
     PROPERTIES (
-        "colocate_with" = "t1"
+        "colocate_with" = "g1"
     );
 
     CREATE TABLE `t2` (
@@ -581,7 +581,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 10
     PROPERTIES (
-        "colocate_with" = "t1"
+        "colocate_with" = "g1"
     );
     ```
 
