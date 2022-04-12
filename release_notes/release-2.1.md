@@ -69,7 +69,7 @@ flink-source-connector 支持 Flink 批量读取 StarRocks 数据，实现了直
 
 发布日期： 2022年4月8日
 
-### New Features
+### New Feature
 
 - 新增 `UUID_NUMERIC` 函数，返回 LARGEINT 类型的值。相比于 `UUID` 函数，执行性能提升近 2 个数量级。
 
