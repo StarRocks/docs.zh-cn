@@ -19,9 +19,9 @@ Insert Into 语句的使用方式和 MySQL 等数据库中 Insert Into 语句的
 **示例1** 以导入 insert_wiki_edit 表为例：
 
 ~~~sql
-mysql> CREATE DATABASE IF NOT EXISTS load_test;
-mysql> USE load_test;
-mysql> CREATE TABLE insert_wiki_edit
+CREATE DATABASE IF NOT EXISTS load_test;
+USE load_test;
+CREATE TABLE insert_wiki_edit
 (
     event_time DATETIME,
     channel VARCHAR(32) DEFAULT '',
@@ -51,26 +51,33 @@ PROPERTIES("replication_num" = "1");
 #### 通过values导入数据
 
 ~~~sql
-mysql> INSERT INTO insert_wiki_edit VALUES("2015-09-12 00:00:00","#en.wikipedia","GELongstreet",0,0,0,0,0,36,36,0),("2015-09-12 00:00:00","#ca.wikipedia","PereBot",0,1,0,1,0,17,17,0);
+INSERT INTO insert_wiki_edit VALUES
+    ("2015-09-12 00:00:00","#en.wikipedia","GELongstreet",0,0,0,0,0,36,36,0),
+    ("2015-09-12 00:00:00","#ca.wikipedia","PereBot",0,1,0,1,0,17,17,0);
 ~~~
 
 #### 通过select导入数据
 
 ~~~sql
 # 指定label
-mysql> INSERT INTO insert_wiki_edit WITH LABEL insert_load_wikipedia_1 SELECT * FROM routine_wiki_edit;
+INSERT INTO insert_wiki_edit
+    WITH LABEL insert_load_wikipedia_1
+    SELECT * FROM routine_wiki_edit;
 
 # 指定分区导入，只导入到p06和p12分区
-mysql> INSERT INTO insert_wiki_edit PARTITION(p06, p12) WITH LABEL insert_load_wikipedia_2 SELECT * FROM routine_wiki_edit;
+INSERT INTO insert_wiki_edit PARTITION(p06, p12)
+    WITH LABEL insert_load_wikipedia_2
+    SELECT * FROM routine_wiki_edit;
 
 # 指定部分列导入，只导入event_time和channel字段
-mysql> INSERT INTO insert_wiki_edit WITH LABEL insert_load_wikipedia_3 (event_time, channel) SELECT event_time, channel FROM routine_wiki_edit;
-
+INSERT INTO insert_wiki_edit
+    WITH LABEL insert_load_wikipedia_3 (event_time, channel)
+    SELECT event_time, channel FROM routine_wiki_edit;
 ~~~
 
 **参数说明**
 
-* tablet_name: 导入数据的目的表。可以是 db_name.table_name 形式。
+* table_name: 导入数据的目的表。可以是 db_name.table_name 形式。
 * partitions: 指定待导入的分区，必须是 table_name 中存在的分区，多个分区名称用逗号分隔。如果指定目标分区，则只会导入符合目标分区的数据。如果没有指定，则默认值为这张表的所有分区。
 * label: 为 insert 作业指定一个 Label，Label 是该 Insert Into 导入作业的标识。每个导入作业，都有一个在单 database 内部唯一的 Label。
 
@@ -89,7 +96,9 @@ Insert Into 本身就是一个 SQL 命令，其返回结果会根据执行结果
 #### 执行成功
 
 ~~~sql
-mysql> INSERT INTO insert_wiki_edit WITH LABEL insert_load_wikipedia SELECT * FROM routine_wiki_edit; 
+INSERT INTO insert_wiki_edit
+    WITH LABEL insert_load_wikipedia
+    SELECT * FROM routine_wiki_edit; 
 Query OK, 18203 rows affected (0.40 sec)
 {'label':'insert_load_wikipedia', 'status':'VISIBLE', 'txnId':'618'}
 ~~~
@@ -105,9 +114,10 @@ Query OK, 18203 rows affected (0.40 sec)
 执行失败表示没有任何数据被成功导入，并返回如下：
 
 ~~~sql
-mysql> INSERT INTO insert_wiki_edit PARTITION(p24) WITH LABEL insert_load_wikipedia_6 SELECT * FROM routine_wiki_edit;
+INSERT INTO insert_wiki_edit PARTITION(p24)
+    WITH LABEL insert_load_wikipedia_6
+    SELECT * FROM routine_wiki_edit;
 ERROR 1064 (HY000): Insert has filtered data in strict mode, tracking_url=http://172.26.194.185:9016/api/_load_error_log?file=error_log_9f0a4fd0b64e11ec_906bbede076e9d08
-
 ~~~
 
 其中 ERROR 1064 (HY000): Insert has filtered data in strict mode 显示失败原因。后面的 tracking_url 可以用于查询错误的数据。
