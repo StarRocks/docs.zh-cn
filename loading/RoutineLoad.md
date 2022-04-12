@@ -59,16 +59,16 @@ FROM KAFKA
 
 显示 [database] 下，所有的例行导入作业（包括已停止或取消的作业）。结果为一行或多行。
 
-  ~~~SQL
-  USE [database];
-  SHOW ALL ROUTINE LOAD;
-  ~~~
+~~~SQL
+USE [database];
+SHOW ALL ROUTINE LOAD;
+~~~
 
 显示 [database] 下，名称为 job_name 的当前正在运行的例行导入作业。
 
-  ~~~SQL
-  SHOW ROUTINE LOAD FOR [database.][job_name];
-  ~~~
+~~~SQL
+SHOW ROUTINE LOAD FOR [database.][job_name];
+~~~
 
 > 注意： StarRocks 只能查看当前正在运行中的任务，已结束和未开始的任务无法查看。
 
@@ -127,9 +127,9 @@ ReasonOfStateChanged:
 
 暂停名称为 job_name 的例行导入任务。
 
-  ~~~SQL
-  PAUSE ROUTINE LOAD FOR [job_name];
-  ~~~
+~~~SQL
+PAUSE ROUTINE LOAD FOR [job_name];
+~~~
 
 可以参考 [PAUSE ROUTINE LOAD](../sql-reference/sql-statements/data-manipulation/PAUSE%20ROUTINE%20LOAD.md)
 
@@ -167,9 +167,9 @@ ReasonOfStateChanged: ErrorReason{code=errCode = 100, msg='User root pauses rout
 
 重启名称为 job_name 的例行导入任务。
 
-  ~~~SQL
-  RESUME ROUTINE LOAD FOR [job_name];
-  ~~~
+~~~SQL
+RESUME ROUTINE LOAD FOR [job_name];
+~~~
 
 可以参考 [RESUME ROUTINE LOAD](../sql-reference/sql-statements/data-manipulation/RESUME%20ROUTINE%20LOAD.md)
 
@@ -231,18 +231,18 @@ ReasonOfStateChanged:
 
 以上面创建的任务为例，将 `desired_concurrent_number` 修改为 10，修改 partition 的 offset。
 
-  ~~~sql
-  ALTER ROUTINE LOAD FOR routine_wiki_edit
-  PROPERTIES
-  (
-    "desired_concurrent_number" = "10"
-  )
-  FROM kafka
-  (
-    "kafka_partitions" = "0",
-    "kafka_offsets" = "16414342",
-  );
-  ~~~
+~~~sql
+ALTER ROUTINE LOAD FOR routine_wiki_edit
+PROPERTIES
+(
+  "desired_concurrent_number" = "10"
+)
+FROM kafka
+(
+  "kafka_partitions" = "0",
+  "kafka_offsets" = "16414342",
+);
+~~~
 
 其他参数详解请参考 [ALTER ROUTINE LOAD](../sql-reference/sql-statements/data-manipulation/alter-routine-load.md)
 
@@ -252,9 +252,9 @@ ReasonOfStateChanged:
 
 停止名称为 job_name 的例行导入任务。
 
-  ~~~SQL
-  STOP ROUTINE LOAD FOR [job_name];
-  ~~~
+~~~SQL
+STOP ROUTINE LOAD FOR [job_name];
+~~~
 
 可以参考 [STOP ROUTINE LOAD](../sql-reference/sql-statements/data-manipulation/STOP%20ROUTINE%20LOAD.md)
 
@@ -306,17 +306,17 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
 COLUMNS(category, author, price, timestamp, dt=from_unixtime(timestamp, '%Y%m%d'))
 PROPERTIES
 (
-    "desired_concurrent_number" = "3",
-    "max_batch_interval" = "20",
-    "strict_mode" = "false",
-    "format" = "json",
-    "jsonpaths" = "[\"$.category\",\"$.author\",\"$.price\",\"$.timestamp\"]",
-    "strip_outer_array" = "true"
+  "desired_concurrent_number" = "3",
+  "max_batch_interval" = "20",
+  "strict_mode" = "false",
+  "format" = "json",
+  "jsonpaths" = "[\"$.category\",\"$.author\",\"$.price\",\"$.timestamp\"]",
+  "strip_outer_array" = "true"
 )
 FROM KAFKA
 (
-    "kafka_broker_list" = "localhost:9092",
-    "kafka_topic" = "my_topic",
+  "kafka_broker_list" = "localhost:9092",
+  "kafka_topic" = "my_topic",
 );
 ~~~
 
@@ -329,12 +329,12 @@ FROM KAFKA
 
 ~~~json
 [
-    {
-        "key1": "value1"
-    },
-    {
-        "key2": "value2"
-    }
+  {
+      "key1": "value1"
+  },
+  {
+      "key2": "value2"
+  }
 ]
 ~~~
 
@@ -344,16 +344,16 @@ FROM KAFKA
 
 ## 常见问题
 
-* Q：导入任务被 PAUSE，报错 Broker: Offset out of range
+1、Q：导入任务被 PAUSE，报错 Broker: Offset out of range
 
   A：通过 SHOW ROUTINE LOAD 查看最新的 offset，用 Kafka 客户端查看该 offset 有没有数据。
 
-    可能原因：
+  可能原因：
 
-  * 导入时指定了未来的 offset。
-  * 还没来得及导入，Kafka 已经将该 offset 的数据清理。需要根据 StarRocks 的导入速度设置合理的 log 清理参数 log.retention.hours、log.retention.bytes 等。
+* 导入时指定了未来的 offset。
+* 还没来得及导入，Kafka 已经将该 offset 的数据清理。需要根据 StarRocks 的导入速度设置合理的 log 清理参数 log.retention.hours、log.retention.bytes 等。
 
-* 如何提高 ROUTINE LOAD 效率
+2、如何提高 ROUTINE LOAD 效率
 
 当前 ROUNTINE LOAD 并发取决于
 

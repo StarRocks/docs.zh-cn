@@ -88,7 +88,6 @@ PROPERTIES
 PROPERTIES 是 Spark 资源相关参数，如下：
 
 * **type**：资源类型，必填，目前仅支持 spark。
-* **spark** 相关参数如下：
 * `spark.master`: 必填，目前支持 yarn。
 * `spark.submit.deployMode`: Spark 程序的部署模式，必填，支持 cluster，client 两种。
 * `spark.hadoop.fs.defaultFS`: master 为 yarn 时必填。
@@ -127,7 +126,7 @@ FE 底层通过执行 `spark-submit` 的命令去提交 spark 任务，因此需
 
 当提交 spark load 任务时，会将归档好的依赖文件上传至远端仓库，默认仓库路径挂在 `working_dir/{cluster_id}` 目录下，并以--spark-repository--{resource-name}命名，表示集群内的一个 resource 对应一个远端仓库，远端仓库目录结构参考如下：
 
-~~~bash
+~~~text
 ---spark-repository--spark0/
    |---archive-1.0.0/
    |   |---lib-990325d2c0d1d5e45bf675e54e44fb16-spark-dpp-1.0.0-jar-with-dependencies.jar
@@ -188,49 +187,15 @@ PROPERTIES
 
 **示例 2**：上游数据源是 hdfs orc 文件的情况
 
-**示例 2**：上游数据源是 hive 表的情况
-
-* step 1: 新建 hive 资源
-
 ~~~sql
-CREATE EXTERNAL RESOURCE hive0
-properties
-( 
-    "type" = "hive",
-    "hive.metastore.uris" = "thrift://0.0.0.0:8080"
-);
-~~~
-
-* step 2: 新建 hive 外部表
-
-~~~sql
-CREATE EXTERNAL TABLE hive_t1
+LOAD LABEL db1.label2
 (
-    k1 INT,
-    K2 SMALLINT,
-    k3 varchar(50),
-    uuid varchar(100)
-)
-ENGINE=hive
-properties
-( 
-    "resource" = "hive0",
-    "database" = "tmp",
-    "table" = "t1"
-);
-~~~
-
-* step 3: 提交 load 命令，要求导入的 StarRocks 表中的列必须在 hive 外部表中存在。
-
-~~~sql
-LOAD LABEL db1.label1
-(
-    DATA FROM TABLE hive_t1
-    INTO TABLE tbl1
-    SET
-    (
-        uuid=bitmap_dict(uuid)
-    )
+    DATA INFILE("hdfs://abc.com:8888/user/starRocks/test/ml/file3")
+    INTO TABLE tbl3
+    COLUMNS TERMINATED BY ","
+    FORMAT AS "orc"
+    (col1, col2)
+    where col1 > 1
 )
 WITH RESOURCE 'spark0'
 (
@@ -242,6 +207,61 @@ PROPERTIES
     "timeout" = "3600"
 );
 ~~~
+
+**示例 3**：上游数据源是 hive 表的情况
+
+* step 1: 新建 hive 资源
+
+    ~~~sql
+    CREATE EXTERNAL RESOURCE hive0
+    properties
+    ( 
+        "type" = "hive",
+        "hive.metastore.uris" = "thrift://0.0.0.0:8080"
+    );
+    ~~~
+
+* step 2: 新建 hive 外部表
+
+    ~~~sql
+    CREATE EXTERNAL TABLE hive_t1
+    (
+        k1 INT,
+        K2 SMALLINT,
+        k3 varchar(50),
+        uuid varchar(100)
+    )
+    ENGINE=hive
+    properties
+    ( 
+        "resource" = "hive0",
+        "database" = "tmp",
+        "table" = "t1"
+    );
+    ~~~
+
+* step 3: 提交 load 命令，要求导入的 StarRocks 表中的列必须在 hive 外部表中存在。
+
+    ~~~sql
+    LOAD LABEL db1.label3
+    (
+        DATA FROM TABLE hive_t1
+        INTO TABLE tbl1
+        SET
+        (
+            uuid=bitmap_dict(uuid)
+        )
+    )
+    WITH RESOURCE 'spark0'
+    (
+        "spark.executor.memory" = "2g",
+        "spark.shuffle.compress" = "true"
+    )
+    PROPERTIES
+    (
+        "timeout" = "3600"
+    );
+    ~~~
 
 创建导入的详细语法请参考 [SPARK LOAD](../sql-reference/sql-statements/data-manipulation/SPARK%20LOAD.md)。这里主要介绍 Spark load 的创建导入语法中参数意义和注意事项。
 
@@ -261,8 +281,8 @@ Spark 资源需要提前配置到 StarRocks 系统中并且赋予用户 USAGE-PR
 ~~~sql
 WITH RESOURCE 'spark0'
 (
-"spark.driver.memory" = "1g",
-"spark.executor.memory" = "3g"
+    "spark.driver.memory" = "1g",
+    "spark.executor.memory" = "3g"
 )
 ~~~
 
@@ -305,7 +325,7 @@ LoadFinishTime: 2019-07-27 11:50:16
 当 Spark load 作业状态不为 CANCELLED 或 FINISHED 时，可以被用户手动取消。取消时需要指定待取消导入任务的 Label 。取消导入命令语法可参考 [CANCEL LOAD](../sql-reference/sql-statements/data-manipulation/CANCEL%20LOAD.md) 。示例如下：
 
 ~~~sql
-mysql >  CANCEL LOAD FROM db1 WHERE LABEL = "label1";
+    mysql >  CANCEL LOAD FROM db1 WHERE LABEL = "label1";
 ~~~
 
 ---
@@ -333,23 +353,23 @@ mysql >  CANCEL LOAD FROM db1 WHERE LABEL = "label1";
 
 ## 常见问题
 
-* 报错：When running with master 'yarn' either HADOOP-CONF-DIR or YARN-CONF-DIR must be set in the environment.
+1、报错：When running with master 'yarn' either HADOOP-CONF-DIR or YARN-CONF-DIR must be set in the environment.
 
 使用 Spark Load 时没有在 Spark 客户端的 spark-env.sh 配置 HADOOP-CONF-DIR 环境变量。
 
-* 提交 Spark job 时用到 spark-submit 命令，报错：Cannot run program "xxx/bin/spark-submit": error = 2, No such file or directory
+2、提交 Spark job 时用到 spark-submit 命令，报错：Cannot run program "xxx/bin/spark-submit": error = 2, No such file or directory
 
 使用 Spark Load 时 `spark_home_default_dir` 配置项没有指定或者指定了错误的 spark 客户端根目录。
 
-* 报错：File xxx/jars/spark-2x.zip does not exist 错误。
+3、报错：File xxx/jars/spark-2x.zip does not exist 错误。
 
  使用 Spark Load 时 spark-resource-path 配置项没有指向打包好的 zip 文件，检查指向文件路径和文件名词是否一致。
 
-* 报错：yarn client does not exist in path: xxx/yarn-client/hadoop/bin/yarn
+4、报错：yarn client does not exist in path: xxx/yarn-client/hadoop/bin/yarn
 
  使用 Spark Load 时 yarn-client-path 配置项没有指定 yarn 的可执行文件。
 
-* 报错：Cannot execute hadoop-yarn/bin/../libexec/yarn-config.sh
+5、报错：Cannot execute hadoop-yarn/bin/../libexec/yarn-config.sh
 
  使用 CDH 的 Hadoop 时，需要配置 HADOOP_LIBEXEC_DIR 环境变量，由于 hadoop-yarn 和 hadoop 目录不同，默认 libexec 目录会找 hadoop-yarn/bin/../libexec，而 libexec 在 hadoop 目录下。
  ```yarn application status```命令获取Spark任务状态报错导致导入作业失败。
