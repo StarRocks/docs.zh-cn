@@ -107,7 +107,7 @@ Stream Load 导入语句：
 
 ~~~bash
 curl --location-trusted -u root: -H "label:lineorder" -H "column_separator:," \
-    -H " columns: c1,c2,c3,pk=c1, col0=c2,__op=c3 " -T demo.csv \
+    -H "columns: c1,c2,c3,pk=c1, col0=c2,__op=c3 " -T demo.csv \
     http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
 ~~~
 
