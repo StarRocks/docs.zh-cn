@@ -42,7 +42,6 @@ SHOW PROPERTY FOR 'root';
     | ------------------------------------- | ------------------------------------------------------------ |
     | `enable_pipeline_engine`              | 是否启用 Pipeline 执行引擎。取值： **true**：启用（默认）。 **false**：不启用。 |
     | `pipeline_dop`                        | 一个 Pipeline 实例的并行数量。建议设为默认值 **0**，表示自适应调整每个 pipeline 的并行度。 也可以设为大于 **0** 的数值，通常为 BE 节点 CPU 物理核数的一半。 |
-    | `parallel_fragment_exec_instance_num` | 一个 Fragment 实例的并行数量。 启用 Pipeline 时，查询并行度由 `pipeline_dop` 参数决定，因此该参数设为 1 即可。 |
 
   - parallel_fragment_exec_instance_num
 
