@@ -13,10 +13,10 @@ SET PROPERTY [FOR 'user'] 'key' = 'value' [, 'key' = 'value']
 例如
 
 ```sql
-修改用户 jack 最大连接数为1000
+-- 修改用户 jack 最大连接数为1000
 SET PROPERTY FOR 'jack' 'max_user_connections' = '1000';
 
-查看root用户的连接数限制
+-- 查看root用户的连接数限制
 SHOW PROPERTY FOR 'root'; 
 ```
 
@@ -28,7 +28,7 @@ SHOW PROPERTY FOR 'root';
   - Pipeline 执行引擎相关变量（推荐）
   > 自 StarRocks 2.2 版本，Pipeline 执行引擎已经默认开启。
 
-    ```plain text
+    ```sql
     set enable_pipeline_engine = true;
     set pipeline_dop = 0;
     ```
