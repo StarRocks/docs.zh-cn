@@ -28,12 +28,9 @@ SHOW PROPERTY FOR 'root';
   - Pipeline 执行引擎相关变量（推荐）
   > 自 StarRocks 2.2 版本，Pipeline 执行引擎已经默认开启。
 
-    ```SQL
+    ```plain text
     set enable_pipeline_engine = true;
-
     set pipeline_dop = 0;
-
-    set parallel_fragment_exec_instance_num = 1;
     ```
 
     参数说明
