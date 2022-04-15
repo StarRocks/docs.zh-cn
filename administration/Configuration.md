@@ -387,7 +387,7 @@ BE 配置项暂不支持在线修改，生效需在 be.conf 中修改并重启 b
 |enable_token_check|TRUE|Token 开启检验|
 |enable_prefetch|TRUE|查询提前预取|
 |load_process_max_memory_limit_bytes|107374182400|单节点上所有的导入线程占据的内存上限，100GB|
-|load_process_max_memory_limit_percent|80|单节点上所有的导入线程占据的内存上限比例，100GB|
+|load_process_max_memory_limit_percent|30|单节点上所有的导入线程占据的内存上限比例，100GB|
 |sync_tablet_meta|FALSE|存储引擎是否开 sync 保留到磁盘上。|
 |thrift_rpc_timeout_ms|5000|Thrift 超时的时长|
 |txn_commit_rpc_timeout_ms|10000|Txn 超时的时长|
