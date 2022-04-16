@@ -346,7 +346,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
         "dynamic_partition.enable" = "true|false",
         "dynamic_partition.time_unit" = "DAY|WEEK|MONTH",
         "dynamic_partition.start" = "${integer_value}",
-        "dynamic_partitoin.end" = "${integer_value}",
+        "dynamic_partition.end" = "${integer_value}",
         "dynamic_partition.prefix" = "${string_value}",
         "dynamic_partition.buckets" = "${integer_value}"
     )
