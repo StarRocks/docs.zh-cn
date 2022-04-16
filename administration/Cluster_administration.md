@@ -104,7 +104,7 @@ mv lib lib.bak
 cp -r /tmp/StarRocks-SE-x.x.x/fe/lib  .   
 sh bin/stop_fe.sh
 sh bin/start_fe.sh --daemon
-ps aux | grep StarRocksFe
+ps aux | grep StarRocksFE
 ```
 
 特别注意：
