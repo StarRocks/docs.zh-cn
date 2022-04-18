@@ -17,7 +17,7 @@ auth_option: {
     IDENTIFIED WITH auth_plugin
     IDENTIFIED WITH auth_plugin BY 'auth_string'
     IDENTIFIED WITH auth_plugin AS 'auth_string'
-}
+};
 ```
 
 1. CREATE USER 命令用于创建一个 StarRocks 用户。在 StarRocks 中，一个 user_identity 唯一标识一个用户。
@@ -69,13 +69,13 @@ auth_option: {
 4. 创建一个ldap认证的用户
 
     ```sql
-    CREATE USER jack@'172.10.1.10' IDENTIFIED WITH authentication_ldap_simple
+    CREATE USER jack@'172.10.1.10' IDENTIFIED WITH authentication_ldap_simple;
     ```
 
 5. 创建一个ldap认证的用户，并指定用户在ldap中的DN(Distinguished Name)
 
     ```sql
-    CREATE USER jack@'172.10.1.10' IDENTIFIED WITH authentication_ldap_simple AS 'uid=jack,ou=company,dc=example,dc=com'
+    CREATE USER jack@'172.10.1.10' IDENTIFIED WITH authentication_ldap_simple AS 'uid=jack,ou=company,dc=example,dc=com';
     ```
 
 6. 创建一个允许从 '192.168' 子网登陆的用户，同时指定其角色为 example_role
