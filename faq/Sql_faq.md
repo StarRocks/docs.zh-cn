@@ -90,7 +90,7 @@ show tablet from lineitem where State="ALTER";
 **问题描述：**
 
 查询hive外部表是具体报错信息为：
-`get partition detail failed: org.apache.doris.common.DdlException: get hive partition meta data failed: java.net.UnknownHostException:hadooptest（具体hdfs-ha的名字）`
+`get partition detail failed: com.starrocks.common.DdlException: get hive partition meta data failed: java.net.UnknownHostException:hadooptest（具体hdfs-ha的名字）`
 
 **解决方案:**
 
@@ -116,7 +116,7 @@ A JOIN B ON A.col1=B.col1 JOIN C on A.col1=C.col1 where A.col1='北京'，
 
 或者升级较新版本并开启CBO，然后会有此类谓词下推操作，优化查询性能。
 
-## 查询报错Doris planner use long time 3000 remaining task num 1
+## 查询报错 planner use long time 3000 remaining task num 1
 
 **解决方案：**
 
