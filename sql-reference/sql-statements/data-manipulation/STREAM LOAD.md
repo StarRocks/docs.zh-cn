@@ -119,8 +119,7 @@ SHOW LOAD WARNINGS ON 'url'
 3. 将本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表, 允许20%的错误率（用户是defalut_cluster中的）
 
     ```bash
-    curl --location-trusted -u root -H "label:123" -H "max_filter_ratio:0.2" -T testData \
-        http://host:port/api/testDb/testTbl/_stream_load
+    curl --location-trusted -u root -H "label:123" -H "max_filter_ratio:0.2" -T testData \ http://host:port/api/testDb/testTbl/_stream_load
     ```
 
 4. 将本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表, 允许20%的错误率，并且指定文件的列名（用户是defalut_cluster中的）
@@ -227,6 +226,41 @@ SHOW LOAD WARNINGS ON 'url'
     curl --location-trusted -u root \
         -H "columns: category, price, author" -H "label:123" -H "format: json" -H "jsonpaths: [\"$.category\",\"$.price\",\"$.author\"]" -H "strip_outer_array: true" -H "json_root: $.RECORDS" -T testData \
         http://host:port/api/testDb/testTbl/_stream_load
+    ```
+
+### 应用场景
+
+Stream Load 的最佳使用场景是原始文件在内存中或者存储在本地磁盘中。其次由于 Stream Load 是一种同步的导入方式，所以用户如果希望用同步方式获取导入结果，也可以使用这种导入。
+
+### 数据量
+
+由于Stream Load是由BE发起的导入并分发数据，建议的导入数据量在 1GB 到 10GB 之间。系统默认的最大Stream Load导入数据量为10GB，所以如果要导入超过10GB的文件需要修改BE的配置项streaming_load_max_mb。比如，待导入文件大小为15G，则可修改BE的该配置项大于15G,例如设置为 `streaming_load_max_mb = 16000` 即可。
+
+Stream Load的默认超时为300秒，按照StarRocks目前最大的导入限速来看，导入超过3GB大小的文件就需要修改导入任务默认的超时时间了。
+
+`导入任务超时时间 = 导入数据量 / 10M/s` （具体的平均导入速度需要用户根据自己的集群情况计算）
+
+例如：导入一个 10GB 的文件，timeout应该设为1000s。
+
+### 完整例子
+
+**数据情况**：数据在客户端本地磁盘路径 /home/store-sales 中，导入的数据量约为 15GB，希望导入到数据库 bj-sales 的表 store-sales 中。
+
+**集群情况**：Stream Load 的并发数不受集群大小影响。
+
+* step1: 导入文件大小超过默认的最大导入大小10GB，所以要修改BE的配置文件BE.conf,例如将最大导入大小设置为16000：
+
+`streaming_load_max_mb = 16000`
+
+* step2: 计算大概的导入时间是否超过默认 timeout 值，导入时间 ≈ 15000 / 10 = 1500s，超过了默认的 timeout 时间，需要修改 FE 的配置FE.conf：
+
+`stream_load_default_timeout_second = 1500`
+
+* step3：创建导入任务
+
+    ```plain text
+    curl --location-trusted -u user:password -T /home/store_sales \
+    -H "label:abc" [http://abc.com:8000/api/bj_sales/store_sales/_stream_load](http://abc.com:8000/api/bj_sales/store_sales/_stream_load)
     ```
 
 ## keyword
