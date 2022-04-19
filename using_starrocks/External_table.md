@@ -474,21 +474,13 @@ USE iceberg_test;
 
 ~~~sql
 CREATE EXTERNAL TABLE `iceberg_tbl` ( 
-
-`id` bigint NULL, 
-
-`data` varchar(200) NULL 
-
+    `id` bigint NULL, 
+    `data` varchar(200) NULL 
 ) ENGINE=ICEBERG 
-
 PROPERTIES ( 
-
-"resource" = "iceberg0", 
-
-"database" = "iceberg", 
-
-"table" = "iceberg_table" 
-
+    "resource" = "iceberg0", 
+    "database" = "iceberg", 
+    "table" = "iceberg_table" 
 ); 
 ~~~
 
@@ -587,7 +579,6 @@ DROP RESOURCE "hudi0";
 
 ~~~sql
 CREATE DATABASE hudi_test; 
-
 USE hudi_test; 
 ~~~
 
@@ -599,8 +590,8 @@ USE hudi_test;
 
 ~~~sql
 CREATE EXTERNAL TABLE `hudi_tbl` ( 
-`id` bigint NULL, 
-`data` varchar(200) NULL 
+    `id` bigint NULL, 
+    `data` varchar(200) NULL 
 ) ENGINE=HUDI 
 PROPERTIES ( 
     "resource" = "hudi0", 
@@ -642,5 +633,5 @@ PROPERTIES (
 创建Hudi外表后，无需导入数据，执行如下命令，即可查询Hudi的数据。
 
 ~~~sql
-select count(*) from hudi_tbl;
+SELECT COUNT(*) FROM hudi_tbl;
 ~~~
