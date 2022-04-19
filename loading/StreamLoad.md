@@ -37,7 +37,6 @@ Stream Load 中所有与导入任务相关的参数均设置在 Header 中。下
   * 例2：表中有3列"c1, c2, c3" ，源文件中前3列一一对应，但是还有多余1列；那么需要指定\-H "columns: c1, c2, c3, temp"，最后1列随意指定名称用于占位即可。
   * 例3：表中有3个列“year, month, day"，源文件中只有一个时间列，为”2018-06-01 01:02:03“格式；那么可以指定 \-H "columns: col, year = year(col), month=month(col), day=day(col)"完成导入。
 
-
 **返回结果：**
 
 导入完成后，Stream Load会以Json格式返回这次导入的相关内容，示例如下：
