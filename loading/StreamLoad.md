@@ -51,7 +51,7 @@ Stream Load 中所有与导入任务相关的参数均设置在 Header 中。下
     "ExistingJobStatus": "FINISHED", // optional
     "Message": "OK",
     "NumberTotalRows": 1000000,
-    "NumberLoadedRows": 1000000,
+    "NumberLoadedRows": 999999,
     "NumberFilteredRows": 1,
     "NumberUnselectedRows": 0,
     "LoadBytes": 40888898,
