@@ -4,13 +4,10 @@
 
 + [StarRocks介绍](/introduction/StarRocks_intro.md)
 + 快速开始
-  + [StarRocks基本概念](/quick_start/Concepts.md)
-  + [StarRocks系统架构](/quick_start/Architecture.md)
+  + [StarRocks基本概念及系统架构](/quick_start/Architecture.md)
   + [StarRocks手动部署](/quick_start/Deploy.md)
-  + [数据流和控制流](/quick_start/Data_flow_and_control_flow.md)
+  + [表创建](/quick_start/Create_table.md)
   + [数据导入和查询](/quick_start/Import_and_query.md)
-  + [测试常见问题](/quick_start/Test_faq.md)
-  + [下一步](/quick_start/Next_step.md)
 + 表设计
   + [理解StarRocks表设计](/table_design/StarRocks_table_design.md)
   + [数据模型介绍](/table_design/Data_model.md)
@@ -26,6 +23,7 @@
   + [Routine Load](/loading/RoutineLoad.md)
   + [Spark Load](/loading/SparkLoad.md)
   + [Insert Into导入](/loading/InsertInto.md)
+  + [主键模型导入](/loading/PrimaryKeyLoad.md)
   + [导入过程中完成数据转换](/loading/Etl_in_loading.md)
   + [Json数据导入](/loading/Json_loading.md)
   + [Flink connector](/loading/Flink-connector-starrocks.md)
@@ -306,27 +304,31 @@
   + [系统变量](/reference/System_variable.md)
   + [错误码](/reference/Error_code.md)
   + [系统限制](/reference/System_limit.md)
-+ 管理手册
-  + [在容器内编译](/administration/Build_in_docker.md)
-  + [集群部署](/administration/Deployment.md)
-  + [集群管理](/administration/Cluster_administration.md)
-  + [配置参数](/administration/Configuration.md)
-  + [扩容缩容](/administration/Scale_up_down.md)
-  + [备份与恢复](/administration/Backup_and_restore.md)
++ 管理指南
+  + 部署使用
+    + [容器编译](/administration/Build_in_docker.md)
+    + [集群部署](/administration/Deployment.md)
+    + [集群管理](/administration/Cluster_administration.md)
+  + 运维操作
+    + [扩容缩容](/administration/Scale_up_down.md)
+    + [备份恢复](/administration/Backup_and_restore.md)
+    + [参数配置](/administration/Configuration.md)
+    + [监控报警](/administration/Monitor_and_Alert.md)
+    + 资源管理
+      + [查询管理](/administration/Query_management.md)
+      + [黑名单管理](/administration/Blacklist.md)
+      + [内存管理](/administration/Memory_management.md)
+      + [负载均衡](/administration/Load_balance.md)
+      + [副本管理](/administration/Replica.md)
   + 数据恢复
     + [数据删除恢复](/administration/Data_recovery.md)
     + [元数据恢复](/administration/Metadata_recovery.md)
-  + [副本管理](/administration/Replica.md)
-  + [查询分析](/administration/Query_planning.md)
-  + [性能优化](/administration/Profiling.md)
-  + [监控报警](/administration/Monitor_and_Alert.md)
-  + [用户权限](/administration/User_privilege.md)
-  + [认证方式](/administration/Authentication.md)
-  + 资源管理
-    + [查询管理](/administration/Query_management.md)
-    + [黑名单管理](/administration/Blacklist.md)
-    + [内存管理](/administration/Memory_management.md)
-    + [负载均衡](/administration/Load_balance.md)
+  + 用户权限及认证
+    + [用户权限](/administration/User_privilege.md)
+    + [认证方式](/administration/Authentication.md)
+  + 性能调优
+    + [查询分析](/administration/Query_planning.md)
+    + [性能优化](/administration/Profiling.md)
 + 常见问题解答
   + [部署运维](/faq/Deploy_faq.md)
   + 数据迁移
@@ -347,8 +349,8 @@
   + [其他](/faq/Others.md)
 + 性能测试
   + [SSB性能测试](/benchmarking/SSB_Benchmarking.md)
+  + [TPC-H基准测试](/benchmarking/TPC-H_Benchmark.md)
 + Release Notes
   + [v1.19](/release_notes/release-1.19.md)
   + [v2.0](/release_notes/release-2.0.md)
   + [v2.1](/release_notes/release-2.1.md)
-  

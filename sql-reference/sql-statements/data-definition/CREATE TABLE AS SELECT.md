@@ -13,7 +13,7 @@ CREATE TABLE [IF NOT EXISTS] [database.]table_name
 [partition_desc]
 [distribution_desc]
 [PROPERTIES ("key"="value", ...)]
-AS SELECT <query>
+AS SELECT query
 [ ... ]
 ```
 
@@ -23,7 +23,7 @@ AS SELECT <query>
 
 | 参数             | 说明                                                         |
 | ---------------- | ------------------------------------------------------------ |
-| column_name      | 列名。您无需传入列类型，StarRocks 会自动选择合适的类型，并将 FLOAT 或 DOUBLE 转换为 DECIMAL(38,9)，CHAR、VARCHAR、STRING 转换为 VARCHAR(1048576)。 |
+| column_name      | 列名。您无需传入列类型，StarRocks 会自动选择合适的类型，并将 FLOAT 或 DOUBLE 转换为 DECIMAL(38,9)，CHAR、VARCHAR、STRING 转换为 VARCHAR(65533)。 |
 | COMMENT          | 表注释。                                                     |
 | partition_desc   | 分区方式。更多说明，请参见 [partition_desc](CREATE%20TABLE.md/#syntax)。如果不填写，则默认为无分区。 |
 | distribution_desc | 分桶方式。更多说明，请参见 [distribution_desc](CREATE%20TABLE.md/#syntax)。如果不填写，则默认分桶键为CBO统计信息中最高基数的列，分桶数量为10。如果CBO中没有相关统计信息，则默认分桶键为第一列。 |
@@ -31,9 +31,9 @@ AS SELECT <query>
 
 ### 查询部分
 
-支持`... AS SELECT <query>` 直接指定具体列，比如 `... AS SELECT a, b, c FROM table_a;` ，则新建表的列名为a，b， c 。
+支持`... AS SELECT query` 直接指定具体列，比如 `... AS SELECT a, b, c FROM table_a;` ，则新建表的列名为a，b， c 。
 
-支持`... AS SELECT <query>` 使用表达式，并且建议您为新表的列设置具有业务意义的别名，便于后续识别，比如`... AS SELECT a+1 AS x, b+2 AS y, c*c AS z FROM table_a;`，设置新列名为x，y，z。
+支持`... AS SELECT query` 使用表达式，并且建议您为新表的列设置具有业务意义的别名，便于后续识别，比如`... AS SELECT a+1 AS x, b+2 AS y, c*c AS z FROM table_a;`，设置新列名为x，y，z。
 
 ## Usage Notes
 
@@ -55,7 +55,7 @@ AS SELECT * FROM order;
 
 示例二：根据原表 order 的列 k1、k2 和 k3，创建一个新表 order_new，并指定列名为 a、b 和 c。
 
-> 指定的列数需要与 AS SELECT *<query>* 的列数保持一致。
+> 指定的列数需要与`... AS SELECT query` 的列数保持一致。
 
 ```SQL
 CREATE TABLE order_new a, b, c
@@ -67,7 +67,7 @@ CREATE TABLE order_new
 AS SELECT k1 AS a, k2 AS b, k3 AS c FROM order;
 ```
 
-示例三：`... AS SELECT <query>`使用表达式，根据表达式结果，创建一个新表，并重新指定列名。
+示例三：`... AS SELECT query`使用表达式，根据表达式结果，创建一个新表，并重新指定列名。
 
 > 建议您为新表的列名设置具有业务意义的别名，便于后续识别。
 
