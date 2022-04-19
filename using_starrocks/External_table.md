@@ -462,7 +462,6 @@ DROP RESOURCE "iceberg0";
 
 ~~~sql
 CREATE DATABASE iceberg_test; 
-
 USE iceberg_test; 
 ~~~
 
