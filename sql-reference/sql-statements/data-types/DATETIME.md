@@ -10,7 +10,7 @@ DATETIME
 
 ## 示例
 
-创建表时指定字段类型为 DATETIME
+创建表时指定字段类型为 DATETIME。
 
 ```sql
 CREATE TABLE dateTimeDemo (
@@ -22,6 +22,6 @@ COMMENT "OLAP"
 DISTRIBUTED BY HASH(pk) BUCKETS 4;
 ```
 
-## 关键字 (keywords)
+## 关键字
 
 DATETIME
