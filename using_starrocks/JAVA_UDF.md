@@ -407,7 +407,7 @@ FROM test_basic;
 
 #### 步骤一：创建 Maven 工程
 
-参考xxx。
+参考[x](#步骤一：创建-maven-项目)。
 
 #### 步骤二：开发 UDTF 函数
 
