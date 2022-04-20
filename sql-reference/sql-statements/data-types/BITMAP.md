@@ -14,9 +14,9 @@ BITMAP 与 HLL 类似 **只能作为聚合表** 的 value 类型使用，常见�
 
 ```sql
 CREATE TABLE pv_bitmap (
-  dt      INT(11)      NULL COMMENT "",
-  page    VARCHAR(10)  NULL COMMENT "",
-  user_id bitmap       BITMAP_UNION NULL COMMENT ""
+    dt INT(11) NULL COMMENT "",
+    page VARCHAR(10) NULL COMMENT "",
+    user_id bitmap BITMAP_UNION NULL COMMENT ""
 ) ENGINE=OLAP
 AGGREGATE KEY(dt, page)
 COMMENT "OLAP"
@@ -29,6 +29,6 @@ BITMAP 类型的详细使用方法，如向表中插入 bitmap value 请参考 [
 
 BITMAP 类型的字段支持多种 BITMAP 函数，如 bitmap_and，bitmap_andnot 等。具体的函请参考 [bitmap-functions](/sql-reference/sql-functions/bitmap-functions/bitmap_and.md)。
 
-## 关键字 (keywords)
+## 关键字
 
 BITMAP BITMAP_UNION
