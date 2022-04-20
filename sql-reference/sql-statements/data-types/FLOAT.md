@@ -4,7 +4,7 @@
 
 FLOAT
 
-4 字节浮点数
+4 字节浮点数。
 
 ## 示例
 
@@ -12,14 +12,14 @@ FLOAT
 
 ```sql
 CREATE TABLE floatDemo (
-  pk      BIGINT(20)  NOT NULL COMMENT "",
-  channel FLOAT       COMMENT "4 bytes"
+    pk BIGINT(20) NOT NULL COMMENT "",
+    channel FLOAT COMMENT "4 bytes"
 ) ENGINE=OLAP 
 DUPLICATE KEY(pk)
 COMMENT "OLAP"
-DISTRIBUTED BY HASH(pk) BUCKETS 4 ;
+DISTRIBUTED BY HASH(pk) BUCKETS 4;
 ```
 
-## 关键字 (keywords)
+## 关键字
 
 FLOAT
