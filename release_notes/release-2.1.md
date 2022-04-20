@@ -23,7 +23,7 @@
 - 支持建表语句的时间戳字段定义为 DEFAULT CURRENT_TIMESTAMP。
 - 支持导入带有多个分隔符的 CSV 文件。
 
-### Bugfix
+### Bug Fixes
 
 - 修复在导入 JSON 格式数据中设置了 jsonpaths 后不能自动识别 __op 字段的问题。
 - 修复 Broker Load 导入数据过程中因为源数据发生变化而导致 BE 节点挂掉的问题。
@@ -45,7 +45,7 @@ flink-source-connector 支持 Flink 批量读取 StarRocks 数据，实现了直
 
 发布日期： 2022年3月14日
 
-### Bugfix
+### Bug Fixes
 
 - 修复从 1.19 升级到 2.1 会因 `chunk_size` 不匹配导致 BE 崩溃的问题。[#3834](https://github.com/StarRocks/starrocks/issues/3834)
 - 修复在从 2.0 升级到 2.1 的过程中有导入时，可能导致导入任务失败的问题。[#3828](https://github.com/StarRocks/starrocks/issues/3828)
@@ -53,3 +53,31 @@ flink-source-connector 支持 Flink 批量读取 StarRocks 数据，实现了直
 - 修复 FE 在低基数全局字典优化中收集信息时可能导致死锁的问题。[#3839](https://github.com/StarRocks/starrocks/issues/3839)
 - 修复因死锁导致 BE 节点假死且查询失败的问题。
 - 修复因 `SHOW VARIABLES` 命令出错而导致 BI 工具无法连接的问题。[#3708](https://github.com/StarRocks/starrocks/issues/3708)
+
+## 2.1.3
+
+发布日期： 2022年3月19日
+
+### Bug Fixes
+
+- 通过改进为批量 publish version，解决 BE 可能因宕机而导致数据丢失的问题。[#3140](https://github.com/StarRocks/starrocks/issues/3140)
+- 修复某些查询可能因为执行计划不合理而导致内存超限的问题。
+- 修复分片副本的校验和（checksum）在不同的 compaction 过程下结果可能不一致的问题。[#3438](https://github.com/StarRocks/starrocks/issues/3438)
+- 修复因 JOIN reorder projection 未正确处理而导致查询可能报错的问题。[#4056](https://github.com/StarRocks/starrocks/pull/4056)
+
+## 2.1.4
+
+发布日期： 2022年4月8日
+
+### New Feature
+
+- 新增 `UUID_NUMERIC` 函数，返回 LARGEINT 类型的值。相比于 `UUID` 函数，执行性能提升近 2 个数量级。
+
+### Bug Fixes
+
+修复了如下 Bug：
+
+- 在删列、新增分区、并克隆 Tablet 后，新旧 Tablet 的列 Unique ID 可能会不对应，由于系统使用共享的 Tablet Schema，可能导致 BE 停止服务。[#4514](https://github.com/StarRocks/starrocks/issues/4514)
+- 向 StarRocks 外表导入数据时，如果设定的目标 StarRocks 集群的 FE 不是 Leader，则会导致 FE 停止服务。[#4573](https://github.com/StarRocks/starrocks/issues/4573)
+- `CAST`函数在 StarRocks 1.19 和 2.1 版本中的执行结果不一致。[#4701](https://github.com/StarRocks/starrocks/pull/4701)
+- 明细模型的表同时执行表结构变更、创建物化视图时，可能导致数据查询错误。[#4839](https://github.com/StarRocks/starrocks/issues/4839)
