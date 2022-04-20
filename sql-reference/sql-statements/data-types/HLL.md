@@ -14,19 +14,19 @@ VARCHAR(M)
 
 ## 示例
 
-创建表时指定字段类型为 HLL
+创建表时指定字段类型为 HLL。
 
 ```sql
 CREATE TABLE hllDemo
 (
-    k1  TINYINT,
-    v1  HLL HLL_UNION
+    k1 TINYINT,
+    v1 HLL HLL_UNION
 )
 ENGINE=olap
 AGGREGATE KEY(k1)
 DISTRIBUTED BY HASH(k1) BUCKETS 8;
 ```
 
-## 关键字 (keywords)
+## 关键字
 
 HLL, HYPERLOGLOG
