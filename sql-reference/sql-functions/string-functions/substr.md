@@ -46,4 +46,4 @@ mysql> select substring("starrocks",-2);
 
 ## 关键词
 
-SUBSTR
+SUBSTR，SUBSTRING
