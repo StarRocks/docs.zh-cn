@@ -175,9 +175,9 @@ SELECT MY_UDF_JSON_GET('{"key":"{\\"in\\":2}"}', '$.key.in');
 
 ### UDAF
 
-#### 步骤一：创建 Maven 工程
+#### 步骤一：创建 Maven 项目
 
-请参考[步骤一：创建 Maven 工程](#开发并使用UDF/#Scalar UDF/#步骤一：创建 Maven 项目)。
+请参考[步骤一：创建 Maven 项目](./JAVA_UDF.md/#步骤一创建-maven-项目)。
 
 #### 步骤二：开发 UDAF 函数
 
@@ -283,9 +283,9 @@ SELECT MY_SUM_INT(col1);
 
 ### UDWF
 
-#### 步骤一：创建 Maven 工程
+#### 步骤一：创建 Maven 项目
 
-请参考[步骤一：创建 Maven 工程](#开发并使用UDF/#Scalar UDF/#步骤一：创建 Maven 项目)。
+请参考[步骤一：创建 Maven 项目](./JAVA_UDF.md/#步骤一创建-maven-项目)。
 
 #### 步骤二：开发 UDWF 函数
 
@@ -354,7 +354,7 @@ SELECT MY_SUM_INT(col1);
 
     | **需要额外实现的方法**                                   | **方法的含义**                                               |
     | -------------------------------------------------------- | ------------------------------------------------------------ |
-    | void windowUpdate(State state, int, int, int , int, ...) | 更新窗口数据。窗口函数的详细说明，请参见xxx。<BR> 输入每一行数据，都会获取到对应窗口信息来更新中间结果。<br>
+    | void windowUpdate(State state, int, int, int , int, ...) | 更新窗口数据。窗口函数的详细说明，请参见[窗口函数](../using_starrocks/Window_function.md)。<BR>     输入每一行数据，都会获取到对应窗口信息来更新中间结果。<br>
     - peer_group_start：是当前分区开始的位置。<br>
       > 分区：OVER子句中 PARTITION BY 指定分区列， 分区列的值相同的行被视为在同一个分区内。 peer_group_end：当前分区结束的位置。<br>
     - frame_start：当前窗口框架（window frame）起始位置 。<br>
@@ -386,7 +386,7 @@ properties
 );
 ```
 
-> - 参数Analytic：固定取值为**true，**表示所创建的函数为窗口函数。
+> - 参数Analytic：固定取值为**true**，表示所创建的函数为窗口函数。
 > - 其他参数的说明与 Scalar UDF 函数类似，请参考[在 StarRocks 中创建 Scalar UDF 函数](./JAVA_UDF.md/#步骤三在-starrocks-中创建-scalar-udf-函数)。
 
 #### 步骤四：使用 UDWF 函数
@@ -405,9 +405,9 @@ FROM test_basic;
 
 > 目前仅支持使用UDTF返回多行单列。
 
-#### 步骤一：创建 Maven 工程
+#### 步骤一：创建 Maven 项目
 
-请参考[步骤一：创建 Maven 工程](#开发并使用UDF/#Scalar UDF/#步骤一：创建 Maven 项目)。
+请参考[步骤一：创建 Maven 项目](./JAVA_UDF.md/#步骤一创建-maven-项目)。
 
 #### 步骤二：开发 UDTF 函数
 
@@ -426,7 +426,7 @@ FROM test_basic;
 
     用户自定义类必须实现如下方法：
 
-    > 方法中请求参数和返回参数的数据类型，需要和步骤三中的 `CREATE FUNCTION` 语句中声明的相同，且两者的类型映射关系需要符合[类型映射关系](xxx) 。
+    > 方法中请求参数和返回参数的数据类型，需要和步骤三中的 `CREATE FUNCTION` 语句中声明的相同，且两者的类型映射关系需要符合[类型映射关系](./JAVA_UDF.md/#类型映射关系)。
 
     | **需要实现的方法** | **方法的含义**                              |
     | ------------------ | ------------------------------------------- |
@@ -484,11 +484,11 @@ SELECT t1.a,t1.b, MY_UDF_SPLIT FROM t1, MY_UDF_SPLIT(t1.c1);
 
 ## 管理 UDF
 
-执行`SHOW FUNCTIONS`，查看函数信息。更多信息，请参见[SHOW FUNCTIONS](xxx)。
+执行`SHOW FUNCTIONS`，查看函数信息。更多信息，请参见[SHOW FUNCTIONS](../sql-reference/sql-statements/data-definition/show-functions.md)。
 
 ## 删除 UDF
 
-执行`DROP FUNCTION`，删除函数。更多信息，请参见[DROP FUNCTION](xxx)。
+执行`DROP FUNCTION`，删除函数。更多信息，请参见[DROP FUNCTION](../sql-reference/sql-statements/data-definition/drop-function.md)。
 
 ## 类型映射关系
 
