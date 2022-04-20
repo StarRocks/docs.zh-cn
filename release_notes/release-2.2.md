@@ -12,7 +12,7 @@
 - 【公测中】支持 JSON 数据类型和函数。相关文档，请参见 [JSON](../sql-reference/sql-statements/data-types/JSON.md)。
 - 支持通过外表查询 Apache Hudi 的数据，进一步完善了数据湖分析的功能，性能高达 Trino 的 x 倍。相关文档，请参见 [Apache Hudi 外表](../using_starrocks/External_table.md/#apache-hudi外表)。
 - 新增如下函数:
-  - ARRAY 函数，[array_agg](https://github.com/StarRocks/docs.zh-cn/pull/253)、[array_sort](https://github.com/StarRocks/docs.zh-cn/pull/271)、[array_distinct](https://github.com/StarRocks/docs.zh-cn/pull/266)、[ array_join](https://github.com/StarRocks/docs.zh-cn/pull/282)、[reverse](https://github.com/StarRocks/docs.zh-cn/pull/272)、[array_slice](https://github.com/StarRocks/docs.zh-cn/pull/297) [、](https://github.com/StarRocks/docs.zh-cn/pull/297) [array_concat](https://github.com/StarRocks/docs.zh-cn/pull/297) [、](https://github.com/StarRocks/docs.zh-cn/pull/297) [array_difference](https://github.com/StarRocks/docs.zh-cn/pull/297) [、](https://github.com/StarRocks/docs.zh-cn/pull/297) [array_overlap](https://github.com/StarRocks/docs.zh-cn/pull/297) [、](https://github.com/StarRocks/docs.zh-cn/pull/297) [array_intersect](https://github.com/StarRocks/docs.zh-cn/pull/297)。
+  - ARRAY 函数，[array_agg](https://github.com/StarRocks/docs.zh-cn/pull/253)、[array_sort](https://github.com/StarRocks/docs.zh-cn/pull/271)、[array_distinct](https://github.com/StarRocks/docs.zh-cn/pull/266)、[array_join](https://github.com/StarRocks/docs.zh-cn/pull/282)、[reverse](https://github.com/StarRocks/docs.zh-cn/pull/272)、[array_slice](https://github.com/StarRocks/docs.zh-cn/pull/297) [、](https://github.com/StarRocks/docs.zh-cn/pull/297) [array_concat](https://github.com/StarRocks/docs.zh-cn/pull/297) [、](https://github.com/StarRocks/docs.zh-cn/pull/297) [array_difference](https://github.com/StarRocks/docs.zh-cn/pull/297) [、](https://github.com/StarRocks/docs.zh-cn/pull/297) [array_overlap](https://github.com/StarRocks/docs.zh-cn/pull/297) [、](https://github.com/StarRocks/docs.zh-cn/pull/297) [array_intersect](https://github.com/StarRocks/docs.zh-cn/pull/297)。
   - BITMAP 函数，包括 [bitmap_max](https://github.com/StarRocks/docs.zh-cn/pull/374) [、](https://github.com/StarRocks/docs.zh-cn/pull/374) [bitmap_min](https://github.com/StarRocks/docs.zh-cn/pull/374)。
   - 其他函数：[retention](https://github.com/StarRocks/docs.zh-cn/pull/269)、[square](https://github.com/StarRocks/docs.zh-cn/pull/364)。
 
@@ -27,7 +27,7 @@
 ### 修复 Bug
 
 - 修复主键模型的表导入数据和 COMMIT 时产生死锁的问题。[#4998](https://github.com/StarRocks/starrocks/pull/4998）
-- 解决 FE（包含 BDBJE）的一系列稳定性问题。[#4428](https://github.com/StarRocks/starrocks/issues/4426)) (https://github.com/StarRocks/starrocks/pull/4428)、[#4666] (https://github.com/StarRocks/starrocks/pull/4666)、[#2](https://github.com/StarRocks/bdb-je/pull/2)
+- 解决 FE（包含 BDBJE）的一系列稳定性问题。[#4428](https://github.com/StarRocks/starrocks/pull/4428)、[#4666] (https://github.com/StarRocks/starrocks/pull/4666)、[#2](https://github.com/StarRocks/bdb-je/pull/2)
 - 修复 SUM 函数对大量数据求和时返回结果溢出的问题。[#3944](https://github.com/StarRocks/starrocks/pull/3944)
 - 修复 ROUND 和 TRUNCATE 函数返回结果的精度问题。[#4256](https://github.com/StarRocks/starrocks/pull/4256)
 - 修复 SQLancer 的一系列问题，请参见 [SQLancer 相关 issues](https://github.com/StarRocks/starrocks/issues?q=is%3Aissue++label%3Asqlancer++milestone%3A2.2)。
