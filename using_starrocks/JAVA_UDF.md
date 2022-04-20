@@ -23,7 +23,7 @@ FE 配置项：在 FE 配置文件（$FE_HOME/conf/fe.conf）中设置配置项 
 
 1. 创建 Maven 项目，项目的基本目录结构如下：
 
-    ```Plain%20Text
+    ```Plain Text
     project
     |--pom.xml
     |--src
@@ -337,14 +337,14 @@ SELECT MY_SUM_INT(col1);
             state.counter = 0;
         }
 
-    public void windowUpdate(State state,
+        public void windowUpdate(State state,
                                 int peer_group_start, int peer_group_end,
                                 int frame_start, int frame_end,
                                 Integer[] inputs) {
             for (int i = (int)frame_start; i < (int)frame_end; ++i) {
                 state.counter += inputs[i];
             }
-    }
+       }
     }
     ```
 
@@ -365,7 +365,7 @@ SELECT MY_SUM_INT(col1);
           <li>peer_group_end：当前分区结束的位置。</li>
           <li>frame_start：当前窗口框架（window frame）起始位置。<br>窗口框架：window frame子句指定了运算范围，以当前行为准，前后若干行作为窗口函数运算的对象。例如ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING，表示运算范围为当前行和它前后各一行数据。</li>
           <li>frame_end：当前窗口框架（window frame）结束位置。</li>
-          <li>wrapper class[]：包装类数组，表示一个窗口中输入的数据。包装类需要对应输入数据的类型，本示例中输入数据类型为INT，因此包装类数组为Integer[]。</li>
+          <li>inputs：表示一个窗口中输入的数据，格式为包装类数组。包装类需要对应输入数据的类型，本示例中输入数据类型为INT，因此包装类数组为Integer[]。</li>
         </ul></td>
        </tr>
     </table>
@@ -471,7 +471,7 @@ properties
 
 执行如下命令，使用 UDTF 函数。
 
-```SQL
+```Plain Text
 -- 假设存在表t1，其列a、b、c1信息如下
 SELECT t1.a,t1.b,t1.c1 FROM t1;
 > output:
