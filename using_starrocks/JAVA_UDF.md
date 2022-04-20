@@ -365,7 +365,7 @@ SELECT MY_SUM_INT(col1);
           <li>peer_group_end：当前分区结束的位置。</li>
           <li>frame_start：当前窗口框架（window frame）起始位置。<br>窗口框架：window frame子句指定了运算范围，以当前行为准，前后若干行作为窗口函数运算的对象。例如ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING，表示运算范围为当前行和它前后各一行数据。</li>
           <li>frame_end：当前窗口框架（window frame）结束位置。</li>
-          <li>inputs：表示一个窗口中输入的数据，格式为包装类数组。包装类需要对应输入数据的类型，本示例中输入数据类型为INT，因此包装类数组为Integer[]。</li>
+          <li>inputs：表示一个窗口中输入的数据，为包装类数组。包装类需要对应输入数据的类型，本示例中输入数据类型为INT，因此包装类数组为Integer[]。</li>
         </ul></td>
        </tr>
     </table>
@@ -438,7 +438,7 @@ FROM test_basic;
 
     | **需要实现的方法** | **方法的含义**                              |
     | ------------------ | ------------------------------------------- |
-    | TYPE[] process()   | process 方法为UDTF 调用入口，需要返回数组。 |
+    | TYPE[] process()   | process 方法为 UDTF 调用入口，需要返回数组。 |
 
 2. 执行`mvn package`，进行打包。
 
