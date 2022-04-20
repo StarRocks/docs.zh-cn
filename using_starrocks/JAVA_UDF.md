@@ -107,9 +107,9 @@ FE 配置项：在 FE 配置文件（$FE_HOME/conf/fe.conf）中设置配置项 
 
 1. 编写 Scalar UDF 代码，示例如下。
 
-   我们以业务场景中“提取 JSON 数据”为例进行说明。例如，业务场景中，JSON 数据中某个字段的值可能是 JSON  字符串而不是 JSON 对象，因此在提取 JSON  字符串时，SQL 语句需要嵌套调用`GET_JSON_STRING`，例如：`GET_JSON_STRING(get_json_string(``"``{"key":"{\"k0\":\"v0\"}"}``"``,"$.key"), "$.k0")`。
+   我们以业务场景中“提取 JSON 数据”为例进行说明。例如，业务场景中，JSON 数据中某个字段的值可能是 JSON  字符串而不是 JSON 对象，因此在提取 JSON  字符串时，SQL 语句需要嵌套调用`GET_JSON_STRING`，例如：`GET_JSON_STRING(GET_JSON_STRING('{"key":"{\\"k0\\":\\"v0\\"}"}', "$.key"), "$.k0")`。
 
-   为简化SQL语句，您可以开发一个 UDF，直接提取 JSON  字符串，例如 `MY_UDF_JSON_GET("{"key":"{\"k0\":\"v0\"}"}", "$.key.k0")`。
+   为简化SQL语句，您可以开发一个 UDF，直接提取 JSON  字符串，例如：`MY_UDF_JSON_GET('{"key":"{\\"k0\\":\\"v0\\"}"}', "$.key.k0")`。
 
     ```Java
     package com.starrocks.udf.sample;
