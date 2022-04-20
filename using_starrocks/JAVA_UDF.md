@@ -177,7 +177,7 @@ SELECT MY_UDF_JSON_GET('{"key":"{\\"in\\":2}"}', '$.key.in');
 
 #### 步骤一：创建 Maven 工程
 
-参考xxx。
+请参考[步骤一：创建 Maven 工程](#开发并使用UDF/#Scalar UDF/#步骤一：创建 Maven 项目)。
 
 #### 步骤二：开发 UDAF 函数
 
@@ -285,7 +285,7 @@ SELECT MY_SUM_INT(col1);
 
 #### 步骤一：创建 Maven 工程
 
-参考xxx。
+请参考[步骤一：创建 Maven 工程](#开发并使用UDF/#Scalar UDF/#步骤一：创建 Maven 项目)。
 
 #### 步骤二：开发 UDWF 函数
 
@@ -387,7 +387,7 @@ properties
 ```
 
 > - 参数Analytic：固定取值为**true，**表示所创建的函数为窗口函数。
-> - 其他参数的说明 Scalar UDF 函数类似，请参考[在 StarRocks 中创建 Scalar UDF 函数](./JAVA_UDF.md/#步骤三在-starrocks-中创建-scalar-udf-函数)。
+> - 其他参数的说明与 Scalar UDF 函数类似，请参考[在 StarRocks 中创建 Scalar UDF 函数](./JAVA_UDF.md/#步骤三在-starrocks-中创建-scalar-udf-函数)。
 
 #### 步骤四：使用 UDWF 函数
 
@@ -407,7 +407,7 @@ FROM test_basic;
 
 #### 步骤一：创建 Maven 工程
 
-参考[x](#步骤一：创建-maven-项目)。
+请参考[步骤一：创建 Maven 工程](#开发并使用UDF/#Scalar UDF/#步骤一：创建 Maven 项目)。
 
 #### 步骤二：开发 UDTF 函数
 
