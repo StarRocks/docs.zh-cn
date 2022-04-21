@@ -22,7 +22,7 @@
 - 优化查询Apache Hive外表中基于对象存储（Amazon S3、阿里云OSS、腾讯云COS）的外部表的性能，优化后基于对象存储的查询性能可以与基于HDFS的查询性能基本持平。支持ORC格式文件的延迟物化，提升小文件查询性能。相关文档，请参见  [Apache Hive 外表](../using_starrocks/External_table.md/#hive外表)。
 - 通过外表查询 Apache Hive 的数据时，缓存更新通过定期消费 Hive Metastore 的事件（包括数据变更、分区变更等），实现自动增量更新元数据。并且，还支持查询 Apache Hive 中 DECIMAL 和 ARRAY 类型的数据。相关文档，请参见 [Apache Hive 外表](../using_starrocks/External_table.md/#hive外表)。
 - 优化 UNION ALL 算子性能，性能提升可达2-25倍。
-- 正式发布 Pipeline 引擎。可以自适应调节查询的并行度，并且优化了 Pipeline 引擎的 Profile。
+- 正式发布 Pipeline 引擎，支持自适应调节查询的并行度，并且优化了 Pipeline 引擎的 Profile。提升了高并发场景下小查询的性能。
 - 导入 CSV 文件时，支持使用多个字符作为行分隔符。
 
 ### 修复 Bug
