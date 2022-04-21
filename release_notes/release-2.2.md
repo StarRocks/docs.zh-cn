@@ -6,15 +6,15 @@
 
 ### 新功能
 
-- 【公测中】发布资源组管理功能。通过使用资源组来控制 CPU、内存的资源使用，让不同租户的大小查询在同一集群执行时，既能实现资源隔离，又能合理使用资源。相关文档，请参见[资源组](../administration/resource_group.md)。
+- 【公测中】发布资源组管理功能。通过使用资源组来控制 CPU、内存的资源使用，让不同租户的大小查询在同一集群执行时，既能实现资源隔离，又能合理使用资源。相关文档，请参见[资源组](../administration/Resource_Group.md)。
 - 【公测中】实现 Java UDF 框架，支持使用 Java 语法编写 UDF（用户自定义函数），扩展 StarRocks 的函数功能。相关文档，请参见 [Java UDF](../using_starrocks/JAVA_UDF.md)。
 - 导入数据至主键模型时，支持更新部分列。在订单更新、多流 JOIN 等实时数据更新场景下，仅需要更新与业务相关的列。相关文档，请参见 [主键模型的表支持部分更新](../loading/PrimaryKeyLoad.md#部分更新)。
 - 【公测中】支持 JSON 数据类型和函数。相关文档，请参见 [JSON](../sql-reference/sql-statements/data-types/JSON.md)。
 - 支持通过外表查询 Apache Hudi 的数据，进一步完善了数据湖分析的功能。相关文档，请参见 [Apache Hudi 外表](../using_starrocks/External_table.md/#apache-hudi外表)。
 - 新增如下函数:
-  - ARRAY 函数，[array_agg](https://github.com/StarRocks/docs.zh-cn/pull/253)、[array_sort](https://github.com/StarRocks/docs.zh-cn/pull/271)、[array_distinct](https://github.com/StarRocks/docs.zh-cn/pull/266)、[array_join](https://github.com/StarRocks/docs.zh-cn/pull/282)、[reverse](https://github.com/StarRocks/docs.zh-cn/pull/272)、[array_slice](https://github.com/StarRocks/docs.zh-cn/pull/297) [、](https://github.com/StarRocks/docs.zh-cn/pull/297) [array_concat](https://github.com/StarRocks/docs.zh-cn/pull/297) [、](https://github.com/StarRocks/docs.zh-cn/pull/297) [array_difference](https://github.com/StarRocks/docs.zh-cn/pull/297) [、](https://github.com/StarRocks/docs.zh-cn/pull/297) [array_overlap](https://github.com/StarRocks/docs.zh-cn/pull/297) [、](https://github.com/StarRocks/docs.zh-cn/pull/297) [array_intersect](https://github.com/StarRocks/docs.zh-cn/pull/297)。
-  - BITMAP 函数，包括 [bitmap_max](https://github.com/StarRocks/docs.zh-cn/pull/374) [、](https://github.com/StarRocks/docs.zh-cn/pull/374) [bitmap_min](https://github.com/StarRocks/docs.zh-cn/pull/374)。
-  - 其他函数：[retention](https://github.com/StarRocks/docs.zh-cn/pull/269)、[square](https://github.com/StarRocks/docs.zh-cn/pull/364)。
+  - ARRAY 函数，[array_agg](../sql-reference/sql-functions/array-functions/array_agg.md)、[array_sort](../sql-reference/sql-functions/array-functions/array_sort.md)、[array_distinct](../sql-reference/sql-functions/array-functions/array_distinct.md)、[array_join](../sql-reference/sql-functions/array-functions/array_join.md)、[reverse](../sql-reference/sql-functions/string-functions/reverse.md)、[array_slice](../sql-reference/sql-functions/array-functions/array_slice.md)、[array_concat](../sql-reference/sql-functions/array-functions/array_concat.md)、[array_difference](../sql-reference/sql-functions/array-functions/array_difference.md)、[array_overlap](../sql-reference/sql-functions/array-functions/array_overlap.md)、[array_intersect](../sql-reference/sql-functions/array-functions/array_intersect.md)。
+  - BITMAP 函数，包括 [bitmap_max](../sql-reference/sql-functions/bitmap-functions/bitmap_max.md)、[bitmap_min](../sql-reference/sql-functions/bitmap-functions/bitmap_min.md)。
+  - 其他函数：[retention](../sql-reference/sql-functions/aggregate-functions/retention.md)、[square](../sql-reference/sql-functions/math-functions/square.md)。
 
 ### 功能优化
 
