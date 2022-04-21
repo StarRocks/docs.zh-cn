@@ -124,8 +124,8 @@ JobId: 23004
 QueryId: edee47f0-abe1-11ec-b9d1-00163e1e238f
 State: FINISHED
 Progress: 100%
-TaskInfo: {"partitions":["p1","p2"],"column separator":",","columns":["lo_orderkey"],"tablet num":96,"broker":"hdfs_broker","coord num":6,"db":"default_cluster:ssb","tbl":"lineorder","row delimiter":"\n","mem limit":2147483648}
-Path: hdfs://cs01:9002/shemplle/
+TaskInfo: {"partitions":[*],"column separator":",","columns":["test"],"tablet num":96,"broker":"broker_name","coord num":6,"db":"default_cluster:test","tbl":"test","row delimiter":"\n","mem limit":2147483648}
+Path: hdfs://127.0.0.1:9002/dir/
 CreateTime: 2022-03-25 10:18:58
 StartTime: 2022-03-25 10:19:00
 FinishTime: 2022-03-25 10:19:09
