@@ -8,18 +8,18 @@ VARCHAR(M)
 
 ## 示例
 
-创建表时指定字段类型为 VARCHAR
+创建表时指定字段类型为 VARCHAR。
 
 ```sql
 CREATE TABLE varcharDemo (
-    pk       INT           COMMENT "range [-2147483648, 2147483647]",
-    pd_type  VARCHAR(20)   COMMENT "range char(m),m in (1-255) "
+    pk INT COMMENT "range [-2147483648, 2147483647]",
+    pd_type VARCHAR(20) COMMENT "range char(m),m in (1-255) "
 ) ENGINE=OLAP 
 DUPLICATE KEY(pk)
 COMMENT "OLAP"
 DISTRIBUTED BY HASH(pk) BUCKETS 4;
 ```
 
-## 关键字 (keywords)
+## 关键字
 
 VARCHAR

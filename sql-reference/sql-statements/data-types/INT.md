@@ -4,11 +4,11 @@
 
 INT
 
-4 字节有符号整数，范围 [-2147483648, 2147483647]
+4 字节有符号整数，范围 [-2147483648, 2147483647]。
 
 ## 示例
 
-创建表时指定字段类型为 INT
+创建表时指定字段类型为 INT。
 
 ```sql
 CREATE TABLE intDemo (
@@ -19,6 +19,6 @@ COMMENT "OLAP"
 DISTRIBUTED BY HASH(pk) BUCKETS 4;
 ```
 
-## 关键字 (keywords)
+## 关键字
 
 INT

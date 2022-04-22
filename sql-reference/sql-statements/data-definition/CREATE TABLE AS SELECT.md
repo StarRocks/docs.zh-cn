@@ -28,8 +28,8 @@ AS SELECT query
 | column_name      | 列名。您无需传入列类型，StarRocks 会自动选择合适的类型，并将 FLOAT 或 DOUBLE 转换为 DECIMAL(38,9)，CHAR、VARCHAR、STRING 转换为 VARCHAR(65533)。 |
 | COMMENT          | 表注释。                                                     |
 | partition_desc   | 分区方式。更多说明，请参见 [partition_desc](CREATE%20TABLE.md/#syntax)。如果不填写，则默认为无分区。 |
-| distribution_desc | 分桶方式。更多说明，请参见 [distribution_desc](CREATE%20TABLE.md/#syntax)。如果不填写，则默认分桶键为 CBO 统计信息中最高基数的列，分桶数量为 10。如果 CBO 中没有相关统计信息，则默认分桶键为第一列。 |
-| properties       | 新表的附带属性。更多说明，请参见 [PROPERTIES](CREATE%20TABLE.md/#syntax)。目前 CTA 仅支持创建 ENGINE 类型为 OLAP 的表。 |
+| distribution_desc | 分桶方式。更多说明，请参见 [distribution_desc](CREATE%20TABLE.md/#syntax)。如果不填写，则默认分桶键为CBO统计信息中最高基数的列，分桶数量为10。如果CBO中没有相关统计信息，则默认分桶键为第一列。 |
+| properties       | 新表的附带属性。更多说明，请参见 [PROPERTIES](CREATE%20TABLE.md/#syntax)。目前CTAS仅支持创建ENGINE类型为OLAP的表。 |
 
 #### 查询部分
 
@@ -93,9 +93,7 @@ SELECT * FROM employee_new;
 +------------+
 ```
 
-### 基于多表关联查询结果创建新表并调整分区分桶
-
-根据三张原表 lineorder、customer、supplier 和 part，创建一个新表 lineorder_flat，并且调整分区和分桶方式。
+示例四：根据四张原表 lineorder、customer、supplier 和 part，创建一个新表 lineorder_flat，并且调整分区和分桶方式。
 
 ```SQL
 CREATE TABLE lineorder_flat
