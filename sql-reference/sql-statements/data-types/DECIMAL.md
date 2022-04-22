@@ -9,9 +9,9 @@ DECIMAL(P [, S])
 1.19.0 及以后版本对 decimal 类型的（P，S）有默认值设置，默认是 decimal（10，0）。
 
 例如：
-1.19.0 版本可成功执行 `select cast（‘12.35’ as decimal）;` 1.19 之前版本执行 `select cast（‘12.35’ as decimal）;` 或者 `select cast（‘12.35’ as decimal（5））;` 会提示 failed，需明确指定 p, s 的值, 如：`select cast（‘12.35’ as decimal（5，1）;`
+1.19.0 版本可成功执行 `select cast（‘12.35’ as decimal）;` 1.19 之前版本执行 `select cast（‘12.35’ as decimal）;` 或者 `select cast（‘12.35’ as decimal（5））;` 会提示 failed，需明确指定 P, S 的值, 如：`select cast（‘12.35’ as decimal（5，1）;`
 
-* Decimal V2
+* DecimalV2
 
   P 的范围是 [1,27], S 的范围 [0, 9], 另外，P 必须要大于等于 S 的取值。默认的 S 取值为 0。
 
@@ -22,28 +22,28 @@ DECIMAL(P [, S])
 
   主要优化有：
   
-  1. 内部采用多种宽度的整数表示 decimal, decimal(P <= 18, S)使用 64bit 整数, 相比于原来 decimal v2 实现统一采用 128bit 整数, 算数运算和转换运算在 64bit 的处理器上使用更少的指令数量, 因此性能有大幅提升。
-  2. Fast Decimal 实现和 decimal v2 相比, 具体算法做了极致的优化, 尤其是乘法运算，性能提升有 4 倍左右。
+  1. 内部采用多种宽度的整数表示 decimal, decimal(P <= 18, S)使用 64bit 整数, 相比于原来 decimalV2 实现统一采用 128bit 整数, 算数运算和转换运算在 64bit 的处理器上使用更少的指令数量, 因此性能有大幅提升。
+  2. Fast Decimal 实现和 decimalV2 相比, 具体算法做了极致的优化, 尤其是乘法运算，性能提升有 4 倍左右。
   
   当前的限制：
   
-  1. 目前 fast decimal 不支持 array 类型, 如果用户想使用 array(decimal)类型, 请使用 array(double) 类型, 或者关闭 decimal v3 之后, 使用 array(decimal) 类型。
+  1. 目前 fast decimal 不支持 array 类型, 如果用户想使用 array(decimal)类型, 请使用 array(double) 类型, 或者关闭 decimalV3 之后, 使用 array(decimal) 类型。
   2. hive 直连外表中, orc 和 parquet 数据格式对 decimal 暂未支持
 
 ## 示例
 
-创建表时指定字段类型为 DECIMAL
+创建表时指定字段类型为 DECIMAL。
 
 ```sql
 CREATE TABLE decimalDemo (
-  pk      BIGINT(20)     NOT NULL COMMENT "",
-  account DECIMAL(12,4)  COMMENT ""
+    pk BIGINT(20) NOT NULL COMMENT "",
+    account DECIMAL(12,4) COMMENT ""
 ) ENGINE=OLAP 
 DUPLICATE KEY(pk)
 COMMENT "OLAP"
-DISTRIBUTED BY HASH(pk) BUCKETS 4 ;
+DISTRIBUTED BY HASH(pk) BUCKETS 4;
 ```
 
-## 关键字 (keywords)
+## 关键字
 
 DECIMAL

@@ -8,18 +8,18 @@ BOOL, BOOLEAN
 
 ## 示例
 
-创建表时指定字段类型为 BOOLEAN
+创建表时指定字段类型为 BOOLEAN。
 
 ```sql
 CREATE TABLE booleanDemo (
-    pk       INT       COMMENT "range [-2147483648, 2147483647]",
-    ispass   BOOLEAN   COMMENT "true/false"
+    pk INT COMMENT "range [-2147483648, 2147483647]",
+    ispass BOOLEAN COMMENT "true/false"
 ) ENGINE=OLAP 
 DUPLICATE KEY(pk)
 COMMENT "OLAP"
 DISTRIBUTED BY HASH(pk) BUCKETS 4;
 ```
 
-## 关键字 (keywords)
+## 关键字
 
 BOOLEAN

@@ -8,18 +8,18 @@ DOUBLE
 
 ## 示例
 
-创建表时指定字段类型为 DOUBLE
+创建表时指定字段类型为 DOUBLE。
 
 ```sql
 CREATE TABLE doubleDemo (
-  pk      BIGINT(20)  NOT NULL COMMENT "",
-  income  DOUBLE      COMMENT "8 bytes"
+    pk BIGINT(20) NOT NULL COMMENT "",
+    income DOUBLE COMMENT "8 bytes"
 ) ENGINE=OLAP 
 DUPLICATE KEY(pk)
 COMMENT "OLAP"
-DISTRIBUTED BY HASH(pk) BUCKETS 4 ;
+DISTRIBUTED BY HASH(pk) BUCKETS 4;
 ```
 
-## 关键字 (keywords)
+## 关键字
 
 DOUBLE
