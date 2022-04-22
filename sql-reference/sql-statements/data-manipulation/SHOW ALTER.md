@@ -9,18 +9,18 @@
 注：方括号 [] 中内容可省略不写。
 
 ```sql
-SHOW ALTER [CLUSTER | TABLE [COLUMN | ROLLUP] [FROM db_name]];
+SHOW ALTER [TABLE [COLUMN | ROLLUP] [FROM db_name]];
 ```
 
 说明：
 
 ```plain text
-TABLE COLUMN：展示修改列的 ALTER 任务，支持语法[WHERE TableName|CreateTime|FinishTime|State] [ORDER BY] [LIMIT]。
 
-TABLE ROLLUP：展示创建或删除 ROLLUP index 的任务，
-如果不指定 db_name，使用当前默认 db。
+TABLE COLUMN：展示修改列的 ALTER 任务
+支持语法[WHERE TableName|CreateTime|FinishTime|State] [ORDER BY] [LIMIT]
+TABLE ROLLUP：展示创建或删除 ROLLUP index 的任务
+如果不指定 db_name，使用当前默认 db
 
-CLUSTER: 展示集群操作相关任务情况（仅管理员使用！待实现...）
 ```
 
 ## 示例
@@ -43,12 +43,6 @@ CLUSTER: 展示集群操作相关任务情况（仅管理员使用！待实现..
     SHOW ALTER TABLE ROLLUP FROM example_db;
     ````
 
-4. 展示集群操作相关任务（仅管理员使用！待实现...）。
-
-    ```SQL
-    SHOW ALTER CLUSTER;
-    ```
-
-## 关键字(keywords)
+## keyword
 
 SHOW, ALTER
