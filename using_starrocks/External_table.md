@@ -540,7 +540,7 @@ StarRocks支持通过外表的方式查询Apache Iceberg数据湖中的数据，
 * Iceberg外表是只读的，只能用于查询操作。
 * 支持Iceberg的表格式为V1（Copy on write表），暂不支持为 V2（Merge on read表）。V1和V2之间的更多区别，请参见[Apache Iceberg官网](https://iceberg.apache.org/#spec/#format-versioning)。
 * 支持Iceberg文件的压缩格式为GZIP（默认值），ZSTD，LZ4和SNAPPY。
-* 仅支持Iceberg的Catalog类型为Hive Catalog，数据存储格式为Parquet和ORC。
+* 支持Iceberg的Catalog类型为Hive Catalog和Custom Catalog，数据存储格式为Parquet和ORC。
 * StarRocks暂不⽀持同步Iceberg中的[schema evolution](https://iceberg.apache.org/#evolution#schema-evolution)，如果Iceberg表schema evolution发生变更，您需要在StarRocks中删除对应Iceberg外表并重新建立。
 
 ### 操作步骤
@@ -549,7 +549,7 @@ StarRocks支持通过外表的方式查询Apache Iceberg数据湖中的数据，
 
 您需要提前在StarRocks中创建Iceberg资源，用于管理在StarRocks中创建的Iceberg数据库和外表。
 
-执行如下命令，创建一个名为`iceberg0`的Iceberg资源。
+执行如下命令，创建一个名为`iceberg0`的Iceberg Hive Catalog资源。
 
 ~~~sql
 CREATE EXTERNAL RESOURCE "iceberg0" 
@@ -563,8 +563,27 @@ PROPERTIES (
 |  参数   | 说明  |
 |  ----  | ----  |
 | type  | 资源类型，固定取值为**iceberg**。 |
-| starrocks.catalog-type  | Iceberg的Catalog类型。目前仅支持为Hive Catalog，取值为HIVE。 |
+| starrocks.catalog-type  | Iceberg的Catalog类型。目前仅支持为Hive Catalog或Custom Catalog，Hive Catalog取值为HIVE。 |
 | iceberg.catalog.hive.metastore.uris | Hive Metastore的thrift URI。<br>Iceberg通过创建Hive Catalog，连接Hive Metastore，以创建并管理表。您需要传入该Hive Metastore的thrift URI。格式为**thrift://<Hive Metadata的IP地址>:<端口号>**，端口号默认为9083。 |
+
+如果Hive Catalog无法满足您的使用需求，您可以按下述规则开发一个自定义的Iceberg Catalog类。这个类需要继承抽象类BaseMetastoreCatalog，并实现IcebergCatalog接口，要编写的具体内容可参考IcebergHiveCatalog。类名请不要与StarRocks中已存在的类冲突。开发完成后，您还需将这个类及其相关文件打包并放到**全部**FE节点的`fe/lib`路径下，然后重启FE节点，此时这个类即可被FE识别。
+
+执行如下命令，创建一个名为`iceberg1`的Iceberg Custom Catalog资源。
+
+~~~sql
+CREATE EXTERNAL RESOURCE "iceberg1" 
+PROPERTIES ( 
+"type" = "iceberg", 
+"starrocks.catalog-type"="CUSTOM", 
+"iceberg.catalog-impl"="com.starrocks.IcebergCustomCatalog" 
+);
+~~~
+
+|  参数   | 说明  |
+|  ----  | ----  |
+| type  | 资源类型，固定取值为**iceberg**。 |
+| starrocks.catalog-type  | Iceberg的Catalog类型。目前仅支持为Hive Catalog或Custom Catalog，Custom Catalog取值为CUSTOM。 |
+| iceberg.catalog-impl | 您编写的Custom Catalog的**全限定类名**，FE会根据类名寻找您编写的Custom Catalog。如您编写的类中包含自定义的配置项，请在步骤三创建Iceberg外表时添加到SQL语句的**PROPERTIES**中。 |
 
 执行如下命令，查看StarRocks中的所有Iceberg资源。
 
@@ -618,6 +637,7 @@ PROPERTIES (
 
 * 表名无需与Iceberg的实际表名保持一致。
 * 列名需要与Iceberg的实际列名保持一致，列的顺序无需保持一致。
+* 如果RESOURCE类型为**CUSTOM**，且您编写的Custom Catalog中定义了其他配置项，可以将其以键值对形式填入SQL语句的**PROPERTIES**中。StarRocks在执行Iceberg外表查询时能够识别并加载这些配置项。
 * 您可以按照业务需求选择Iceberg表中的全部或部分列。支持的数据类型以及与StarRocks对应关系，请参见下表。
 
 | Apache Iceberg中列的数据类型 | StarRocks中列的数据类型 |
