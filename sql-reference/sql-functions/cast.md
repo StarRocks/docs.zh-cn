@@ -2,7 +2,7 @@
 
 ## 功能
 
-将  input 转成指定的(type)的值, 如 `cast (input as BIGINT)` 将当前列 input 转换为 BIGINT 类型的值
+将 input 转成指定的(type)的值, 如 `cast (input as BIGINT)` 将当前列 input 转换为 BIGINT 类型的值
 
 ## 语法
 
