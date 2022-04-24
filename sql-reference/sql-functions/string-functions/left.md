@@ -7,7 +7,7 @@
 ## 语法
 
 ```Haskell
-left(str,len)
+left(str, len)
 ```
 
 ## 参数说明
