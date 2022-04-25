@@ -317,7 +317,7 @@ tEnv.executeSql(
     'sink.properties.row_delimiter' = '\\x02'  
     ```
 
-5. 如何开启MySQL binlog。 
+5. 如何开启MySQL binlog。
   修改/etc/my.cnf
   
     ```bash
