@@ -169,7 +169,7 @@ where property in ('odd','even');
 语法：
 
 ~~~SQL
-COUNT([DISTINCT | ALL] expression) [OVER (analytic_clause)]
+COUNT(expression) [OVER (analytic_clause)]
 ~~~
 
 举例：
