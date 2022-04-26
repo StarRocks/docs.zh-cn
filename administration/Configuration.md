@@ -211,7 +211,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |---|---|---|
 |meta_dir|StarRocksFe.STARROCKS_HOME_DIR/meta|元数据保留目录|
 |heartbeat_mgr_threads_num|8|HeartbeatMgr 中发送心跳任务的线程数|
-|heartbeat_mgr_blocking_queue_size|1024|HeartbeatMgr 中发送心跳任务的线程池的队列长度。
+|heartbeat_mgr_blocking_queue_size|1024|HeartbeatMgr 中发送心跳任务的线程池的队列长度|
 |metadata_failure_recovery|FALSE|强制重置 FE 的元数据，慎用|
 |edit_log_port|9010|FE Group(Master, Follower, Observer)之间通信用的端口|
 |edit_log_type|BDB|Edit log 的类型，只能为 BDB|
@@ -260,7 +260,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |default_storage_medium|HDD|默认的存储介质，值为 HDD/SSD。在创建表/分区时，如果没有指定存储介质，那么会使用该值|
 |schedule_slot_num_per_path|2|一个 BE 存储目录能够同时执行 tablet 相关任务的数目|
 |tablet_balancer_strategy|disk_and_tablet|Tablet 均衡策略，值为 disk_and_tablet 或 be_load_score|
-|tablet_stat_update_interval_second 300 FE 向每个 BE 请求收集 tablet 信息的时间间隔，默认 5min|
+|tablet_stat_update_interval_second |300 |FE 向每个 BE 请求收集 tablet 信息的时间间隔，默认 5min|
 
 * **其他**
 
