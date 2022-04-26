@@ -2,7 +2,7 @@
 
 ## 功能
 
-将参数 `x` 取反作为结果输出
+对参数 `x` 取其负数作为结果输出。
 
 ## 语法
 
@@ -12,11 +12,11 @@ NEGATIVE(x);
 
 ## 参数说明
 
-`x`: 支持的数据类型为 BIGINT、DOUBLE、DECIMALV2、DECIMAL32、DECIMAL64、DECIMAL128
+`x`: 支持的数据类型为 BIGINT、DOUBLE、DECIMALV2、DECIMAL32、DECIMAL64、DECIMAL128。
 
 ## 返回值说明
 
-返回值的数据类型为与参数 `x` 类型相同
+返回值的数据类型为与参数 `x` 类型相同。
 
 ## 示例
 
