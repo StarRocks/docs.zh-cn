@@ -2,7 +2,7 @@
 
 ## 功能
 
-将参数 `expr2` 从 `expr1` 中解析出来作为结果返回  
+将参数 `expr2` 从 `expr1` 中解析出来作为结果返回。
 
 ## 语法
 
@@ -14,11 +14,11 @@ parse_url(expr1,expr2);
 
 `expr1`: 支持的数据类型为 VARCHAR
 
-`expr2`: 支持的数据类型为 VARCHAR，可为 HOST、PATH
+`expr2`: 支持的数据类型为 VARCHAR，可为 PROTOCOL、HOST、 PATH、 REF、 AUTHORITY、 FILE、 USERINFO、 QUERY(不支持返回 QUERY 里面的特定参数)。
 
 ## 返回值说明
 
-返回值的数据类型为 VARCHAR
+返回值的数据类型为 VARCHAR。
 
 ## 示例
 
