@@ -18,11 +18,7 @@ get_json_int(json_str, json_path)
 
 ## 返回值说明
 
-<<<<<<< HEAD
 返回值的数据类型 INT。
-=======
-返回值的数据类型 INT
->>>>>>> 9f90debddc71ac86b0fc8bfe98745972db3ff679
 
 ## 示例
 
