@@ -637,7 +637,19 @@ PROPERTIES (
 
 * 表名无需与Iceberg的实际表名保持一致。
 * 列名需要与Iceberg的实际列名保持一致，列的顺序无需保持一致。
-* 如果RESOURCE类型为**CUSTOM**，且您编写的Custom Catalog中定义了其他配置项，可以将其以键值对形式填入SQL语句的**PROPERTIES**中。StarRocks在执行Iceberg外表查询时能够识别并加载这些配置项。
+* 如果RESOURCE类型为**CUSTOM**，且您编写的Custom Catalog中定义了其他配置项，可以将其以键值对形式填入SQL语句的**PROPERTIES**中。StarRocks在执行Iceberg外表查询时能够识别并加载这些配置项。假设Custom Catalog定义了一个配置项`custom-catalog.properties`，则建表命令为
+~~~sql
+CREATE EXTERNAL TABLE `iceberg_tbl` ( 
+    `id` bigint NULL, 
+    `data` varchar(200) NULL 
+) ENGINE=ICEBERG 
+PROPERTIES ( 
+    "resource" = "iceberg0", 
+    "database" = "iceberg", 
+    "table" = "iceberg_table",
+    "custom-catalog.properties" = "my_property"
+); 
+~~~
 * 您可以按照业务需求选择Iceberg表中的全部或部分列。支持的数据类型以及与StarRocks对应关系，请参见下表。
 
 | Apache Iceberg中列的数据类型 | StarRocks中列的数据类型 |
