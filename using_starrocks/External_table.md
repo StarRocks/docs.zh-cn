@@ -540,14 +540,14 @@ StarRocks支持通过外表的方式查询Apache Iceberg数据湖中的数据，
 * Iceberg外表是只读的，只能用于查询操作。
 * 支持Iceberg的表格式为V1（Copy on write表），暂不支持为 V2（Merge on read表）。V1和V2之间的更多区别，请参见[Apache Iceberg官网](https://iceberg.apache.org/#spec/#format-versioning)。
 * 支持Iceberg文件的压缩格式为GZIP（默认值），ZSTD，LZ4和SNAPPY。
-* 仅支持Iceberg的Catalog类型为Hive Catalog，数据存储格式为Parquet和ORC。
+* 仅支持Iceberg的Catalog类型为Hive，数据存储格式为Parquet和ORC。
 * StarRocks暂不⽀持同步Iceberg中的[schema evolution](https://iceberg.apache.org/#evolution#schema-evolution)，如果Iceberg表schema evolution发生变更，您需要在StarRocks中删除对应Iceberg外表并重新建立。
 
 ### 操作步骤
 
 #### 步骤一：创建和管理Iceberg资源
 
-您需要提前在StarRocks中创建Iceberg资源，用于管理在StarRocks中创建的Iceberg数据库和外表。
+您需要提前在 StarRocks 中创建 Iceberg 资源，该资源管理 Iceberg 数据源的相关连接信息。创建资源后，即可使用该资源创建外部表。
 
 执行如下命令，创建一个名为`iceberg0`的Iceberg资源。
 
@@ -580,9 +580,9 @@ DROP RESOURCE "iceberg0";
 
 > 删除Iceberg资源会导致其包含的所有Iceberg外表不可用，但Apache Iceberg中的数据并不会丢失。如果您仍需要通过StarRocks查询Iceberg的数据，请重新创建Iceberg资源，Iceberg数据库和外表。
 
-#### 步骤二：创建Iceberg数据库
+#### 步骤二：创建数据库
 
-执行如下命令，在StarRocks中创建并进入名为`iceberg_test`的Iceberg数据库。
+执行如下命令，在StarRocks中创建并进入名为`iceberg_test`的数据库。
 
 ~~~sql
 CREATE DATABASE iceberg_test; 
@@ -593,7 +593,7 @@ USE iceberg_test;
 
 #### 步骤三：创建Iceberg外表
 
-执行如下命令，在Iceberg数据库`iceberg_test`中，创建一张名为`iceberg_tbl`的Iceberg外表。
+执行如下命令，在数据库`iceberg_test`中，创建一张名为`iceberg_tbl`的Iceberg外表。
 
 ~~~sql
 CREATE EXTERNAL TABLE `iceberg_tbl` ( 
@@ -638,7 +638,7 @@ PROPERTIES (
 
 > 如果Apache Iceberg部分列的数据类型为TIMESTAMPTZ、STRUCT、LIST、MAP，则StarRocks暂不支持通过Iceberg关联外表的方式访问此数据类型。
 
-#### 步骤四：查询Iceberg外表
+#### 步骤四：查询Iceberg数据
 
 创建Iceberg外表后，无需导入数据，执行如下命令，即可查询Iceberg的数据。
 
