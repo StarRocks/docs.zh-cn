@@ -119,18 +119,17 @@ SHOW EXPORT WHERE queryid = "edee47f0-abe1-11ec-b9d1-00163e1e238f";
 
 结果举例如下：
 
-~~~sql
-JobId: 23004
-QueryId: edee47f0-abe1-11ec-b9d1-00163e1e238f
-State: FINISHED
-Progress: 100%
-TaskInfo: {"partitions":["p1","p2"],"column separator":",","columns":["lo_orderkey"],"tablet num":96,"broker":"hdfs_broker","coord num":6,"db":"default_cluster:ssb","tbl":"lineorder","row delimiter":"\n","mem limit":2147483648}
-Path: hdfs://cs01:9002/shemplle/
-CreateTime: 2022-03-25 10:18:58
-StartTime: 2022-03-25 10:19:00
-FinishTime: 2022-03-25 10:19:09
-Timeout: 3600
-ErrorMsg: NULL
+~~~plain text
+     JobId: 14008
+     State: FINISHED
+  Progress: 100%
+  TaskInfo: {"partitions":["*"],"mem limit":2147483648,"column separator":",","line delimiter":"\n","tablet num":1,"broker":"hdfs","coord num":1,"db":"default_cluster:db1","tbl":"tbl3",columns:["col1", "col3"]}
+      Path: oss://bj-test/export/
+CreateTime: 2019-06-25 17:08:24
+ StartTime: 2019-06-25 17:08:28
+FinishTime: 2019-06-25 17:08:34
+   Timeout: 3600
+  ErrorMsg: N/A
 ~~~
 
 * JobId：作业的Job ID
