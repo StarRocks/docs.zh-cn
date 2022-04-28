@@ -2,7 +2,12 @@
 
 假如给定一个数组 A， 其取值范围为 [0, n)(注: 不包括n)， 对该数组去重， 可采用 (n+7)/8 的字节长度的 bitmap， 初始化为全 0；逐个处理数组 A 的元素， 以 A 中元素取值作为 bitmap 的下标， 将该下标的 bit 置 1； 最后统计 bitmap 中 1 的个数即为数组 A 的 count distinct 结果。
 
-与传统的[使用 count distinct](# 传统Count distinct计算)方式相比节约了大量的计算资源。
+<br>
+
+
+
+
+与传统的使用 [count distinct](#传统Count_distinct计算) 方式相比节约了大量的计算资源。
 
 # 使用 Bitmap 去重的优势
 
@@ -113,7 +118,7 @@ mysql> select page_id, count(distinct visit_users) from page_uv group by page_id
 
 通过构建全局字典，将其他类型的数据转换成为整型数据，就可以利用 Bitmap 对非整型数据列进行精确去重分析了。
 
-# 传统Count distinct计算
+# 传统Count_distinct计算
 
 StarRocks 是基于 MPP 架构实现的，在使用 count distinct 做精准去重时，可以保留明细数据，灵活性较高。但是，由于在查询执行的过程中需要进行多次数据 shuffle（不同节点间传输数据，计算去重），会导致性能随着数据量增大而直线下降。
 
