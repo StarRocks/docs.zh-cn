@@ -4,7 +4,7 @@
 
 数组，作为数据库的一种扩展类型，在 PG、ClickHouse、Snowflake 等系统中都有相关特性支持，可以广泛的应用于 A/B Test 对比、用户标签分析、人群画像等场景。StarRocks 当前支持了 多维数组嵌套、数组切片、比较、过滤等特性。
 
-下面简要介绍一些是使用方式，更详细的函数语法请查看 [数组函数](../sql-reference/sql-functions/array-functions/array_agg.md)。
+下面简要介绍一些是使用方式，更详细的函数语法请查看 [数组函数](https://docs.starrocks.com/zh-cn/main/sql-reference/sql-functions/array-functions/array_agg)。
 
 <br/>
 
