@@ -37,7 +37,7 @@
   + [CBO优化器](/using_starrocks/Cost_based_optimizer.md)
   + [物化视图](/using_starrocks/Materialized_view.md)
   + [外部表](/using_starrocks/External_table.md)
-  + [Colocate Join](/using_starrocks/Colocation_join.md)
+  + [Colocate Join](/using_starrocks/Colocate_join.md)
   + [Lateral Join](/using_starrocks/Lateral_join.md)
   + [窗口函数](/using_starrocks/Window_function.md)
   + [JAVA UDF](/using_starrocks/JAVA_UDF.md)
