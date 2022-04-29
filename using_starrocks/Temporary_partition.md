@@ -74,13 +74,13 @@ PROPERTIES (
 
 示例1：待替换的分区 p1, p2, p3 的范围 (=> 并集)：
     
-```sql
+```plain text
 [10, 20), [20, 30), [40, 50) => [10, 30), [40, 50)
 ```
     
 替换分区 tp1, tp2 的范围(=> 并集)：
     
-```sql
+```plain text
 [10, 30), [40, 45), [45, 50) => [10, 30), [40, 50)
 ```
     
@@ -88,13 +88,13 @@ PROPERTIES (
     
 示例2：待替换的分区 p1 的范围 (=> 并集)：
     
-```sql
+```plain text
 [10, 50) => [10, 50)
 ```
     
 替换分区 tp1, tp2 的范围(=> 并集)：
     
-```sql
+```plain text
 [10, 30), [40, 50) => [10, 30), [40, 50)
 ```
     
@@ -102,13 +102,13 @@ PROPERTIES (
     
 示例3：待替换的分区 p1, p2 的枚举值(=> 并集)：
     
-```sql
+```plain text
 (1, 2, 3), (4, 5, 6) => (1, 2, 3, 4, 5, 6)
 ```
     
 替换分区 tp1, tp2, tp3 的枚举值(=> 并集)：
     
-```sql
+```plain text
 (1, 2, 3), (4), (5, 6) => (1, 2, 3, 4, 5, 6)
 ```
     
@@ -116,13 +116,13 @@ PROPERTIES (
     
 示例4：待替换的分区 p1, p2，p3 的枚举值(=> 并集)：
     
-```sql
+```plain text
 (("1","beijing"), ("1", "shanghai")), (("2","beijing"), ("2", "shanghai")), (("3","beijing"), ("3", "shanghai")) => (("1","beijing"), ("1", "shanghai"), ("2","beijing"), ("2", "shanghai"), ("3","beijing"), ("3", "shanghai"))
 ```
     
 替换分区 tp1, tp2 的枚举值(=> 并集)：
     
-```sql
+```plain text
 (("1","beijing"), ("1", "shanghai")), (("2","beijing"), ("2", "shanghai"), ("3","beijing"), ("3", "shanghai")) => (("1","beijing"), ("1", "shanghai"), ("2","beijing"), ("2", "shanghai"), ("3","beijing"), ("3", "shanghai"))
 ```
     
@@ -186,7 +186,7 @@ LOAD LABEL example_db.label1
     DATA INFILE("hdfs://hdfs_host:hdfs_port/user/palo/data/input/file")
     INTO TABLE `my_table`
     TEMPORARY PARTITION (tp1, tp2, ...)
-...
+    ...
 )
 WITH BROKER hdfs ("username"="hdfs_user", "password"="hdfs_password");
 ```
