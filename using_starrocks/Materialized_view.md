@@ -47,47 +47,11 @@
 
 通过下面命令就可以创建物化视图。创建物化视图是一个异步的操作，也就是说用户成功提交创建任务后，StarRocks 会在后台对存量的数据进行计算，直到创建成功。
 
+**语法**
 ~~~SQL
 CREATE MATERIALIZED VIEW MATERIALIZED_VIEW_NAME AS 
 (sql_statement);
 ~~~
-
-**物化视图函数支持**
-
-当前的物化视图只支持对单个表的聚合。目前支持以下聚合函数：
-
-* COUNT
-* MAX
-* MIN
-* SUM
-* PERCENTILE_APPROX
-* HLL_UNION
-
-    对明细数据进行 HLL 聚合并且在查询时，使用 HLL 函数分析数据。主要适用于快速进行非精确去重计算。对明细数据使用HLL\_UNION聚合，需要先调用hll\_hash函数，对原数据进行转换。
-
-    ~~~SQL
-    create materialized view dt_uv as 
-        select dt, page_id, HLL_UNION(hll_hash(user_id)) 
-        from user_view
-        group by dt, page_id;
-    select ndv(user_id) from user_view; 查询可命中该物化视图
-    ~~~
-
-    目前不支持对 DECIMAL/BITMAP/HLL/PERCENTILE 类型的列使用HLL\_UNION聚合算子。
-
-* BITMAP_UNION
-
-    对明细数据进行 BITMAP 聚合并且在查询时，使用 BITMAP 函数分析数据，主要适用于快速计算 count(distinct) 的精确去重。对明细数据使用 BITMAP\_UNION 聚合，需要先调用 to\_bitmap 函数，对原数据进行转换。
-
-    ~~~SQL
-    create materialized view dt_uv  as
-        select dt, page_id, bitmap_union(to_bitmap(user_id))
-        from user_view
-        group by dt, page_id;
-    select count(distinct user_id) from user_view; 查询可命中该物化视图
-    ~~~
-
-    目前仅支持 TINYINT/SMALLINT/INT/BITINT 类型，且存储内容需为正整数（包括0）。
 
 **示例**
 
@@ -129,7 +93,45 @@ FROM sales_records
 GROUP BY store_id;
 ~~~
 
-* **限制：**
+**物化视图函数支持**
+
+当前的物化视图只支持对单个表的聚合。目前支持以下聚合函数：
+
+* COUNT
+* MAX
+* MIN
+* SUM
+* PERCENTILE_APPROX
+* HLL_UNION
+
+    对明细数据进行 HLL 聚合并且在查询时，使用 HLL 函数分析数据。主要适用于快速进行非精确去重计算。对明细数据使用HLL\_UNION聚合，需要先调用hll\_hash函数，对原数据进行转换。
+
+    ~~~SQL
+    create materialized view dt_uv as 
+        select dt, page_id, HLL_UNION(hll_hash(user_id)) 
+        from user_view
+        group by dt, page_id;
+    select ndv(user_id) from user_view; 查询可命中该物化视图
+    ~~~
+
+    目前不支持对 DECIMAL/BITMAP/HLL/PERCENTILE 类型的列使用HLL\_UNION聚合算子。
+
+* BITMAP_UNION
+
+    对明细数据进行 BITMAP 聚合并且在查询时，使用 BITMAP 函数分析数据，主要适用于快速计算 count(distinct) 的精确去重。对明细数据使用 BITMAP\_UNION 聚合，需要先调用 to\_bitmap 函数，对原数据进行转换。
+
+    ~~~SQL
+    create materialized view dt_uv  as
+        select dt, page_id, bitmap_union(to_bitmap(user_id))
+        from user_view
+        group by dt, page_id;
+    select count(distinct user_id) from user_view; 查询可命中该物化视图
+    ~~~
+
+    目前仅支持 TINYINT/SMALLINT/INT/BITINT 类型，且存储内容需为正整数（包括0）。
+
+
+**限制**
 
   * Base 表中的分区列，必须存在于创建物化视图的 Group by 聚合列中
     >列如：Base 表按天分区，物化视图则只能按天分区列做 Group by 聚合。不能够建立按月粒度 Group by 的物化视图。
