@@ -2,7 +2,7 @@
 
 ## 功能
 
-计算给定参数 `x` 的分位值。
+计算给定参数 `x` 的百分位数，若 `x` 是列，则先对该列升序排序，然后取精确的第 `y` 位百分数。
 
 ## 语法
 
@@ -22,9 +22,9 @@ PERCENTILE_APPROX_RAW(x, y);
 
 ## 示例
 
-```sql
-建表：
+建表
 
+```sql
 CREATE TABLE `aggregate_tbl` (
   `site_id` largeint(40) NOT NULL COMMENT "id of site",
   `date` date NOT NULL COMMENT "time of event",
@@ -41,13 +41,20 @@ PROPERTIES (
 "storage_format" = "DEFAULT",
 "enable_persistent_index" = "false"
 );
+```
 
-插入数据：
+插入数据
 
+```sql
 insert into aggregate_tbl values (5, '2020-02-23', 'city_code', 555, percentile_hash(1));
 insert into aggregate_tbl values (5, '2020-02-23', 'city_code', 555, percentile_hash(2));
+insert into aggregate_tbl values (5, '2020-02-23', 'city_code', 555, percentile_hash(3));
+insert into aggregate_tbl values (5, '2020-02-23', 'city_code', 555, percentile_hash(4));
+```
 
-计算：
+计算
+
+```Plain Text
 mysql> select percentile_approx_raw(precent, 0.5) from aggregate_tbl;
 +-------------------------------------+
 | percentile_approx_raw(precent, 0.5) |
@@ -55,7 +62,6 @@ mysql> select percentile_approx_raw(precent, 0.5) from aggregate_tbl;
 |                                 2.5 |
 +-------------------------------------+
 1 row in set (0.03 sec)
-
 ```
 
 ## 关键词

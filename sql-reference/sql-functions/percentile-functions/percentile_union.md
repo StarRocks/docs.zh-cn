@@ -31,9 +31,11 @@ CREATE TABLE sales_records(
     sale_amt bigint
 ) distributed BY hash(record_id) 
 properties("replication_num" = "1");
+```
 
 对sale_amt建立percentile类型物化视图表
 
+```sql
 create materialized view mv as
 select store_id, percentile_union(percentile_hash(sale_amt)) from sales_records group by store_id;
 ```
@@ -55,13 +57,17 @@ PROPERTIES (
 "in_memory" = "false",
 "storage_format" = "DEFAULT"
 );
+```
 
 查询percentile类型列
 
+```sql
 select percentile_approx_raw(percentile_union(sale_amt_per), 0.99) from sales_records;
+```
 
 导入包含percentile的聚合表
 
+```sql
 curl --location-trusted -u root -H "columns: record_id, seller_id, store_id,tmp, sale_amt_per =percentile_hash(tmp)" -H "column_separator:," -T a http://ip:port/api/test/sales_records/_stream_load
 ```
 
