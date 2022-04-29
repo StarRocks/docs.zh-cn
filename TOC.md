@@ -40,13 +40,15 @@
   + [Colocate Join](/using_starrocks/Colocation_join.md)
   + [Lateral Join](/using_starrocks/Lateral_join.md)
   + [窗口函数](/using_starrocks/Window_function.md)
+  + [JAVA UDF](/using_starrocks/JAVA_UDF.md)
   + [数组](/using_starrocks/Array.md)
-  + [用Bitmap实现精确去重](/using_starrocks/Using_bitmap.md)
-  + [用HLL实现近似去重](/using_starrocks/Using_HLL.md)
+  + [Bitmap 索引](/using_starrocks/Bitmap_index.md)
+  + [Bloomfilter 索引](/using_starrocks/Bloomfilter_index.md)
+  + [基于 Bitmap 实现精确去重](/using_starrocks/Using_bitmap.md)
+  + [基于 HyperLogLog 实现近似去重](/using_starrocks/Using_HLL.md)
   + [时区](/using_starrocks/timezone.md)
   + [文件管理器](/using_starrocks/filemanager.md)
   + [临时分区](/using_starrocks/Temporary_partition.md)
-  + [JAVA UDF](/using_starrocks/JAVA_UDF.md)
 + 参考手册
   + SQL参考
     + 用户账户管理
