@@ -1,10 +1,10 @@
 # Lateral Join
 
-## 背景介绍
+## 功能
 
 「行列转化」是ETL处理过程中常见的操作，Lateral 一个特殊的Join关键字，能够按照每行和内部的子查询或者 table function 关联，通过 Lateral 与 unnest 配合，我们可以实现一行转多行的功能。
 
-## 使用说明
+## 语法
 
 使用 Lateral join 需要打开新版优化器：
 
@@ -31,7 +31,18 @@ FROM tests, UNNEST(scores) AS t ;
 
 这里第二种写法是第一种的简写，可以使用 Unnest 关键字省略 Lateral Join。
 
-## 使用举例
+## 注意事项
+
+* 当前版本 Lateral join 仅用于和 Unnest 函数配合使用，实现行转列的功能，后续会支持其他 table function / UDTF。
+* 当前 Lateral join 还不支持子查询。
+* 多列 unnest 操作需要指定别名。示例如下：
+
+~~~sql
+select v1,t1.unnest as v2,t2.unnest as v3 
+from lateral_test , unnest(v2) t1 ,unnest(v3) t2;
+~~~
+
+## 示例
 
 当前版本 StarRocks 支持 Bitmap、String、Array、Column 之间的转化关系如下：
 ![Lateral Join 中一些类型间的转化](../assets/lateral_join_type_convertion.png)
@@ -184,15 +195,4 @@ select v1,unnest from lateral_test3 , unnest(bitmap_to_array(v2)) ;
 |    1 |      3 |
 |    2 |      3 |
 +------+--------+
-~~~
-
-## 注意事项
-
-* 当前版本 Lateral join 仅用于和 Unnest 函数配合使用，实现行转列的功能，后续会支持其他 table function / UDTF。
-* 当前 Lateral join 还不支持子查询。
-* 多列 unnest 操作需要指定别名。示例如下：
-
-~~~sql
-select v1,t1.unnest as v2,t2.unnest as v3 
-from lateral_test , unnest(v2) t1 ,unnest(v3) t2;
 ~~~
