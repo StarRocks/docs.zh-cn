@@ -117,8 +117,6 @@ from stock_ticker;
 
 ## 示例
 
-<br/>
-
 ### AVG()
 
 **语法**
