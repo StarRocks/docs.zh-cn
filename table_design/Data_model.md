@@ -211,9 +211,7 @@ StarRocks 在 1.19 版本推出了主键模型（Primary Key）。主键模型�
 
 主键模型的主要适用场景有：
 
-* **实时同步MySQL或其他数据库至StarRocks**。虽然原有的Unique模型也可以实现对数据的更新，但Merge-on-Read的策略大大限制了查询性能。主键模型更好地解决了行级别的更新操作，配合Flink-connector-starrocks可以完成MySQL数据库的同步。具体使用方式详见[文档](/loading/Flink-connector-starrocks.md#使用Flink-connector写入实现MySQL数据同步)。
-
-* **实时对接 TP 数据至 StarRocks**。TP 数据库除了插入数据外，一般还会有较多更新/删除数据的操作，在同步数据至 StarRocks 时，就可以采用主键模型的表，通过 Flink-CDC 等工具直接对接 TP 的 binlog 来实时同步增删改的数据，简化数据同步过程，并且相对于采用 MOR 策略的更新模型，查询性能能够提升 3~10 倍。
+* **实时对接 TP 数据至 StarRocks**。TP 数据库除了插入数据外，一般还会有较多更新/删除数据的操作，在同步数据至 StarRocks 时，就可以采用主键模型的表。您可以通过 Flink-CDC 等工具直接对接 TP 的 binlog ，实时同步增删改的数据至主键模型的表，简化数据同步过程，并且相对于采用 MOR 策略的更新模型，查询性能能够提升 3~10 倍。例如[使用Flink-connector-starrocks实时同步MySQL至StarRocks](/loading/Flink-connector-starrocks.md#使用Flink-connector写入实现MySQL数据同步)。
 
 * **利用部分列更新轻松实现多流 JOIN**。在如用户画像等分析场景中，一般会采用大宽表方式来提升多维分析的性能，同时简化分析师的使用模型。而这种场景中的上游数据，往往可能来自于多个不同业务（比如来自购物消费业务、快递业务、银行业务等）或系统（比如计算用户不同标签属性的机器学习系统），主键模型的部分列更新功能就很好地满足这种需求，不同业务直接各自按需更新自己关注的列即可，同时继续享受主键模型的实时同步增删改数据及高效的查询性能。
 
