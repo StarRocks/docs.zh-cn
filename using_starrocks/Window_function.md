@@ -8,7 +8,7 @@
 
 ## 如何使用窗口函数
 
-### 语法：
+### 语法
 
 ~~~SQL
 function(args) OVER(partition_by_clause order_by_clause [window_clause])
@@ -18,11 +18,11 @@ order_by_clause ::= ORDER BY expr [ASC | DESC] [, expr [ASC | DESC] ...]
 
 ### 参数说明
 
-#### PARTITION BY从句
+#### partition_by_clause
 
 Partition By 从句和 Group By 类似。它把输入行按照指定的一列或多列分组，相同值的行会被分到一组。
 
-#### ORDER BY从句
+#### order_by_clause
 
 Order By 从句和外层的 Order By 基本一致。它定义了输入行的排列顺序，如果指定了 Partition By，则Order By 定义了每个 Partition 分组内的顺序。与外层 Order By 的唯一不同点是：OVER 从句中的`Order By n`（n是正整数）相当于不做任何操作，而外层的 Order By n 表示按照第 n 列排序。
 
@@ -36,7 +36,7 @@ SELECT row_number() OVER (ORDER BY date_and_time) AS id,
 FROM events;
 ~~~
 
-#### Window Clause
+#### window_clause
 
 Window 从句用来为窗口函数指定一个运算范围，以当前行为准，前后若干行作为窗口函数运算的对象。Window 从句支持的方法有：AVG(), COUNT(), FIRST_VALUE(), LAST_VALUE() 和 SUM()。对于 MAX() 和 MIN(), Window 从句可以指定开始范围 UNBOUNDED PRECEDING
 
