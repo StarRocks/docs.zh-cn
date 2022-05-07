@@ -21,7 +21,7 @@ CREATE EXTERNAL TABLE mysql_external_table
     k4 VARCHAR(2048),
     k5 DATETIME
 )
-ENGINE = mysql
+ENGINE=mysql
 PROPERTIES
 (
     "host" = "127.0.0.1",
@@ -59,11 +59,11 @@ CREATE EXTERNAL TABLE elastic_search_external_table
     k4 VARCHAR(2048),
     k5 DATETIME
 )
-ENGINE = ELASTICSEARCH
+ENGINE=ELASTICSEARCH
 PARTITION BY RANGE(k1)
 ()
 PROPERTIES (
-    "hosts" = "http://192.168.0.1: 8200, http://192.168.0.2: 8200",
+    "hosts" = "http://192.168.0.1:8200,http://192.168.0.2:8200",
     "user" = "root",
     "password" = "root",
     "index" = "tindex",
@@ -187,7 +187,7 @@ StarRocks 使用 Hive 资源来管理使用到的 Hive 集群相关配置，如 
 CREATE EXTERNAL RESOURCE "hive0"
 PROPERTIES (
   "type" = "hive",
-  "hive.metastore.uris" = "thrift://10.10.44.98: 9083"
+  "hive.metastore.uris" = "thrift://10.10.44.98:9083"
 );
 
 -- 查看 StarRocks 中创建的资源
@@ -214,7 +214,7 @@ USE hive_test;
 -- 语法
 CREATE EXTERNAL TABLE table_name (
   col_name col_type [NULL | NOT NULL] [COMMENT "comment"]
-) ENGINE = HIVE
+) ENGINE=HIVE
 PROPERTIES (
   "key" = "value"
 );
@@ -234,7 +234,7 @@ CREATE EXTERNAL TABLE `profile_wos_p7` (
   `p__update_time` bigint NULL,
   `p__first_visit_time` bigint NULL,
   `p__last_seen_time` bigint NULL
-) ENGINE = HIVE
+) ENGINE=HIVE
 PROPERTIES (
   "resource" = "hive0",
   "database" = "rawdata",
@@ -301,33 +301,33 @@ select count(*) from profile_wos_p7;
 
 #### S3 支持
 
-一. 在$FE_HOME/conf/core-site.xml 中加入如下配置。
+一. 在 $FE_HOME/conf/core-site.xml 中加入如下配置。
 
 ~~~xml
 <configuration>
    <property>
-      <name> fs.s3a.impl </name>
-      <value> org.apache.hadoop.fs.s3a.S3AFileSystem </value>
+      <name>fs.s3a.impl</name>
+      <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>
    </property>
    <property>
-      <name> fs.AbstractFileSystem.s3a.impl </name>
-      <value> org.apache.hadoop.fs.s3a.S3A </value>
+      <name>fs.AbstractFileSystem.s3a.impl</name>
+      <value>org.apache.hadoop.fs.s3a.S3A</value>
    </property>
    <property>
-      <name> fs.s3a.access.key </name>
-      <value> ******</value>
+      <name>fs.s3a.access.key</name>
+      <value>******</value>
    </property>
    <property>
-      <name> fs.s3a.secret.key </name>
-      <value> ******</value>
+      <name>fs.s3a.secret.key</name>
+      <value>******</value>
    </property>
    <property>
-      <name> fs.s3a.endpoint </name>
-      <value> s3.us-west-2.amazonaws.com </value>
+      <name>fs.s3a.endpoint</name>
+      <value>s3.us-west-2.amazonaws.com</value>
    </property>
    <property>
-     <name> fs.s3a.connection.maximum </name>
-     <value> 500 </value>
+     <name>fs.s3a.connection.maximum</name>
+     <value>500</value>
    </property>
 </configuration>
 ~~~
@@ -352,25 +352,25 @@ select count(*) from profile_wos_p7;
 ~~~xml
 <configuration>
    <property>
-      <name> fs.oss.impl </name>
-      <value> org.apache.hadoop.fs.aliyun.oss.AliyunOSSFileSystem </value>
+      <name>fs.oss.impl</name>
+      <value>org.apache.hadoop.fs.aliyun.oss.AliyunOSSFileSystem</value>
    </property>
    <property>
-      <name> fs.AbstractFileSystem.oss.impl </name>
-      <value> com.aliyun.emr.fs.oss.OSS </value>
+      <name>fs.AbstractFileSystem.oss.impl</name>
+      <value>com.aliyun.emr.fs.oss.OSS</value>
    </property>
    <property>
-        <name> fs.oss.accessKeyId </name>
-        <value> xxx </value>
+        <name>fs.oss.accessKeyId</name>
+        <value>xxx</value>
     </property>
     <property>
-        <name> fs.oss.accessKeySecret </name>
-        <value> xxx </value>
+        <name>fs.oss.accessKeySecret</name>
+        <value>xxx</value>
     </property>
     <property>
-        <name> fs.oss.endpoint </name>
+        <name>fs.oss.endpoint</name>
         <!-- 以下以北京地域为例，其他地域请根据实际情况替换。 -->
-        <value> oss-cn-beijing.aliyuncs.com </value>
+        <value>oss-cn-beijing.aliyuncs.com</value>
     </property>
 </configuration>
 ~~~
@@ -411,32 +411,32 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
 
 ~~~xml
 <property>
-    <name> hive.metastore.event.db.notification.api.auth </name>
-    <value> false </value>
+    <name>hive.metastore.event.db.notification.api.auth</name>
+    <value>false</value>
   </property>
   <property>
-    <name> hive.metastore.notifications.add.thrift.objects </name>
-    <value> true </value>
+    <name>hive.metastore.notifications.add.thrift.objects</name>
+    <value>true</value>
   </property>
   <property>
-    <name> hive.metastore.alter.notifications.basic </name>
-    <value> false </value>
+    <name>hive.metastore.alter.notifications.basic</name>
+    <value>false</value>
   </property>
   <property>
-    <name> hive.metastore.dml.events </name>
-    <value> true </value>
+    <name>hive.metastore.dml.events</name>
+    <value>true</value>
   </property>
   <property>
-    <name> hive.metastore.transactional.event.listeners </name>
-    <value> org.apache.hive.hcatalog.listener.DbNotificationListener </value>
+    <name>hive.metastore.transactional.event.listeners</name>
+    <value>org.apache.hive.hcatalog.listener.DbNotificationListener</value>
   </property>
   <property>
-    <name> hive.metastore.event.db.listener.timetolive </name>
-    <value> 172800s </value>
+    <name>hive.metastore.event.db.listener.timetolive</name>
+    <value>172800s</value>
   </property>
   <property>
-    <name> hive.metastore.server.max.message.size </name>
-    <value> 858993459 </value>
+    <name>hive.metastore.server.max.message.size</name>
+    <value>858993459</value>
   </property>
 ~~~
 
@@ -481,7 +481,7 @@ CREATE TABLE t
     k4 VARCHAR(2048),
     k5 DATETIME
 )
-ENGINE = olap
+ENGINE=olap
 DISTRIBUTED BY HASH(k1) BUCKETS 10;
 
 # 在外表集群上执行
@@ -493,7 +493,7 @@ CREATE EXTERNAL TABLE external_t
     k4 VARCHAR(2048),
     k5 DATETIME
 )
-ENGINE = olap
+ENGINE=olap
 DISTRIBUTED BY HASH(k1) BUCKETS 10
 PROPERTIES
 (
@@ -555,8 +555,8 @@ StarRocks 支持通过外表的方式查询 Apache Iceberg 数据湖中的数据
 CREATE EXTERNAL RESOURCE "iceberg0" 
 PROPERTIES ( 
 "type" = "iceberg", 
-"starrocks.catalog-type" = "HIVE", 
-"iceberg.catalog.hive.metastore.uris" = "thrift://192.168.0.81: 9083" 
+"starrocks.catalog-type"="HIVE", 
+"iceberg.catalog.hive.metastore.uris"="thrift://192.168.0.81:9083" 
 );
 ~~~
 
@@ -599,7 +599,7 @@ USE iceberg_test;
 CREATE EXTERNAL TABLE `iceberg_tbl` ( 
     `id` bigint NULL, 
     `data` varchar(200) NULL 
-) ENGINE = ICEBERG 
+) ENGINE=ICEBERG 
 PROPERTIES ( 
     "resource" = "iceberg0", 
     "database" = "iceberg", 
@@ -673,7 +673,7 @@ StarRocks 支持通过外表的方式查询 Apache Hudi 数据湖中的数据，
 CREATE EXTERNAL RESOURCE "hudi0" 
 PROPERTIES ( 
     "type" = "hudi", 
-    "hive.metastore.uris" = "thrift://192.168.7.251: 9083"
+    "hive.metastore.uris" = "thrift://192.168.7.251:9083"
 );
 ~~~
 
@@ -715,7 +715,7 @@ USE hudi_test;
 CREATE EXTERNAL TABLE `hudi_tbl` ( 
     `id` bigint NULL, 
     `data` varchar(200) NULL 
-) ENGINE = HUDI 
+) ENGINE=HUDI 
 PROPERTIES ( 
     "resource" = "hudi0", 
     "database" = "hudi", 
