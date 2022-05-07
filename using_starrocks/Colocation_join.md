@@ -106,7 +106,6 @@ SHOW PROC '/colocation_group/10005.10008';
 
 > 注意：以上命令需要 ADMIN 权限。暂不支持普通用户查看。
 
-
 ### 修改表 Group 属性
 
 可以对一个已经创建的表，修改其 Colocation Group 属性。示例：
@@ -138,7 +137,6 @@ Group 自身有一个 **Stable** 属性，当 Stable 为 true 时，表示当前
 ### 副本修复
 
 副本只能存储在指定的 BE 节点上。所以当某个 BE 不可用时（宕机、Decommission 等），需要寻找一个新的 BE 进行替换。StarRocks 会优先寻找负载最低的 BE 进行替换。替换后，该 Bucket 内的所有在旧 BE 上的数据分片都要做修复。迁移过程中，Group 被标记为 **Unstable**。
-
 
 ### 副本均衡
 
@@ -290,7 +288,6 @@ DESC SELECT * FROM tbl1 INNER JOIN tbl2 ON (tbl1.k2 = tbl2.k2);
 
 HASH JOIN 节点会显示对应原因：`colocate: false, reason: group is not stable`。同时会有一个 EXCHANGE 节点生成。
 
-
 ## 高级操作
 
 ### FE 配置项
@@ -406,4 +403,3 @@ StarRocks 提供了几个和 Colocation Join 有关的 HTTP Restful API，用于
     其中 Body 是以嵌套数组表示的 BucketsSequence 以及每个 Bucket 中分片所在 BE 的 id。
 
     > 注意，使用该命令，可能需要将 FE 的配置 disable_colocate_balance 设为 true。即关闭系统自动的 Colocation 副本修复和均衡。否则可能在修改后，会被系统自动重置。
-    
