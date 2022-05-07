@@ -1,345 +1,612 @@
+# 窗口函数
 
-# 物化视图
+## 功能
 
-## 背景介绍
+窗口函数是一类特殊的内置函数。和聚合函数类似，窗口函数也是对于多个输入行做计算得到一个数据值。不同的是，窗口函数是在一个特定的窗口内对输入数据做处理，而不是按照 group by 来分组计算。每个窗口内的数据可以用 over() 从句进行排序和分组。窗口函数会**对结果集的每一行**计算出一个单独的值，而不是每个 group by 分组计算一个值。这种灵活的方式允许用户在 select 从句中增加额外的列，给用户提供了更多的机会来对结果集进行重新组织和过滤。窗口函数只能出现在 select 列表和最外层的 order by 从句中。在查询过程中，窗口函数会在最后生效，就是说，在执行完 join，where 和 group by 等操作之后再执行。窗口函数在金融和科学计算领域经常被使用到，用来分析趋势、计算离群值以及对大量数据进行分桶分析等。
 
-物化视图的一般定义是：一种包含一个查询结果的数据库对象，它可以是远端数据的一份本地拷贝，也可以是一个表或一个 join 结果的行/列的一个子集，还可以是使用聚合函数的一个汇总。相对于普通的逻辑视图，将数据「物化」后，能够带来查询性能的提升。
-
-> 系统目前还不支持join，更多注意事项请参看 [注意事项](#注意事项)。
-
-在本系统中，物化视图会被更多地用来当做一种预先计算的技术，同RollUp表，预先计算是为了减少查询时现场计算量，从而降低查询延迟。RollUp 表有两种使用方式：对明细表的任意维度组合进行预先聚合；采用新的维度列排序方式，以命中更多的前缀查询条件。当然也可以两种方式一起使用。物化视图的功能是 RollUp 表的超集，原有的 RollUp 功能都可通过物化视图来实现。
-
-<br/>
-
-物化视图的使用场景有：
-
-* 分析需求覆盖明细数据查询以及固定维度聚合查询两方面。
-* 需要做对排序键前缀之外的其他列组合形式做范围条件过滤。
-* 需要对明细表的任意维度做粗粒度聚合分析。
-
-<br/>
-
-## 原理
-
-物化视图的数据组织形式和基表、RollUp表相同。用户可以在新建的基表时添加物化视图，也可以对已有表添加物化视图，这种情况下，基表的数据会自动以**异步**方式填充到物化视图中。基表可以拥有多张物化视图，向基表导入数据时，会**同时**更新基表的所有物化视图。数据导入操作具有**原子性**，因此基表和它的物化视图保持数据一致。
-
-物化视图创建成功后，用户的原有的查询基表的 SQL 语句保持不变，StarRocks 会自动选择一个最优的物化视图，从物化视图中读取数据并计算。用户可以通过 EXPLAIN 命令来检查当前查询是否使用了物化视图。
-
-<br/>
-
-物化视图中的聚合和查询中聚合的匹配关系：
-
-| 物化视图聚合 | 查询中聚合 |
-| :-: | :-: |
-| sum | sum |
-| min | min |
-| max | max |
-| count | count |
-| bitmap_union | bitmap_union, bitmap_union_count, count(distinct) |
-| hll_union | hll_raw_agg, hll_union_agg, ndv, approx_count_distinct |
-
-其中 bitmap 和 hll 的聚合函数在查询匹配到物化视图后，查询的聚合算子会根据物化视图的表结构进行改写。
-
-<br/>
-
-## 使用方式
-
-### 创建物化视图
-
-通过下面命令就可以创建物化视图。创建物化视图是一个异步的操作，也就是说用户成功提交创建任务后，StarRocks 会在后台对存量的数据进行计算，直到创建成功。
+## 语法
 
 ~~~SQL
-CREATE MATERIALIZED VIEW
+function(args) OVER(partition_by_clause order_by_clause [window_clause])
+partition_by_clause ::= PARTITION BY expr [, expr ...]
+order_by_clause ::= ORDER BY expr [ASC | DESC] [, expr [ASC | DESC] ...]
 ~~~
 
-具体的语法可以通过下面命令查看：
+## 参数说明
+
+### partition_by_clause
+
+Partition By 从句和 Group By 类似。它把输入行按照指定的一列或多列分组，相同值的行会被分到一组。
+
+### order_by_clause
+
+Order By 从句和外层的 Order By 基本一致。它定义了输入行的排列顺序，如果指定了 Partition By，则Order By 定义了每个 Partition 分组内的顺序。与外层 Order By 的唯一不同点是：OVER 从句中的`Order By n`（n是正整数）相当于不做任何操作，而外层的 Order By n 表示按照第 n 列排序。
+
+举例:
+
+这个例子展示了在 select 列表中增加一个 id 列，它的值是 1，2，3 等等，顺序按照 events 表中的 date_and_time 列排序。
 
 ~~~SQL
-HELP CREATE MATERIALIZED VIEW
+SELECT row_number() OVER (ORDER BY date_and_time) AS id,
+    c1, c2, c3, c4
+FROM events;
 ~~~
 
-假设用户有一张销售记录明细表，存储了每个交易的交易id、销售员、售卖门店、销售时间、以及金额。建表语句为：
+### window_clause
+
+Window 从句用来为窗口函数指定一个运算范围，以当前行为准，前后若干行作为窗口函数运算的对象。Window 从句支持的方法有：AVG(), COUNT(), FIRST_VALUE(), LAST_VALUE() 和 SUM()。对于 MAX() 和 MIN(), Window 从句可以指定开始范围 UNBOUNDED PRECEDING
+
+语法：
 
 ~~~SQL
-CREATE TABLE sales_records(
-    record_id int,
-    seller_id int,
-    store_id int,
-    sale_date date,
-    sale_amt bigint
-) distributed BY hash(record_id)
-properties("replication_num" = "1");
+ROWS BETWEEN [ { m | UNBOUNDED } PRECEDING | CURRENT ROW] [ AND [CURRENT ROW | { UNBOUNDED | n } FOLLOWING] ]
 ~~~
 
-表 sales_records 的结构为:
+举例：
 
-~~~PlainText
-MySQL [test]> desc sales_records;
-
-+-----------+--------+------+-------+---------+-------+
-| Field     | Type   | Null | Key   | Default | Extra |
-+-----------+--------+------+-------+---------+-------+
-| record_id | INT    | Yes  | true  | NULL    |       |
-| seller_id | INT    | Yes  | true  | NULL    |       |
-| store_id  | INT    | Yes  | true  | NULL    |       |
-| sale_date | DATE   | Yes  | false | NULL    | NONE  |
-| sale_amt  | BIGINT | Yes  | false | NULL    | NONE  |
-+-----------+--------+------+-------+---------+-------+
-~~~
-
-如果用户经常对不同门店的销售量做分析，则可以为 sales_records 表创建一张“以售卖门店为分组，对相同售卖门店的销售额求和”的物化视图。创建语句如下：
-
-~~~sql
-CREATE MATERIALIZED VIEW store_amt AS
-SELECT store_id, SUM(sale_amt)
-FROM sales_records
-GROUP BY store_id;
-~~~
-
-更详细物化视图创建语法请参看SQL参考手册 [CREATE MATERIALIZED VIEW](../sql-reference/sql-statements/data-definition/CREATE%20MATERIALIZED%20VIEW.md) ，或者在 MySQL 客户端使用命令 `help create materialized view` 获得帮助。
-
-<br/>
-
-### 查看物化视图构建状态
-
-由于创建物化视图是一个异步的操作，用户在提交完创建物化视图任务后，需要通过命令检查物化视图是否构建完成，命令如下:
+假设我们有如下的股票数据，股票代码是 JDR，closing price 是每天的收盘价。
 
 ~~~SQL
-SHOW ALTER MATERIALIZED VIEW FROM db_name;
+create table stock_ticker (
+    stock_symbol string,
+    closing_price decimal(8,2),
+    closing_date timestamp);
+
+-- ...load some data...
+
+select *
+from stock_ticker
+order by stock_symbol, closing_date
 ~~~
 
-或
+得到原始数据如下：
+
+~~~Plain Text
++--------------+---------------+---------------------+
+| stock_symbol | closing_price | closing_date        |
++--------------+---------------+---------------------+
+| JDR          | 12.86         | 2014-10-02 00:00:00 |
+| JDR          | 12.89         | 2014-10-03 00:00:00 |
+| JDR          | 12.94         | 2014-10-04 00:00:00 |
+| JDR          | 12.55         | 2014-10-05 00:00:00 |
+| JDR          | 14.03         | 2014-10-06 00:00:00 |
+| JDR          | 14.75         | 2014-10-07 00:00:00 |
+| JDR          | 13.98         | 2014-10-08 00:00:00 |
++--------------+---------------+---------------------+
+~~~
+
+这个查询使用窗口函数产生 moving_average 这一列，它的值是3天的股票均价，即前一天、当前以及后一天三天的均价。第一天没有前一天的值，最后一天没有后一天的值，所以这两行只计算了两天的均值。这里 Partition By 没有起到作用，因为所有的数据都是 JDR 的数据，但如果还有其他股票信息，Partition By 会保证窗口函数值作用在本 Partition 之内。
 
 ~~~SQL
-SHOW ALTER TABLE ROLLUP FROM db_name;
+select stock_symbol, closing_date, closing_price,
+    avg(closing_price)
+        over (partition by stock_symbol
+              order by closing_date
+              rows between 1 preceding and 1 following
+        ) as moving_average
+from stock_ticker;
 ~~~
 
-> db_name：替换成真实的 db name，比如"test"。
+得到如下数据：
 
-查询结果为:
-
-~~~PlainText
-+-------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+----------+------+----------+---------+
-| JobId | TableName     | CreateTime          | FinishedTime        | BaseIndexName | RollupIndexName | RollupId | TransactionId | State    | Msg  | Progress | Timeout |
-+-------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+----------+------+----------+---------+
-| 22324 | sales_records | 2020-09-27 01:02:49 | 2020-09-27 01:03:13 | sales_records | store_amt       | 22325    | 672           | FINISHED |      | NULL     | 86400   |
-+-------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+----------+------+----------+---------+
-~~~
-
-如果 State 为 FINISHED，说明物化视图已经创建完成。
-
-查看物化视图的表结果，需用通过基表名进行：
-
-~~~PlainText
-mysql> desc sales_records all;
-
-+---------------+---------------+-----------+--------+------+-------+---------+-------+
-| IndexName     | IndexKeysType | Field     | Type   | Null | Key   | Default | Extra |
-+---------------+---------------+-----------+--------+------+-------+---------+-------+
-| sales_records | DUP_KEYS      | record_id | INT    | Yes  | true  | NULL    |       |
-|               |               | seller_id | INT    | Yes  | true  | NULL    |       |
-|               |               | store_id  | INT    | Yes  | true  | NULL    |       |
-|               |               | sale_date | DATE   | Yes  | false | NULL    | NONE  |
-|               |               | sale_amt  | BIGINT | Yes  | false | NULL    | NONE  |
-|               |               |           |        |      |       |         |       |
-| store_amt     | AGG_KEYS      | store_id  | INT    | Yes  | true  | NULL    |       |
-|               |               | sale_amt  | BIGINT | Yes  | false | NULL    | SUM   |
-+---------------+---------------+-----------+--------+------+-------+---------+-------+
+~~~Plain Text
++--------------+---------------------+---------------+----------------+
+| stock_symbol | closing_date        | closing_price | moving_average |
++--------------+---------------------+---------------+----------------+
+| JDR          | 2014-10-02 00:00:00 | 12.86         | 12.87          |
+| JDR          | 2014-10-03 00:00:00 | 12.89         | 12.89          |
+| JDR          | 2014-10-04 00:00:00 | 12.94         | 12.79          |
+| JDR          | 2014-10-05 00:00:00 | 12.55         | 13.17          |
+| JDR          | 2014-10-06 00:00:00 | 14.03         | 13.77          |
+| JDR          | 2014-10-07 00:00:00 | 14.75         | 14.25          |
+| JDR          | 2014-10-08 00:00:00 | 13.98         | 14.36          |
++--------------+---------------------+---------------+----------------+
 ~~~
 
 <br/>
 
-### 查询命中物化视图
+### 函数（function）
 
-当物化视图创建完成后，用户再查询不同门店的销售量时，就会直接从刚才创建的物化视图 store_amt 中读取聚合好的数据，达到提升查询效率的效果。
+目前支持的函数包括：
 
-用户的查询依旧指定查询 sales_records 表，比如：
+* MIN(), MAX(), COUNT(), SUM(), AVG()
+* FIRST_VALUE(), LAST_VALUE(), LEAD(), LAG()
+* ROW_NUMBER(), RANK(), DENSE_RANK()
 
-~~~SQL
-SELECT store_id, SUM(sale_amt) FROM sales_records GROUP BY store_id;
-~~~
+## 示例
 
-使用 EXPLAIN 命令查询物化视图是否命中：
+### AVG()
 
-~~~SQL
-EXPLAIN SELECT store_id, SUM(sale_amt) FROM sales_records GROUP BY store_id;
-~~~
-
-结果为:
-
-~~~PlainText
-
-| Explain String                                                              |
-+-----------------------------------------------------------------------------+
-| PLAN FRAGMENT 0                                                             |
-|  OUTPUT EXPRS:<slot 2> `store_id` | <slot 3> sum(`sale_amt`)                |
-|   PARTITION: UNPARTITIONED                                                  |
-|                                                                             |
-|   RESULT SINK                                                               |
-|                                                                             |
-|   4:EXCHANGE                                                                |
-|      use vectorized: true                                                   |
-|                                                                             |
-| PLAN FRAGMENT 1                                                             |
-|  OUTPUT EXPRS:                                                              |
-|   PARTITION: HASH_PARTITIONED: <slot 2> `store_id`                          |
-|                                                                             |
-|   STREAM DATA SINK                                                          |
-|     EXCHANGE ID: 04                                                         |
-|     UNPARTITIONED                                                           |
-|                                                                             |
-|   3:AGGREGATE (merge finalize)                                              |
-|   |  output: sum(<slot 3> sum(`sale_amt`))                                  |
-|   |  group by: <slot 2> `store_id`                                          |
-|   |  use vectorized: true                                                   |
-|   |                                                                         |
-|   2:EXCHANGE                                                                |
-|      use vectorized: true                                                   |
-|                                                                             |
-| PLAN FRAGMENT 2                                                             |
-|  OUTPUT EXPRS:                                                              |
-|   PARTITION: RANDOM                                                         |
-|                                                                             |
-|   STREAM DATA SINK                                                          |
-|     EXCHANGE ID: 02                                                         |
-|     HASH_PARTITIONED: <slot 2> `store_id`                                   |
-|                                                                             |
-|   1:AGGREGATE (update serialize)                                            |
-|   |  STREAMING                                                              |
-|   |  output: sum(`sale_amt`)                                                |
-|   |  group by: `store_id`                                                   |
-|   |  use vectorized: true                                                   |
-|   |                                                                         |
-|   0:OlapScanNode                                                            |
-|      TABLE: sales_records                                                   |
-|      PREAGGREGATION: ON                                                     |
-|      partitions=1/1                                                         |
-|      rollup: store_amt                                                      |
-|      tabletRatio=10/10                                                      |
-|      tabletList=22326,22328,22330,22332,22334,22336,22338,22340,22342,22344 |
-|      cardinality=0                                                          |
-|      avgRowSize=0.0                                                         |
-|      numNodes=1                                                             |
-|      use vectorized: true                                                   |
-+-----------------------------------------------------------------------------+
-~~~
-
-查询计划树中的 OlapScanNode 显示 `PREAGGREGATION: ON` 和 `rollup: store_amt`，说明使用物化视图 store_amt 的预先聚合计算结果。也就是说查询已经命中到物化视图 store_amt，并直接从物化视图中读取数据了。
-
-<br/>
-
-### 删除物化视图
-
-下列两种情形需要删除物化视图:
-
-* 用户误操作创建物化视图，需要撤销该操作。
-* 用户创建了大量的物化视图，导致数据导入速度过慢不满足业务需求，并且部分物化视图的相互重复，查询频率极低，可容忍较高的查询延迟，此时需要删除部分物化视图。
-
-删除已经创建完成的物化视图:
+**语法**
 
 ~~~SQL
-DROP MATERIALIZED VIEW IF EXISTS store_amt on sales_records;
+AVG( expression ) [OVER (*analytic_clause*)]
 ~~~
 
-删除处于创建中的物化视图，需要先取消异步任务，然后再删除物化视图，以表 `db0.table0` 上的物化视图 mv 为例:
+**示例**
 
-首先获得JobId，执行命令:
+计算当前行和它**前后各一行**数据的x平均值
 
 ~~~SQL
-show alter table rollup from db0;
+select x, property,
+    avg(x)
+        over (
+            partition by property
+            order by x
+            rows between 1 preceding and 1 following
+        ) as 'moving average'
+from int_t
+where property in ('odd','even');
 ~~~
 
-结果为:
-
-~~~PlainText
-+-------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+-------------+------+----------+---------+
-| JobId | TableName     | CreateTime          | FinishedTime        | BaseIndexName | RollupIndexName | RollupId | TransactionId | State       | Msg  | Progress | Timeout |
-| 22478 | table0        | 2020-09-27 01:46:42 | NULL                | table0        | mv              | 22479    | 676           | WAITING_TXN |      | NULL     | 86400   |
-+-------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+-------------+------+----------+---------+
-~~~
-
-其中JobId为22478，取消该Job，执行命令:
-
-~~~SQL
-cancel alter table rollup from db0.table0 (22478);
+~~~Plain Text
++----+----------+----------------+
+| x  | property | moving average |
++----+----------+----------------+
+| 2  | even     | 3              |
+| 4  | even     | 4              |
+| 6  | even     | 6              |
+| 8  | even     | 8              |
+| 10 | even     | 9              |
+| 1  | odd      | 2              |
+| 3  | odd      | 3              |
+| 5  | odd      | 5              |
+| 7  | odd      | 7              |
+| 9  | odd      | 8              |
++----+----------+----------------+
 ~~~
 
 <br/>
 
-## 最佳实践
+### COUNT()
 
-### 精确去重
-
-用户可以在明细表上使用表达式`bitmap_union(to_bitmap(col))`创建物化视图，实现原来聚合表才支持的基于 bitmap 的预先计算的精确去重功能。
-
-比如，用户有一张计算广告业务相关的明细表，每条记录包含的信息有点击日期、点击的是什么广告、通过什么渠道点击、以及点击的用户是谁：
+**语法**
 
 ~~~SQL
-CREATE TABLE advertiser_view_record(
-    TIME date,
-    advertiser varchar(10),
-    channel varchar(10),
-    user_id int
-) distributed BY hash(TIME)
-properties("replication_num" = "1");
+COUNT( expression ) [OVER (analytic_clause)]
 ~~~
 
-用户查询广告 UV，使用下面查询语句：
+**示例**
+
+计算从**当前行到第一行**x出现的次数。
 
 ~~~SQL
-SELECT advertiser, channel, count(distinct user_id)
-FROM advertiser_view_record
-GROUP BY advertiser, channel;
+select x, property,
+    count(x)
+        over (
+            partition by property
+            order by x
+            rows between unbounded preceding and current row
+        ) as 'cumulative total'
+from int_t where property in ('odd','even');
 ~~~
 
-这种情况下，可以创建物化视图，使用 bitmap_union 预先聚合:
-
-~~~SQL
-CREATE MATERIALIZED VIEW advertiser_uv AS
-SELECT advertiser, channel, bitmap_union(to_bitmap(user_id))
-FROM advertiser_view_record
-GROUP BY advertiser, channel;
-~~~
-
-物化视图创建完毕后，查询语句中的`count(distinct user_id)`，会自动改写为`bitmap_union_count (to_bitmap(user_id))`以命中物化视图。
-
-<br/>
-
-### 近似去重
-
-用户可以在明细表上使用表达式 `hll_union(hll_hash(col))` 创建物化视图，实现近似去重的预计算。
-
-在同上一样的场景中，用户创建如下物化视图:
-
-~~~SQL
-CREATE MATERIALIZED VIEW advertiser_uv AS
-SELECT advertiser, channel, hll_union(hll_hash(user_id))
-FROM advertiser_view_record
-GROUP BY advertiser, channel;
+~~~Plain Text
++----+----------+------------------+
+| x  | property | cumulative count |
++----+----------+------------------+
+| 2  | even     | 1                |
+| 4  | even     | 2                |
+| 6  | even     | 3                |
+| 8  | even     | 4                |
+| 10 | even     | 5                |
+| 1  | odd      | 1                |
+| 3  | odd      | 2                |
+| 5  | odd      | 3                |
+| 7  | odd      | 4                |
+| 9  | odd      | 5                |
++----+----------+------------------+
 ~~~
 
 <br/>
 
-### 匹配更丰富的前缀索引
+### DENSE_RANK()
 
-用户的基表 tableA 有 (k1, k2, k3) 三列。其中 k1, k2 为排序键。这时候如果用户查询条件中包含 `where k1=1 and k2=2`，就能通过 shortkey 索引加速查询。但是用户查询语句中使用条件 `k3=3`，则无法通过 shortkey 索引加速。此时，可创建以 k3 作为第一列的物化视图:
+DENSE_RANK() 函数用来表示排名，与 RANK() 不同的是，DENSE_RANK() **不会出现空缺**数字。比如，如果出现了两个并列的 1，DENSE_RANK() 的第三个数仍然是 2，而 RANK() 的第三个数是 3。
+
+**语法**
 
 ~~~SQL
-CREATE MATERIALIZED VIEW mv_1 AS
-SELECT k3, k2, k1
-FROM tableA
-ORDER BY k3;
+DENSE_RANK() OVER(partition_by_clause order_by_clause)
 ~~~
 
-这时候查询就会直接从刚才创建的 mv_1 物化视图中读取数据。物化视图对 k3 是存在前缀索引的，查询效率也会提升。
+**示例**
+下例展示了按照 property 列分组对x列排名：
+
+~~~SQL
+select x, y,
+    dense_rank()
+        over (
+            partition by x
+            order by y
+        ) as rank
+from int_t;
+~~~
+
+~~~Plain Text
++---+---+------+
+| x | y | rank |
++---+---+------+
+| 1 | 1 | 1    |
+| 1 | 2 | 2    |
+| 1 | 2 | 2    |
+| 2 | 1 | 1    |
+| 2 | 2 | 2    |
+| 2 | 3 | 3    |
+| 3 | 1 | 1    |
+| 3 | 1 | 1    |
+| 3 | 2 | 2    |
++---+---+------+
+~~~
 
 <br/>
 
-## 注意事项
+### FIRST_VALUE()
 
-1. 物化视图的聚合函数的参数仅支持单列，比如：`sum(a+b)` 不支持。
-2. 如果删除语句的条件列，在物化视图中不存在，则不能进行删除操作。如果一定要删除数据，则需要先将物化视图删除，然后方可删除数据。
-3. 单表上过多的物化视图会影响导入的效率：导入数据时，物化视图和 base 表数据是同步更新的，如果一张表的物化视图表超过10张，则有可能导致导入速度很慢。这就像单次导入需要同时导入10张表数据是一样的。
-4. 相同列，不同聚合函数，不能同时出现在一张物化视图中，比如：`select sum(a), min(a) from table` 不支持。
-5. 物化视图的创建语句目前不支持 JOIN 和 WHERE ，也不支持 GROUP BY 的 HAVING 子句。
-6. 不能同时创建多个物化视图，只能等待上一个物化视图创建完成，才能创建下一个物化视图。
+FIRST_VALUE() 返回窗口范围内的**第一个**值。
+
+**语法**
+
+~~~SQL
+FIRST_VALUE(expr) OVER(partition_by_clause order_by_clause [window_clause])
+~~~
+
+**示例**
+
+我们有如下数据
+
+~~~SQL
+select name, country, greeting
+from mail_merge;
+~~~
+
+~~~Plain Text
++---------+---------+--------------+
+| name    | country | greeting     |
++---------+---------+--------------+
+| Pete    | USA     | Hello        |
+| John    | USA     | Hi           |
+| Boris   | Germany | Guten tag    |
+| Michael | Germany | Guten morgen |
+| Bjorn   | Sweden  | Hej          |
+| Mats    | Sweden  | Tja          |
++---------+---------+--------------+
+~~~
+
+使用 FIRST_VALUE()，根据 country 分组，返回每个分组中第一个 greeting 的值：
+
+~~~SQL
+select country, name,
+    first_value(greeting)
+        over (
+            partition by country
+            order by name, greeting
+        ) as greeting
+from mail_merge;
+~~~
+
+~~~Plain Text
++---------+---------+-----------+
+| country | name    | greeting  |
++---------+---------+-----------+
+| Germany | Boris   | Guten tag |
+| Germany | Michael | Guten tag |
+| Sweden  | Bjorn   | Hej       |
+| Sweden  | Mats    | Hej       |
+| USA     | John    | Hi        |
+| USA     | Pete    | Hi        |
++---------+---------+-----------+
+~~~
+
+<br/>
+
+### LAG()
+
+LAG() 方法用来计算当前行**向前**数若干行的值。
+
+**语法**
+
+~~~SQL
+LAG (expr, offset, default) OVER (partition_by_clause order_by_clause)
+~~~
+
+**示例**
+
+计算前一天的收盘价
+
+~~~SQL
+select stock_symbol, closing_date, closing_price,
+    lag(closing_price,1, 0) over
+    (
+        partition by stock_symbol
+        order by closing_date
+    ) as "yesterday closing"
+from stock_ticker
+order by closing_date;
+~~~
+
+~~~Plain Text
++--------------+---------------------+---------------+-------------------+
+| stock_symbol | closing_date        | closing_price | yesterday closing |
++--------------+---------------------+---------------+-------------------+
+| JDR          | 2014-09-13 00:00:00 | 12.86         | 0                 |
+| JDR          | 2014-09-14 00:00:00 | 12.89         | 12.86             |
+| JDR          | 2014-09-15 00:00:00 | 12.94         | 12.89             |
+| JDR          | 2014-09-16 00:00:00 | 12.55         | 12.94             |
+| JDR          | 2014-09-17 00:00:00 | 14.03         | 12.55             |
+| JDR          | 2014-09-18 00:00:00 | 14.75         | 14.03             |
+| JDR          | 2014-09-19 00:00:00 | 13.98         | 14.75             |
++--------------+---------------------+---------------+-------------------+
+~~~
+
+<br/>
+
+### LAST_VALUE()
+
+LAST_VALUE() 返回窗口范围内的**最后一个**值。与 FIRST_VALUE() 相反。
+
+语法：
+
+~~~SQL
+LAST_VALUE(expr) OVER(partition_by_clause order_by_clause [window_clause])
+~~~
+
+使用 FIRST_VALUE() 举例中的数据：
+
+~~~SQL
+select country, name,
+    last_value(greeting)
+        over (
+            partition by country
+            order by name, greeting
+        ) as greeting
+from mail_merge;
+~~~
+
+~~~Plain Text
++---------+---------+--------------+
+| country | name    | greeting     |
++---------+---------+--------------+
+| Germany | Boris   | Guten morgen |
+| Germany | Michael | Guten morgen |
+| Sweden  | Bjorn   | Tja          |
+| Sweden  | Mats    | Tja          |
+| USA     | John    | Hello        |
+| USA     | Pete    | Hello        |
++---------+---------+--------------+
+~~~
+
+<br/>
+
+### LEAD()
+
+LEAD() 方法用来计算当前行**向后**数若干行的值。
+
+**语法**
+
+~~~SQL
+LEAD (expr, offset, default]) OVER (partition_by_clause order_by_clause)
+~~~
+
+**示例**
+
+计算第二天的收盘价对比当天收盘价的走势，即第二天收盘价比当天高还是低。
+
+~~~SQL
+select stock_symbol, closing_date, closing_price,
+    case
+        (lead(closing_price,1, 0)
+            over (partition by stock_symbol
+                  order by closing_date)
+         - closing_price) > 0
+    when true then "higher"
+    when false then "flat or lower"
+    end as "trending"
+from stock_ticker
+order by closing_date;
+~~~
+
+~~~Plain Text
++--------------+---------------------+---------------+---------------+
+| stock_symbol | closing_date        | closing_price | trending      |
++--------------+---------------------+---------------+---------------+
+| JDR          | 2014-09-13 00:00:00 | 12.86         | higher        |
+| JDR          | 2014-09-14 00:00:00 | 12.89         | higher        |
+| JDR          | 2014-09-15 00:00:00 | 12.94         | flat or lower |
+| JDR          | 2014-09-16 00:00:00 | 12.55         | higher        |
+| JDR          | 2014-09-17 00:00:00 | 14.03         | higher        |
+| JDR          | 2014-09-18 00:00:00 | 14.75         | flat or lower |
+| JDR          | 2014-09-19 00:00:00 | 13.98         | flat or lower |
++--------------+---------------------+---------------+---------------+
+~~~
+
+<br/>
+
+### MAX()
+
+**语法**
+
+~~~SQL
+MAX(expression) [OVER (analytic_clause)]
+~~~
+
+**示例**
+
+计算**从第一行到当前行之后一行**的最大值
+
+~~~SQL
+select x, property,
+    max(x)
+        over (
+            order by property, x
+            rows between unbounded preceding and 1 following
+        ) as 'local maximum'
+from int_t
+where property in ('prime','square');
+~~~
+
+~~~Plain Text
++---+----------+---------------+
+| x | property | local maximum |
++---+----------+---------------+
+| 2 | prime    | 3             |
+| 3 | prime    | 5             |
+| 5 | prime    | 7             |
+| 7 | prime    | 7             |
+| 1 | square   | 7             |
+| 4 | square   | 9             |
+| 9 | square   | 9             |
++---+----------+---------------+
+~~~
+
+<br/>
+
+### MIN()
+
+**语法**
+
+~~~SQL
+MIN(expression) [OVER (analytic_clause)]
+~~~
+
+**示例**
+
+计算**从第一行到当前行之后一行**的最小值
+
+~~~SQL
+select x, property,
+    min(x)
+        over (
+            order by property, x desc
+            rows between unbounded preceding and 1 following
+        ) as 'local minimum'
+from int_t
+where property in ('prime','square');
+~~~
+
+~~~Plain Text
++---+----------+---------------+
+| x | property | local minimum |
++---+----------+---------------+
+| 7 | prime    | 5             |
+| 5 | prime    | 3             |
+| 3 | prime    | 2             |
+| 2 | prime    | 2             |
+| 9 | square   | 2             |
+| 4 | square   | 1             |
+| 1 | square   | 1             |
++---+----------+---------------+
+~~~
+
+<br/>
+
+### RANK()
+
+RANK() 函数用来表示排名，与 DENSE_RANK() 不同的是，RANK() 会**出现空缺**数字。比如，如果出现了两个并列的 1，RANK() 的第三个数就是 3，而不是 2。
+
+**语法**
+
+~~~SQL
+RANK() OVER(partition_by_clause order_by_clause)
+~~~
+
+**示例**
+
+根据x列进行排名
+
+~~~SQL
+select x, y, rank() over(partition by x order by y) as rank
+from int_t;
+~~~
+
+~~~Plain Text
++---+---+------+
+| x | y | rank |
++---+---+------+
+| 1 | 1 | 1    |
+| 1 | 2 | 2    |
+| 1 | 2 | 2    |
+| 2 | 1 | 1    |
+| 2 | 2 | 2    |
+| 2 | 3 | 3    |
+| 3 | 1 | 1    |
+| 3 | 1 | 1    |
+| 3 | 2 | 3    |
++---+---+------+
+~~~
+
+<br/>
+
+### ROW_NUMBER()
+
+为每个 Partition 的每一行返回一个从1开始连续递增的整数。与 RANK() 和 DENSE_RANK() 不同的是，ROW_NUMBER() 返回的值**不会重复也不会出现空缺**，是**连续递增**的。
+
+**语法**
+
+~~~SQL
+ROW_NUMBER() OVER(partition_by_clause order_by_clause)
+~~~
+
+**示例**
+
+~~~SQL
+select x, y, row_number() over(partition by x order by y) as rank
+from int_t;
+~~~
+
+~~~Plain Text
++---+---+------+
+| x | y | rank |
++---+---+------+
+| 1 | 1 | 1    |
+| 1 | 2 | 2    |
+| 1 | 2 | 3    |
+| 2 | 1 | 1    |
+| 2 | 2 | 2    |
+| 2 | 3 | 3    |
+| 3 | 1 | 1    |
+| 3 | 1 | 2    |
+| 3 | 2 | 3    |
++---+---+------+
+~~~
+
+<br/>
+
+### SUM()
+
+**语法**
+
+~~~SQL
+SUM(expression) [OVER (analytic_clause)]
+~~~
+
+**示例**
+
+按照 property 进行分组，在组内计算**当前行以及前后各一行**的x列的和。
+
+~~~SQL
+select x, property,
+    sum(x)
+        over (
+            partition by property
+            order by x
+            rows between 1 preceding and 1 following
+        ) as 'moving total'
+from int_t where property in ('odd','even');
+~~~
+
+~~~Plain Text
++----+----------+--------------+
+| x  | property | moving total |
++----+----------+--------------+
+| 2  | even     | 6            |
+| 4  | even     | 12           |
+| 6  | even     | 18           |
+| 8  | even     | 24           |
+| 10 | even     | 18           |
+| 1  | odd      | 4            |
+| 3  | odd      | 9            |
+| 5  | odd      | 15           |
+| 7  | odd      | 21           |
++----+----------+--------------+
+~~~
