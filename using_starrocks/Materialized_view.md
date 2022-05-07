@@ -96,12 +96,12 @@ GROUP BY store_id;
 
 当前的物化视图只支持对单个表的聚合。目前支持以下聚合函数：
 
-* COUNT
-* MAX
-* MIN
-* SUM
-* PERCENTILE_APPROX
-* HLL_UNION
+- COUNT
+- MAX
+- MIN
+- SUM
+- PERCENTILE_APPROX
+- HLL_UNION
 
     对明细数据进行 HLL 聚合并且在查询时，使用 HLL 函数分析数据。主要适用于快速进行非精确去重计算。对明细数据使用HLL\_UNION聚合，需要先调用hll\_hash函数，对原数据进行转换。
 
@@ -132,14 +132,14 @@ GROUP BY store_id;
 
 **使用限制**
 
-  * Base 表中的分区列，必须存在于创建物化视图的 Group by 聚合列中
+  - Base 表中的分区列，必须存在于创建物化视图的 Group by 聚合列中
     >列如：Base 表按天分区，物化视图则只能按天分区列做 Group by 聚合。不能够建立按月粒度 Group by 的物化视图。
-  * 目前只支持对单表进行构建物化视图，不支持多表 JOIN
-  * 聚合类型表（Aggregation)，不支持对key列执行聚合算子操作，仅支持对 Value 列进行聚合，且聚合算子类型不能改变。
-  * 物化视图中至少包含一个 KEY 列
-  * 不支持表达式计算
-  * 不支持指定物化视图查询
-  * 不支持 Order By
+  - 目前只支持对单表进行构建物化视图，不支持多表 JOIN
+  - 聚合类型表（Aggregation)，不支持对key列执行聚合算子操作，仅支持对 Value 列进行聚合，且聚合算子类型不能改变。
+  - 物化视图中至少包含一个 KEY 列
+  - 不支持表达式计算
+  - 不支持指定物化视图查询
+  - 不支持 Order By
 
 更详细物化视图创建语法请参看 SQL 参考手册 [CREATE MATERIALIZED VIEW](../sql-reference/sql-statements/data-definition/CREATE%20MATERIALIZED%20VIEW.md) 。
 
@@ -303,8 +303,8 @@ EXPLAIN SELECT store_id, SUM(sale_amt) FROM sales_records GROUP BY store_id;
 
 下列两种情形需要删除物化视图:
 
-* 用户误操作创建物化视图，需要撤销该操作。
-* 用户创建了大量的物化视图，导致数据导入速度过慢不满足业务需求，并且部分物化视图的相互重复，查询频率极低，可容忍较高的查询延迟，此时需要删除部分物化视图。
+- 用户误操作创建物化视图，需要撤销该操作。
+- 用户创建了大量的物化视图，导致数据导入速度过慢不满足业务需求，并且部分物化视图的相互重复，查询频率极低，可容忍较高的查询延迟，此时需要删除部分物化视图。
 
 删除已经创建完成的物化视图:
 
