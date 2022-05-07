@@ -6,7 +6,7 @@
 
 ## 如何使用临时分区
 
-### 创建分区 
+### 创建分区
 
 通过 ALTER TABLE ADD TEMPORARY PARTITION 语句可以创建临时分区。
 
