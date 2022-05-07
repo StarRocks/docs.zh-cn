@@ -45,18 +45,18 @@ Examples:
 
 * 创建文件 ca.pem ，分类为 kafka
 
-    ~~~sql
+  ~~~sql
     CREATE FILE "ca.pem"
     PROPERTIES
     (
         "url" = "https://test.bj.bcebos.com/kafka-key/ca.pem",
         "catalog" = "kafka"
     );
-    ~~~
+  ~~~
 
 * 创建文件 client.key，分类为 my_catalog
 
-    ~~~sql
+  ~~~sql
     CREATE FILE "client.key"
     IN my_database
     PROPERTIES
@@ -65,7 +65,7 @@ Examples:
         "catalog" = "my_catalog",
         "md5" = "b5bb901bf10f99205b39a46ac3557dd9"
     );
-    ~~~
+  ~~~
 
 文件创建成功后，文件相关的信息将持久化在 StarRocks 中。
 
@@ -81,12 +81,12 @@ Examples:
 
 说明：
 
- * FileId:     文件ID，全局唯一
- * DbName:     所属数据库名称
- * Catalog:    自定义分类
- * FileName:   文件名
- * FileSize:   文件大小，单位字节
- * MD5:        文件的 MD5
+* FileId:     文件ID，全局唯一
+* DbName:     所属数据库名称
+* Catalog:    自定义分类
+* FileName:   文件名
+* FileSize:   文件大小，单位字节
+* MD5:        文件的 MD5
 
 Examples:
 
