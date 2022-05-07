@@ -4,7 +4,7 @@
 
 「行列转化」是ETL处理过程中常见的操作，Lateral 一个特殊的Join关键字，能够按照每行和内部的子查询或者 table function 关联，通过 Lateral 与 unnest 配合，我们可以实现一行转多行的功能。
 
-## 语法
+## 使用说明
 
 使用 Lateral join 需要打开新版优化器：
 
