@@ -18,17 +18,17 @@ StarRocks 内部存在多个时区相关参数
 
 2. SET time_zone = 'Asia/Shanghai'
 
-    该命令可以设置session级别的时区，连接断开后失效
+    该命令可以设置 session 级别的时区，连接断开后失效
 
 3. SET global time_zone = 'Asia/Shanghai'
 
-    该命令可以设置global级别的时区参数，fe会将参数持久化，连接断开后不失效
+    该命令可以设置 global 级别的时区参数，fe会将参数持久化，连接断开后不失效
 
 ## 时区的影响
 
 时区设置会影响对时区敏感的时间值的显示和存储。
 
-包括NOW()或CURTIME()等时间函数显示的值，也包括show load, show backends中的时间值。
+包括 NOW() 或 CURTIME() 等时间函数显示的值，也包括 show load, show backends 中的时间值。
 
 但不会影响 create table 中时间类型分区列的 less than 值，也不会影响存储为 date/datetime 类型的值的显示。
 
@@ -44,19 +44,19 @@ StarRocks 内部存在多个时区相关参数
 
 时区值可以使用几种格式给出，不区分大小写:
 
-* 表示UTC偏移量的字符串，如'+10:00'或'-6:00'
+* 表示UTC偏移量的字符串，如 '+10:00' 或 '-6:00'
 
-* 标准时区格式，如"Asia/Shanghai"、"America/Los_Angeles"
+* 标准时区格式，如 "Asia/Shanghai" 、 "America/Los_Angeles"
 
-* 不支持缩写时区格式，如"MET"、"CTT"。因为缩写时区在不同场景下存在歧义。
+* 不支持缩写时区格式，如 "MET" 、 "CTT" 。因为缩写时区在不同场景下存在歧义。
 
-* 为了兼容StarRocks，支持CST缩写时区，内部会将CST转移为"Asia/Shanghai"的中国标准时区
+* 为了兼容 StarRocks ，支持 CST 缩写时区，内部会将 CST 转移为 "Asia/Shanghai" 的中国标准时区
 
 ## 默认时区
 
-系统default timezone为"Asia/Shanghai"，当导入时，如果服务器时区为其他时区，需要指定相应时区，否则日期字段会不一致。
+系统 default timezone 为 "Asia/Shanghai"，当导入时，如果服务器时区为其他时区，需要指定相应时区，否则日期字段会不一致。
 
-例如系统时区为UTC时，未指定情况下导入结果的日期字段会出现+8h的异常结果，需要在导入的参数部分指定时区，具体参数指定参考对应Load章节的参数说明。
+例如系统时区为 UTC 时，未指定情况下导入结果的日期字段会出现 +8h 的异常结果，需要在导入的参数部分指定时区，具体参数指定参考对应 Load 章节的参数说明。
 
 ## 时区格式列表
 
