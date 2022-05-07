@@ -115,7 +115,7 @@ GROUP BY store_id;
 
     目前不支持对 DECIMAL/BITMAP/HLL/PERCENTILE 类型的列使用HLL\_UNION聚合算子。
 
-* BITMAP_UNION
+- BITMAP_UNION
 
     对明细数据进行 BITMAP 聚合并且在查询时，使用 BITMAP 函数分析数据，主要适用于快速计算 count(distinct) 的精确去重。对明细数据使用 BITMAP\_UNION 聚合，需要先调用 to\_bitmap 函数，对原数据进行转换。
 
@@ -129,17 +129,16 @@ GROUP BY store_id;
 
     目前仅支持 TINYINT/SMALLINT/INT/BITINT 类型，且存储内容需为正整数（包括0）。
 
-
 **使用限制**
 
-  - Base 表中的分区列，必须存在于创建物化视图的 Group by 聚合列中
-    >列如：Base 表按天分区，物化视图则只能按天分区列做 Group by 聚合。不能够建立按月粒度 Group by 的物化视图。
-  - 目前只支持对单表进行构建物化视图，不支持多表 JOIN
-  - 聚合类型表（Aggregation)，不支持对key列执行聚合算子操作，仅支持对 Value 列进行聚合，且聚合算子类型不能改变。
-  - 物化视图中至少包含一个 KEY 列
-  - 不支持表达式计算
-  - 不支持指定物化视图查询
-  - 不支持 Order By
+- Base 表中的分区列，必须存在于创建物化视图的 Group by 聚合列中。
+  > 例如：Base 表按天分区，物化视图则只能按天分区列做 Group by 聚合。不能够建立按月粒度 Group by 的物化视图。
+- 目前只支持对单表进行构建物化视图，不支持多表 JOIN。
+- 聚合类型表（Aggregation)，不支持对key列执行聚合算子操作，仅支持对 Value 列进行聚合，且聚合算子类型不能改变。
+- 物化视图中至少包含一个 KEY 列。
+- 不支持表达式计算。
+- 不支持指定物化视图查询。
+- 不支持 Order By。
 
 更详细物化视图创建语法请参看 SQL 参考手册 [CREATE MATERIALIZED VIEW](../sql-reference/sql-statements/data-definition/CREATE%20MATERIALIZED%20VIEW.md) 。
 
