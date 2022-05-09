@@ -43,14 +43,9 @@
 
 ### 创建物化视图
 
-通过下面命令就可以创建物化视图。创建物化视图是一个异步的操作，也就是说用户成功提交创建任务后，StarRocks 会在后台对存量的数据进行计算，直到创建成功。
+[创建物化视图语法](../sql-reference/sql-statements/data-definition/CREATE%20MATERIALIZED%20VIEW.md)。创建物化视图是一个异步的操作，也就是说用户成功提交创建任务后，StarRocks 会在后台对存量的数据进行计算，直到创建成功。
 
-**语法**
 
-~~~SQL
-CREATE MATERIALIZED VIEW MATERIALIZED_VIEW_NAME AS 
-(sql_statement);
-~~~
 
 **示例**
 
@@ -139,8 +134,6 @@ GROUP BY store_id;
 - 不支持表达式计算。
 - 不支持指定物化视图查询。
 - 不支持 Order By。
-
-更详细物化视图创建语法请参看 SQL 参考手册 [CREATE MATERIALIZED VIEW](../sql-reference/sql-statements/data-definition/CREATE%20MATERIALIZED%20VIEW.md) 。
 
 <br/>
 
