@@ -2,7 +2,7 @@
 
 Spark Load 通过外部的 Spark 资源实现对导入数据的预处理，提高 StarRocks 大数据量的导入性能并且节省 StarRocks 集群的计算资源。主要用于 **初次迁移**、**大数据量导入** StarRocks 的场景（数据量可到 TB 级别）。
 
-Spark Load 是一种 **异步** 导入方式，用户需要通过 MySQL 协议创建 Spark 类型导入任务，并可以通过 SHOW LOAD 查看导入结果。
+本文介绍导入任务的操作流程（包括相关客户端配置、创建和查看任务等）、系统配置、最佳实践和常见问题。
 
 ---
 
@@ -14,9 +14,11 @@ Spark Load 是一种 **异步** 导入方式，用户需要通过 MySQL 协议�
 
 ## 基本操作
 
+使用 Spark Load导入数据，需要按照 `创建资源-->配置 Spark 客户端-->配置 YARN 客户端-->创建 Spark Load 导入任务` 流程执行，具体的各个部分介绍请参考下问描述。
+
 ### 配置 ETL 集群
 
-Spark 作为一种外部计算资源在 StarRocks 中用来完成 ETL 工作，未来可能还有其他的外部资源会加入到 StarRocks 中使用，如 Spark/GPU 用于查询，HDFS/S3 用于外部存储，MapReduce 用于 ETL 等，因此我们引入 Resource Management 来管理 StarRocks 使用的这些外部资源。
+Spark 作为一种外部计算资源在 StarRocks 中用来完成 ETL 工作，因此我们引入 Resource Management 来管理 StarRocks 使用的外部资源。
 
 提交 Spark 导入任务之前，需要配置执行 ETL 任务的 Spark 集群。操作语法：
 
@@ -108,6 +110,10 @@ PROPERTIES 是 Spark 资源相关参数，如下：
 
 #### 查看资源
 
+~~~sql
+    show resources;
+~~~
+
 普通账户只能看到自己有 USAGE-PRIV 使用权限的资源。root 和 admin 账户可以看到所有的资源。
 
 资源权限通过 GRANT REVOKE 来管理，目前仅支持 USAGE_PRIV 使用权限。可以将 USAGE-PRIV 权限赋予某个用户或者某个角色，角色的使用与之前一致。请参考 [GRANT USAGE_PRIV](../sql-reference/sql-statements/account-management/GRANT.md)。
@@ -157,7 +163,7 @@ yarn_config_dir: FE 配置，默认会在 FE 根目录下的 `lib/yarn-config` �
 **示例 1**：上游数据源为 hdfs 文件的情况
 
 ~~~sql
-LOAD LABEL db1.label1
+LOAD LABEL db1.label1 #此处的label建议记录，可用于任务查询
 (
     DATA INFILE("hdfs://abc.com:8888/user/starRocks/test/ml/file1")
     INTO TABLE tbl1
@@ -299,7 +305,7 @@ WITH RESOURCE 'spark0'
 Spark Load 导入方式同 Broker Load 一样都是异步的，用户必须将创建导入的 Label 记录下来，并且在 `SHOW LOAD` 命令中使用 Label 来查看导入结果。查看导入的命令在所有导入方式中是通用的，具体语法可参考 [SHOW LOAD](../sql-reference/sql-statements/data-manipulation/SHOW%20LOAD.md)。示例如下：
 
 ~~~sql
-mysql > show load order by createtime desc limit 1\G
+mysql > show load where label="label1"\G
 *************************** 1. row ***************************
          JobId: 76391
          Label: label1
@@ -325,7 +331,7 @@ LoadFinishTime: 2019-07-27 11:50:16
 当 Spark load 作业状态不为 CANCELLED 或 FINISHED 时，可以被用户手动取消。取消时需要指定待取消导入任务的 Label 。取消导入命令语法可参考 [CANCEL LOAD](../sql-reference/sql-statements/data-manipulation/CANCEL%20LOAD.md) 。示例如下：
 
 ~~~sql
-    mysql >  CANCEL LOAD FROM db1 WHERE LABEL = "label1";
+    CANCEL LOAD FROM db1 WHERE LABEL = "label1";
 ~~~
 
 ---
@@ -345,9 +351,31 @@ LoadFinishTime: 2019-07-27 11:50:16
 
 ## 最佳实践
 
-使用 Spark Load 最适合的场景是原始数据在文件系统（HDFS）中，数据量在几十 GB 到 TB 级别。小数据量还是建议使用 Stream Load 或者 Broker Load。
+### 全局字典
 
-* 完整 spark load 导入示例，参考 github 上的 demo: [sparkLoad2StarRocks](https://github.com/StarRocks/demo/blob/master/docs/03_sparkLoad2StarRocks.md)
+#### 适用场景
+
+目前StarRocks中BITMAP列是使用类库Roaringbitmap实现的，而Roaringbitmap的输入数据类型只能是整型，因此如果要在导入流程中实现对于BITMAP列的预计算，那么就需要将输入数据的类型转换成整型。
+
+在StarRocks现有的导入流程中，全局字典的数据结构是基于Hive表实现的，保存了原始值到编码值的映射。
+
+#### 构建流程
+
+**1.** 读取上游数据源的数据，生成一张 Hive 临时表，记为 hive-table。
+
+**2.** 从 hive-table 中抽取待去重字段的去重值，生成一张新的Hive表，记为distinct-value-table。
+
+**3.** 新建一张全局字典表，记为dict-table；一列为原始值，一列为编码后的值。
+
+**4.** 将distinct-value-table与dict-table做left join，计算出新增的去重值集合，然后对这个集合使用窗口函数进行编码，此时去重列原始值就多了一列编码后的值，最后将这两列的数据写回dict-table。
+
+**5.** 将dict-table与hive-table做join，完成hive-table中原始值替换成整型编码值的工作。
+
+**6.** hive-table会被下一步数据预处理的流程所读取，经过计算后导入到StarRocks中。
+
+### Spark 程序导入
+
+完整 spark load 导入示例，参考 github 上的 demo: [sparkLoad2StarRocks](https://github.com/StarRocks/demo/blob/master/docs/03_sparkLoad2StarRocks.md)
 
 ---
 

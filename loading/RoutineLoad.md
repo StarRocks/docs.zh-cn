@@ -1,6 +1,6 @@
 # Routine Load
 
-Routine Load 是一种例行导入方式，StarRocks 通过这种方式支持从 Kafka 持续不断的导入数据，并且支持通过 SQL 控制导入任务的暂停、重启、停止。本节主要介绍该功能的基本原理和使用方式。
+本文主要介绍Routine Load的使用方式和常见问题。
 
 ## 支持的数据格式
 
@@ -42,7 +42,17 @@ FROM KAFKA
   * 衍生列：除了直接读取源数据的列内容之外，StarRocks 还提供对数据列的加工操作。假设目标表后加入了第四列 col4 ，其结果由 col1 + col2 产生，则可以书写如下：COLUMNS (col2, col1, temp, col3, col4 = col1 + col2),。
 * **PROPERTIES 子句**：选填。用于指定导入作业的通用参数。
 
-* **desired_concurrent_number**：导入并发度，指定一个导入作业最多会被分成多少个子任务执行。必须大于 0，默认为 3。
+* **desired_concurrent_number**：导入并发度，指定一个导入作业最多会被分成多少个子任务执行。必须大于 0，默认为 3。子任务最终的个数，由多个参数决定。当前 routine load 并发取决于以下参数：
+
+  ~~~plain text
+  min(min(partitionNum,min(desireTaskConcurrentNum,aliveBeNum)),max_routine_load_task_concurrent_num)
+  ~~~
+
+  * partitionNum：kafka 分区数
+  * desireTaskConcurrentNum： desired_concurrent_number 配置
+  * aliveBeNum：状态为 Alive 的 be 节点个数
+  * max_routine_load_task_concurrent_num：be.conf 配置项，默认为5
+
 * **max_batch_interval**：每个子任务最大执行时间，单位是「秒」。范围为 5 到 60。默认为 10。**1.15 版本后**: 该参数是子任务的调度时间，即任务多久执行一次，任务的消费数据时间为 fe.conf 中的 routine_load_task_consume_second，默认为 3s，
 任务的执行超时时间为 fe.conf 中的 routine_load_task_timeout_second，默认为 15s。
 * **max_error_number**：采样窗口内，允许的最大错误行数。必须大于等于 0。默认是 0，即不允许有错误行。注意：被 where 条件过滤掉的行不算错误行。
@@ -119,7 +129,33 @@ ReasonOfStateChanged:
 * unselectedRows：被 where 条件过滤的行数
 * receivedBytesRate：接收数据速率，单位是「Bytes/s」
 * taskExecuteTimeMs：导入耗时，单位是「ms」
-* ErrorLogUrls：错误信息日志，可以通过 URL 看到导入过程中的错误信息
+* Progress：已消费 Kafka 分区的OFFSET
+* ErrorLogUrls：错误信息日志，可以通过 URL 看到导入过程中的错误信息。
+
+~~~sql
+MySQL [load_test] > USE load_test;
+MySQL [load_test] > SHOW ROUTINE LOAD WHERE Jobname="routine_load_wikipedia"\G;
+*************************** 1. row ***************************
+              TaskId: 645da10b-0a5c-4e90-84f0-03b33ec58b68
+               TxnId: 2776810
+           TxnStatus: UNKNOWN
+               JobId: 144093
+          CreateTime: 2020-05-16 16:00:48
+   LastScheduledTime: 2020-05-16 16:01:18
+    ExecuteStartTime: NULL
+             Timeout: 15
+                BeId: 10003
+DataSourceProperties: {"0":13634684}
+             Message: 
+1 rows in set (0.00 sec)
+~~~
+
+可以看到示例中创建的名为 routine_load_wikipedia 的导入子任务，其中重要的字段释义：
+
+* TaskId：子任务 ID
+* TxnId：本次导入任务事物 ID
+* JobId：任务ID，例如例子中 routine_load_wikipedia 对应的 ID
+* DataSourceProperties：已消费 Kafka 分区的OFFSET
 
 ### 暂停导入任务
 
@@ -163,7 +199,7 @@ ReasonOfStateChanged: ErrorReason{code=errCode = 100, msg='User root pauses rout
 
 ### 恢复导入任务
 
-使用 RESUME 语句后，任务会短暂的进入 **NEED_SCHEDULE** 状态，表示任务正在重新调度，一段时间后会重新恢复至 RUNING 状态，继续导入数据。
+使用 RESUME 语句后，任务会短暂的进入 **NEED_SCHEDULE** 状态，表示任务正在重新调度，一段时间后会重新恢复至 RUNNING 状态，继续导入数据。
 
 重启名称为 job_name 的例行导入任务。
 
@@ -337,6 +373,8 @@ FROM KAFKA
   }
 ]
 ~~~
+
+JSON文本暂停、恢复和停止导入任务指令与上述CSV格式一致。
 
 更多详细的事例请参考 [ROUTINE LOAD 导入例子](../sql-reference/sql-statements/data-manipulation/ROUTINE%20LOAD#example)
 
