@@ -74,7 +74,7 @@ PROPERTIES (
 );
 ```
 
-#### 参数说明 
+#### 参数说明
 
 * **strict_range**
 
