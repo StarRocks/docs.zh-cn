@@ -15,53 +15,55 @@ MySQL 数据实时同步到 StarRocks 满足业务实时场景的数据分析。
 
 ## 使用步骤
 
-1. 下载 [Flink](https://flink.apache.org/downloads.html), 推荐使用 1.13，最低支持版本 1.11。
-2. 下载 [Flink CDC connector](https://github.com/ververica/flink-cdc-connectors/releases)，请注意下载对应 Flink 版本的 Flink-MySQL-CDC。
-3. 下载 [Flink StarRocks connector](https://github.com/StarRocks/flink-connector-starrocks)，请注意 1.13 版本和 1.11/1.12 版本使用不同的 connector.
-4. 复制 `flink-sql-connector-mysql-cdc-xxx.jar`, `flink-connector-starrocks-xxx.jar` 到 `flink-xxx/lib/`
-5. 下载 [smt.tar.gz](https://www.starrocks.com/en-US/download/community)
-6. 解压并修改配置文件
-  `Db` 需要修改成 MySQL 的连接信息。  
-  `be_num` 需要配置成 StarRocks 集群的节点数（这个能帮助更合理的设置 bucket 数量）。  
-  `[table-rule.1]` 是匹配规则，可以根据正则表达式匹配数据库和表名生成建表的 SQL，也可以配置多个规则。  
-  `flink.starrocks.*` 是 StarRocks 的集群配置信息，参考 Flink.  
+1. 记得打开 MySQL binlog，打开方式可参考 [打开 MySQl Binlog](#注意事项)
+
+2. 下载 [Flink](https://flink.apache.org/downloads.html), 推荐使用 1.13，最低支持版本 1.11。
+3. 下载 [Flink CDC connector](https://github.com/ververica/flink-cdc-connectors/releases)，请注意下载对应 Flink 版本的 Flink-MySQL-CDC。
+4. 下载 [Flink-connector-starrocks](https://github.com/StarRocks/flink-connector-starrocks)，请注意 1.13 版本和 1.11/1.12 版本使用不同的 connector.
+5. 复制 `flink-sql-connector-mysql-cdc-xxx.jar`, `flink-connector-starrocks-xxx.jar` 到 `flink-xxx/lib/`
+6. 下载并解压 [smt.tar.gz](https://www.starrocks.com/zh-CN/download/community)
+7. 解压并修改配置文件
+    * `Db` 需要修改成 MySQL 的连接信息。  
+    * `be_num` 需要配置成 StarRocks 集群的节点数（这个能帮助更合理的设置 bucket 数量）。  
+    * `[table-rule.1]` 是匹配规则，可以根据正则表达式匹配数据库和表名生成建表的 SQL，也可以配置多个规则。  
+    * `flink.starrocks.*` 是 StarRocks 的集群配置信息，参考 [Flink-connector-starrocks 配置](../loading/Flink-connector-starrocks.md)。
   
-    ```bash
-    [db]
-    host = 192.168.1.1
-    port = 3306
-    user = root
-    password =  
+        ```bash
+        [db]
+        host = 192.168.1.1
+        port = 3306
+        user = root
+        password =  
 
-    [other]
-    # number of backends in StarRocks
-    be_num = 3
-    # `decimal_v3` is supported since StarRocks-1.18.1
-    use_decimal_v3 = false
-    # file to save the converted DDL SQL
-    output_dir = ./result
+        [other]
+        # number of backends in StarRocks
+        be_num = 3
+        # `decimal_v3` is supported since StarRocks-1.18.1
+        use_decimal_v3 = false
+        # file to save the converted DDL SQL
+        output_dir = ./result
 
 
-    [table-rule.1]
-    # pattern to match databases for setting properties
-    database = ^console_19321.*$
-    # pattern to match tables for setting properties
-    table = ^.*$
+        [table-rule.1]
+        # pattern to match databases for setting properties
+        database = ^console_19321.*$
+        # pattern to match tables for setting properties
+        table = ^.*$
 
-    ############################################
-    ### flink sink configurations
-    ### DO NOT set `connector`, `table-name`, `database-name`, they are auto-generated
-    ############################################
-    flink.starrocks.jdbc-url=jdbc:mysql://192.168.1.1:9030
-    flink.starrocks.load-url= 192.168.1.1:8030
-    flink.starrocks.username=root
-    flink.starrocks.password=
-    flink.starrocks.sink.properties.column_separator=\x01
-    flink.starrocks.sink.properties.row_delimiter=\x02
-    flink.starrocks.sink.buffer-flush.interval-ms=15000
-    ```
+        ############################################
+        ### flink sink configurations
+        ### DO NOT set `connector`, `table-name`, `database-name`, they are auto-generated
+        ############################################
+        flink.starrocks.jdbc-url=jdbc:mysql://192.168.1.1:9030
+        flink.starrocks.load-url= 192.168.1.1:8030
+        flink.starrocks.username=root
+        flink.starrocks.password=
+        flink.starrocks.sink.properties.column_separator=\x01
+        flink.starrocks.sink.properties.row_delimiter=\x02
+        flink.starrocks.sink.buffer-flush.interval-ms=15000
+        ```
 
-7. 执行 starrocks-migrate-tool，所有建表语句都生成在 result 目录下
+8. 执行 starrocks-migrate-tool，flink 和 starrocks 建表语句都生成在 result 目录下
 
     ```bash
     $./starrocks-migrate-tool
@@ -70,13 +72,13 @@ MySQL 数据实时同步到 StarRocks 满足业务实时场景的数据分析。
     flink-create.all.sql  starrocks-create.1.sql
     ```
 
-8. 生成 StarRocks 的表结构
+9. 利用上一步生成的 StarRocks 的建表语句在 StarRocks 中建表
 
     ```bash
     Mysql -hxx.xx.xx.x -P9030 -uroot -p < starrocks-create.1.sql
     ```
 
-9. 生成 Flink table 并开始同步
+10. 执行如下语句，生成Flink table 并开始同步，同步任务会持续执行
 
     > 需要确保flink集群已经启动，未启动可以使用flink/bin/start-cluster.sh启动
 
@@ -86,19 +88,18 @@ MySQL 数据实时同步到 StarRocks 满足业务实时场景的数据分析。
 
     这个执行以后同步任务会持续执行
     > 如果是 Flink 1.13 之前的版本可能无法直接执行脚本，需要逐行提交
-    注意 记得打开 MySQL binlog
 
-10. 观察任务状况
+11. 观察任务状况
   
     ```bash
     bin/flink list 
     ```
 
-  如果有任务请查看 log 日志，或者调整 conf 中的系统配置中内存和 slot。
+  如果有任务请查看 log 日志，或者调整 conf/flink-conf.yam 中的系统配置中内存和 slot，具体配置请参考 [Flink 配置参数](https://nightlies.apache.org/flink/flink-docs-master/zh/docs/deployment/config/)。
 
 ## 注意事项
 
-1. 如果有多组规则，需要给每一组规则匹配 database，table 和 flink-connector 的配置
+* 如果有多组规则，需要给每一组规则匹配 database，table 和 flink-connector 的配置
 
     ```bash
     [table-rule.1]
@@ -136,11 +137,11 @@ MySQL 数据实时同步到 StarRocks 满足业务实时场景的数据分析。
     # 如果导入数据不方便选出合适的分隔符可以考虑使用 Json 格式，但是会有一定的性能损失, 使用方法：用以下参数替换 flink.starrocks.sink.properties.column_separator 和 flink.starrocks.sink.properties.row_delimiter 参数
     flink.starrocks.sink.properties.strip_outer_array=true
     flink.starrocks.sink.properties.format=json
-    ~~~
+    ```
 
-2. Flink.starrocks.sink 的参数可以参考[上文](##使用步骤)，比如可以给不同的规则配置不同的导入频率等参数。
+  > Flink.starrocks.sink 的参数可以参考[上文](#使用步骤)，比如可以给不同的规则配置不同的导入频率等参数。
 
-3. 针对分库分表的大表可以单独配置一个规则，比如：有两个数据库 edu_db_1，edu_db_2，每个数据库下面分别有course_1，course_2 两张表，并且所有表的数据结构都是相同的，通过如下配置把他们导入StarRocks的一张表中进行分析。
+* 针对分库分表的大表可以单独配置一个规则，比如：有两个数据库 edu_db_1，edu_db_2，每个数据库下面分别有course_1，course_2 两张表，并且所有表的数据结构都是相同的，通过如下配置把他们导入StarRocks的一张表中进行分析。
 
     ``` bash
     [table-rule.3]
@@ -164,14 +165,14 @@ MySQL 数据实时同步到 StarRocks 满足业务实时场景的数据分析。
 
     这样会自动生成一个多对一的导入关系，在StarRocks默认生成的表名是 course__auto_shard，也可以自行在生成的配置文件中修改。
 
-4. 如果在sql-client中命令行执行建表和同步任务，需要做对'\'字符进行转义
+* 如果在sql-client中命令行执行建表和同步任务，需要做对'\'字符进行转义
 
     ``` bash
     'sink.properties.column_separator' = '\\x01'
     'sink.properties.row_delimiter' = '\\x02'  
     ```
 
-5. 如何开启MySQL binlog  
+* 如何开启MySQL binlog  
     修改/etc/my.cnf
   
     ``` bash

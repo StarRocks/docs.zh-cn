@@ -1,24 +1,34 @@
 # 使用 DataX 导入 StarRocks
 
+本文介绍利用 DataX 和 StarRocks 开发的 starrockswriter 插件实现将 MySQL、Oracle等数据库中的数据导入到 StarRocks。
+
+## 支持的数据源
+
+* MySQL
+* Oracle
+* [更多](https://github.com/alibaba/DataX)
+
 ## 使用场景
 
+Mysql、Oracle 等 DataX 支持读取的数据库`全量数据`通过 DataX 和 starrockswriter 导入到 StarRocks。
+
+## 实现原理
+
 StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能。在底层实现上，StarRocksWriter 通过Stream load以csv或 json 格式导入数据至StarRocks。内部将`reader`读取的数据进行缓存后批量导入至StarRocks，以提高写入性能。总体数据流是 `source -> Reader -> DataX channel -> Writer -> StarRocks`。
+
+## 使用步骤
+
+### 环境准备
 
 [点击下载插件](https://github.com/StarRocks/DataX/releases)
 
 [源码地址](https://github.com/StarRocks/DataX)
 
-测试时可以使用如下命令:
-
-~~~bash
-  python datax.py --jvm="-Xms6G -Xmx6G" --loglevel=debug job.json
-~~~
-
-## 使用步骤
+解压 starrockswriter 插件并放置在 datax/plugin/writer目录下。
 
 ### 配置样例
 
-* 这里使用一份从内存Mysql读取数据后导入至StarRocks。
+> 以下举例从 MySQL 读取数据后导入至 StarRocks 时 datax 的配置。
 
 ~~~json
 {
@@ -187,6 +197,26 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
   * 必选：否
 
   * 默认值：无
+
+### 启动任务
+
+>下面 job.json 文件是用于调试 DataX 环境，实际文件内容可根据需求命名即可，比如 job_starrocks.json，内容参考[配置样例](#配置样例)。
+
+~~~bash
+  python bin/datax.py --jvm="-Xms6G -Xmx6G" --loglevel=debug job/job.json
+~~~
+
+### 查看导入任务状态
+
+DataX 导入底层调用的 Stream Load实现，可以在 datax/log/$日期/ 目录下搜索对应的job日志，日志文件名字中包含上文命名的json文件名和任务启动的小时分钟秒，例如：t_datax_job_job_json-20_52_19.196.log，
+
+* 日志中如果有 "http://$fe:${http_port}/api/$db/$tbl/_stream_load" 生成，表示成功触发了 Stream Load 任务，任务结果可参考 [Stream Load 任务状态](../loading/StreamLoad#创建导入任务)。
+
+* 日志中如果没有上述信息，请参考报错提示排查，或者在 [DataX 社区问题](https://github.com/alibaba/DataX/issues)查找。
+
+### 取消或停止导入任务
+
+DataX 导入启动的是一个 python 进程，如果要取消或者停止导入任务，kill 掉进程即可。
 
 ### 注意事项
 

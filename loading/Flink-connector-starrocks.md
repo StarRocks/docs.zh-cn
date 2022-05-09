@@ -2,9 +2,11 @@
 
 ## 设计背景
 
-flink的用户想要将数据sink到StarRocks当中，但是flink官方只提供了flink-connector-jdbc, 不足以满足导入性能要求，为此我们新增了一个flink-connector-starrocks，内部实现是通过缓存并批量由stream load导入。
+Flink 的用户想要将数据 sink 到 StarRock s当中，但是 Flink 官方只提供了 flink-connector-jdbc, 不足以满足导入性能要求，为此我们新增了一个 flink-connector-starrocks，内部实现是通过缓存并批量由 stream load 导入。
 
-## 使用方式
+## 使用步骤
+
+### 添加 pom 依赖
 
 [源码地址](https://github.com/StarRocks/flink-connector-starrocks)
 
@@ -31,10 +33,12 @@ flink的用户想要将数据sink到StarRocks当中，但是flink官方只提供
 </dependency>
 ```
 
-使用方式如下：
+### 使用方式
+
+**示例1**：使用 Flink DataStream API
 
 ```scala
-// -------- sink with raw json string stream --------
+// -------- 原始数据为 json 格式 --------
 fromElements(new String[]{
     "{\"score\": \"99\", \"name\": \"stephen\"}",
     "{\"score\": \"100\", \"name\": \"lebron\"}"
@@ -55,7 +59,7 @@ fromElements(new String[]{
 );
 
 
-// -------- sink with stream transformation --------
+// -------- 原始数据为 CSV 格式 --------
 class RowData {
     public int score;
     public String name;
@@ -96,9 +100,10 @@ fromElements(
 ;
 ```
 
-或者：
+**示例2**：使用 Flink Table API
 
 ```scala
+// -------- 原始数据为 CSV 格式 --------
 // create a table with `structure` and `properties`
 // Needed: Add `com.starrocks.connector.flink.table.StarRocksDynamicTableSinkFactory` to: `src/main/resources/META-INF/services/org.apache.flink.table.factories.Factory`
 tEnv.executeSql(
@@ -145,6 +150,38 @@ tEnv.executeSql(
 | sink.properties.ignore_json_size | NO |false| String | ignore the batching size (100MB) of json data |
 
 sink.properties.* 可以配置为 `sink.properties.columns' = 'k1, k2, k3'`，其他支持的参数请参考 [STREAM LOAD](../sql-reference/sql-statements/data-manipulation/STREAM%20LOAD.md)。
+
+Flink 数据类型与 StarRocks 数据类型映射表
+
+| Flink type | StarRocks type |
+|  :-: | :-: |
+| BOOLEAN | BOOLEAN |
+| TINYINT | TINYINT |
+| SMALLINT | SMALLINT |
+| INTEGER | INTEGER |
+| BIGINT | BIGINT |
+| FLOAT | FLOAT |
+| DOUBLE | DOUBLE |
+| DECIMAL | DECIMAL |
+| BINARY | INT |
+| CHAR | STRING |
+| VARCHAR | STRING |
+| STRING | STRING |
+| DATE | DATE |
+| TIMESTAMP_WITHOUT_TIME_ZONE(N) | DATETIME |
+| TIMESTAMP_WITH_LOCAL_TIME_ZONE(N) | DATETIME |
+| ARRAY\<T\> | ARRAY\<T\> |
+| MAP\<KT,VT\> | JSON STRING |
+| ROW\<arg T...\> | JSON STRING |
+
+### 导入数据可观测指标
+
+| Name | Type | Description |
+|  :-: | :-:  | :-:  |
+| totalFlushBytes | counter | successfully flushed bytes. |
+| totalFlushRows | counter | successfully flushed rows. |
+| totalFlushSucceededTimes | counter | number of times that the data-batch been successfully flushed. |
+| totalFlushFailedTimes | counter | number of times that the flushing been failed. |
 
 ## 注意事项
 
