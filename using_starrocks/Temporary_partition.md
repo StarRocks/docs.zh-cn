@@ -41,7 +41,7 @@ ALTER TABLE tbl3 ADD TEMPORARY PARTITION tp1 VALUES IN ("Beijing", "Shanghai")
 DISTRIBUTED BY HASH(k1) BUCKETS 5;
 ```
 
-**注意事项** 
+**注意事项**
 
 * 临时分区的添加和正式分区的添加操作相似。临时分区的分区范围独立于正式分区。
 * 临时分区可以独立指定一些属性。包括分桶数、副本数、是否是内存表、存储介质等信息。
@@ -50,7 +50,7 @@ DISTRIBUTED BY HASH(k1) BUCKETS 5;
 
 通过 ALTER TABLE DROP TEMPORARY PARTITION 语句可以将一个表的临时分区删除。
 
-**示例** 
+**示例**
 
 ```sql
 ALTER TABLE tbl1 DROP TEMPORARY PARTITION tp1;
@@ -60,7 +60,7 @@ ALTER TABLE tbl1 DROP TEMPORARY PARTITION tp1;
 
 通过 ALTER TABLE REPLACE PARTITION 语句可以将一个表的正式分区替换为临时分区。
 
-**示例** 
+**示例**
 
 ```sql
 ALTER TABLE tbl1 REPLACE PARTITION (p1) WITH TEMPORARY PARTITION (tp1);
