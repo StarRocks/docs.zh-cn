@@ -4,13 +4,7 @@
 
 「行列转化」是ETL处理过程中常见的操作，Lateral 一个特殊的Join关键字，能够按照每行和内部的子查询或者 table function 关联，通过 Lateral 与 unnest 配合，我们可以实现一行转多行的功能。
 
-## 使用说明
-
-使用 Lateral join 需要打开新版优化器：
-
-~~~SQL
-set global enable_cbo = true;
-~~~
+## 语法
 
 Lateral 关键字语法说明：
 
@@ -32,6 +26,12 @@ FROM tests, UNNEST(scores) AS t ;
 这里第二种写法是第一种的简写，可以使用 Unnest 关键字省略 Lateral Join。
 
 ## 注意事项
+
+* 使用 Lateral join 需要打开CBO优化器：
+
+~~~SQL
+set global enable_cbo = true;
+~~~
 
 * 当前版本 Lateral join 仅用于和 Unnest 函数配合使用，实现行转列的功能，后续会支持其他 table function / UDTF。
 * 当前 Lateral join 还不支持子查询。
