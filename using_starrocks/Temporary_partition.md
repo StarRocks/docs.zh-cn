@@ -74,7 +74,9 @@ PROPERTIES (
 );
 ```
 
-#### 参数 strict_range
+#### 参数说明 
+
+* **strict_range**
 
 默认为 true。
 
@@ -136,7 +138,7 @@ PROPERTIES (
 
 枚举值并集相同，可以使用 tp1，tp2 替换 p1，p2，p3
 
-#### 关于参数 use_temp_partition_name
+* **use_temp_partition_name**
 
 默认为 false。当该参数为 false，并且待替换的分区和替换分区的个数相同时，则替换后的正式分区名称维持不变。
 
