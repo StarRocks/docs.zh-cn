@@ -21,7 +21,7 @@
 
 通过 ALTER TABLE ADD TEMPORARY PARTITION 语句可以创建临时分区。
 
-**示例**：
+**示例**
 
 ```sql
 ALTER TABLE tbl1 ADD TEMPORARY PARTITION tp1 VALUES LESS THAN("2020-02-01");
@@ -41,7 +41,7 @@ ALTER TABLE tbl3 ADD TEMPORARY PARTITION tp1 VALUES IN ("Beijing", "Shanghai")
 DISTRIBUTED BY HASH(k1) BUCKETS 5;
 ```
 
-**注意** ：
+**注意事项** 
 
 * 临时分区的添加和正式分区的添加操作相似。临时分区的分区范围独立于正式分区。
 * 临时分区可以独立指定一些属性。包括分桶数、副本数、是否是内存表、存储介质等信息。
@@ -50,17 +50,17 @@ DISTRIBUTED BY HASH(k1) BUCKETS 5;
 
 通过 ALTER TABLE DROP TEMPORARY PARTITION 语句可以将一个表的临时分区删除。
 
-**示例** ：
+**示例** 
 
 ```sql
 ALTER TABLE tbl1 DROP TEMPORARY PARTITION tp1;
 ```
 
-### 替换分区
+### 使用临时分区进行替换
 
 通过 ALTER TABLE REPLACE PARTITION 语句可以将一个表的正式分区替换为临时分区。
 
-**示例** ：
+**示例** 
 
 ```sql
 ALTER TABLE tbl1 REPLACE PARTITION (p1) WITH TEMPORARY PARTITION (tp1);
@@ -78,91 +78,95 @@ PROPERTIES (
 
 * **strict_range**
 
-默认为 true。
+    默认为 true。
 
-对于 Range 分区，当该参数为 true 时，表示要被替换的所有正式分区的范围并集需要和替换的临时分区的范围并集完全相同。当置为 false 时，只需要保证替换后，新的正式分区间的范围不重叠即可。
+    对于 Range 分区，当该参数为 true 时，表示要被替换的所有正式分区的范围并集需要和替换的临时分区的范围并集完全相同。当置为 false 时，只需要保证替换后，新的正式分区间的范围不重叠即可。
 
-示例1：待替换的分区 p1, p2, p3 的范围 (=> 并集)：
+    **示例1**
+    待替换的分区 p1, p2, p3 的范围 (=> 并集)：
 
-```plain text
-[10, 20), [20, 30), [40, 50) => [10, 30), [40, 50)
-```
+    ```plain text
+    [10, 20), [20, 30), [40, 50) => [10, 30), [40, 50)
+    ```
 
-替换分区 tp1, tp2 的范围(=> 并集)：
+    替换分区 tp1, tp2 的范围(=> 并集)：
 
-```plain text
-[10, 30), [40, 45), [45, 50) => [10, 30), [40, 50)
-```
+    ```plain text
+    [10, 30), [40, 45), [45, 50) => [10, 30), [40, 50)
+    ```
 
-范围并集相同，则可以使用 tp1 和 tp2 替换 p1, p2, p3。
+    范围并集相同，则可以使用 tp1 和 tp2 替换 p1, p2, p3。
 
-示例2：待替换的分区 p1 的范围 (=> 并集)：
+    **示例2**
+    待替换的分区 p1 的范围 (=> 并集)：
 
-```plain text
-[10, 50) => [10, 50)
-```
+    ```plain text
+    [10, 50) => [10, 50)
+    ```
 
-替换分区 tp1, tp2 的范围(=> 并集)：
+    替换分区 tp1, tp2 的范围(=> 并集)：
 
-```plain text
-[10, 30), [40, 50) => [10, 30), [40, 50)
-```
+    ```plain text
+    [10, 30), [40, 50) => [10, 30), [40, 50)
+    ```
 
-范围并集不相同，如果 strict_range 为 true，则不可以使用 tp1 和 tp2 替换 p1。如果为 false，且替换后的两个分区范围 [10, 30), [40, 50) 和其他正式分区不重叠，则可以替换。
+    范围并集不相同，如果 strict_range 为 true，则不可以使用 tp1 和 tp2 替换 p1。如果为 false，且替换后的两个分区范围 [10, 30), [40, 50) 和其他正式分区不重叠，则可以替换。
 
-示例3：待替换的分区 p1, p2 的枚举值(=> 并集)：
+    **示例3**
+    待替换的分区 p1, p2 的枚举值(=> 并集)：
 
-```plain text
-(1, 2, 3), (4, 5, 6) => (1, 2, 3, 4, 5, 6)
-```
+    ```plain text
+    (1, 2, 3), (4, 5, 6) => (1, 2, 3, 4, 5, 6)
+    ```
 
-替换分区 tp1, tp2, tp3 的枚举值(=> 并集)：
+    替换分区 tp1, tp2, tp3 的枚举值(=> 并集)：
 
-```plain text
-(1, 2, 3), (4), (5, 6) => (1, 2, 3, 4, 5, 6)
-```
+    ```plain text
+    (1, 2, 3), (4), (5, 6) => (1, 2, 3, 4, 5, 6)
+    ```
 
-枚举值并集相同，可以使用 tp1，tp2，tp3 替换 p1，p2
+    枚举值并集相同，可以使用 tp1，tp2，tp3 替换 p1，p2。
 
-示例4：待替换的分区 p1, p2，p3 的枚举值(=> 并集)：
+    **示例4**
+    待替换的分区 p1, p2，p3 的枚举值(=> 并集)：
 
-```plain text
-(("1","beijing"), ("1", "shanghai")), (("2","beijing"), ("2", "shanghai")), (("3","beijing"), ("3", "shanghai")) => (("1","beijing"), ("1", "shanghai"), ("2","beijing"), ("2", "shanghai"), ("3","beijing"), ("3", "shanghai"))
-```
+    ```plain text
+    (("1","beijing"), ("1", "shanghai")), (("2","beijing"), ("2", "shanghai")), (("3","beijing"), ("3", "shanghai")) => (("1","beijing"), ("1", "shanghai"), ("2","beijing"), ("2", "shanghai"), ("3","beijing"), ("3", "shanghai"))
+    ```
 
-替换分区 tp1, tp2 的枚举值(=> 并集)：
+    替换分区 tp1, tp2 的枚举值(=> 并集)：
 
-```plain text
-(("1","beijing"), ("1", "shanghai")), (("2","beijing"), ("2", "shanghai"), ("3","beijing"), ("3", "shanghai")) => (("1","beijing"), ("1", "shanghai"), ("2","beijing"), ("2", "shanghai"), ("3","beijing"), ("3", "shanghai"))
-```
+    ```plain text
+    (("1","beijing"), ("1", "shanghai")), (("2","beijing"), ("2", "shanghai"), ("3","beijing"), ("3", "shanghai")) => (("1","beijing"), ("1", "shanghai"), ("2","beijing"), ("2", "shanghai"), ("3","beijing"), ("3", "shanghai"))
+    ```
 
-枚举值并集相同，可以使用 tp1，tp2 替换 p1，p2，p3
+    枚举值并集相同，可以使用 tp1，tp2 替换 p1，p2，p3。
 
 * **use_temp_partition_name**
 
-默认为 false。当该参数为 false，并且待替换的分区和替换分区的个数相同时，则替换后的正式分区名称维持不变。
+    默认为 false。当该参数为 false，并且待替换的分区和替换分区的个数相同时，则替换后的正式分区名称维持不变。
 
-如果为 true，则替换后，正式分区的名称为替换分区的名称。
+    如果为 true，则替换后，正式分区的名称为替换分区的名称。
 
-示例 1 ：
+    **示例 1**
 
-```sql
-ALTER TABLE tbl1 REPLACE PARTITION (p1) WITH TEMPORARY PARTITION (tp1);
-```
+    ```sql
+    ALTER TABLE tbl1 REPLACE PARTITION (p1) WITH TEMPORARY PARTITION (tp1);
+    ```
 
-use_temp_partition_name 默认为 false，则在替换后，分区的名称依然为 p1，但是相关的数据和属性都替换为 tp1 的。
+    use_temp_partition_name 默认为 false，则在替换后，分区的名称依然为 p1，但是相关的数据和属性都替换为 tp1 的。
 
-如果 use_temp_partition_name 默认为 true，则在替换后，分区的名称为 tp1。p1 分区不再存在。
+    如果 use_temp_partition_name 默认为 true，则在替换后，分区的名称为 tp1。p1 分区不再存在。
 
-示例 2 ：
+    **示例 2**
 
-```sql
-ALTER TABLE tbl1 REPLACE PARTITION (p1, p2) WITH TEMPORARY PARTITION (tp1);
-```
+    ```sql
+    ALTER TABLE tbl1 REPLACE PARTITION (p1, p2) WITH TEMPORARY PARTITION (tp1);
+    ```
 
-use_temp_partition_name 默认为 false，但因为待替换分区的个数和替换分区的个数不同，则该参数无效。替换后，分区名称为 tp1，p1 和 p2 不再存在。
+    use_temp_partition_name 默认为 false，但因为待替换分区的个数和替换分区的个数不同，则该参数无效。替换后，分区名称为 tp1，p1 和 p2 不再存在。
 
-**注意** ：
+**注意事项**
 
 1. 分区替换成功后，被替换的分区将被删除且不可恢复。
 
@@ -170,7 +174,7 @@ use_temp_partition_name 默认为 false，但因为待替换分区的个数和�
 
 3. 当表在进行变更操作时，无法对表添加临时分区。
 
-### 临时分区导入
+### 导入数据至临时分区
 
 临时分区的导入方式跟普通数据稍有差别：
 
@@ -213,9 +217,9 @@ FROM KAFKA
 (property_desc);
 ```
 
-### 查询
+### 查询临时分区
 
-需要指定 特定的 TEMPORARY PARTITION
+查询指定的临时分区
 
 ```sql
 SELECT column_name FROM
