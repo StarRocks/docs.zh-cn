@@ -39,7 +39,7 @@ DISTRIBUTED BY HASH(k1) BUCKETS 5;
 
 通过 ALTER TABLE DROP TEMPORARY PARTITION 语句可以将一个表的临时分区删除。
 
-#### 示例
+**示例** ：
 
 ```sql
 ALTER TABLE tbl1 DROP TEMPORARY PARTITION tp1;
@@ -49,7 +49,7 @@ ALTER TABLE tbl1 DROP TEMPORARY PARTITION tp1;
 
 通过 ALTER TABLE REPLACE PARTITION 语句可以将一个表的正式分区替换为临时分区。
 
-#### 示例
+**示例** ：
 
 ```sql
 ALTER TABLE tbl1 REPLACE PARTITION (p1) WITH TEMPORARY PARTITION (tp1);
@@ -125,7 +125,7 @@ PROPERTIES (
 
 枚举值并集相同，可以使用 tp1，tp2 替换 p1，p2，p3
 
-#### use_temp_partition_name
+#### 关于参数 use_temp_partition_name
 
 默认为 false。当该参数为 false，并且待替换的分区和替换分区的个数相同时，则替换后的正式分区名称维持不变。
 
@@ -149,11 +149,13 @@ ALTER TABLE tbl1 REPLACE PARTITION (p1, p2) WITH TEMPORARY PARTITION (tp1);
 
 use_temp_partition_name 默认为 false，但因为待替换分区的个数和替换分区的个数不同，则该参数无效。替换后，分区名称为 tp1，p1 和 p2 不再存在。
 
-3. 分区替换成功后，被替换的分区将被删除且不可恢复。
+**注意** ：
 
-4. 当表存在临时分区时，无法使用 Alter 命令对表进行 Schema Change 等变更操作。
+1. 分区替换成功后，被替换的分区将被删除且不可恢复。
 
-5. 当表在进行变更操作时，无法对表添加临时分区。
+2. 当表存在临时分区时，无法使用 Alter 命令对表进行 Schema Change 等变更操作。
+
+3. 当表在进行变更操作时，无法对表添加临时分区。
 
 ### 临时分区导入
 
