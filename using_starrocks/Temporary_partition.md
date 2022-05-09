@@ -162,15 +162,16 @@ use_temp_partition_name 默认为 false，但因为待替换分区的个数和�
 临时分区的导入方式跟普通数据稍有差别：
 
 1. INSERT INTO 导入
-
 ```sql
 INSERT INTO table_name TEMPORARY PARTITION(tp_name, ) SELECT (sql_statment)
 ```
+
 2. STREAM LOAD 导入
 ```sql
 curl --location-trusted -u root: -H "label:123" -H "temporary_partitions: tp1, tp2, ..." -T testData \
     http://host:port/api/testDb/testTbl/_stream_load    
 ```
+
 3. BROKER LOAD 导入
 ```sql
 LOAD LABEL example_db.label1
@@ -182,6 +183,7 @@ LOAD LABEL example_db.label1
 )
 WITH BROKER hdfs ("username"="hdfs_user", "password"="hdfs_password");
 ```
+
 4. ROUTINE LOAD 导入
 ```sql
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl
