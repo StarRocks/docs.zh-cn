@@ -2,7 +2,7 @@
 
 ## 设计背景
 
-Flink 的用户想要将数据 sink 到 StarRock s当中，但是 Flink 官方只提供了 flink-connector-jdbc, 不足以满足导入性能要求，为此我们新增了一个 flink-connector-starrocks，内部实现是通过缓存并批量由 stream load 导入。
+Flink 的用户想要将数据 sink 到 StarRocks 当中，但是 Flink 官方只提供了 flink-connector-jdbc, 不足以满足导入性能要求，为此我们新增了一个 flink-connector-starrocks，内部实现是通过缓存并批量由 stream load 导入。
 
 ## 使用步骤
 
