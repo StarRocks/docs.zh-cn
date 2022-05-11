@@ -131,6 +131,7 @@ flink-connector-starrocks 的内部实现是通过缓存并批量由 stream load
     ```
 
 ## 参数说明
+
 其中Sink选项如下：
 
 | Option | Required | Default | Type | Description |
