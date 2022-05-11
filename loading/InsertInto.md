@@ -120,7 +120,6 @@ ERROR 1064 (HY000): Insert has filtered data in strict mode, tracking_url=http:/
 
 其中 ERROR 1064 (HY000): Insert has filtered data in strict mode 显示失败原因。后面的 tracking_url 可以用于查询错误的数据。
 
-
 ## 相关配置
 
 ### FE 配置
