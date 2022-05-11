@@ -8,7 +8,7 @@ Insert Into 语句的使用方式和 MySQL 等数据库中 Insert Into 语句的
 ### 应用场景
 
 * Insert Into VALUES, `仅适用于导入几条数据作为 DEMO 的情况，完全不适用于任何测试和生产环境`，大数据导入请参考其他导入方式。
-* Insert Into SELECT, 将已经在 StarRocks 表中的数据进行 ETL 转换并导入到一个新的 StarRocks 表中。用户也可以创建一种外部表，如 MySQL 外部表映射一张 MySQL 系统中的表。然后通过 INSERT INTO SELECT 语法将外部表中的数据导入到 StarRocks 表中存储。外表使用请参考[外部表](../using_starrocks/External_ta.ble.md)。
+* Insert Into SELECT, 将已经在 StarRocks 表中的数据进行 ETL 转换并导入到一个新的 StarRocks 表中。用户也可以创建一种外部表，如 MySQL 外部表映射一张 MySQL 系统中的表。然后通过 INSERT INTO SELECT 语法将外部表中的数据导入到 StarRocks 表中存储。外表使用请参考[外部表](../using_starrocks/External_table.md)。
 
 ## 操作步骤
 
