@@ -1,18 +1,16 @@
 # Insert Into 导入
 
+## 什么是 Insert Into 导入
+
 Insert Into 语句的使用方式和 MySQL 等数据库中 Insert Into 语句的使用方式类似。
 但在 StarRocks 中，所有的数据写入都是 **一个独立的导入作业** ，所以这里将 Insert Into 也作为一种导入方式介绍。
 
----
-
-## 使用场景
+### 应用场景
 
 * Insert Into VALUES, `仅适用于导入几条数据作为 DEMO 的情况，完全不适用于任何测试和生产环境`，大数据导入请参考其他导入方式。
-* Insert Into SELECT, 将已经在 StarRocks 表中的数据进行 ETL 转换并导入到一个新的 StarRocks 表中。用户也可以创建一种外部表，如 MySQL 外部表映射一张 MySQL 系统中的表。然后通过 INSERT INTO SELECT 语法将外部表中的数据导入到 StarRocks 表中存储。外表使用请参考[外部表](../using_starrocks/External_ta.ble.md../using_starrocks/External_table.md.)。
+* Insert Into SELECT, 将已经在 StarRocks 表中的数据进行 ETL 转换并导入到一个新的 StarRocks 表中。用户也可以创建一种外部表，如 MySQL 外部表映射一张 MySQL 系统中的表。然后通过 INSERT INTO SELECT 语法将外部表中的数据导入到 StarRocks 表中存储。外表使用请参考[外部表](../using_starrocks/External_ta.ble.md)。
 
----
-
-## 基本操作
+## 操作步骤
 
 ### 创建导入任务
 
@@ -125,8 +123,6 @@ ERROR 1064 (HY000): Insert has filtered data in strict mode, tracking_url=http:/
 ### 取消导入任务
 
 Insert Into 方式导入目前不支持取消或者停止任务。
-
----
 
 ## 相关配置
 
