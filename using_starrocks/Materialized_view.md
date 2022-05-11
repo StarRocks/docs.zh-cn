@@ -45,8 +45,6 @@
 
 [创建物化视图语法](../sql-reference/sql-statements/data-definition/CREATE%20MATERIALIZED%20VIEW.md)。创建物化视图是一个异步的操作，也就是说用户成功提交创建任务后，StarRocks 会在后台对存量的数据进行计算，直到创建成功。
 
-
-
 **示例**
 
 假设用户有一张销售记录明细表，存储了每个交易的交易 id 、销售员、售卖门店、销售时间、以及金额。建表语句为：
