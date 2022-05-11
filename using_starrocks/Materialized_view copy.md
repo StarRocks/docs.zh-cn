@@ -4,7 +4,7 @@
 
 1. 支持的数据模型：StarRocks当前仅支持明细模型及聚合模型表来创建物化视图。
 2. Base 表：StarRocks 中通过 CREATE TABLE 命令创建出来的表。
-3. Materialized Views 表：简称 MVs，翻译：物化视图。
+3. Materialized Views 表：简称 MVs - 物化视图。
 
 ## 使用场景
 
