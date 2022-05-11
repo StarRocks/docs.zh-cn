@@ -14,7 +14,7 @@ Insert Into 语句的使用方式和 MySQL 等数据库中 Insert Into 语句的
 
 ### 创建导入任务
 
-**示例1** 以导入 insert_wiki_edit 表为例：
+以导入 insert_wiki_edit 表为例：
 
 ~~~sql
 CREATE DATABASE IF NOT EXISTS load_test;
@@ -87,7 +87,7 @@ INSERT INTO insert_wiki_edit
 
 其他详细的使用语法请参考 [INSERT INTO](../sql-reference/sql-statements/data-manipulation/insert.md)
 
-### 查看任务状态
+### 查看导入任务是否执行成功
 
 Insert Into 本身就是一个 SQL 命令，其返回结果会根据执行结果的不同，分为以下两种：
 
@@ -120,9 +120,6 @@ ERROR 1064 (HY000): Insert has filtered data in strict mode, tracking_url=http:/
 
 其中 ERROR 1064 (HY000): Insert has filtered data in strict mode 显示失败原因。后面的 tracking_url 可以用于查询错误的数据。
 
-### 取消导入任务
-
-Insert Into 方式导入目前不支持取消或者停止任务。
 
 ## 相关配置
 
@@ -137,5 +134,6 @@ Insert Into 方式导入目前不支持取消或者停止任务。
 
 ## 注意事项
 
+* Insert Into 方式导入目前不支持取消或者停止任务。
 * 当前执行 INSERT 语句时，对于有不符合目标表格式的数据，默认的行为是过滤，比如字符串超长等。但是对于要求数据不能够被过滤的业务场景，可以通过设置会话变量 enable_insert_strict 为 true 来确保当有数据被过滤掉的时候，INSERT 不会成功执行。
 * 因为StarRocks的insert复用导入数据的逻辑，所以每一次insert语句都会产生一个新的数据版本。频繁小批量导入操作会产生过多的数据版本，而过多的小版本会影响查询的性能。所以并不建议频繁的使用insert语法导入数据或作为生产环境的日常例行导入任务。如果有流式导入或者小批量导入任务的需求，可以使用Stream Load或者Routine Load的方式进行导入。
