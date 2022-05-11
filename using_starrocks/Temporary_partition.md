@@ -46,14 +46,63 @@ DISTRIBUTED BY HASH(k1) BUCKETS 5;
 * 临时分区的添加和正式分区的添加操作相似。临时分区的分区范围独立于正式分区。
 * 临时分区可以独立指定一些属性。包括分桶数、副本数、是否是内存表、存储介质等信息。
 
-### 删除临时分区
+### 导入数据至临时分区
 
-通过 ALTER TABLE DROP TEMPORARY PARTITION 语句可以将一个表的临时分区删除。
+临时分区的导入方式跟普通数据稍有差别：
 
-**示例**
+#### INSERT INTO 导入
 
 ```sql
-ALTER TABLE tbl1 DROP TEMPORARY PARTITION tp1;
+INSERT INTO table_name TEMPORARY PARTITION(tp_name, ) SELECT (sql_statment)
+```
+
+#### STREAM LOAD 导入
+
+```sql
+curl --location-trusted -u root: -H "label:123" -H "temporary_partitions: tp1, tp2, ..." -T testData \
+    http://host:port/api/testDb/testTbl/_stream_load    
+```
+
+#### BROKER LOAD 导入
+
+```sql
+LOAD LABEL example_db.label1
+(
+    DATA INFILE("hdfs://hdfs_host:hdfs_port/user/palo/data/input/file")
+    INTO TABLE `my_table`
+    TEMPORARY PARTITION (tp1, tp2, ...)
+    ...
+)
+WITH BROKER hdfs ("username"="hdfs_user", "password"="hdfs_password");
+```
+
+#### ROUTINE LOAD 导入
+
+```sql
+CREATE ROUTINE LOAD example_db.test1 ON example_tbl
+COLUMNS(k1, k2, k3, v1, v2, v3 = k1 * 100),
+TEMPORARY PARTITIONS(tp1, tp2, ...),
+WHERE k1 > 100
+PROPERTIES
+("property_type"="property_value" ,...)
+FROM KAFKA
+(property_desc);
+```
+
+### 查询临时分区
+
+查询指定的临时分区
+
+```sql
+SELECT column_name FROM
+table_name TEMPORARY PARTITION(tp1, tp2, ...) ;
+
+SELECT column_name FROM
+table_name TEMPORARY PARTITION(tp1, tp2, ...)
+JOIN
+table_name TEMPORARY PARTITION(tp1, tp2, ...)
+ON ...
+WHERE ...;
 ```
 
 ### 使用临时分区进行替换
@@ -174,63 +223,14 @@ PROPERTIES (
 
 3. 当表在进行变更操作时，无法对表添加临时分区。
 
-### 导入数据至临时分区
+### 删除临时分区
 
-临时分区的导入方式跟普通数据稍有差别：
+通过 ALTER TABLE DROP TEMPORARY PARTITION 语句可以将一个表的临时分区删除。
 
-#### INSERT INTO 导入
-
-```sql
-INSERT INTO table_name TEMPORARY PARTITION(tp_name, ) SELECT (sql_statment)
-```
-
-#### STREAM LOAD 导入
+**示例**
 
 ```sql
-curl --location-trusted -u root: -H "label:123" -H "temporary_partitions: tp1, tp2, ..." -T testData \
-    http://host:port/api/testDb/testTbl/_stream_load    
-```
-
-#### BROKER LOAD 导入
-
-```sql
-LOAD LABEL example_db.label1
-(
-    DATA INFILE("hdfs://hdfs_host:hdfs_port/user/palo/data/input/file")
-    INTO TABLE `my_table`
-    TEMPORARY PARTITION (tp1, tp2, ...)
-    ...
-)
-WITH BROKER hdfs ("username"="hdfs_user", "password"="hdfs_password");
-```
-
-#### ROUTINE LOAD 导入
-
-```sql
-CREATE ROUTINE LOAD example_db.test1 ON example_tbl
-COLUMNS(k1, k2, k3, v1, v2, v3 = k1 * 100),
-TEMPORARY PARTITIONS(tp1, tp2, ...),
-WHERE k1 > 100
-PROPERTIES
-("property_type"="property_value" ,...)
-FROM KAFKA
-(property_desc);
-```
-
-### 查询临时分区
-
-查询指定的临时分区
-
-```sql
-SELECT column_name FROM
-table_name TEMPORARY PARTITION(tp1, tp2, ...) ;
-
-SELECT column_name FROM
-table_name TEMPORARY PARTITION(tp1, tp2, ...)
-JOIN
-table_name TEMPORARY PARTITION(tp1, tp2, ...)
-ON ...
-WHERE ...;
+ALTER TABLE tbl1 DROP TEMPORARY PARTITION tp1;
 ```
 
 ## 注意事项
