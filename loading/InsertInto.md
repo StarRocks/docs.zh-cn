@@ -78,7 +78,7 @@ INSERT INTO insert_wiki_edit
 * partitions: 指定待导入的分区，必须是 table_name 中存在的分区，多个分区名称用逗号分隔。如果指定目标分区，则只会导入符合目标分区的数据。如果没有指定，则默认值为这张表的所有分区。
 * label: 为 insert 作业指定一个 Label，Label 是该 Insert Into 导入作业的标识。每个导入作业，都有一个在单 database 内部唯一的 Label。
 
-> * **注意**：建议指定 label 而不是由系统自动分配。如果由系统自动分配，但在 Insert Into 语句执行过程中，因网络错误导致连接断开等，则无法得知 Insert Into 是否成功。而如果指定 Label，则可以再次通过 Label 查看任务结果。
+> * **注意**：建议指定 label 而不是由系统自动分配。如果由系统自动分配，但在 Insert Into 语句执行过程中，因网络错误导致连接断开等，则无法得知 Insert Into 是否成功。而如果指定 Label，则可以再次通过 Label 查看任务结果，查看指令 `show load where label="label"`。
 
 * column_name: 指定的目的列，必须是 table_name 中存在的列。导入表的目标列，可以以任意的顺序存在。如果没有指定目标列，那么默认值是这张表的所有列。如果导入表中的某个列不在目标列中，那么这个列需要有默认值，否则 Insert Into 会失败。如果查询语句的结果列类型与目标列的类型不一致，那么会调用隐式类型转化，如果不能进行转化，那么 Insert Into 语句会报语法解析错误。
 * query：一个普通查询，查询的结果会写入到目标中。查询语句支持任意 StarRocks 支持的 SQL 查询语法。
