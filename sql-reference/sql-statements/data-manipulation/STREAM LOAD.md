@@ -252,7 +252,7 @@ Stream Load的默认超时为300秒，按照StarRocks目前最大的导入限速
 
 `streaming_load_max_mb = 16000`
 
-* step2: 计算大概的导入时间是否超过默认 timeout 值，导入时间 ≈ 15000 / 10 = 1500s，超过了默认的 timeout 时间，需要修改 FE 的配置FE.conf：
+* step2: 计算大概的导入时间是否超过默认 timeout 值，导入时间 ≈ 15000 / 10 = 1500s，超过了默认的 timeout 时间，需要修改 FE 的配置（需要重启机器）FE.conf：
 
 `stream_load_default_timeout_second = 1500`
 
