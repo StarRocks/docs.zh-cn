@@ -1,28 +1,44 @@
-# 使用 Flink-connector 写入实现 MySQL 数据同步
+# MySQL 实时同步至StarRocks
 
-## 使用场景
+## 功能简介
 
-MySQL 数据实时同步到 StarRocks 满足业务实时场景的数据分析。
+StarRocks 提供 Flink CDC connector、flink-connector-starrocks 和 StarRocks-migrate-tools（简称smt），实现 MySQL 数据实时同步至 StarRocks，满足业务实时场景的数据分析。
 
 ## 基本原理
 
-通过 Flink-cdc 和 StarRocks-migrate-tools（简称 smt）可以实现 MySQL 数据的秒级同步。
+通过 Flink CDC connector、flink-connector-starrocks 和 smt 可以实现 MySQL 数据的秒级同步至StarRocks。
 
 ![MySQL 同步](../assets/4.9.2.png)
 
 如图所示，Smt 可以根据 MySQL 和 StarRocks 的集群信息和表结构自动生成 source table 和 sink table 的建表语句。  
 通过 Flink-cdc-connector 消费 MySQL 的 binlog，然后通过 Flink-connector-starrocks 写入 StarRocks。
 
-## 使用步骤
+## 操作步骤
 
-1. 记得打开 MySQL binlog，打开方式可参考 [打开 MySQl Binlog](#注意事项)
+1. 打开 MySQL binlog，修改/etc/my.cnf
+  
+    ``` bash
+    #开启 binlog 日志
+    log-bin =/var/lib/mysql/mysql-bin
 
-2. 下载 [Flink](https://flink.apache.org/downloads.html), 推荐使用 1.13，最低支持版本 1.11。
-3. 下载 [Flink CDC connector](https://github.com/ververica/flink-cdc-connectors/releases)，请注意下载对应 Flink 版本的 Flink-MySQL-CDC。
-4. 下载 [Flink-connector-starrocks](https://github.com/StarRocks/flink-connector-starrocks)，请注意 1.13 版本和 1.11/1.12 版本使用不同的 connector.
-5. 复制 `flink-sql-connector-mysql-cdc-xxx.jar`, `flink-connector-starrocks-xxx.jar` 到 `flink-xxx/lib/`
-6. 下载并解压 [smt.tar.gz](https://www.starrocks.com/zh-CN/download/community)
-7. 解压并修改配置文件
+    #log_bin = ON
+    ##binlog 日志的基本文件名
+    #log_bin_basename =/var/lib/mysql/mysql-bin
+    ##binlog 文件的索引文件，管理所有 binlog 文件
+    #log_bin_index =/var/lib/mysql/mysql-bin.index
+    #配置 serverid
+    server-id = 1
+    binlog_format = row
+    ```
+  
+    重启mysqld，然后可以通过 SHOW VARIABLES LIKE 'log_bin'; 确认是否已经打开。
+    
+3. 下载 [Flink](https://flink.apache.org/downloads.html), 推荐使用 1.13，最低支持版本 1.11。
+4. 下载 [Flink CDC connector](https://github.com/ververica/flink-cdc-connectors/releases)，请注意下载对应 Flink 版本的 Flink-MySQL-CDC。
+5. 下载 [Flink-connector-starrocks](https://github.com/StarRocks/flink-connector-starrocks)，请注意 1.13 版本和 1.11/1.12 版本使用不同的 connector.
+6. 复制 `flink-sql-connector-mysql-cdc-xxx.jar`, `flink-connector-starrocks-xxx.jar` 到 `flink-xxx/lib/`
+7. 下载并解压 [smt.tar.gz](https://www.starrocks.com/zh-CN/download/community)
+8. 解压并修改配置文件
     * `Db` 需要修改成 MySQL 的连接信息。  
     * `be_num` 需要配置成 StarRocks 集群的节点数（这个能帮助更合理的设置 bucket 数量）。  
     * `[table-rule.1]` 是匹配规则，可以根据正则表达式匹配数据库和表名生成建表的 SQL，也可以配置多个规则。  
@@ -171,22 +187,3 @@ MySQL 数据实时同步到 StarRocks 满足业务实时场景的数据分析。
     'sink.properties.column_separator' = '\\x01'
     'sink.properties.row_delimiter' = '\\x02'  
     ```
-
-* 如何开启MySQL binlog  
-    修改/etc/my.cnf
-  
-    ``` bash
-    #开启 binlog 日志
-    log-bin =/var/lib/mysql/mysql-bin
-
-    #log_bin = ON
-    ##binlog 日志的基本文件名
-    #log_bin_basename =/var/lib/mysql/mysql-bin
-    ##binlog 文件的索引文件，管理所有 binlog 文件
-    #log_bin_index =/var/lib/mysql/mysql-bin.index
-    #配置 serverid
-    server-id = 1
-    binlog_format = row
-    ```
-  
-    重启mysqld，然后可以通过 SHOW VARIABLES LIKE 'log_bin'; 确认是否已经打开。
