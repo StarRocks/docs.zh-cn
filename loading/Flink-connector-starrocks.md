@@ -154,7 +154,7 @@ flink-connector-starrocks 的内部实现是通过缓存并批量由 stream load
 
 sink.properties.* 可以配置为 `sink.properties.columns' = 'k1, k2, k3'`，其他支持的参数请参考 [STREAM LOAD](../sql-reference/sql-statements/data-manipulation/STREAM%20LOAD.md)。
 
-## Flink 数据类型与 StarRocks 数据类型映射表
+## Flink 与 StarRocks 的数据类型映射关系
 
 | Flink type | StarRocks type |
 |  :-: | :-: |
@@ -187,7 +187,7 @@ sink.properties.* 可以配置为 `sink.properties.columns' = 'k1, k2, k3'`，�
 
 - 如果代码运行正常且能接收到数据，但是写入不成功时请确认当前机器能访问BE的http_port端口，这里指能ping通集群show backends显示的ip:port。举个例子：如果一台机器有外网和内网ip，且FE/BE的http_port均可通过外网ip:port访问，集群里绑定的ip为内网ip，任务里loadurl写的FE外网ip:http_port,FE会将写入任务转发给BE内网ip:port,这时如果Client机器ping不通BE的内网ip就会写入失败。
 
-### 导入数据可观测指标
+## 导入数据可观测指标
 
 | Name | Type | Description |
 |  :-: | :-:  | :-:  |
