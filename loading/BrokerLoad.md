@@ -29,7 +29,7 @@ broker进程部署可以参考手册（[部署Broker](../quick_start/Deploy.md)�
 ### 创建导入任务
 
 
-**Apache HDFS导入示例：**
+- **Apache HDFS导入示例：**
 
 ~~~sql
 LOAD LABEL db1.label1
@@ -61,7 +61,7 @@ PROPERTIES
 );
 ~~~
 
-**阿里云 OSS导入示例：**
+- **阿里云 OSS导入示例：**
 
 ~~~SQL
 LOAD LABEL example_db.label12
@@ -80,7 +80,7 @@ WITH BROKER my_broker
 
 **Label：**
 
-导入任务的标识。每个导入任务，都有**一个数据库**内部唯一的Label。Label是用户在导入命令中自定义的名称。通过这个Label，用户可以查看对应导入任务的执行情况，并且Label可以用来防止用户导入相同的数据。当导入任务状态为FINISHED时，对应的Label就不能再次使用了。当 Label 对应的导入任务状态为CANCELLED时，**可以再次使用**该Label提交导入作业。
+导入任务的标识。每个导入任务都对应一个在**该数据库内**唯一的Label。Label是用户在导入命令中自定义的名称。通过这个Label，用户可以查看对应导入任务的执行情况，并且Label可以用来防止用户导入相同的数据。当导入任务状态为FINISHED时，对应的Label就不能再次使用了。当 Label 对应的导入任务状态为CANCELLED时，**可以再次使用**该Label提交导入作业。
 
 **数据描述类参数：**
 
