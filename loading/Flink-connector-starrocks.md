@@ -195,4 +195,3 @@ sink.properties.* 可以配置为 `sink.properties.columns' = 'k1, k2, k3'`，�
 | totalFlushRows | counter | successfully flushed rows. |
 | totalFlushSucceededTimes | counter | number of times that the data-batch been successfully flushed. |
 | totalFlushFailedTimes | counter | number of times that the flushing been failed. |
-
