@@ -43,7 +43,6 @@ PARTITION BY RANGE(event_time)
 )
 DISTRIBUTED BY HASH(user) BUCKETS 3
 PROPERTIES("replication_num" = "1");
-
 ~~~
 
 #### 通过values导入数据
