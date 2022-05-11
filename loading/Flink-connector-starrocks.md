@@ -5,6 +5,11 @@
 StarRocks 提供 flink-connector-starrocks，导入数据至 StarRocks，相比于 Flink 官方提供的 flink-connector-jdbc，导入性能更佳。
 flink-connector-starrocks 的内部实现是通过缓存并批量由 stream load 导入。
 
+## 支持的数据源
+
+* CSV
+* JSON
+
 ## 操作步骤
 
 ### 步骤一：添加 pom 依赖
