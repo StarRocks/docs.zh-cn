@@ -48,8 +48,6 @@ DISTRIBUTED BY HASH(k1) BUCKETS 5;
 
 ### 导入数据至临时分区
 
-临时分区的导入方式跟普通数据稍有差别：
-
 #### INSERT INTO 导入
 
 ```sql
