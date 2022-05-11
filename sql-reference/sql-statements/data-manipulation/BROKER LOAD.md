@@ -343,8 +343,7 @@ WITH BROKER broker_name
 
 7. 提取文件路径中的分区字段
 
-    如果需要，则会根据表中定义的字段类型解析文件路径中的分区字段（partitioned fields），类似Spark中Partition Discovery的功能
-
+    如果需要提取文件路径中的分区字段，指定后会根据表中定义的字段类型解析文件路径中的分区字段（partitioned fields），该功能类似Spark中Partition Discovery的功能
     ```SQL
     LOAD LABEL example_db.label10
     (
@@ -403,7 +402,7 @@ WITH BROKER broker_name
     WITH BROKER "hdfs" ("username"="user", "password"="pass");
     ```
 
-10. 从 阿里云 OSS 导入 csv 格式的数据
+10. 从 阿里云 OSS 导入 CSV 格式的数据
 
     ```SQL
     LOAD LABEL example_db.label12
@@ -420,7 +419,7 @@ WITH BROKER broker_name
     )
     ```
 
-11. 从腾讯云 COS 导入 csv 格式的数据
+11. 从腾讯云 COS 导入 CSV 格式的数据
 
     ```SQL
     LOAD LABEL example_db.label13
@@ -437,7 +436,7 @@ WITH BROKER broker_name
     )
     ```
 
-12. 从 Amazon S3 导入 csv 格式的数据
+12. 从 Amazon S3 导入 CSV 格式的数据
 
     ```SQL
     LOAD LABEL example_db.label14
