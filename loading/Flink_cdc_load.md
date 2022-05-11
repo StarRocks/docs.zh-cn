@@ -111,7 +111,7 @@ StarRocks 提供 Flink CDC connector、flink-connector-starrocks 和 StarRocks-m
     bin/flink list 
     ```
 
-  如果有任务请查看 log 日志，或者调整 conf/flink-conf.yam 中的系统配置中内存和 slot，具体配置请参考 [Flink 配置参数](https://nightlies.apache.org/flink/flink-docs-master/zh/docs/deployment/config/)。
+  上述命令可以查看 flink 同步任务状态，如果有任务请查看 log 日志，或者调整 conf/flink-conf.yaml 中的系统配置中内存和 slot，具体配置请参考 [Flink 配置参数](https://nightlies.apache.org/flink/flink-docs-master/zh/docs/deployment/config/)。
 
 ## 注意事项
 
