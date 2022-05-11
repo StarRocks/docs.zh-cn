@@ -15,7 +15,7 @@ StarRocks 提供 Flink CDC connector、flink-connector-starrocks 和 StarRocks-m
 
 ## 操作步骤
 
-1. 打开 MySQL binlog，修改/etc/my.cnf
+1. 修改/etc/my.cnf，开启 MySQL binlog
   
     ``` bash
     #开启 binlog 日志
@@ -32,13 +32,13 @@ StarRocks 提供 Flink CDC connector、flink-connector-starrocks 和 StarRocks-m
     ```
   
     重启mysqld，然后可以通过 SHOW VARIABLES LIKE 'log_bin'; 确认是否已经打开。
-    
-3. 下载 [Flink](https://flink.apache.org/downloads.html), 推荐使用 1.13，最低支持版本 1.11。
-4. 下载 [Flink CDC connector](https://github.com/ververica/flink-cdc-connectors/releases)，请注意下载对应 Flink 版本的 Flink-MySQL-CDC。
-5. 下载 [Flink-connector-starrocks](https://github.com/StarRocks/flink-connector-starrocks)，请注意 1.13 版本和 1.11/1.12 版本使用不同的 connector.
-6. 复制 `flink-sql-connector-mysql-cdc-xxx.jar`, `flink-connector-starrocks-xxx.jar` 到 `flink-xxx/lib/`
-7. 下载并解压 [smt.tar.gz](https://www.starrocks.com/zh-CN/download/community)
-8. 解压并修改配置文件
+
+2. 下载 [Flink](https://flink.apache.org/downloads.html), 推荐使用 1.13，最低支持版本 1.11。
+3. 下载 [Flink CDC connector](https://github.com/ververica/flink-cdc-connectors/releases)，请注意下载对应 Flink 版本的 Flink-MySQL-CDC。
+4. 下载 [Flink-connector-starrocks](https://github.com/StarRocks/flink-connector-starrocks)，请注意 1.13 版本和 1.11/1.12 版本使用不同的 connector.
+5. 复制 `flink-sql-connector-mysql-cdc-xxx.jar`, `flink-connector-starrocks-xxx.jar` 到 `flink-xxx/lib/`
+6. 下载并解压 [smt.tar.gz](https://www.starrocks.com/zh-CN/download/community)
+7. 解压并修改配置文件
     * `Db` 需要修改成 MySQL 的连接信息。  
     * `be_num` 需要配置成 StarRocks 集群的节点数（这个能帮助更合理的设置 bucket 数量）。  
     * `[table-rule.1]` 是匹配规则，可以根据正则表达式匹配数据库和表名生成建表的 SQL，也可以配置多个规则。  
