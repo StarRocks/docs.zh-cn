@@ -1,4 +1,4 @@
-# Flink-connector 导入
+# 使用MySQL 实时同步至 StarRocks
 
 ## 设计背景
 
