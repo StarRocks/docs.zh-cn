@@ -4,7 +4,6 @@
 
 Broker Load是一种**异步的导入方式**，通过部署的Broker程序，StarRocks可读取对应数据源（如HDFS、S3）上的数据，利用自身的计算资源对数据进行预处理和导入。因为是异步导入，通过SQL异步创建导入作业后，可以通过 show load命令检查导入的结果。
 
-
 ## 支持的数据格式
 
 Broker Load支持从Apache HDFS、Amazon S3等外部存储系统导入数据，支持CSV、ORCFile、Parquet等文件格式。
@@ -28,8 +27,7 @@ broker进程部署可以参考手册（[部署Broker](../quick_start/Deploy.md)�
 
 ### 创建导入任务
 
-
-- **Apache HDFS导入示例：**
+* **Apache HDFS导入示例：**
 
 ~~~sql
 LOAD LABEL db1.label1
@@ -61,7 +59,7 @@ PROPERTIES
 );
 ~~~
 
-- **阿里云 OSS导入示例：**
+* **阿里云 OSS导入示例：**
 
 ~~~SQL
 LOAD LABEL example_db.label12
