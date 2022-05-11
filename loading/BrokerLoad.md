@@ -1,12 +1,13 @@
 # Broker Load
 
-Broker Load是一种*异步**的导入方式**，该导入通过部署的Broker程序，StarRocks可读取对应数据源（如HDFS、S3）上的数据，利用自身的计算资源对数据进行预处理和导入。因为是异步导入，所以用户需要通过MySQL协议创建导入，并通过查看导入命令检查导入结果。
+本节主要介绍如何通过 Broker 导入数据以及与其相关的常见问题。
 
-本节主要介绍Broker导入的及常见问题。
+Broker Load是一种**异步的导入方式**，通过部署的Broker程序，StarRocks可读取对应数据源（如HDFS、S3）上的数据，利用自身的计算资源对数据进行预处理和导入。因为是异步导入，通过SQL异步创建导入作业后，可以通过 show load命令检查导入的结果。
+
 
 ## 支持的数据格式
 
-Broker Load支持从Apache HDFS、Amazon S3等外部存储系统导入数据，支持CSV、ORCFile、Parquet等文件格式。数据量在几十GB到上百GB 级别。
+Broker Load支持从Apache HDFS、Amazon S3等外部存储系统导入数据，支持CSV、ORCFile、Parquet等文件格式。
 
 ## 支持的远程文件系统
 
@@ -21,13 +22,12 @@ Broker Load支持从Apache HDFS、Amazon S3等外部存储系统导入数据，�
 
 ### Broker搭建
 
-Broker Load需要借助Broker进程访问远端存储，因此使用Broker Load前需要搭建好Broker。
+Broker Load需要借助Broker进程访问远端存储，因此使用Broker Load前需要提前搭建好Broker进程。
 
-可以参考手动部署（[部署Broker](../quick_start/Deploy.md)）。
+broker进程部署可以参考手册（[部署Broker](../quick_start/Deploy.md)）。
 
 ### 创建导入任务
 
-**语法：**
 
 **Apache HDFS导入示例：**
 
@@ -108,7 +108,7 @@ data_desc中还可以设置数据取反导入。这个功能适用的场景是�
 
 在data_desc中可以指定待导入表的partition信息。如果待导入数据不属于指定的partition则不会被导入。同时，不在指定Partition中的数据会被认为是“错误数据”。对于不想要导入、也不想要记录为“错误数据”的数据，可以使用下面介绍的 **where predicate** 来过滤。
 
-创建导入任务更详细的语法可以参考 [CREATE ROUTINE LOAD](../sql-reference/sql-statements/data-manipulation/BROKER%20LOAD.md)。
+创建导入任务更详细的语法可以参考 [CREATE BROKER LOAD](../sql-reference/sql-statements/data-manipulation/BROKER%20LOAD.md)。
 
 **导入作业参数：**
 
