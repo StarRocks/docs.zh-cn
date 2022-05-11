@@ -1,8 +1,8 @@
-# MySQL 实时同步至 StarRocks
+# 使用 flink-connector-starrocks 导入至 StarRocks
 
 ## 功能简介
 
-StarRocks 提供 flink-connector-starrocks，支持将 MySQL 的数据实时同步至 StarRocks，相比于 Flink 官方提供的 flink-connector-jdbc，导入性能更佳。
+StarRocks 提供 flink-connector-starrocks，导入数据至 StarRocks，相比于 Flink 官方提供的 flink-connector-jdbc，导入性能更佳。
 flink-connector-starrocks 的内部实现是通过缓存并批量由 stream load 导入。
 
 ## 操作步骤
