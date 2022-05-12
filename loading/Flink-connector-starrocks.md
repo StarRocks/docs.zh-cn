@@ -41,7 +41,7 @@ flink-connector-starrocks 的内部实现是通过缓存并批量由 stream load
 
 ### 步骤二：调用 flink-connector-starrocks，将 MySQL 数据实时同步至 StarRocks
 
-- 如您使用 Flink DataStream API，则需要参考如下命令。
+* 如您使用 Flink DataStream API，则需要参考如下命令。
 
     ```scala
     // -------- 原始数据为 json 格式 --------
@@ -106,7 +106,7 @@ flink-connector-starrocks 的内部实现是通过缓存并批量由 stream load
     ;
     ```
 
-- 如您使用 Flink Table API，则需要参考如下命令。
+* 如您使用 Flink Table API，则需要参考如下命令。
 
     ```scala
     // -------- 原始数据为 CSV 格式 --------
