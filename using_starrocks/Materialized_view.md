@@ -96,7 +96,7 @@ GROUP BY store_id;
 - PERCENTILE_APPROX
 - HLL_UNION
 
-    对明细数据进行 HLL 聚合并且在查询时，使用 HLL 函数分析数据。主要适用于快速进行非精确去重计算。对明细数据使用HLL\_UNION聚合，需要先调用hll\_hash函数，对原数据进行转换。
+    对明细数据进行 HLL 聚合并且在查询时，使用 HLL 函数分析数据。主要适用于快速进行非精确去重计算。对明细数据使用HLL\_UNION聚合，如果是整形、字符串等基础类型需要先调用hll\_hash函数，对原数据进行转换。
 
     ~~~SQL
     create materialized view dt_uv as 
@@ -110,7 +110,7 @@ GROUP BY store_id;
 
 - BITMAP_UNION
 
-    对明细数据进行 BITMAP 聚合并且在查询时，使用 BITMAP 函数分析数据，主要适用于快速计算 count(distinct) 的精确去重。对明细数据使用 BITMAP\_UNION 聚合，需要先调用 to\_bitmap 函数，对原数据进行转换。
+    对明细数据进行 BITMAP 聚合并且在查询时，使用 BITMAP 函数分析数据，主要适用于快速计算 count(distinct) 的精确去重。对明细数据使用 BITMAP\_UNION 聚合，如果是整形、字符串等基础类型需要先调用 to\_bitmap 函数，对原数据进行转换。
 
     ~~~SQL
     create materialized view dt_uv  as
