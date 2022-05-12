@@ -274,7 +274,7 @@ canal.mq.canalBatchSize = 50
 # Canal get数据的超时时间, 单位: 毫秒, 空为不限超时
 canal.mq.canalGetTimeout = 100
 # 是否为flat json格式对象
-canal.mq.flatMessage = false
+canal.mq.flatMessage = true
 canal.mq.compressionType = none
 canal.mq.acks = all
 # kafka消息投递是否使用事务
