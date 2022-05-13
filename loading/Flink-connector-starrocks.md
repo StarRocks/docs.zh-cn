@@ -158,7 +158,6 @@ flink-connector-starrocks 的内部实现是通过缓存并批量由 stream load
 | sink.properties.* | NO | NONE | String | the stream load properties like **'sink.properties.columns' = 'k1, k2, k3'**,details in [STREAM LOAD](../sql-reference/sql-statements/data-manipulation/STREAM%20LOAD.md)。 |
 | sink.properties.ignore_json_size | NO |false| String | ignore the batching size (100MB) of json data |
 
-
 ## Flink 与 StarRocks 的数据类型映射关系
 
 | Flink type | StarRocks type |
