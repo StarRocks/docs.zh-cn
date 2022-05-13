@@ -10,7 +10,7 @@
 
 ## 使用场景
 
-Mysql、Oracle 等 DataX 支持读取的数据库`全量数据`通过 DataX 和 starrockswriter 导入到 StarRocks。
+Mysql、Oracle 等 DataX 支持读取的数据库**全量数据**通过 DataX 和 starrockswriter 导入到 StarRocks。
 
 ## 实现原理
 
@@ -208,9 +208,9 @@ StarRocksWriter 插件实现了写入数据到 StarRocks 的目的表的功能�
 
 ### 查看导入任务状态
 
-DataX 导入底层调用的 Stream Load实现，可以在 datax/log/$日期/ 目录下搜索对应的job日志，日志文件名字中包含上文命名的json文件名和任务启动的小时分钟秒，例如：t_datax_job_job_json-20_52_19.196.log，
+DataX 导入是封装的 Stream Load 实现的，可以在 `datax/log/$date/` 目录下搜索对应的job日志，日志文件名字中包含上文命名的json文件名和任务启动的小时分钟秒，例如：t_datax_job_job_json-20_52_19.196.log，
 
-* 日志中如果有 "http://$fe:${http_port}/api/$db/$tbl/_stream_load" 生成，表示成功触发了 Stream Load 任务，任务结果可参考 [Stream Load 任务状态](../loading/StreamLoad#创建导入任务)。
+* 日志中如果有 `http://$fe:${http_port}/api/$db/$tbl/_stream_load` 生成，表示成功触发了 Stream Load 任务，任务结果可参考 [Stream Load 任务状态](../loading/StreamLoad#创建导入任务)。
 
 * 日志中如果没有上述信息，请参考报错提示排查，或者在 [DataX 社区问题](https://github.com/alibaba/DataX/issues)查找。
 
