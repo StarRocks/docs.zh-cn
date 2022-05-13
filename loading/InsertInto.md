@@ -93,7 +93,7 @@ Insert Into 本身就是一个 SQL 命令，其返回结果会根据执行结果
 #### 执行成功
 
 ~~~sql
-INSERT INTO insert_wiki_edit
+mysql> INSERT INTO insert_wiki_edit
     WITH LABEL insert_load_wikipedia
     SELECT * FROM routine_wiki_edit; 
 Query OK, 18203 rows affected (0.40 sec)
@@ -111,7 +111,7 @@ Query OK, 18203 rows affected (0.40 sec)
 执行失败表示没有任何数据被成功导入，并返回如下：
 
 ~~~sql
-INSERT INTO insert_wiki_edit PARTITION(p24)
+mysql> INSERT INTO insert_wiki_edit PARTITION(p24)
     WITH LABEL insert_load_wikipedia_6
     SELECT * FROM routine_wiki_edit;
 ERROR 1064 (HY000): Insert has filtered data in strict mode, tracking_url=http://172.26.194.185:9016/api/_load_error_log?file=error_log_9f0a4fd0b64e11ec_906bbede076e9d08
