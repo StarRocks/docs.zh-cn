@@ -95,3 +95,5 @@ flink-source-connector 支持 Flink 批量读取 StarRocks 数据，实现了直
 - 当 4 张表以上进行 Join 时，复杂表达式规划错误，导致查询报错。
 - Shuffle Join 下，如果 Shuffle 的列是低基数列，可能会导致 BE 停止服务。[#4890](https://github.com/StarRocks/starrocks/issues/4890)
 - SPLIT 函数使用 NULL 参数时，会导致 BE 停止服务。[#4092](https://github.com/StarRocks/starrocks/issues/4092)
+
+## 2.1.6
