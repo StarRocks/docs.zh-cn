@@ -220,8 +220,6 @@ DISTRIBUTED BY HASH(date) BUCKETS 1;
 2020-05-23
 ~~~
 
-在导入时，通过下面的命令实现衍生列。
-
 ### 本地文件导入
 
 通过下面的命令，能够在导入本地文件的同时，生成对应的衍生列。方法是指定HTTP请求中的`Header "columns:date, year=year(date), month=month(date), day=day(date)"`，让StarRocks在导入过程中根据文件内容计算生成对应的列。
