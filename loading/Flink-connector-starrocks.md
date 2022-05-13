@@ -181,6 +181,8 @@ flink-connector-starrocks 的内部实现是通过缓存并批量由 stream load
 | MAP\<KT,VT\> | JSON STRING |
 | ROW\<arg T...\> | JSON STRING |
 
+>注意：当前不支持 Flink 的 BYTES、VARBINARY、TIME、INTERVAL、MULTISET、RAW，具体可参考 [Flink 数据类型](https://nightlies.apache.org/flink/flink-docs-master/docs/dev/table/types/)。
+
 ## 注意事项
 
 * 支持exactly-once的数据sink保证，需要外部系统的 two phase commit 机制。由于 StarRocks 无此机制，我们需要依赖flink的checkpoint-interval在每次checkpoint时保存批数据以及其label，在checkpoint完成后的第一次invoke中阻塞flush所有缓存在state当中的数据，以此达到精准一次。但如果StarRocks挂掉了，会导致用户的flink sink stream 算子长时间阻塞，并引起flink的监控报警或强制kill。
@@ -202,6 +204,6 @@ flink-connector-starrocks 的内部实现是通过缓存并批量由 stream load
 
 flink-connector-starrocks 导入底层调用的 Stream Load实现，可以在 flink 日志中查看导入状态
 
-* 日志中如果有 "http://$fe:${http_port}/api/$db/$tbl/_stream_load" 生成，表示成功触发了 Stream Load 任务，任务结果也会打印在 flink 日志中，返回值可参考 [Stream Load 任务状态](../loading/StreamLoad#创建导入任务)。
+* 日志中如果有 `http://$fe:${http_port}/api/$db/$tbl/_stream_load` 生成，表示成功触发了 Stream Load 任务，任务结果也会打印在 flink 日志中，返回值可参考 [Stream Load 任务状态](../loading/StreamLoad#创建导入任务)。
 
 * 日志中如果没有上述信息，请在论坛提问 [StarRocks 论坛](https://forum.starrocks.com/)，我们会及时跟进。
