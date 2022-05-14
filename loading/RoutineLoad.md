@@ -397,10 +397,10 @@ JSON文本暂停、恢复和停止导入任务指令与上述CSV格式一致。
      min(min(partitionNum, min(desireTaskConcurrentNum, aliveBeNum)), Config.max_routine_load_task_concurrent_num)
      ~~~
 
-     partitionNum：Kafka topic 分区个数
-     desireTaskConcurrentNum： desired_concurrent_number 配置，见 [创建导入任务](#创建导入任务) 参数说明
-     aliveBeNum：集群存活的 BE 节点个数
-     max_routine_load_task_concurrent_num：be.conf 配置项，默认为5，具体可参考 [参数配置](../administration/Configuration.md)
+     * partitionNum：Kafka topic 分区个数
+     * desireTaskConcurrentNum： desired_concurrent_number 配置，见 [创建导入任务](#创建导入任务) 参数说明
+     * aliveBeNum：集群存活的 BE 节点个数
+     * max_routine_load_task_concurrent_num：be.conf 配置项，默认为5，具体可参考 [参数配置](../administration/Configuration.md)
 
      可以看出来主要受限于存活的 BE 节点个数，您的 **Kafka topic分区数 > BE节点个数** 的时候，建议拆分成多个 ROUTINE LOAD 任务。比如下面这个场景下：
 
