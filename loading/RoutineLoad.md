@@ -259,7 +259,7 @@ ReasonOfStateChanged:
 1 row in set (0.00 sec)
 ~~~
 
-重启导入任务后，可以看到第一次查询任务时，State 变更为 **NEED_SCHEDULE**，表示任务正在重新调度；第二次查询任务时，State 变更为 **RUNING**，同时 Statistic 和 Progress 中的导入信息开始更新，继续导入数据。
+重启导入任务后，可以看到第一次查询任务时，State 变更为 **NEED_SCHEDULE**，表示任务正在重新调度；第二次查询任务时，State 变更为 **RUNNING**，同时 Statistic 和 Progress 中的导入信息开始更新，继续导入数据。
 
 ### 修改导入任务
 
@@ -329,9 +329,9 @@ ReasonOfStateChanged:
 
 ~~~json
 [
-  {"category": "11", "title": "SayingsoftheCentury", "price": 895, "timestamp": 1589191587},
-  {"category": "22", "author": "2avc", "price": 895, "timestamp": 1589191487},
-  {"category": "33", "author": "3avc", "title": "SayingsoftheCentury", "timestamp": 1589191387}
+    {"category": "11", "title": "SayingsoftheCentury", "price": 895, "timestamp": 1589191587},
+    {"category": "22", "author": "2avc", "price": 895, "timestamp": 1589191487},
+    {"category": "33", "author": "3avc", "title": "SayingsoftheCentury", "timestamp": 1589191387}
 ]
 ~~~
 
