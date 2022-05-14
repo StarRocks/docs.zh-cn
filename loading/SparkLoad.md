@@ -381,23 +381,23 @@ CANCEL LOAD FROM db1 WHERE LABEL = "label1";
 
 ## 常见问题
 
-1、Q：报错 When running with master 'yarn' either HADOOP-CONF-DIR or YARN-CONF-DIR must be set in the environment.
+* Q：报错 When running with master 'yarn' either HADOOP-CONF-DIR or YARN-CONF-DIR must be set in the environment.
 
-A：使用 Spark Load 时没有在 Spark 客户端的 spark-env.sh 配置 HADOOP-CONF-DIR 环境变量。
+  A：使用 Spark Load 时没有在 Spark 客户端的 spark-env.sh 配置 HADOOP-CONF-DIR 环境变量。
 
-2、Q：提交 Spark job 时用到 spark-submit 命令，报错：Cannot run program "xxx/bin/spark-submit": error = 2, No such file or directory
+* Q：提交 Spark job 时用到 spark-submit 命令，报错：Cannot run program "xxx/bin/spark-submit": error = 2, No such file or directory
 
-A：使用 Spark Load 时 `spark_home_default_dir` 配置项没有指定或者指定了错误的 spark 客户端根目录。
+  A：使用 Spark Load 时 `spark_home_default_dir` 配置项没有指定或者指定了错误的 spark 客户端根目录。
 
-3、Q：报错 File xxx/jars/spark-2x.zip does not exist 错误。
+* Q：报错 File xxx/jars/spark-2x.zip does not exist 错误。
 
-A：使用 Spark Load 时 spark-resource-path 配置项没有指向打包好的 zip 文件，检查指向文件路径和文件名词是否一致。
+  A：使用 Spark Load 时 spark-resource-path 配置项没有指向打包好的 zip 文件，检查指向文件路径和文件名词是否一致。
 
-4、Q：报错 yarn client does not exist in path: xxx/yarn-client/hadoop/bin/yarn
+* Q：报错 yarn client does not exist in path: xxx/yarn-client/hadoop/bin/yarn
 
- 使用 Spark Load 时 yarn-client-path 配置项没有指定 yarn 的可执行文件。
+  A：使用 Spark Load 时 yarn-client-path 配置项没有指定 yarn 的可执行文件。
 
-5、Q：报错 Cannot execute hadoop-yarn/bin/../libexec/yarn-config.sh
+* Q：报错 Cannot execute hadoop-yarn/bin/../libexec/yarn-config.sh
 
-A：使用 CDH 的 Hadoop 时，需要配置 HADOOP_LIBEXEC_DIR 环境变量，由于 hadoop-yarn 和 hadoop 目录不同，默认 libexec 目录会找 hadoop-yarn/bin/../libexec，而 libexec 在 hadoop 目录下。
+  A：使用 CDH 的 Hadoop 时，需要配置 HADOOP_LIBEXEC_DIR 环境变量，由于 hadoop-yarn 和 hadoop 目录不同，默认 libexec 目录会找 hadoop-yarn/bin/../libexec，而 libexec 在 hadoop 目录下。
  ```yarn application status```命令获取Spark任务状态报错导致导入作业失败。
