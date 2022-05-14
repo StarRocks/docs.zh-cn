@@ -101,3 +101,4 @@
 - 在数据导入中的某些特殊情形，可能一些副本的某些版本还未生效，却被 FE 标记为生效，导致查询时出现找不到对应版本数据的错误。[#5153](https://github.com/StarRocks/starrocks/issues/5153)
 - `SPLIT` 函数使用 `NULL` 参数时，会导致 BE 停止服务。[#4092](https://github.com/StarRocks/starrocks/issues/4092)  
 - 从 Apache Doris 0.13 升级到 StarRocks 1.19.x 并运行一段时间，再升级到 StarRocks 2.0.1，可能会升级失败。[#5309](https://github.com/StarRocks/starrocks/issues/5309)
+
