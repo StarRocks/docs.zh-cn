@@ -14,7 +14,7 @@ Spark Load 通过外部的 Spark 资源实现对导入数据的预处理，提�
 
 ## 基本操作
 
-使用 Spark Load导入数据，需要按照 `创建资源-->配置 Spark 客户端-->配置 YARN 客户端-->创建 Spark Load 导入任务` 流程执行，具体的各个部分介绍请参考下问描述。
+使用 Spark Load导入数据，需要按照 `创建资源 -> 配置 Spark 客户端 -> 配置 YARN 客户端 -> 创建 Spark Load 导入任务` 流程执行，具体的各个部分介绍请参考下问描述。
 
 ### 配置 ETL 集群
 
@@ -111,7 +111,7 @@ PROPERTIES 是 Spark 资源相关参数，如下：
 #### 查看资源
 
 ~~~sql
-    show resources;
+show resources;
 ~~~
 
 普通账户只能看到自己有 USAGE-PRIV 使用权限的资源。root 和 admin 账户可以看到所有的资源。
@@ -331,7 +331,7 @@ LoadFinishTime: 2019-07-27 11:50:16
 当 Spark load 作业状态不为 CANCELLED 或 FINISHED 时，可以被用户手动取消。取消时需要指定待取消导入任务的 Label 。取消导入命令语法可参考 [CANCEL LOAD](../sql-reference/sql-statements/data-manipulation/CANCEL%20LOAD.md) 。示例如下：
 
 ~~~sql
-    CANCEL LOAD FROM db1 WHERE LABEL = "label1";
+CANCEL LOAD FROM db1 WHERE LABEL = "label1";
 ~~~
 
 ---
@@ -381,23 +381,23 @@ LoadFinishTime: 2019-07-27 11:50:16
 
 ## 常见问题
 
-1、报错：When running with master 'yarn' either HADOOP-CONF-DIR or YARN-CONF-DIR must be set in the environment.
+1、Q：报错 When running with master 'yarn' either HADOOP-CONF-DIR or YARN-CONF-DIR must be set in the environment.
 
-使用 Spark Load 时没有在 Spark 客户端的 spark-env.sh 配置 HADOOP-CONF-DIR 环境变量。
+A：使用 Spark Load 时没有在 Spark 客户端的 spark-env.sh 配置 HADOOP-CONF-DIR 环境变量。
 
-2、提交 Spark job 时用到 spark-submit 命令，报错：Cannot run program "xxx/bin/spark-submit": error = 2, No such file or directory
+2、Q：提交 Spark job 时用到 spark-submit 命令，报错：Cannot run program "xxx/bin/spark-submit": error = 2, No such file or directory
 
-使用 Spark Load 时 `spark_home_default_dir` 配置项没有指定或者指定了错误的 spark 客户端根目录。
+A：使用 Spark Load 时 `spark_home_default_dir` 配置项没有指定或者指定了错误的 spark 客户端根目录。
 
-3、报错：File xxx/jars/spark-2x.zip does not exist 错误。
+3、Q：报错 File xxx/jars/spark-2x.zip does not exist 错误。
 
- 使用 Spark Load 时 spark-resource-path 配置项没有指向打包好的 zip 文件，检查指向文件路径和文件名词是否一致。
+A：使用 Spark Load 时 spark-resource-path 配置项没有指向打包好的 zip 文件，检查指向文件路径和文件名词是否一致。
 
-4、报错：yarn client does not exist in path: xxx/yarn-client/hadoop/bin/yarn
+4、Q：报错 yarn client does not exist in path: xxx/yarn-client/hadoop/bin/yarn
 
  使用 Spark Load 时 yarn-client-path 配置项没有指定 yarn 的可执行文件。
 
-5、报错：Cannot execute hadoop-yarn/bin/../libexec/yarn-config.sh
+5、Q：报错 Cannot execute hadoop-yarn/bin/../libexec/yarn-config.sh
 
- 使用 CDH 的 Hadoop 时，需要配置 HADOOP_LIBEXEC_DIR 环境变量，由于 hadoop-yarn 和 hadoop 目录不同，默认 libexec 目录会找 hadoop-yarn/bin/../libexec，而 libexec 在 hadoop 目录下。
+A：使用 CDH 的 Hadoop 时，需要配置 HADOOP_LIBEXEC_DIR 环境变量，由于 hadoop-yarn 和 hadoop 目录不同，默认 libexec 目录会找 hadoop-yarn/bin/../libexec，而 libexec 在 hadoop 目录下。
  ```yarn application status```命令获取Spark任务状态报错导致导入作业失败。

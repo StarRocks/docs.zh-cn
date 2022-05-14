@@ -49,9 +49,9 @@ FROM KAFKA
   ~~~
 
   * partitionNum：kafka 分区数
-  * desireTaskConcurrentNum： desired_concurrent_number 配置
+  * desireTaskConcurrentNum： desired_concurrent_number 任务配置，参考当前参数释义
   * aliveBeNum：状态为 Alive 的 be 节点个数
-  * max_routine_load_task_concurrent_num：be.conf 配置项，默认为5
+  * max_routine_load_task_concurrent_num：be.conf 配置项，默认为5，具体可参考 [参数配置](../administration/Configuration.md)
 
 * **max_batch_interval**：每个子任务最大执行时间，单位是「秒」。范围为 5 到 60。默认为 10。**1.15 版本后**: 该参数是子任务的调度时间，即任务多久执行一次，任务的消费数据时间为 fe.conf 中的 routine_load_task_consume_second，默认为 3s，
 任务的执行超时时间为 fe.conf 中的 routine_load_task_timeout_second，默认为 15s。
@@ -271,12 +271,12 @@ ReasonOfStateChanged:
 ALTER ROUTINE LOAD FOR routine_wiki_edit
 PROPERTIES
 (
-  "desired_concurrent_number" = "10"
+    "desired_concurrent_number" = "10"
 )
 FROM kafka
 (
-  "kafka_partitions" = "0",
-  "kafka_offsets" = "16414342",
+    "kafka_partitions" = "0",
+    "kafka_offsets" = "16414342",
 );
 ~~~
 
@@ -342,17 +342,17 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
 COLUMNS(category, author, price, timestamp, dt=from_unixtime(timestamp, '%Y%m%d'))
 PROPERTIES
 (
-  "desired_concurrent_number" = "3",
-  "max_batch_interval" = "20",
-  "strict_mode" = "false",
-  "format" = "json",
-  "jsonpaths" = "[\"$.category\",\"$.author\",\"$.price\",\"$.timestamp\"]",
-  "strip_outer_array" = "true"
+    "desired_concurrent_number" = "3",
+    "max_batch_interval" = "20",
+    "strict_mode" = "false",
+    "format" = "json",
+    "jsonpaths" = "[\"$.category\",\"$.author\",\"$.price\",\"$.timestamp\"]",
+    "strip_outer_array" = "true"
 )
 FROM KAFKA
 (
-  "kafka_broker_list" = "localhost:9092",
-  "kafka_topic" = "my_topic",
+    "kafka_broker_list" = "localhost:9092",
+    "kafka_topic" = "my_topic"
 );
 ~~~
 
@@ -365,12 +365,12 @@ FROM KAFKA
 
 ~~~json
 [
-  {
-      "key1": "value1"
-  },
-  {
-      "key2": "value2"
-  }
+        {
+                "key1": "value1"
+        },
+        {
+                "key2": "value2"
+        }
 ]
 ~~~
 
@@ -384,27 +384,27 @@ JSON文本暂停、恢复和停止导入任务指令与上述CSV格式一致。
 
 1、Q：导入任务被 PAUSE，报错 Broker: Offset out of range
 
-  A：通过 SHOW ROUTINE LOAD 查看最新的 offset，用 Kafka 客户端查看该 offset 有没有数据。
+A：通过 SHOW ROUTINE LOAD 查看最新的 offset，用 Kafka 客户端查看该 offset 有没有数据。
 
-  可能原因：
+可能原因：
 
 * 导入时指定了未来的 offset。
 * 还没来得及导入，Kafka 已经将该 offset 的数据清理。需要根据 StarRocks 的导入速度设置合理的 log 清理参数 log.retention.hours、log.retention.bytes 等。
 
-2、如何提高 ROUTINE LOAD 效率
+2、Q：如何提高 ROUTINE LOAD 效率
 
-当前 ROUNTINE LOAD 并发取决于
+A：当前 ROUNTINE LOAD 并发取决于
 
 ~~~plain text
 min(min(partitionNum, min(desireTaskConcurrentNum, aliveBeNum)), Config.max_routine_load_task_concurrent_num)
 ~~~
 
 partitionNum：Kafka topic 分区个数
-desireTaskConcurrentNum： desired_concurrent_number 配置
+desireTaskConcurrentNum： desired_concurrent_number 配置，见 [创建导入任务](#创建导入任务) 参数说明
 aliveBeNum：集群存活的 BE 节点个数
-max_routine_load_task_concurrent_num：BE 的配置项，默认为 5
+max_routine_load_task_concurrent_num：be.conf 配置项，默认为5，具体可参考 [参数配置](../administration/Configuration.md)
 
-可以看出来主要受限于存活的 BE 节点个数，您的 `Kafka topic分区数>BE节点个数` 的时候，建议拆分成多个 ROUTINE LOAD 任务。比如下面这个场景下：
+可以看出来主要受限于存活的 BE 节点个数，您的 **Kafka topic分区数 > BE节点个数** 的时候，建议拆分成多个 ROUTINE LOAD 任务。比如下面这个场景下：
 
 ~~~plain text
 BE 节点：3 台
