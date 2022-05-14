@@ -376,7 +376,7 @@ FROM KAFKA
 
 JSON文本暂停、恢复和停止导入任务指令与上述CSV格式一致。
 
-更多详细的事例请参考 [ROUTINE LOAD 导入例子](../sql-reference/sql-statements/data-manipulation/ROUTINE%20LOAD#example)
+更多详细的事例请参考 [ROUTINE LOAD 导入例子](../sql-reference/sql-statements/data-manipulation/ROUTINE%20LOAD.md#example)
 
 ---
 
