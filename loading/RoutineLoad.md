@@ -384,8 +384,7 @@ JSON文本暂停、恢复和停止导入任务指令与上述CSV格式一致。
 
 * Q：导入任务被 PAUSE，报错 Broker: Offset out of range。<br>
   A：通过 SHOW ROUTINE LOAD 查看最新的 offset，用 Kafka 客户端查看该 offset 有没有数据。<br>
-  
-     可能原因：
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可能原因：
   * 导入时指定了未来的 offset。
   * 还没来得及导入，Kafka 已经将该 offset 的数据清理。需要根据 StarRocks 的导入速度设置合理的 log 清理参数 log.retention.hours、log.retention.bytes 等。
 
@@ -397,10 +396,10 @@ JSON文本暂停、恢复和停止导入任务指令与上述CSV格式一致。
      min(min(partitionNum, min(desireTaskConcurrentNum, aliveBeNum)), Config.max_routine_load_task_concurrent_num)
      ~~~
 
-     partitionNum：Kafka topic 分区个数
-     desireTaskConcurrentNum： desired_concurrent_number 配置，见 [创建导入任务](#创建导入任务) 参数说明
-     aliveBeNum：集群存活的 BE 节点个数
-     max_routine_load_task_concurrent_num：be.conf 配置项，默认为5，具体可参考 [参数配置](../administration/Configuration.md)
+  * partitionNum：Kafka topic 分区个数
+  * desireTaskConcurrentNum： desired_concurrent_number 配置，见 [创建导入任务](#创建导入任务) 参数说明
+  * aliveBeNum：集群存活的 BE 节点个数
+  * max_routine_load_task_concurrent_num：be.conf 配置项，默认为5，具体可参考 [参数配置](../administration/Configuration.md)
 
      可以看出来主要受限于存活的 BE 节点个数，您的 **Kafka topic分区数 > BE节点个数** 的时候，建议拆分成多个 ROUTINE LOAD 任务。比如下面这个场景下：
 
