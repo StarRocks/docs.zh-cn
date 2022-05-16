@@ -24,7 +24,7 @@ Roaring Bitmap 实现，细节可以参考：[具体论文和实现](https://git
 
 以统计某一个页面的 UV 为例：
 
-1. 创建一张含有 BITMAP 列的表，其中 **visit_users** 列为聚合列，列类型为 **BITMAP**，聚合函数为 **BITMAP_UNION**。
+创建一张含有 BITMAP 列的表，其中 **visit_users** 列为聚合列，列类型为 **BITMAP**，聚合函数为 **BITMAP_UNION**。
 
   ```sql
   CREATE TABLE `page_uv` (
@@ -40,7 +40,7 @@ Roaring Bitmap 实现，细节可以参考：[具体论文和实现](https://git
   );
   ```
 
-2. 向表中导入数据，采用 **insert into** 语句导入。
+向表中导入数据，采用 **insert into** 语句导入。
 
   ```sql
   insert into page_uv values
@@ -53,7 +53,7 @@ Roaring Bitmap 实现，细节可以参考：[具体论文和实现](https://git
 
 在以上数据导入后，在 page_id = 1， visit_date = '2020-06-23 01:30:30' 的数据行，visit_user 字段包含着 3 个 bitmap 元素（13，23，33）；在 page_id = 1， visit_date = '2020-06-23 02:30:30' 的数据行，visit_user 字段包含着 1 个 bitmap 元素（13）；在 page_id = 2， visit_date = '2020-06-23 01:30:30' 的数据行，visit_user 字段包含着 1 个 bitmap 元素（23）。
 
-采用本地文件导入
+3. 采用本地文件导入
 
 ```bash
 cat <<<'DONE' | \
