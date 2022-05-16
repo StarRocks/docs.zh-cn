@@ -53,7 +53,7 @@ Roaring Bitmap 实现，细节可以参考：[具体论文和实现](https://git
 
 在以上数据导入后，在 page_id = 1， visit_date = '2020-06-23 01:30:30' 的数据行，visit_user 字段包含着 3 个 bitmap 元素（13，23，33）；在 page_id = 1， visit_date = '2020-06-23 02:30:30' 的数据行，visit_user 字段包含着 1 个 bitmap 元素（13）；在 page_id = 2， visit_date = '2020-06-23 01:30:30' 的数据行，visit_user 字段包含着 1 个 bitmap 元素（23）。
 
-3. 采用本地文件导入
+采用本地文件导入
 
 ```bash
 cat <<<'DONE' | \
