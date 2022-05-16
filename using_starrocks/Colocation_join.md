@@ -1,29 +1,21 @@
 # Colocate Join
 
-## 什么是 Colocate Join
+本小节介绍如何使用 Colocate join。
 
 Colocate Join 功能，属于分布式系统实现 Join 数据分布的策略之一。 能够减少数据分布在多个节点引起的 Join 时的数据移动和网络传输，从而提高查询性能。
+Colocate Join 使用 Colocation Group（CG）管理一组表 ，同一 CG 内的表 Colocation Group Schema（CGS）相同，即表对应的分桶副本具有一致的分桶键、副本数量和副本放置方式 。这样可以保证同一 CG 内，表的数据分布在相同一组 BE 节点上。当 Join 列为分桶键时，计算节点只需做本地 Join，因而可以减少数据在节点间的传输耗时，提高查询性能。
+因此，Colocation Join，相对于其他 Join，例如 Shuffle Join 和 Broadcast Join，可以避免数据网络传输开销，提高查询性能。
 
-本文档主要介绍 Colocate Join 的原理、实现、使用方式和注意事项。
-
-## 名词解释
+**名词解释：**
 
 * **Colocation Group（CG）**：一个 CG 中会包含一张及以上的 Table。一个CG内的 Table 有相同的分桶方式和副本放置方式，使用 Colocation Group Schema 描述。
 * **Colocation Group Schema（CGS）**： 包含 CG 的分桶键，分桶数以及副本数等信息。
 
-## 使用 Colocate Join 的优势
+## 使用 Colocate Join 功能
 
-Colocate Join 使用 CG 管理一组表 ，同一 CG 内的表 CGS 相同，即表对应的分桶副本具有一致的分桶键、副本数量和副本放置方式 。这样可以保证同一CG内，表的数据分布在相同一组 BE 节点上。当 Join 列为分桶键，则计算节点只需做本地 Join 即可，减少数据在节点间的传输耗时，提高查询性能。
-
-因此，Colocation Join ，相对于其他 JOIN，例如 Shuffle Join 和 Broadcast Join ，可以避免数据网络传输开销，提高查询性能。
-
-## 使用方式
-
-### 创建方式
+### 创建 Colocation 表
 
 建表时，可以在 PROPERTIES 中指定属性 `"colocate_with" = "group_name"`，表示这个表是一个 Colocate Join 表，并且归属于一个指定的 Colocation Group。
-
-示例：
 
 ~~~SQL
 CREATE TABLE tbl (k1 int, v1 int sum)
@@ -34,9 +26,9 @@ PROPERTIES(
 );
 ~~~
 
-如果指定的 CG 不存在，则 StarRocks 会自动创建一个只包含当前这张表的 CG，当前表被称为该 CG 的 Parent Table 。如果 CG 已存在，则 StarRocks 会检查当前表是否满足 CGS。如果满足，则会创建该表，并将该表加入 Group。同时，表会根据已存在的 Group 中的数据分布规则创建分片和副本。
+如果指定的 CG 不存在，StarRocks 会自动创建一个只包含当前表的 CG，并指定当前表为该 CG 的 Parent Table。如果 CG 已存在，StarRocks 会检查当前表是否满足 CGS。如果满足，StarRocks 会创建该表，并将该表加入 Group。同时，StarRocks 会根据已存在的 Group 中的数据分布规则为当前表创建分片和副本。
 
-Group 归属于一个 Database，Group 的名字在一个 Database 内唯一。在内部存储是 Group 的全名为 dbId_groupName，但用户只感知 groupName。
+Group 归属于一个 Database，Group 名在一个 Database 内唯一。在内部存储中，Group 的全名为 dbId_groupName，但用户只感知 groupName。
 
 分桶键 hash 值，对分桶数取模得到桶的序号(Bucket Seq)， 假设一个 Table 的分桶数为 8，则共有 \[0, 1, 2, 3, 4, 5, 6, 7\] 8 个分桶（Bucket)，每个 Bucket 内会有一个或多个子表（Tablet)，子表数量取决于表的分区数(Partition)：为单分区表时，一个 Bucket 内仅有一个 Tablet。如果是多分区表，则会有多个Tablet。
 
@@ -54,17 +46,19 @@ Group 归属于一个 Database，Group 的名字在一个 Database 内唯一。�
 
 CG内表的一致的数据分布定义和子表副本映射，能够保证分桶键取值相同的数据行一定在相同BE上，因此当分桶键做join列时，只需本地join即可。
 
-### 删除方式
+### 删除 Colocation 表
 
 当 Group 中最后一张表彻底删除后（彻底删除是指从回收站中删除。通常，一张表通过 `DROP TABLE` 命令删除后，会在回收站默认停留一天的时间后，再删除），该 Group 也会被自动删除。
 
 ### 查看 Group 信息
 
-以下命令可以查看集群内已存在的 Group 信息。
+通过以下命令查看集群内已存在的 Group 信息。
+
+~~~sql
+SHOW PROC '/colocation_group';
+~~~
 
 ~~~Plain Text
-SHOW PROC '/colocation_group';
-
 +-------------+--------------+--------------+------------+----------------+----------+----------+
 | GroupId     | GroupName    | TableIds     | BucketsNum | ReplicationNum | DistCols | IsStable |
 +-------------+--------------+--------------+------------+----------------+----------+----------+
@@ -72,21 +66,25 @@ SHOW PROC '/colocation_group';
 +-------------+--------------+--------------+------------+----------------+----------+----------+
 ~~~
 
-* **GroupId**：一个 Group 的全集群唯一标识，前半部分为 db id，后半部分为 group id。
-* **GroupName**：Group 的全名。
-* **TabletIds**：该 Group 包含的 Table 的 id 列表。
-* **BucketsNum**：分桶数。
-* **ReplicationNum**：副本数。
-* **DistCols**：Distribution columns，即分桶列类型。
-* **IsStable**：该 Group 是否稳定（稳定的定义，见 Colocation 副本均衡和修复 一节）。
+| 列明     | 描述    | 
+|  ----  | ----  |
+| GroupId | 一个 Group 的全集群唯一标识。前半部分为 db id，后半部分为 **group id**。 | 
+| GroupName | Group 的全名。 | 
+| TabletIds | 该 Group 包含的 Table 的 id 列表。 | 
+| BucketsNum | 分桶数。 | 
+| ReplicationNum | 副本数。 | 
+| DistCols | Distribution columns，即分桶列类型。 | 
+| IsStable | 该 Group 是否[稳定](https://docs.starrocks.com/zh-cn/main/administration/Replica) | 
 
 <br/>
 
-通过以下命令可以进一步查看一个 Group 的数据分布情况：
+通过以下命令进一步查看一个 Group 的数据分布情况。
+
+~~~sql
+SHOW PROC '/colocation_group/10005.10008';
+~~~
 
 ~~~Plain Text
-SHOW PROC '/colocation_group/10005.10008';
-
 +-------------+---------------------+
 | BucketIndex | BackendIds          |
 +-------------+---------------------+
@@ -101,14 +99,16 @@ SHOW PROC '/colocation_group/10005.10008';
 +-------------+---------------------+
 ~~~
 
-* **BucketIndex**：分桶序列的下标。
-* **BackendIds**：分桶中数据分片所在的 BE 节点 id 列表。
+| 类名 | 描述 |
+|------|------|
+| BucketIndex |分桶序列的下标。|
+| BackendIds |分桶中数据分片所在的 BE 节点 id 列表。|
 
 > 注意：以上命令需要 ADMIN 权限。暂不支持普通用户查看。
 
 ### 修改表 Group 属性
 
-可以对一个已经创建的表，修改其 Colocation Group 属性。示例：
+通过以下命令修改表的 Colocation Group 属性。
 
 ~~~SQL
 ALTER TABLE tbl SET ("colocate_with" = "group2");
@@ -130,13 +130,13 @@ ALTER TABLE tbl SET ("colocate_with" = "");
 
 ## Colocation 副本均衡和修复
 
-Colocation 表的副本分布需要遵循 Group 中指定的分布，所以在副本修复和均衡方面和普通分片有所区别。
+Colocation 表的副本分布需遵循 Group 中指定的分布，所以在其副本修复和均衡相较于普通分片有所区别。
 
-Group 自身有一个 **Stable** 属性，当 Stable 为 true 时，表示当前 Group 内的表的所有分片没有正在进行变动，Colocation 特性可以正常使用。当 Stable 为 false 时（Unstable），表示当前 Group 内有部分表的分片正在做修复或迁移，此时，相关表的 Colocation Join 将退化为普通 Join。
+Group 具有 **Stable** 属性，当 **Stable** 为 **true** 时（Stable），表示当前 Group 内的表的所有分片没有正在进行变动，Colocation 特性可以正常使用。当 **Stable** 为 **false** 时（Unstable），表示当前 Group 内有部分表的分片正在做修复或迁移，此时，相关表的 Colocate Join 将退化为普通 Join。
 
 ### 副本修复
 
-副本只能存储在指定的 BE 节点上。所以当某个 BE 不可用时（宕机、Decommission 等），需要寻找一个新的 BE 进行替换。StarRocks 会优先寻找负载最低的 BE 进行替换。替换后，该 Bucket 内的所有在旧 BE 上的数据分片都要做修复。迁移过程中，Group 被标记为 **Unstable**。
+因副本只能存储在指定的 BE 节点上，所以当某个 BE 不可用时（例如宕机或 Decommission 等），StarRocks 需要寻找一个新的 BE 进行替换。StarRocks 会优先寻找负载最低的 BE 进行替换。替换后，该 Bucket 内所有在旧 BE 上的数据分片都要做修复。迁移过程中，Group 被标记为 Unstable。
 
 ### 副本均衡
 
@@ -148,7 +148,7 @@ StarRocks 会尽力将 Colocation 表的分片均匀分布在所有 BE 节点上
 
 ## 查询
 
-对 Colocation 表的查询方式和普通表一样，用户无需感知 Colocation 属性。如果 Colocation 表所在的 Group 处于 Unstable 状态，将自动退化为普通 Join。以下举例说明。
+对 Colocation 表的查询方式和普通表一样，用户无需感知 Colocation 属性。如果 Colocation 表所在的 Group 处于 Unstable 状态，将自动退化为普通 Join。
 
 表1：
 
