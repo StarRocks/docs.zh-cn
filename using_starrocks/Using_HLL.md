@@ -130,12 +130,12 @@ DISTRIBUTED BY HASH(ID) BUCKETS 32;
 
      `SELECT COUNT(DISTINCT uv) FROM test;`
 
-### 注意事项
+## 选择去重方案
 
 如果数据集的基数在百万、千万量级，并拥有几十台机器，那么直接使用 count distinct 即可。如果基数在亿级以上，并且需要精确去重，那么只能用 Bitmap 类型；如果可以接受近似去重，那么还可以使用 HLL 类型。
 
-Bitmap 只支持 TINYINT，SMALLINT，INT，BIGINT，(注意不支持 LARGEINT )，对其他类型数据集去重，则需要构建词典，将原类型映射到整数类型。词典构建比较复杂，需要权衡数据量，更新频率，查询效率，存储等一系列问题. HLL 则没有必要构建词典，只需要对应的数据类型支持哈希函数即可，甚至在没有内部支持 HLL 的分析系统中，依然可以使用系统提供的 hash，用 SQL 实现 HLL 去重。
+Bitmap 仅支持 TINYINT，SMALLINT，INT，BIGINT（注意不支持 LARGEINT）去重。对于其他类型数据集去重，用户需要构建词典，将原类型映射到整数类型。词典构建较复杂，需要权衡数据量，更新频率，查询效率，存储等一系列问题。HLL 去重方式则无需构建词典，仅要求对应的数据类型支持哈希函数。即便在没有内部支持 HLL 的分析系统中，依然可以使用系统提供的 hash，用 SQL 实现 HLL 去重。
 
-对于普通列，用户还可以使用 NDV 函数进行近似去重计算。NDV函数返回值是COUNT(DISTINCT col) 结果的近似值聚合函数，底层实现将数据存储类型转为 HyperLogLog 类型进行计算。NDV 函数在计算的时候比较消耗资源，不太适合并发高的场景。
+对于普通列，用户还可以使用 NDV 函数进行近似去重计算。NDV 函数返回值是 COUNT(DISTINCT col) 结果的近似值聚合函数，底层实现将数据存储类型转为 HyperLogLog 类型进行计算。但 NDV 函数在计算的时候比较消耗资源，不适合于并发高的场景。
 
-如果您希望进行用户行为分析，可以考虑 IntersectCount 或者自定义 UDAF。
+如果应用场景为用户行为分析，建议使用 IntersectCount 或者自定义 UDAF 去重。
