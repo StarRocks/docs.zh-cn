@@ -26,30 +26,30 @@ Roaring Bitmap 实现，细节可以参考：[具体论文和实现](https://git
 
 1. 创建一张含有 BITMAP 列的表，其中 **visit_users** 列为聚合列，列类型为 **BITMAP**，聚合函数为 **BITMAP_UNION**。
 
-```sql
-CREATE TABLE `page_uv` (
-  `page_id` INT NOT NULL COMMENT '页面id',
-  `visit_date` datetime NOT NULL COMMENT '访问时间',
-  `visit_users` BITMAP BITMAP_UNION NOT NULL COMMENT '访问用户id'
-) ENGINE=OLAP
-AGGREGATE KEY(`page_id`, `visit_date`)
-DISTRIBUTED BY HASH(`page_id`) BUCKETS 1
-PROPERTIES (
-  "replication_num" = "1",
-  "storage_format" = "DEFAULT"
-);
-```
+  ```sql
+  CREATE TABLE `page_uv` (
+    `page_id` INT NOT NULL COMMENT '页面id',
+    `visit_date` datetime NOT NULL COMMENT '访问时间',
+    `visit_users` BITMAP BITMAP_UNION NOT NULL COMMENT '访问用户id'
+  ) ENGINE=OLAP
+  AGGREGATE KEY(`page_id`, `visit_date`)
+  DISTRIBUTED BY HASH(`page_id`) BUCKETS 1
+  PROPERTIES (
+    "replication_num" = "1",
+    "storage_format" = "DEFAULT"
+  );
+  ```
 
 2. 向表中导入数据，采用 **insert into** 语句导入。
 
-```sql
-insert into page_uv values
-(1, '2020-06-23 01:30:30', to_bitmap(13)),
-(1, '2020-06-23 01:30:30', to_bitmap(23)),
-(1, '2020-06-23 01:30:30', to_bitmap(33)),
-(1, '2020-06-23 02:30:30', to_bitmap(13)),
-(2, '2020-06-23 01:30:30', to_bitmap(23));
-```
+  ```sql
+  insert into page_uv values
+  (1, '2020-06-23 01:30:30', to_bitmap(13)),
+  (1, '2020-06-23 01:30:30', to_bitmap(23)),
+  (1, '2020-06-23 01:30:30', to_bitmap(33)),
+  (1, '2020-06-23 02:30:30', to_bitmap(13)),
+  (2, '2020-06-23 01:30:30', to_bitmap(23));
+  ```
 
 在以上数据导入后，在 page_id = 1， visit_date = '2020-06-23 01:30:30' 的数据行，visit_user 字段包含着 3 个 bitmap 元素（13，23，33）；在 page_id = 1， visit_date = '2020-06-23 02:30:30' 的数据行，visit_user 字段包含着 1 个 bitmap 元素（13）；在 page_id = 2， visit_date = '2020-06-23 01:30:30' 的数据行，visit_user 字段包含着 1 个 bitmap 元素（23）。
 
