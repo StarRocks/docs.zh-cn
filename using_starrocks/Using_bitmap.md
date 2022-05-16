@@ -40,7 +40,7 @@ PROPERTIES (
 );
 ```
 
-2. 向表中导入数据，采用 insert into 语句导入。
+2. 向表中导入数据，采用 **insert into** 语句导入。
 
 ```sql
 insert into page_uv values
@@ -145,4 +145,3 @@ select page, count(distinct user_id) as uv from table group by page;
 > 注：图中是 6 行数据在 2 个 BE 节点上计算的示意图
 
 显然，在上面的计算方式中，由于数据需要进行多次 shuffle，当数据量越来越大时，所需的计算资源就会越来越多，查询也会越来越慢。而使用 Bitmap 技术去重，就是为了解决传统 count distinct 在大量数据场景下的性能问题。
-
