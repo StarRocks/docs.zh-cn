@@ -77,49 +77,49 @@ DISTRIBUTED BY HASH(ID) BUCKETS 32;
 
 > * 注：当数据量较大时，建议为高频率的 HLL 查询建立对应的物化视图。
 
-2. 导入数据
+1. 导入数据
 
-* Stream Load 模式:
+     * Stream Load 模式:
 
-~~~bash
-curl --location-trusted -u root: -H "label:label_1600997542287" \
-    -H "column_separator:," \
-    -H "columns:dt,id,user_id, uv=hll_hash(user_id)" -T /root/test.csv http://starrocks_be0:8040/api/db0/test/_stream_load
-{
-    "TxnId": 2504748,
-    "Label": "label_1600997542287",
-    "Status": "Success",
-    "Message": "OK",
-    "NumberTotalRows": 5,
-    "NumberLoadedRows": 5,
-    "NumberFilteredRows": 0,
-    "NumberUnselectedRows": 0,
-    "LoadBytes": 120,
-    "LoadTimeMs": 46,
-    "BeginTxnTimeMs": 0,
-    "StreamLoadPutTimeMs": 1,
-    "ReadDataTimeMs": 0,
-    "WriteDataTimeMs": 29,
-    "CommitAndPublishTimeMs": 14
-}
-~~~
+     ~~~bash
+     curl --location-trusted -u root: -H "label:label_1600997542287" \
+         -H "column_separator:," \
+         -H "columns:dt,id,user_id, uv=hll_hash(user_id)" -T /root/test.csv http://starrocks_be0:8040/api/db0/test/_stream_load
+     {
+         "TxnId": 2504748,
+         "Label": "label_1600997542287",
+         "Status": "Success",
+         "Message": "OK",
+         "NumberTotalRows": 5,
+         "NumberLoadedRows": 5,
+         "NumberFilteredRows": 0,
+         "NumberUnselectedRows": 0,
+         "LoadBytes": 120,
+         "LoadTimeMs": 46,
+         "BeginTxnTimeMs": 0,
+         "StreamLoadPutTimeMs": 1,
+         "ReadDataTimeMs": 0,
+         "WriteDataTimeMs": 29,
+         "CommitAndPublishTimeMs": 14
+     }
+     ~~~
 
-* Broker Load 模式:
+     * Broker Load 模式:
 
-~~~sql
-LOAD LABEL test_db.label
- (
-    DATA INFILE("hdfs://hdfs_host:hdfs_port/user/starRocks/data/input/file")
-    INTO TABLE `test`
-    COLUMNS TERMINATED BY ","
-    (dt, id, user_id)
-    SET (
-      uv = HLL_HASH(user_id)
-    )
- );
-~~~
+     ~~~sql
+     LOAD LABEL test_db.label
+      (
+         DATA INFILE("hdfs://hdfs_host:hdfs_port/user/starRocks/data/input/file")
+         INTO TABLE `test`
+         COLUMNS TERMINATED BY ","
+         (dt, id, user_id)
+         SET (
+           uv = HLL_HASH(user_id)
+         )
+      );
+     ~~~
 
-3. 查询数据
+2. 查询数据
 
      1. HLL 列不允许直接查询它的原始值，可以用函数 HLL_UNION_AGG 进行查询
      * 求总 uv
