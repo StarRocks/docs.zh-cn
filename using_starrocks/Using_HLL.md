@@ -121,7 +121,7 @@ DISTRIBUTED BY HASH(ID) BUCKETS 32;
 
 2. 查询数据
 
-     1. HLL 列不允许直接查询它的原始值，可以用函数 HLL_UNION_AGG 进行查询
+     HLL 列不允许直接查询它的原始值，可以用函数 HLL_UNION_AGG 进行查询
      * 求总 uv
 
      `SELECT HLL_UNION_AGG(uv) FROM test;`
@@ -129,10 +129,6 @@ DISTRIBUTED BY HASH(ID) BUCKETS 32;
      该语句等价于
 
      `SELECT COUNT(DISTINCT uv) FROM test;`
-
-     2. 求每一天的 uv
-
-     `SELECT COUNT(DISTINCT uv) FROM test GROUP BY dt;`
 
 ### 注意事项
 
