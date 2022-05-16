@@ -1,6 +1,8 @@
-# 背景介绍
+# 使用 HLL 近似去重
 
-在现实场景中，随着数据量的增大，对数据进行去重分析的压力会越来越大。当数据的规模大到一定程度的时候，进行精确去重的成本会比较高。此时用户通常会采用近似算法来降低计算压力。本节将要介绍的 HyperLogLog（简称 HLL）是一种近似去重算法，它的特点是具有非常优异的空间复杂度 O(mloglogn)，时间复杂度为 O(n)，并且计算结果的误差可控制在1%—10%左右，误差与数据集大小以及所采用的哈希函数有关。
+本小节介绍如何通过 HLL 在 StarRocks 中近似去重。
+
+在现实场景中，随着 StarRocks 中的数据量增大，对数据进行去重分析的压力会越来越大。当数据的规模达到一定程度时，进行精确去重的成本会比较高。此时用户通常会采用近似算法来降低计算压力。HyperLogLog（简称 HLL）是一种近似去重算法，其特点是具有非常优异的空间复杂度 O(mloglogn)，时间复杂度为 O(n)，并且计算结果的误差可控制在 1%—10% 左右，误差与数据集大小以及所采用的哈希函数有关。
 
 ## 什么是 HyperLogLog
 
@@ -50,17 +52,19 @@ FROM(select(murmur_hash3_32(c2) & 1023) AS bucket,
 
 这就是 HLL 算法的核心思想。有兴趣的同学可以参考[HyperLogLog论文](http://algo.inria.fr/flajolet/Publications/FlFuGaMe07.pdf)。
 
-### 如何使用HyperLogLog
+## 使用 HLL 去重
 
-1. 使用 HyperLogLog 去重，需要在建表语句中，将目标的指标列的类型设置为 HLL，聚合函数设置为 HLL_UNION。
+说明：
+
+1. 使用 HLL 去重，需要在建表语句中，将目标的指标列的类型设置为 **HLL**，聚合函数设置为 **HLL_UNION**。
 2. 目前, 只有聚合表支持 HLL 类型的指标列。
 3. 当在 HLL 类型列上使用 count distinct 时，StarRocks 会自动转化为 HLL_UNION_AGG 计算。
 
 具体函数语法参见 [HLL_UNION_AGG](../sql-reference/sql-functions/aggregate-functions/hll_union_agg.md)。
 
-#### 示例
+### 示例
 
-首先，创建一张含有**HLL**列的表，其中 uv 列为聚合列，列类型为 HLL，聚合函数为 HLL_UNION
+创建一张含有**HLL**列的表，其中 UV 列为聚合列，列类型为 HLL，聚合函数为 HLL_UNION。
 
 ~~~sql
 CREATE TABLE test(
@@ -71,9 +75,11 @@ CREATE TABLE test(
 DISTRIBUTED BY HASH(ID) BUCKETS 32;
 ~~~
 
-> * 注：当数据量很大时，最好为高频率的 HLL 查询建立对应的 物化视图
+> * 注：当数据量较大时，建议为高频率的 HLL 查询建立对应的物化视图。
 
-导入数据，Stream Load 模式:
+2. 导入数据
+
+* Stream Load 模式:
 
 ~~~bash
 curl --location-trusted -u root: -H "label:label_1600997542287" \
@@ -98,7 +104,7 @@ curl --location-trusted -u root: -H "label:label_1600997542287" \
 }
 ~~~
 
-Broker Load 模式:
+* Broker Load 模式:
 
 ~~~sql
 LOAD LABEL test_db.label
@@ -113,24 +119,24 @@ LOAD LABEL test_db.label
  );
 ~~~
 
-查询数据
+3. 查询数据
 
-* HLL 列不允许直接查询它的原始值，可以用函数 HLL_UNION_AGG 进行查询
-* 求总 uv
+     1. HLL 列不允许直接查询它的原始值，可以用函数 HLL_UNION_AGG 进行查询
+     * 求总 uv
 
-`SELECT HLL_UNION_AGG(uv) FROM test;`
+     `SELECT HLL_UNION_AGG(uv) FROM test;`
 
-该语句等价于
+     该语句等价于
 
-`SELECT COUNT(DISTINCT uv) FROM test;`
+     `SELECT COUNT(DISTINCT uv) FROM test;`
 
-* 求每一天的 uv
+     2. 求每一天的 uv
 
-`SELECT COUNT(DISTINCT uv) FROM test GROUP BY dt;`
+     `SELECT COUNT(DISTINCT uv) FROM test GROUP BY dt;`
 
 ### 注意事项
 
-Bitmap 和 HLL 应该如何选择？如果数据集的基数在百万、千万量级，并拥有几十台机器，那么直接使用 count distinct 即可。如果基数在亿级以上，并且需要精确去重，那么只能用 Bitmap 类型；如果可以接受近似去重，那么还可以使用 HLL 类型。
+如果数据集的基数在百万、千万量级，并拥有几十台机器，那么直接使用 count distinct 即可。如果基数在亿级以上，并且需要精确去重，那么只能用 Bitmap 类型；如果可以接受近似去重，那么还可以使用 HLL 类型。
 
 Bitmap 只支持 TINYINT，SMALLINT，INT，BIGINT，(注意不支持 LARGEINT )，对其他类型数据集去重，则需要构建词典，将原类型映射到整数类型。词典构建比较复杂，需要权衡数据量，更新频率，查询效率，存储等一系列问题. HLL 则没有必要构建词典，只需要对应的数据类型支持哈希函数即可，甚至在没有内部支持 HLL 的分析系统中，依然可以使用系统提供的 hash，用 SQL 实现 HLL 去重。
 
