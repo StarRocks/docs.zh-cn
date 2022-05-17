@@ -66,15 +66,15 @@ SHOW PROC '/colocation_group';
 +-------------+--------------+--------------+------------+----------------+----------+----------+
 ~~~
 
-| 列明 | 描述 |
-| ---- | ---- |
-| GroupId | 一个 Group 的全集群唯一标识。前半部分为 db id，后半部分为 **group id**。 |
-| GroupName | Group 的全名。 |
-| TabletIds | 该 Group 包含的 Table 的 id 列表。 |
-| BucketsNum | 分桶数。 |
-| ReplicationNum | 副本数。 |
-| DistCols | Distribution columns，即分桶列类型。 |
-| IsStable | 该 Group 是否[稳定](https://docs.starrocks.com/zh-cn/main/administration/Replica) |
+|列明|描述|
+|----|----|
+|GroupId|一个 Group 的全集群唯一标识。前半部分为 db id，后半部分为 **group id**。|
+|GroupName|Group 的全名|
+|TabletIds|该 Group 包含的 Table 的 id 列表|
+|BucketsNum|分桶数|
+|ReplicationNum|副本数|
+|DistCols|Distribution columns，即分桶列类型。|
+|IsStable|该 Group 是否[稳定](https://docs.starrocks.com/zh-cn/main/administration/Replica)|
 
 <br/>
 
