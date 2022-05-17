@@ -248,7 +248,6 @@ curl -v --location-trusted -u root: \
 +------+------+
 ~~~
 
-
 ### 代码集成示例
 
 * JAVA开发stream load，参考：[https://github.com/StarRocks/demo/MiscDemo/stream_load](https://github.com/StarRocks/demo/tree/master/MiscDemo/stream_load)
