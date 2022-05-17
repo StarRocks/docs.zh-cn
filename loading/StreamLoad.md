@@ -87,6 +87,170 @@ Stream Load 中所有与导入任务相关的参数均设置在 Header 中。下
 
 可以参考 [STREAM LOAD](../sql-reference/sql-statements/data-manipulation/STREAM%20LOAD.md)
 
+
+
+## JSON数据导入
+
+对于文本文件存储的Json数据，我们可以采用stream load 的方式进行导入。
+
+### Stream Load导入Json数据
+
+样例数据：
+
+~~~json
+{ "id": 123, "city" : "beijing"},
+{ "id": 456, "city" : "shanghai"},
+    ...
+~~~
+
+示例：
+
+~~~shell
+curl -v --location-trusted -u root: \
+    -H "format: json" -H "jsonpaths: [\"$.id\", \"$.city\"]" \
+    -T example.json \
+    http://FE_HOST:HTTP_PORT/api/DATABASE/TABLE/_stream_load
+~~~
+
+通过 format: json 参数可以执行导入的数据格式 jsonpaths 用来执行对应的数据导入路径
+
+相关参数：
+
+* jsonpaths : 选择每一列的json路径
+* json\_root : 选择json开始解析的列
+* strip\_outer\_array ： 裁剪最外面的 array 字段（可以见下一个样例）
+* strict\_mode：导入过程中的列类型转换进行严格过滤
+* columns:对应StarRocks表中的字段的名称
+
+jsonpaths参数和columns参数还有StarRocks表中字段三者关系如下：
+
+* jsonpaths的值名称与json文件中的key的名称一致
+* columns的值的名称和StarRocks表中字段名称保持一致
+* columns和jsonpaths属性的值，名称不需要保持一致(建议设置为一致方便区分)，值的顺序保持一致就可以将json文件中的value和StarRocks表中字段对应起来，如下图：
+
+![streamload](../assets/4.8.1.png)
+
+样例数据：
+
+~~~json
+{"name": "北京", "code": 2}
+~~~
+
+导入示例：
+
+~~~bash
+curl -v --location-trusted -u root: \
+    -H "format: json" -H "jsonpaths: [\"$.name\", \"$.code\"]" \
+    -H "columns: city,tmp_id, id = tmp_id * 100" \
+    -T jsontest.json \
+    http://127.0.0.1:8030/api/test/testJson/_stream_load
+~~~
+
+导入后结果
+
+~~~plain text
++------+------+
+|  id  | city |
++------+------+
+|  200 | 北京 |
++------+------+
+~~~
+
+如果想先对Json中数据进行加工，然后再落入StarRocks表中，可以通过更改columns的值来实现，属性的对应关系可以参考上图中描述，示例如下:
+
+样例数据：
+
+~~~json
+{"k1": 1, "k2": 2}
+~~~
+
+导入示例：
+
+~~~bash
+curl -v --location-trusted -u root: \
+    -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\"]" \
+    -H "columns: k2, tmp_k1, k1 = tmp_k1 * 100" \
+    -T example.json \
+    http://127.0.0.1:8030/api/db1/tbl1/_stream_load
+~~~
+
+这里导入过程中进行了将k1乘以100的ETL操作，并且通过Jsonpath来进行column和原始数据的对应
+
+导入后结果
+
+~~~plain text
++------+------+
+|  k1  |  k2  |
++------+------+
+|  100 |  2   |
++------+------+
+~~~
+
+<br>
+
+对于缺失的列 如果列的定义是nullable，那么会补上NULL，也可以通过ifnull补充默认值。
+
+样例数据：
+
+~~~json
+[
+    {"k1": 1, "k2": "a"},
+    {"k1": 2},
+    {"k1": 3, "k2": "c"},
+]
+~~~
+
+> 这里最外层有一对表示 json array 的中括号 `[ ]`，导入时就需要指定 `strip_outer_array = true`
+
+导入示例-1：
+
+~~~shell
+curl -v --location-trusted -u root: \
+    -H "format: json" -H "strip_outer_array: true" \
+    -T example.json \
+    http://127.0.0.1:8030/api/db1/tbl1/_stream_load
+~~~
+
+导入后结果：
+
+~~~plain text
++------+------+
+|  k1  | k2   |
++------+------+
+|   1  | a    |
++------+------+
+|   2  | NULL |
++------+------+
+|   3  | c    |
++------+------+
+~~~
+  
+导入示例-2：
+
+~~~shell
+curl -v --location-trusted -u root: \
+    -H "format: json" -H "strip_outer_array: true" \
+    -H "jsonpaths: [\"$.k1\", \"$.k2\"]" \
+    -H "columns: k1, tmp_k2, k2 = ifnull(tmp_k2, 'x')" \
+    -T example.json \
+    http://127.0.0.1:8030/api/db1/tbl1/_stream_load
+~~~
+
+导入后结果：
+
+~~~plain text
++------+------+
+|  k1  |  k2  |
++------+------+
+|  1   |  a   |
++------+------+
+|  2   |  x   |
++------+------+
+|  3   |  c   |
++------+------+
+~~~
+
+
 ### 代码集成示例
 
 * JAVA开发stream load，参考：[https://github.com/StarRocks/demo/MiscDemo/stream_load](https://github.com/StarRocks/demo/tree/master/MiscDemo/stream_load)
