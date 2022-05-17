@@ -87,8 +87,6 @@ Stream Load 中所有与导入任务相关的参数均设置在 Header 中。下
 
 可以参考 [STREAM LOAD](../sql-reference/sql-statements/data-manipulation/STREAM%20LOAD.md)
 
-
-
 ## JSON数据导入
 
 对于文本文件存储的Json数据，我们可以采用stream load 的方式进行导入。
@@ -105,8 +103,8 @@ Stream Load 中所有与导入任务相关的参数均设置在 Header 中。下
 
 示例：
 
-~~~shell
-curl -v --location-trusted -u root: \
+~~~bash
+curl -v --location-trusted -u root:\
     -H "format: json" -H "jsonpaths: [\"$.id\", \"$.city\"]" \
     -T example.json \
     http://FE_HOST:HTTP_PORT/api/DATABASE/TABLE/_stream_load
@@ -204,7 +202,7 @@ curl -v --location-trusted -u root: \
 
 导入示例-1：
 
-~~~shell
+~~~bash
 curl -v --location-trusted -u root: \
     -H "format: json" -H "strip_outer_array: true" \
     -T example.json \
@@ -227,7 +225,7 @@ curl -v --location-trusted -u root: \
   
 导入示例-2：
 
-~~~shell
+~~~bash
 curl -v --location-trusted -u root: \
     -H "format: json" -H "strip_outer_array: true" \
     -H "jsonpaths: [\"$.k1\", \"$.k2\"]" \
