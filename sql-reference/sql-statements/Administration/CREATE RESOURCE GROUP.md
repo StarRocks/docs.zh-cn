@@ -16,7 +16,7 @@ WITH ("key" = "value", ...);
 
 |参数|描述|
 |----|----|
-|cpu_core_limit|为该资源组指定的 CPU 核数|
+|cpu_core_limit|资源组所分配的 CPU 核数（按比例[弹性伸缩](../../../administration/Resource_Group.md#基本概念)）|
 |mem_limit|为该资源组指定的内存百分比上限|
 |type|资源组的类型，固定取值为 `normal`|
 
