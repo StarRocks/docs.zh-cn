@@ -12,7 +12,7 @@ Broker Load 通过随 StarRocks 集群一同部署的 broker 进行，访问对�
 2. Amazon S3：Amazon对象存储。
 3. 阿里云 OSS：阿里云对象存储。
 4. 腾讯COS：腾讯云对象存储。
-5. 百度BOS：百度对象存储。
+
 语法：
 
 ```sql
