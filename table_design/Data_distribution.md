@@ -212,8 +212,6 @@ PROPERTIES(
 [types: [DATE]; keys: [2020-03-28]; ‥types: [DATE]; keys: [2020-03-29]; )
 ~~~
 
-StarRocks支持自动增删分区之后表的分区，调度的时机依赖于FE的配置，FE的常驻线程会根据dynamic\_partition\_enable和dynamic\_partition\_check\_interval\_seconds两个参数来控制。每次调度时，读取动态分区表的属性，以此判断是否增加/删除分区。
-
 #### 4.2 查看表当前的分区
 
 动态分区表运行过程中，会不断地自动增减分区，可以通过下列命令查看当前的分区情况，
