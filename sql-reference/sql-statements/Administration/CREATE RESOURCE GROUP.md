@@ -24,7 +24,7 @@ WITH ("key" = "value", ...);
 
 依据多个 CLASSIFIER 创建 `type` 为 `normal` 的资源组 `rg1`，并为其分配 10 核 CPU 以及 20% 的内存资源。
 
-~~~sql
+```sql
 CREATE RESOURCE GROUP rg1
 to 
     (user='rg1_user1', role='rg1_role1', query_type in ('select'), source_ip='192.168.2.1/24'),
@@ -36,7 +36,7 @@ with (
     'mem_limit' = '20%',
     'type' = 'normal'
 );
-~~~
+```
 
 ## 关键字(keywords)
 
