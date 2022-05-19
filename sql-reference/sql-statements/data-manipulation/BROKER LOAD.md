@@ -121,41 +121,41 @@ WITH BROKER broker_name
         社区版本的 hdfs，支持简单认证、kerberos 认证。以及支持 HA 配置。
 
         简单认证：
-        
-```plain text
-hadoop.security.authentication = simple (默认)
 
-username：hdfs 用户名
+        ```plain text
+        hadoop.security.authentication = simple (默认)
 
-password：hdfs 密码  
-```
-        
+        username：hdfs 用户名
+
+        password：hdfs 密码  
+        ```
+
         kerberos 认证：
-        
-```plain text
-hadoop.security.authentication = kerberos
 
-kerberos_principal：指定 kerberos 的 principal
+        ```plain text
+        hadoop.security.authentication = kerberos
 
-kerberos_keytab：指定 kerberos 的 keytab 文件路径。该文件必须为 broker 进程所在服务器上的文件。
+        kerberos_principal：指定 kerberos 的 principal
 
-kerberos_keytab_content：指定 kerberos 中 keytab 文件内容经过 base64 编码之后的内容。这个跟 kerberos_keytab 配置二选一就可以。
-```
-        
+        kerberos_keytab：指定 kerberos 的 keytab 文件路径。该文件必须为 broker 进程所在服务器上的文件。
+
+        kerberos_keytab_content：指定 kerberos 中 keytab 文件内容经过 base64 编码之后的内容。这个跟 kerberos_keytab 配置二选一就可以。
+        ```
+
         namenode HA：
-        
-```plain text
-通过配置 namenode HA，可以在 namenode 切换时，自动识别到新的 namenode
 
-dfs.nameservices: 指定 hdfs 服务的名字，自定义，如："dfs.nameservices" = "my_ha"
+        ```plain text
+        通过配置 namenode HA，可以在 namenode 切换时，自动识别到新的 namenode
 
-dfs.ha.namenodes.xxx：自定义 namenode 的名字, 多个名字以逗号分隔。其中 xxx 为 dfs.nameservices 中自定义的名字，如 "dfs.ha.namenodes.my_ha" = "my_nn"
+        dfs.nameservices: 指定 hdfs 服务的名字，自定义，如："dfs.nameservices" = "my_ha"
 
-dfs.namenode.rpc-address.xxx.nn：指定 namenode 的 rpc 地址信息。其中 nn 表示 dfs.ha.namenodes.xxx 中配置的 namenode 的名字，如："dfs.namenode.rpc-address.my_ha.my_nn" = "host: port"
+        dfs.ha.namenodes.xxx：自定义 namenode 的名字, 多个名字以逗号分隔。其中 xxx 为 dfs.nameservices 中自定义的名字，如 "dfs.ha.namenodes.my_ha" = "my_nn"
 
-dfs.client.failover.proxy.provider：指定 client 连接 namenode 的 provider，默认为：org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider
-```
-        
+        dfs.namenode.rpc-address.xxx.nn：指定 namenode 的 rpc 地址信息。其中 nn 表示 dfs.ha.namenodes.xxx 中配置的 namenode 的名字，如："dfs.namenode.rpc-address.my_ha.my_nn" = "host: port"
+
+        dfs.client.failover.proxy.provider：指定 client 连接 namenode 的 provider，默认为：org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider
+        ```
+
     2. Amazon S3
 
         需提供：
