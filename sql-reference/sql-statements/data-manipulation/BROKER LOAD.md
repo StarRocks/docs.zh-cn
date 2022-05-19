@@ -166,16 +166,7 @@ WITH BROKER broker_name
 
         fs.oss.endpoint：Aliyun OSS的endpoint
 
-    4. 百度 BOS
-
-       需提供：
-       bos_endpoint：BOS 的endpoint
-
-       bos_accesskey：公有云用户的 accesskey
-
-       bos_secret_accesskey：公有云用户的 secret_accesskey
-
-    5. opt_properties
+    4. opt_properties
 
         用于指定一些特殊参数。
 
@@ -194,7 +185,7 @@ WITH BROKER broker_name
 
         timezone:         指定某些受时区影响的函数的时区，如 strftime/alignment_timestamp/from_unixtime 等等，具体请查阅 [时区] 文档。如果不指定，则使用 "Asia/Shanghai" 时区。
 
-    6. 导入数据格式样例
+    5. 导入数据格式样例
 
         整型类（TINYINT/SMALLINT/INT/BIGINT/LARGEINT）：1, 1000, 1234
 
