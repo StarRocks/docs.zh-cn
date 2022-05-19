@@ -128,7 +128,6 @@ WITH BROKER broker_name
 
         password：hdfs 密码
         
-
         kerberos 认证：
 
         hadoop.security.authentication = kerberos
@@ -139,7 +138,6 @@ WITH BROKER broker_name
 
         kerberos_keytab_content：指定 kerberos 中 keytab 文件内容经过 base64 编码之后的内容。这个跟 kerberos_keytab 配置二选一就可以。
         
-
         namenode HA：
 
         通过配置 namenode HA，可以在 namenode 切换时，自动识别到新的 namenode
@@ -155,7 +153,6 @@ WITH BROKER broker_name
     2. Amazon S3
 
         需提供：
-        
         fs.s3a.access.key：AmazonS3 的 access key
 
         fs.s3a.secret.key：AmazonS3 的 secret key
@@ -165,7 +162,6 @@ WITH BROKER broker_name
     3. 阿里云 OSS
 
         需提供：
-        
         fs.oss.accessKeyId：Aliyun OSS 的 access key
 
         fs.oss.accessKeySecret：Aliyun OSS 的 secret key
@@ -181,7 +177,6 @@ WITH BROKER broker_name
         [PROPERTIES ("key" = "value", ...)]
 
         可以指定如下参数：
-        
         timeout：         指定导入操作的超时时间。默认超时为 4 小时，单位秒。
 
         max_filter_ratio：最大容忍可过滤（数据不规范等原因）的数据比例。默认零容忍。
