@@ -282,44 +282,7 @@ WITH BROKER broker_name
     )
     ```
 
-5. 从 BOS 导入一批数据，指定分区, 并对导入文件的列做一些转化，如下：
-
-    表结构为：
-    k1 varchar(20)
-    k2 int
-
-    假设数据文件只有一行数据：
-
-    Adele,1,1
-
-    数据文件中各列，对应导入语句中指定的各列：
-    k1,tmp_k2,tmp_k3
-
-    转换如下：
-    1. k1: 不变换
-    2. k2：是 tmp_k2 和 tmp_k3 数据之和
-
-    ```sql
-    LOAD LABEL example_db.label6
-    (
-    DATA INFILE("bos://my_bucket/input/file")
-    INTO TABLE `my_table`
-    PARTITION (p1, p2)
-    COLUMNS TERMINATED BY ","
-    (k1, tmp_k2, tmp_k3)
-    SET (
-    k2 = tmp_k2 + tmp_k3
-    )
-    )
-    WITH BROKER my_bos_broker
-    (
-        "bos_endpoint" = "http://bj.bcebos.com",
-        "bos_accesskey" = "xxxxxxxxxxxxxxxxxxxxxxxxxx",
-        "bos_secret_accesskey"="yyyyyyyyyyyyyyyyyyyy"
-    )
-    ```
-
-6. 导入数据到含有HLL列的表，可以是表中的列或者数据里面的列
+5. 导入数据到含有HLL列的表，可以是表中的列或者数据里面的列
 
     如果表中有三列分别是（id,v1,v2,v3）。其中v1和v2列是hll列。导入的源文件有3列。则（column_list）中声明第一列为id，第二三列为一个临时命名的k1,k2。
 
@@ -356,7 +319,7 @@ WITH BROKER broker_name
     WITH BROKER hdfs ("username"="hdfs_user", "password"="hdfs_password");
     ```
 
-7. 导入Parquet文件中数据  指定FORMAT 为parquet， 默认是通过文件后缀判断
+6. 导入Parquet文件中数据  指定FORMAT 为parquet， 默认是通过文件后缀判断
 
     ```SQL
     LOAD LABEL example_db.label9
@@ -369,7 +332,7 @@ WITH BROKER broker_name
     WITH BROKER hdfs ("username"="hdfs_user", "password"="hdfs_password");
     ```
 
-8. 提取文件路径中的分区字段
+7. 提取文件路径中的分区字段
 
     如果需要，则会根据表中定义的字段类型解析文件路径中的分区字段（partitioned fields），类似Spark中Partition Discovery的功能
 
@@ -392,7 +355,7 @@ WITH BROKER broker_name
 
     则提取文件路径的中的city和utc_date字段
 
-9. 对待导入数据进行过滤，k1 值大于 k2 值的列才能被导入
+8. 对待导入数据进行过滤，k1 值大于 k2 值的列才能被导入
 
     ```sql
     LOAD LABEL example_db.label10
@@ -403,7 +366,7 @@ WITH BROKER broker_name
     )
     ```
 
-10. 提取文件路径中的时间分区字段，并且时间包含 %3A (在 hdfs 路径中，不允许有 ':'，所有 ':' 会由 %3A 替换)
+9. 提取文件路径中的时间分区字段，并且时间包含 %3A (在 hdfs 路径中，不允许有 ':'，所有 ':' 会由 %3A 替换)
 
     假设有如下文件：
 
@@ -431,7 +394,7 @@ WITH BROKER broker_name
     WITH BROKER "hdfs" ("username"="user", "password"="pass");
     ```
 
-11. 从 阿里云 OSS 导入 csv 格式的数据
+10. 从 阿里云 OSS 导入 csv 格式的数据
 
     ```SQL
     LOAD LABEL example_db.label12
@@ -448,7 +411,7 @@ WITH BROKER broker_name
     )
     ```
 
-12. 从腾讯云 COS 导入 csv 格式的数据
+11. 从腾讯云 COS 导入 csv 格式的数据
 
     ```SQL
     LOAD LABEL example_db.label13
@@ -465,7 +428,7 @@ WITH BROKER broker_name
     )
     ```
 
-13. 从 Amazon S3 导入 csv 格式的数据
+12. 从 Amazon S3 导入 csv 格式的数据
 
     ```SQL
     LOAD LABEL example_db.label14
