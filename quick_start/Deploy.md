@@ -1,4 +1,4 @@
-# 手动部署 StarRcoks
+# 手动部署 StarRocks
 
 本文档介绍如何手动部署 StarRocks。StarRocks 支持以二进制压缩包形式手动部署于集群中。
 
@@ -73,11 +73,11 @@ tar -xzvf StarRocks-x.x.x.tar.gz
 
 1. 进入 **StarRocks-x.x.x/fe** 路径。
 
-```bash
-cd StarRocks-x.x.x/fe
-```
+  ```bash
+  cd StarRocks-x.x.x/fe
+  ```
 
-> 注意：将以上路径名修改为解压后的路径名。
+  > 注意：将以上路径名修改为解压后的路径名。
 
 2. 修改 FE 配置文件 **conf/fe.conf**。以下示例仅添加元数据目录和 Java 目录，以保证部署成功。如需在生产环境中对集群进行详细优化配置，参考 [FE 参数配置](../administration/Configuration.md#FE-配置项)。
 
@@ -140,11 +140,11 @@ bin/start_fe.sh --daemon
 
 1. 在 FE 进程启动后，使用 MySQL 客户端连接 FE 实例。
 
-```bash
-mysql -h 127.0.0.1 -P9030 -uroot
-```
+  ```bash
+  mysql -h 127.0.0.1 -P9030 -uroot
+  ```
 
-> 说明：默认 root 用户密码为空，端口为 **fe/conf/fe.conf** 中的 `query\_port` 配置项，默认值为 `9030`。
+  > 说明：默认 root 用户密码为空，端口为 **fe/conf/fe.conf** 中的 `query\_port` 配置项，默认值为 `9030`。
 
 2. 查看 FE 状态。
 
@@ -191,6 +191,7 @@ StarRocks 的 FE 节点支持 HA 模型部署，以保证集群的高可用。�
 ```bash
 ./bin/stop_fe.sh --daemon
 ```
+
 <br/>
 
 ## 部署 BE 节点
@@ -211,13 +212,13 @@ tar -xzvf StarRocks-x.x.x.tar.gz
 
 ### 配置 BE 节点
 
-1. 进入 **StarRocks-x.x.x/be** 路径。
+  1. 进入 **StarRocks-x.x.x/be** 路径。
 
-```bash
-cd StarRocks-x.x.x/be
-```
+  ```bash
+  cd StarRocks-x.x.x/be
+  ```
 
-> 注意：将以上路径名修改为解压后的路径名。
+  > 注意：将以上路径名修改为解压后的路径名。
 
 2. 修改 BE 节点配置文件 **conf/be.conf**。因默认配置即可启动集群，以下示例并未修改 BE 节点配置。如需在生产环境中对集群进行详细优化配置，参考 [BE 参数配置](../administration/Configuration.md#BE-参数配置)。
 
@@ -317,6 +318,7 @@ MySQL> ALTER SYSTEM DROP BACKEND "172.16.xxx.xx:9050";
 ```bash
 ./bin/stop_be.sh --daemon
 ```
+
 <br/>
 
 ## 部署 Broker 节点
@@ -339,11 +341,11 @@ tar -xzvf StarRocks-x.x.x.tar.gz
 
 1. 进入 **StarRocks-x.x.x/apache_hdfs_broker** 路径。
 
-```bash
-cd StarRocks-x.x.x/apache_hdfs_broker
-```
+  ```bash
+  cd StarRocks-x.x.x/apache_hdfs_broker
+  ```
 
-> 注意：将以上路径名修改为解压后的路径名。
+  > 注意：将以上路径名修改为解压后的路径名。
 
 2. 修改 Broker 节点配置文件 **conf/apache_hdfs_broker.conf**。因默认配置即可启动集群，以下示例并未修改 Broker 点配置。如果需特殊的 HDFS 配置，复制线上的 **hdfs-site.xml** 至 **conf** 路径下。
 
@@ -392,6 +394,7 @@ LastUpdateTime: 2022-05-19 11:28:31
 ```bash
 ./bin/stop_broker.sh --daemon
 ```
+
 <br/>
 
 ## 下一步
