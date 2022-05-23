@@ -1,41 +1,49 @@
 # 创建表
 
-## 使用 MySQL 客户端访问 StarRocks
+本文档介绍如何在 StarRocks 中建表以及进行其他相关操作。
 
-安装部署好 StarRocks 集群后，可使用 MySQL 客户端连接某一个 FE 实例的 query_port(默认 9030)连接 StarRocks， StarRocks 内置 root 用户，密码默认为空：
+## 连接 StarRocks
+
+在成功 [部署 StarRocks 集群](Deploy.md) 后，您可以通过 MySQL 客户端连接任意一个 FE 节点的 `query_port`（默认为 `9030`）以连接 StarRocks。StarRocks 内置 `root` 用户，密码默认为空。
 
 ```shell
-mysql -h fe_host -P9030 -u root
+mysql -h < fe_host > -P9030 -u root
 ```
 
 ## 创建数据库
 
-使用 root 用户建立 example\_db 数据库:
+通过 `root` 用户建立 `example_db` 数据库。
 
 ```sql
-create database example_db;
+CREATE DATABASE example_db;
 ```
 
-通过 `show databases;` 查看数据库信息：
+您可以通过 `SHOW DATABASES;` 命令查看当前 StarRocks 集群中所有数据库。
 
 ```Plain Text
-show databases;
+MySQL [(none)]> SHOW DATABASES;
 
 +--------------------+
-| Database           |
+| Database           |
 +--------------------+
-| example_db         |
+| _statistics_       |
+| example_db         |
 | information_schema |
 +--------------------+
-2 rows in set (0.00 sec)
+3 rows in set (0.00 sec)
 ```
 
-Information_schema 的表结构类似 MySQL，但是部分统计信息还不完善，当前推荐通过 `desc tablename` 等命令来获取数据库元数据信息。
+> 说明：与 MySQL 的表结构类似，`Information_schema` 包含当前 StarRocks 集群的元数据信息，但是部分统计信息还不完善。推荐您通过 `DESC table_name` 等命令来获取数据库元数据信息。
+
 <br/>
 
 ## 建表
 
-StarRocks 支持 [多种数据模型](../table_design/Data_model.md)，分别适用于不同的应用场景，以 [明细表](../table_design/Data_model.md#明细模型) 为例书写建表语句：
+在新建的数据库中建表。
+
+StarRocks 支持 [多种数据模型](../table_design/Data_model.md)，以适用不同的应用场景。以下示例基于 [明细表模型](../table_design/Data_model.md) 编写建表语句。
+
+更多建表语法，参考 [CREATE TABLE](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md) 。
 
 ```sql
 use example_db;
@@ -46,7 +54,7 @@ CREATE TABLE IF NOT EXISTS detailDemo (
     de_code       INT            COMMENT "range [-2147483648, 2147483647]",
     saler_id      BIGINT         COMMENT "range [-2^63 + 1 ~ 2^63 - 1]",
     pd_num        LARGEINT       COMMENT "range [-2^127 + 1 ~ 2^127 - 1]",
-    pd_type       CHAR(20)        NOT NULL COMMENT "range char(m),m in (1-255) ",
+    pd_type       CHAR(20)       NOT NULL COMMENT "range char(m),m in (1-255) ",
     pd_desc       VARCHAR(500)   NOT NULL COMMENT "upper limit value 65533 bytes",
     us_detail     STRING         NOT NULL COMMENT "upper limit value 65533 bytes",
     relTime       DATETIME       COMMENT "YYYY-MM-DD HH:MM:SS",
@@ -71,31 +79,29 @@ PROPERTIES(
 );
 ```
 
-可以通过 `show tables;` 命令查看当前库的所有表，通过 `desc table_name;` 命令可以查看表结构。通过 `show create table table_name;` 可查看建表语句。请注意：在 StarRocks 中字段名不区分大小写，表名区分大小写。
-
-表创建成功后，可以参考 [导入查询](/quick_start/Import_and_query.md) 章节 [Stream load Demo](/quick_start/Import_and_query.md#stream-load%E5%AF%BC%E5%85%A5demo) 进行数据导入及查询操作。
-
-更多建表语法详见 [CREATE TABLE](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md) 章节。
+> 注意：在 StarRocks 中，字段名不区分大小写，表名区分大小写。
 
 ### 建表语句说明
 
 #### 排序键
 
-StarRocks 表内部组织存储数据时会按照指定列排序，这些列为排序列（Sort Key），明细模型中由 `DUPLICATE KEY` 指定排序列，以上 demo 中的 `make_time, mache_verson` 两列为排序列。注意排序列在建表时应定义在其他列之前。排序键详细描述以及不同数据模型的表的设置方法请参考 [排序键](../table_design/Sort_key.md)。
+StarRocks 表内部组织存储数据时会按照指定列排序，这些列为排序列（Sort Key）。明细模型中由 `DUPLICATE KEY` 指定排序列。以上示例中的 `make_time` 以及 `mache_verson` 两列为排序列。
+
+> 注意：排序列在建表时应定义在其他列之前。排序键详细描述以及不同数据模型的表的设置方法请参考 [排序键](../table_design/Sort_key.md)。
 
 #### 字段类型
 
-StarRocks 表中支持多种字段类型，除 demo 中已经列举的字段类型，还支持 [BITMAP 类型](/using_starrocks/Using_bitmap.md)，[HLL 类型](../using_starrocks/Using_HLL.md)，[Array 类型](../using_starrocks/Array.md)，字段类型介绍详见 [数据类型章节](/sql-reference/sql-statements/data-types/)。
+StarRocks 表中支持多种字段类型，除以上示例中已经列举的字段类型，还支持 [BITMAP 类型](/using_starrocks/Using_bitmap.md)，[HLL 类型](../using_starrocks/Using_HLL.md)，[Array 类型](../using_starrocks/Array.md)，字段类型介绍详见 [数据类型章节](/sql-reference/sql-statements/data-types/BIGINT.md)。
 
-建表时尽量使用精确的类型。例如整形就不要用字符串类型，INT 类型满足则不要使用 BIGINT，精确的数据类型能够更好的发挥数据库的性能。
+> 注意：在建表时，您应尽量使用精确的类型。例如，整形类型数据不应使用字符串类型，INT 类型即可满足的数据不应使用 BIGINT 类型。精确的数据类型能够更好的发挥数据库的性能。
 
-#### 分区，分桶
+#### 分区分桶
 
-`PARTITION` 关键字用于给表 [创建分区](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md#Syntax)，当前 demo 中使用 `make_time` 进行范围分区，从 11 日到 15 日每天创建一个分区。StarRocks 支持动态生成分区，`PROPERTIES` 中的 `dynamic_partition` 开头的相关属性配置都是为表设置动态分区。详见 [动态分区管理](/table_design/Data_distribution.md#动态分区管理)。
+`PARTITION` 关键字用于给表 [创建分区](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md)。以上示例中使用 `make_time` 进行范围分区，从 11 日到 15 日每天创建一个分区。StarRocks 支持动态生成分区，`PROPERTIES` 中 `dynamic_partition` 开头的相关属性配置全部用以为表设置动态分区。详见 [动态分区管理](/table_design/Data_distribution.md)。
 
-`DISTRIBUTED` 关键字用于给表 [创建分桶](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md#Syntax)，当前 demo 中使用 `make_time, mache_verson` 两个字段通过 Hash 算法创建 32 个桶。
+`DISTRIBUTED` 关键字用于给表 [创建分桶](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md)，以上示例中使用 `make_time` 以及 `mache_verson` 两个字段通过 Hash 算法创建 32 个桶。
 
-创建表时合理的分区和分桶设计可以优化表的查询性能，分区分桶列如何选择详见 [数据分布章节](/table_design/Data_distribution.md)。
+创建表时合理的分区和分桶设计可以优化表的查询性能。有关分区分桶列如何选择，详见 [数据分布](/table_design/Data_distribution.md)。
 
 #### 数据模型
 
@@ -103,95 +109,118 @@ StarRocks 表中支持多种字段类型，除 demo 中已经列举的字段类�
 
 #### 索引
 
-StarRocks 默认会给 Key 列创建稀疏索引加速查询，具体规则见 [排序键和 shortke index](/table_design/Sort_key.md#排序列的原理) 章节。支持的索引类型有 [Bitmap 索引](/table_design/Bitmap_index.md#原理)，[Bloomfilter 索引](/table_design/Bloomfilter_index.md#原理) 等。
+StarRocks 默认会给 Key 列创建稀疏索引加速查询，具体规则见 [排序键](/table_design/Sort_key.md)。支持的索引类型有 [Bitmap 索引](/table_design/Bitmap_index.md)，[Bloomfilter 索引](/table_design/Bloomfilter_index.md) 等。
 
-注意：索引创建对表模型和列有要求，详细说明见对应索引介绍章节。
+> 注意：索引创建对表模型和列有要求，详细说明见对应索引介绍章节。
 
 #### ENGINE 类型
 
-默认为 olap。可选 mysql，elasticsearch，hive，ICEBERG 代表创建表为 [外部表](/using_starrocks/External_table.md#外部表)。
+默认 ENGINE 类型为 `OLAP`，对应 StarRocks 集群内部表。其他可选项包括 `mysql`，`elasticsearch`，`hive`，以及 `ICEBERG`，分别代表所创建的表为相应类型的 [外部表](/using_starrocks/External_table.md)。
+
+## 查看表信息
+
+您可以通过 SQL 命令查看表的相关信息。
+
+* 查看当前数据库中所有的表
+
+```sql
+SHOW TABLES;
+```
+
+* 查看表的结构
+
+```sql
+DESC table_name;
+```
+
+* 查看建表语句
+
+```sql
+SHOW CREATE TABLE table_name;
+```
 
 <br/>
 
-## 其他操作
+## 修改 Schema
 
-表创建成功后即可进行[数据导入查询](/quick_start/Import_and_query.md)。
+StarRocks 支持多种 DDL 操作。
 
-StarRocks支持[用户创建授权](/sql-reference/sql-statements/account-management)及多种[DDL操作](/sql-reference/sql-statements/data-definition)，此处仅简单介绍部分Schema Change 操作和如何创建用户并授权。
+您可以通过 [ALTER TABLE](/sql-reference/sql-statements/data-definition/ALTER%20TABLE.md) 命令可以修改表的 Schema，包括增加列，删除列，修改列类型（暂不支持修改列名称），改变列顺序。
 
-### Schema 修改
-
-使用 [ALTER TABLE](/sql-reference/sql-statements/data-definition/ALTER%20TABLE.md) 命令可以修改表的 Schema，包括增加列，删除列，修改列类型（暂不支持修改列名称），改变列顺序。
-
-以下举例说明。
-
-原表 table1 的 Schema 如下:
-
-```Plain Text
-+----------+-------------+------+-------+---------+-------+
-| Field    | Type        | Null | Key   | Default | Extra |
-+----------+-------------+------+-------+---------+-------+
-| siteid   | int(11)     | Yes  | true  | 10      |       |
-| citycode | smallint(6) | Yes  | true  | N/A     |       |
-| username | varchar(32) | Yes  | true  |         |       |
-| pv       | bigint(20)  | Yes  | false | 0       | SUM   |
-+----------+-------------+------+-------+---------+-------+
-```
-
-新增一列 uv，类型为 BIGINT，聚合类型为 SUM，默认值为 0:
+例如，在以上创建的表中，与 `ispass` 列后新增一列 `uv`，类型为 BIGINT，默认值为 `0`。
 
 ```sql
-ALTER TABLE table1 ADD COLUMN uv BIGINT SUM DEFAULT '0' after pv;
+ALTER TABLE detailDemo ADD COLUMN uv BIGINT DEFAULT '0' after ispass;
 ```
 
-Schema Change 为异步操作，提交成功后，可以通过以下命令查看:
+Schema Change 为异步操作。提交成功后，您可以通过以下命令查看作业状态。
 
 ```sql
 SHOW ALTER TABLE COLUMN\G
 ```
 
-当作业状态为 FINISHED，则表示作业完成。新的 Schema 已生效。
+当作业状态为 FINISHED，则表示作业完成，新的 Schema 已生效。
 
-ALTER TABLE 完成之后, 可以通过 desc table 查看最新的 schema：
+修改 Schema 完成之后, 您可以通过以下命令查看最新的 Schema。
+
+```sql
+DESC table_name;
+```
+
+示例如下：
 
 ```Plain Text
-mysql> desc table1;
+MySQL [example_db]> desc detailDemo;
 
-+----------+-------------+------+-------+---------+-------+
-| Field    | Type        | Null | Key   | Default | Extra |
-+----------+-------------+------+-------+---------+-------+
-| siteid   | int(11)     | Yes  | true  | 10      |       |
-| citycode | smallint(6) | Yes  | true  | N/A     |       |
-| username | varchar(32) | Yes  | true  |         |       |
-| pv       | bigint(20)  | Yes  | false | 0       | SUM   |
-| uv       | bigint(20)  | Yes  | false | 0       | SUM   |
-+----------+-------------+------+-------+---------+-------+
-5 rows in set (0.00 sec)
++--------------+-----------------+------+-------+---------+-------+
+| Field        | Type            | Null | Key   | Default | Extra |
++--------------+-----------------+------+-------+---------+-------+
+| make_time    | DATE            | No   | true  | NULL    |       |
+| mache_verson | TINYINT         | Yes  | true  | NULL    |       |
+| mache_num    | SMALLINT        | Yes  | false | NULL    |       |
+| de_code      | INT             | Yes  | false | NULL    |       |
+| saler_id     | BIGINT          | Yes  | false | NULL    |       |
+| pd_num       | LARGEINT        | Yes  | false | NULL    |       |
+| pd_type      | CHAR(20)        | No   | false | NULL    |       |
+| pd_desc      | VARCHAR(500)    | No   | false | NULL    |       |
+| us_detail    | VARCHAR(65533)  | No   | false | NULL    |       |
+| relTime      | DATETIME        | Yes  | false | NULL    |       |
+| channel      | FLOAT           | Yes  | false | NULL    |       |
+| income       | DOUBLE          | Yes  | false | NULL    |       |
+| account      | DECIMAL64(12,4) | Yes  | false | NULL    |       |
+| ispass       | BOOLEAN         | Yes  | false | NULL    |       |
+| uv           | BIGINT          | Yes  | false | 0       |       |
++--------------+-----------------+------+-------+---------+-------+
+15 rows in set (0.00 sec)
 ```
 
-可以使用以下命令取消当前正在执行的作业:
+您可以通过以下命令取消当前正在执行的作业。
 
 ```sql
-CANCEL ALTER TABLE COLUMN FROM table1\G
+CANCEL ALTER TABLE COLUMN FROM table_name\G
 ```
 
-### 创建用户并授权
+<br/>
 
-StarRocks 中拥有 [Create_priv 权限](../administration/User_privilege.md#权限类型) 的用户才可建立数据库。
+## 创建用户并授权
 
-example_db 数据库创建完成之后，可以通过 root 账户 example_db 读写权限授权给 test 账户，授权之后采用 test 账户登录就可以操作 example\_db 数据库了：
+在 StarRocks 中，只有拥有 [CREATE_PRIV 权限](../administration/User_privilege.md) 的用户才可建立数据库。
+
+`example_db` 数据库创建完成之后，您可以通过 `root` 账户将 `example_db` 的读写权限授予 `test` 账户。
 
 ```sql
-mysql > create user 'test' identified by '123456';
-mysql > grant all on example_db to test;
+CREATE USER 'test' IDENTIFIED by '123456';
+GRANT ALL on example_db to test;
 ```
 
-退出 root 账户，使用 test 登录 StarRocks 集群：
+通过登录被授权的 `test` 账户,其他用户就可以操作 `example_db` 数据库了。
 
-```sql
-mysql > exit
-
+```bash
 mysql -h 127.0.0.1 -P9030 -utest -p123456
 ```
 
-更多用户权限介绍请参考 [用户权限章节](/administration/User_privilege.md)，创建用户更改用户密码相关命令详见 [用户账户管理章节](/sql-reference/sql-statements/account-management/)。
+<br/>
+
+## 下一步
+
+表创建成功后，您可以 [导入并查询数据](/quick_start/Import_and_query.md)。
