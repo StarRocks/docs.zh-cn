@@ -341,7 +341,7 @@ cd StarRocks-x.x.x/apache_hdfs_broker
 
 > 注意：将以上路径名修改为解压后的路径名。
 
-修改 Broker 节点配置文件 **conf/apache_hdfs_broker.conf**。因默认配置即可启动集群，以下示例并未修改 Broker 点配置。如果需特殊的 HDFS 配置，复制线上的 **hdfs-site.xml** 至 **conf** 路径下。
+修改 Broker 节点配置文件 **conf/apache_hdfs_broker.conf**。因默认配置即可启动集群，以下示例并未修改 Broker 点配置。您可以直接复制自己的 HDFS 集群配置文件并粘贴至 **conf** 路径下。
 
 > 注意：Broker 节点没有且无须设置 `priority_networks` 参数，其服务默认绑定于 `0.0.0.0` 上。添加 Broker 时只需填写正确且可访问的 Broker IP 即可。
 
