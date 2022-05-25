@@ -219,3 +219,9 @@ BE节点最小配置个数是1个,支持单节点部署,推荐集群部署性能
 ## 建表的时候列不能指定now()这种函数默认值？
 
 目前暂时不支持函数默认值，需要写成常量。
+
+## StarRocks 外部表同步出错
+提示问题：SQL 错误 [1064] [42000]: data cannot be inserted into table with empty partition.Use `SHOW PARTITIONS FROM external_t` to see the currently partitions of this table. 
+查看Partitions时提示另一错误：SHOW PARTITIONS FROM external_t
+SQL 错误 [1064] [42000]: Table[external_t] is not a OLAP/ELASTICSEARCH/HIVE table
+解决方法：原来是建外部表时端口不对，正确的端口是"port"="9020"，不是9931.
