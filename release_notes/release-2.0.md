@@ -61,7 +61,7 @@
 
 ### 功能优化
 
-- 优化 FE 内存占用。通过设置参数 `label_keep_max_num`，控制一定时间内导入任务保留的最大数量，以避免在高频作业导入时，FE 内存占用过多而出现 Full GC。
+优化 FE 内存占用。通过设置参数 `label_keep_max_num`，控制一定时间内导入任务保留的最大数量，以避免在高频作业导入时，FE 内存占用过多而出现 Full GC。
 
 ### Bug 修复
 
@@ -91,7 +91,7 @@
 
 ### Behavior Change
 
-- StarRocks支持使用Hive外表访问创建在Hive外表上的Amazon S3外表。由于用于访问Amazon S3外表的jar包较大，因此StarRocks二进制产品包目前暂未包含该jar包。如有需要，请单击[Hive_s3_lib](https://cdn-thirdparty.starrocks.com/hive_s3_jar.tar.gz)进行下载。
+StarRocks支持使用Hive外表访问创建在Hive外表上的Amazon S3外表。由于用于访问Amazon S3外表的jar包较大，因此StarRocks二进制产品包目前暂未包含该jar包。如有需要，请单击[Hive_s3_lib](https://cdn-thirdparty.starrocks.com/hive_s3_jar.tar.gz)进行下载。
 
 ## 2.0.0
 
