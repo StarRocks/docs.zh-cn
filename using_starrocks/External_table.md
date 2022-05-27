@@ -1,6 +1,6 @@
 # 外部表
 
-StarRocks 支持以外部表的形式，接入其他数据源。外部表指的是保存在其他数据源中的数据表，而 StartRocks 只保存表对应的元数据，并直接向外部表所在数据源发起查询。目前 StarRocks 已支持的第三方数据源包括 MySQL、ElasticSearch、Hive、StarRocks、Apache Iceberg 和 Apache Hudi。**对于 StarRocks 数据源，现阶段只支持 Insert 写入，不支持读取，对于其他数据源，现阶段只支持读取，还不支持写入**。
+StarRocks 支持以外部表的形式，接入其他数据源。外部表指的是保存在其他数据源中的数据表，而 StartRocks 只保存表对应的元数据，并直接向外部表所在数据源发起查询。目前 StarRocks 已支持的第三方数据源包括 MySQL、Elasticsearch、Hive、StarRocks、Apache Iceberg 和 Apache Hudi。**对于 StarRocks 数据源，现阶段只支持 Insert 写入，不支持读取，对于其他数据源，现阶段只支持读取，还不支持写入**。
 
 <br/>
 
@@ -44,9 +44,9 @@ PROPERTIES
 
 <br/>
 
-## ElasticSearch 外部表
+## Elasticsearch 外部表
 
-StarRocks 与 ElasticSearch 都是目前流行的分析系统，StarRocks 强于大规模分布式计算，ElasticSearch 擅长全文检索。StarRocks 支持 ElasticSearch 访问的目的，就在于将这两种能力结合，提供更完善的一个 OLAP 解决方案。
+StarRocks 与 Elasticsearch 都是目前流行的分析系统，StarRocks 强于大规模分布式计算，Elasticsearch 擅长全文检索。StarRocks 支持 Elasticsearch 访问的目的，就在于将这两种能力结合，提供更完善的一个 OLAP 解决方案。
 
 ### 建表示例
 
@@ -84,7 +84,7 @@ PROPERTIES (
 
 ### 谓词下推
 
-StarRocks 支持对 ElasticSearch 表进行谓词下推，把过滤条件推给 ElasticSearch 进行执行，让执行尽量靠近存储，提高查询性能。目前支持下推的算子如下表：
+StarRocks 支持对 Elasticsearch 表进行谓词下推，把过滤条件推给 Elasticsearch 进行执行，让执行尽量靠近存储，提高查询性能。目前支持下推的算子如下表：
 
 |   SQL syntax  |   ES syntax  |
 | :---: | :---: |
@@ -456,7 +456,7 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
 
 * 注意事项
   * 不同版本 Hive Metastore 的 Events 事件可能不同，且上述开启 HiveMetastore Event 机制的配置在不同版本也存在不同。使用时相关配置可根据实际版进行适当调整。当前已经验证可以开启 Hive Metastore Event 机制的版本有 2.X 和 3.X。用户可以在 FE 日志中搜索 "event id" 来验证 event 是否开启成功，如果没有开启成功，event id 始终保持为 0。如果无法判断是否成功开启 Event 机制，请在 StarRocks 用户交流群中联系值班同学进行排查。
-  * 当前 Hive 元数据缓存模式为懒加载，即：如果 HIVE 新增了分区，StarRocks 只会将新增分区的 partition key 进行缓存，不会立即缓存该分区的文件信息。只有当查询该分区时或者用户手动执行 refresh 分区操作时，该分区的文件信息才会被加载。StarRocks 首次缓存该分区统计信息后，该分区后续的元数据变更就会自动同步到 StarRocks 中。
+  * 当前 Hive 元数据缓存模式为懒加载，即：如果 Hive 新增了分区，StarRocks 只会将新增分区的 partition key 进行缓存，不会立即缓存该分区的文件信息。只有当查询该分区时或者用户手动执行 refresh 分区操作时，该分区的文件信息才会被加载。StarRocks 首次缓存该分区统计信息后，该分区后续的元数据变更就会自动同步到 StarRocks 中。
   * 手动执行缓存方式执行效率较低，相比之下自动增量更新性能开销较小，建议用户开启该功能进行更新缓存。
   * 当前自动更新不支持 add/drop column 等 schema change 操作，Hive 表结构如有更改，需要重新创建 Hive 外表。Hive 外表支持 Schema change 将会在近期推出，敬请期待。
 
@@ -464,10 +464,10 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
 
 1.19 版本开始，StarRocks 支持将数据通过外表方式写入另一个 StarRocks 集群的表中。这可以解决用户的读写分离需求，提供更好的资源隔离。用户需要首先在目标集群上创建一张目标表，然后在源 StarRocks 集群上创建一个 Schema 信息一致的外表，并在属性中指定目标集群和表的信息。
 
-通过 insert into 写入数据至 StarRocks 外表, 可以实现如下目标:
+通过 INSERT INTO 写入数据至 StarRocks 外表，可以将源集群的数据写入至目标集群。借助这一能力，可以实现如下目标：
 
-* 集群间的数据同步
-* 在外表集群计算结果写入目标表集群，并在目标表集群提供查询服务，实现读写分离
+* 集群间的数据同步。
+* 读写分离。向源集群中写入数据，并且源集群的数据变更同步至目标集群，目标集群提供查询服务。
 
 以下是创建目标表和外表的实例：
 
@@ -505,7 +505,7 @@ PROPERTIES
     "table" = "t"
 );
 
-# 向外表插入数据, 线上推荐使用第二种方式
+# 写入数据至 StarRocks 外表，实现源集群的数据写入至目标集群。推荐生产环境使用第二种方式。
 insert into external_t values ('2020-10-11', 1, 1, 'hello', '2020-10-11 10: 00: 00');
 
 insert into external_t select * from other_table;
@@ -513,19 +513,19 @@ insert into external_t select * from other_table;
 
 其中：
 
-* **EXTERNAL**：该关键字指定创建的是 StarRocks 外表
-* **host**：该属性描述目标表所属 StarRocks 集群 Master FE 的 IP 地址
-* **port**：该属性描述目标表所属 StarRocks 集群 Master FE 的 RPC 访问端口，该值可参考配置 fe/fe.conf 中的 rpc_port 配置取值
-* **user**：该属性描述目标表所属 StarRocks 集群的访问用户名
-* **password**：该属性描述目标表所属 StarRocks 集群的访问密码
-* **database**：该属性描述目标表所属数据库名称
-* **table**：该属性描述目标表名称
+* **EXTERNAL**：该关键字指定创建的是 StarRocks 外表.
+* **host**：该属性描述目标表所属 StarRocks 集群 Leader FE 的 IP 地址.
+* **port**：该属性描述目标表所属 StarRocks 集群 Leader FE 的 RPC 访问端口，该值可参考配置 fe/fe.conf 中的 rpc_port 配置取值.
+* **user**：该属性描述目标表所属 StarRocks 集群的访问用户名.
+* **password**：该属性描述目标表所属 StarRocks 集群的访问密码.
+* **database**：该属性描述目标表所属数据库名称.
+* **table**：该属性描述目标表名称.
 
 目前 StarRocks 外表使用上有以下限制：
 
-* 仅可以在外表上执行 insert into 和 show create table 操作，不支持其他数据写入方式，也不支持查询和 DDL
-* 创建外表语法和创建普通表一致，但其中的列名等信息请保持同其对应的目标表一致
-* 外表会周期性从目标表同步元信息（同步周期为 10 秒），在目标表执行的 DDL 操作可能会延迟一定时间反应在外表上
+* 仅可以在外表上执行 insert into 和 show create table 操作，不支持其他数据写入方式，也不支持查询和 DDL.
+* 创建外表语法和创建普通表一致，但其中的列名等信息请保持同其对应的目标表一致.
+* 外表会周期性从目标表同步元信息（同步周期为 10 秒），在目标表执行的 DDL 操作可能会延迟一定时间反应在外表上.
 
 ## Apache Iceberg 外表
 

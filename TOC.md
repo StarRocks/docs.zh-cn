@@ -2,10 +2,12 @@
 
 ## 索引
 
-+ [StarRocks介绍](/introduction/StarRocks_intro.md)
++ 产品简介
+  + [什么是 StarRocks](/introduction/StarRocks_intro.md)
+  + [系统架构](/introduction/system_architecture.md)
+  + [产品特性](/introduction/features.md)
 + 快速开始
-  + [StarRocks基本概念及系统架构](/quick_start/Architecture.md)
-  + [StarRocks手动部署](/quick_start/Deploy.md)
+  + [StarRocks 部署](/quick_start/Deploy.md)
   + [表创建](/quick_start/Create_table.md)
   + [数据导入和查询](/quick_start/Import_and_query.md)
 + 表设计
@@ -13,9 +15,6 @@
   + [数据模型介绍](/table_design/Data_model.md)
   + [数据分布](/table_design/Data_distribution.md)
   + [排序键和shortkey index](/table_design/Sort_key.md)
-  + [物化视图](/table_design/Materialized_view.md)
-  + [Bitmap索引](/table_design/Bitmap_index.md)
-  + [Bloomfilter索引](/table_design/Bloomfilter_index.md)
 + 数据导入
   + [导入总览](/loading/Loading_intro.md)
   + [Stream Load](/loading/StreamLoad.md)
@@ -40,9 +39,11 @@
   + [外部表](/using_starrocks/External_table.md)
   + [Colocate Join](/using_starrocks/Colocate_join.md)
   + [Lateral Join](/using_starrocks/Lateral_join.md)
+  + [数组](/using_starrocks/Array.md)
   + [窗口函数](/using_starrocks/Window_function.md)
   + [JAVA UDF](/using_starrocks/JAVA_UDF.md)
-  + [数组](/using_starrocks/Array.md)
+  + [Bitmap索引](/table_design/Bitmap_index.md)
+  + [Bloomfilter索引](/table_design/Bloomfilter_index.md)
   + [基于 Bitmap 实现精确去重](/using_starrocks/Using_bitmap.md)
   + [基于 HyperLogLog 实现近似去重](/using_starrocks/Using_HLL.md)
   + [时区](/using_starrocks/timezone.md)
@@ -187,7 +188,7 @@
       + [STOP ROUTINE LOAD](/sql-reference/sql-statements/data-manipulation/STOP%20ROUTINE%20LOAD.md)
       + [STREAM LOAD](/sql-reference/sql-statements/data-manipulation/STREAM%20LOAD.md)
     + 数据类型
-      + 数字类型
+      + 数值类型
         + [BIGINT](/sql-reference/sql-statements/data-types/BIGINT.md)
         + [LARGEINT](/sql-reference/sql-statements/data-types/LARGEINT.md)
         + [SMALLINT](/sql-reference/sql-statements/data-types/SMALLINT.md)
@@ -250,7 +251,6 @@
       + [seconds_diff](/sql-reference/sql-functions/date-time-functions/seconds_diff.md)
       + [weeks_diff](/sql-reference/sql-functions/date-time-functions/weeks_diff.md)
       + [years_diff](/sql-reference/sql-functions/date-time-functions/years_diff.md)
-      + [year](/sql-reference/sql-functions/date-time-functions/year.md)
       + [quarter](/sql-reference/sql-functions/date-time-functions/quarter.md)
       + [timestamp](/sql-reference/sql-functions/date-time-functions/timestamp.md)
       + [time_to_sec](/sql-reference/sql-functions/date-time-functions/time_to_sec.md)
@@ -377,7 +377,7 @@
       + [array_difference](/sql-reference/sql-functions/array-functions/array_difference.md)
       + [array_intersect](/sql-reference/sql-functions/array-functions/array_intersect.md)
       + [array_slice](/sql-reference/sql-functions/array-functions/array_slice.md)
-      + [array_overlap](/sql-reference/sql-functions/array-functions/array_overlap.md)
+      + [arrays_overlap](/sql-reference/sql-functions/array-functions/array_overlap.md)
       + [array_append](/sql-reference/sql-functions/array-functions/array_append.md)
       + [array_avg](/sql-reference/sql-functions/array-functions/array_avg.md)
       + [array_contains](/sql-reference/sql-functions/array-functions/array_contains.md)
