@@ -35,8 +35,6 @@ MySQL [(none)]> SHOW DATABASES;
 
 > 说明：与 MySQL 的表结构类似，`Information_schema` 包含当前 StarRocks 集群的元数据信息，但是部分统计信息还不完善。推荐您通过 `DESC table_name` 等命令来获取数据库元数据信息。
 
-<br/>
-
 ## 建表
 
 在新建的数据库中建表。
@@ -91,15 +89,15 @@ StarRocks 表内部组织存储数据时会按照指定列排序，这些列为�
 
 #### 字段类型
 
-StarRocks 表中支持多种字段类型，除以上示例中已经列举的字段类型，还支持 [BITMAP 类型](/using_starrocks/Using_bitmap.md)，[HLL 类型](../using_starrocks/Using_HLL.md)，[Array 类型](../using_starrocks/Array.md)，字段类型介绍详见 [数据类型章节](/sql-reference/sql-statements/data-types/BIGINT.md)。
+StarRocks 表中支持多种字段类型，除以上示例中已经列举的字段类型，还支持 [BITMAP 类型](/using_starrocks/Using_bitmap.md)，[HLL 类型](../using_starrocks/Using_HLL.md)，[ARRAY 类型](../using_starrocks/Array.md)，字段类型介绍详见 [数据类型章节](/sql-reference/sql-statements/data-types/BIGINT.md)。
 
-> 注意：在建表时，您应尽量使用精确的类型。例如，整形类型数据不应使用字符串类型，INT 类型即可满足的数据不应使用 BIGINT 类型。精确的数据类型能够更好的发挥数据库的性能。
+> 注意：在建表时，您应尽量使用精确的类型。例如，整形数据不应使用字符串类型，INT 类型即可满足的数据不应使用 BIGINT 类型。精确的数据类型能够更好的发挥数据库的性能。
 
 #### 分区分桶
 
 `PARTITION` 关键字用于给表 [创建分区](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md)。以上示例中使用 `make_time` 进行范围分区，从 11 日到 15 日每天创建一个分区。StarRocks 支持动态生成分区，`PROPERTIES` 中 `dynamic_partition` 开头的相关属性配置全部用以为表设置动态分区。详见 [动态分区管理](/table_design/Data_distribution.md)。
 
-`DISTRIBUTED` 关键字用于给表 [创建分桶](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md)，以上示例中使用 `make_time` 以及 `mache_verson` 两个字段通过 Hash 算法创建 32 个桶。
+`DISTRIBUTED` 关键字用于给表 [创建分桶](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md)，以上示例中使用 `make_time` 以及 `mache_verson` 两个字段通过 Hash 算法创建 8 个桶。
 
 创建表时合理的分区和分桶设计可以优化表的查询性能。有关分区分桶列如何选择，详见 [数据分布](/table_design/Data_distribution.md)。
 
@@ -141,11 +139,13 @@ SHOW CREATE TABLE table_name;
 
 <br/>
 
-## 修改 Schema
+## 修改表结构
 
 StarRocks 支持多种 DDL 操作。
 
 您可以通过 [ALTER TABLE](/sql-reference/sql-statements/data-definition/ALTER%20TABLE.md) 命令可以修改表的 Schema，包括增加列，删除列，修改列类型（暂不支持修改列名称），改变列顺序。
+
+### 增加列
 
 例如，在以上创建的表中，与 `ispass` 列后新增一列 `uv`，类型为 BIGINT，默认值为 `0`。
 
@@ -153,15 +153,17 @@ StarRocks 支持多种 DDL 操作。
 ALTER TABLE detailDemo ADD COLUMN uv BIGINT DEFAULT '0' after ispass;
 ```
 
-Schema Change 为异步操作。提交成功后，您可以通过以下命令查看作业状态。
+### 查看修改表结构作业状态
+
+修改表结构为异步操作。提交成功后，您可以通过以下命令查看作业状态。
 
 ```sql
-SHOW ALTER TABLE COLUMN\G
+SHOW ALTER TABLE COLUMN\G;
 ```
 
-当作业状态为 FINISHED，则表示作业完成，新的 Schema 已生效。
+当作业状态为 FINISHED，则表示作业完成，新的表结构修改已生效。
 
-修改 Schema 完成之后, 您可以通过以下命令查看最新的 Schema。
+修改 Schema 完成之后, 您可以通过以下命令查看最新的表结构。
 
 ```sql
 DESC table_name;
@@ -194,19 +196,19 @@ MySQL [example_db]> desc detailDemo;
 15 rows in set (0.00 sec)
 ```
 
+### 取消修改表结构
+
 您可以通过以下命令取消当前正在执行的作业。
 
 ```sql
-CANCEL ALTER TABLE COLUMN FROM table_name\G
+CANCEL ALTER TABLE COLUMN FROM table_name\G;
 ```
-
-<br/>
 
 ## 创建用户并授权
 
 在 StarRocks 中，只有拥有 [CREATE_PRIV 权限](../administration/User_privilege.md) 的用户才可建立数据库。
 
-`example_db` 数据库创建完成之后，您可以通过 `root` 账户将 `example_db` 的读写权限授予 `test` 账户。
+`example_db` 数据库创建完成之后，您可以使用 `root` 账户创建 `test` 账户，并授予其 `example_db` 的读写权限 。
 
 ```sql
 CREATE USER 'test' IDENTIFIED by '123456';
