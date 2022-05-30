@@ -12,6 +12,10 @@ GRANT 命令用于赋予指定用户或角色指定的权限。
 GRANT privilege_list ON db_name[.tbl_name] TO user_identity [ROLE role_name];
 
 GRANT privilege_list ON RESOURCE resource_name TO user_identity [ROLE role_name];
+
+GRANT IMPERSONATE ON user_identity TO user_identity;
+
+GRANT user_identity TO role_name;
 ```
 
 **privilege_list**
@@ -28,6 +32,7 @@ ALTER_PRIV：对指定的库或表的schema变更权限
 CREATE_PRIV：对指定的库或表的创建权限
 DROP_PRIV：对指定的库或表的删除权限
 USAGE_PRIV: 对指定资源的使用权限
+IMPERSONATE: 可以切换到指定用户执行的权限
 ```
 
 旧版权限中的 `ALL` 和 `READ_WRITE` 会被转换成：`SELECT_PRIV，LOAD_PRIV，ALTER_PRIV，CREATE_PRIV，DROP_PRIV`；
@@ -108,6 +113,18 @@ USAGE_PRIV: 对指定资源的使用权限
     ```sql
     GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO ROLE 'my_role';
     ```
+
+7. 将某个用户授予某个角色
+
+    ```sql
+    GRANT 'jack'@'%' TO 'my_role'
+    ```
+
+8. 授予 jack 可以以 rose 的身份执行命令的权限
+
+   ```sql
+   GRANT IMPERSONATE ON 'rose'@'%' TO 'jack'@'%';
+   ```
 
 ## 关键字(keywords)
 

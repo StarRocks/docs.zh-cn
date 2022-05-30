@@ -12,6 +12,10 @@ REVOKE 命令用于撤销指定用户或角色指定的权限。
 REVOKE privilege_list ON db_name[.tbl_name] FROM user_identity [ROLE role_name];
 
 REVOKE privilege_list ON RESOURCE resource_name FROM user_identity [ROLE role_name];
+
+REVOKE IMPERSONATE ON user_identity FROM user_identity;
+
+REVOKE user_identity FROM role_name;
 ```
 
 **user_identity：**
@@ -34,6 +38,18 @@ REVOKE privilege_list ON RESOURCE resource_name FROM user_identity [ROLE role_na
     ```sql
     REVOKE USAGE_PRIV ON RESOURCE 'spark_resource' FROM 'jack'@'192.%';
     ```
+
+3.  将某个角色的权限从用户撤销。
+
+    ```sql
+    REVOKE 'jack'@'%' FROM 'my_role'
+    ```
+
+4.  撤销 jack 可以以 rose 的身份执行命令的权限
+
+   ```sql
+   REVOKE IMPERSONATE ON 'rose'@'%' FROM 'jack'@'%';
+   ```
 
 ## 关键字(keywords)
 
