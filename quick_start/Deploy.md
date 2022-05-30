@@ -1,6 +1,6 @@
 # 手动部署 StarRocks
 
-本文档介绍如何手动部署 StarRocks。StarRocks 支持以二进制压缩包形式手动部署于集群中。
+本文档介绍如何手动部署 StarRocks。StarRocks 支持以二进制安装包形式手动部署于集群中。
 
 如需从 [源码](https://github.com/StarRocks/starrocks) 编译安装 StarRocks，参考 [Docker 编译](../administration/Build_in_docker.md)。
 
@@ -10,36 +10,15 @@
 
 ## 前提条件
 
-硬件需求
+在部署 StarRocks 之前，请确保如下环境要求已满足。
+|需求种类|需求细节|说明|
+|-----------|------------|------|
+|硬件需求|<ul><li>集群至少拥有两台物理或虚拟节点。</li><li>BE 节点 CPU 需支持 AVX2 指令集。</li><li>各节点间需要通过万兆网卡及万兆交换机连接。</li></ul>|<ul><li>FE 节点建议配置 8 核 或以上 CPU，16GB 或以上内存。</li> <li>BE 节点建议配置 16 核 或以上 CPU，64GB 或以上内存。</li><li>通过运行 <code>cat /proc/cpuinfo \|grep avx2</code> 命令查看节点 CPU 支持的指令集，若有结果返回则表明 CPU 支持 AVX2 指令集。</li></ul>|
+|操作系统|所有节点操作系统需为 CentOS（7 或以上）。| |
+|软件需求|所有节点需安装：<ul><li><a   href="https://www.oracle.com/java/technologies/downloads/">Oracle Java</a>（1.8 或以上）</li><li><a href="https://www.mysql.com/downloads/">MySQL 客户端</a>（5.5 或以上） </li></ul>|  |
+|系统环境|<ul><li>集群时钟需保持同步。 </li> <li> 用户需要有设置 <code>ulimit -n</code> 权限。 </li> </ul> | |
 
-* 万兆网卡
-* 万兆交换机
-* CPU 支持 AVX2 指令集
-
-> 通过运行 `cat /proc/cpuinfo |grep avx2` 命令查看节点 CPU 支持的指令集，若有结果返回则表明 CPU 支持 AVX2 指令集。
-
-建议配置
-
-|节点名称|CPU|内存|
-|-------|----|---|
-|FE|8 核 或以上|16GB 或以上|
-|BE|16 核 或以上|64GB 或以上|
-
-操作系统
-
-操作系统需为 CentOS（7 或以上）。
-
-软件需求
-
-* [Oracle Java](https://www.oracle.com/java/technologies/downloads/)（1.8 或以上）
-* [MySQL 客户端](https://www.mysql.com/downloads/)（5.5 或以上）
-
-系统环境
-
-* 集群时钟需保持同步。
-* 用户需要有设置 `ulimit -n` 权限。
-
-其他系统参数配置
+其他系统参数配置：
 
 * 建议关闭交换区，消除交换内存到虚拟内存时对性能的扰动。
 
@@ -55,7 +34,7 @@ echo 1 | sudo tee /proc/sys/vm/overcommit_memory
 
 ## 部署 FE 节点
 
-本小节介绍如何部署 FE 节点。
+本小节介绍如何配置部署 Frontend (FE) 节点。FE 是StarRocks的前端节点，负责管理元数据，管理客户端连接，进行查询规划，查询调度等工作。
 
 ### 下载并解压安装包
 
@@ -79,7 +58,7 @@ cd StarRocks-x.x.x/fe
 
 修改 FE 配置文件 **conf/fe.conf**。以下示例仅添加元数据目录和 Java 目录，以保证部署成功。如需在生产环境中对集群进行详细优化配置，参考 [FE 参数配置](../administration/Configuration.md#FE-配置项)。
 
-> 注意：当一台机器拥有多个 IP 地址时，需要在 FE 配置文件 conf/fe.conf 中设置 `priority_networks`，为该节点设定唯一 IP。
+> 注意：当一台机器拥有多个 IP 地址时，需要在 FE 配置文件 **conf/fe.conf** 中设置 `priority_networks`，为该节点设定唯一 IP。
 
 添加元数据目录。
 
@@ -120,8 +99,8 @@ bin/start_fe.sh --daemon
 * 通过查看日志 **log/fe.log** 确认 FE 是否启动成功。
 
 ```Plain Text
-2020-03-16 20:32:14,686 INFO 1 [FeServer.start():46] thrift server started.
-2020-03-16 20:32:14,696 INFO 1 [NMysqlServer.start():71] Open mysql server success on 9030
+2020-03-16 20:32:14,686 INFO 1 [FeServer.start():46] thrift server started.  // FE 节点启动成功。
+2020-03-16 20:32:14,696 INFO 1 [NMysqlServer.start():71] Open mysql server success on 9030  // 可以使用 MySQL 客户端通过 `9030` 端口连接 FE。
 2020-03-16 20:32:14,696 INFO 1 [QeService.start():60] QE service start.
 2020-03-16 20:32:14,825 INFO 76 [HttpServer$HttpServerThread.run():210] HttpServer started with port 8030
 ...
@@ -134,7 +113,7 @@ bin/start_fe.sh --daemon
 
 ### 添加 FE 节点
 
-您可通过 MySQL 客户端连接 StarRocks 以添加或删除 FE 节点。
+您可通过 MySQL 客户端连接 StarRocks 以添加 FE 节点。
 
 在 FE 进程启动后，使用 MySQL 客户端连接 FE 实例。
 
@@ -142,7 +121,7 @@ bin/start_fe.sh --daemon
 mysql -h 127.0.0.1 -P9030 -uroot
 ```
 
-> 说明：默认 root 用户密码为空，端口为 **fe/conf/fe.conf** 中的 `query\_port` 配置项，默认值为 `9030`。
+> 说明：`root` 为 StarRocks 默认内置 user，密码为空，端口为 **fe/conf/fe.conf** 中的 `query\_port` 配置项，默认值为 `9030`。
 
 查看 FE 状态。
 
@@ -171,8 +150,8 @@ ReplayedJournalId: 1303
 1 row in set (0.02 sec)
 ```
 
-> * 当 **Role** 为 **FOLLOWER** 时，当前节点是一个能参与选主的 FE 节点。
-> * 当 **IsMaster** 为 **true** 时，当前 FE 节点为主节点。
+* 当 **Role** 为 **FOLLOWER** 时，当前节点是一个能参与选主的 FE 节点。
+* 当 **IsMaster** 为 **true** 时，当前 FE 节点为主节点。
 
 如果 MySQL 客户端连接失败，可以通过查看 **log/fe.warn.log** 日志文件发现问题。
 
@@ -194,7 +173,7 @@ StarRocks 的 FE 节点支持 HA 模型部署，以保证集群的高可用。�
 
 ## 部署 BE 节点
 
-本小节介绍如何配置部署 BE 节点。
+本小节介绍如何配置部署 Backend (BE) 节点。BE 是StarRocks的后端节点，负责数据存储以及SQL执行等工作。以下例子仅部署一个 BE 节点。您可以通过重复以下步骤添加多个 BE 节点。
 
 ### 下载并解压安装包
 
@@ -230,7 +209,7 @@ mkdir -p storage
 
 ### 添加 BE 节点
 
-您可通过 MySQL 客户端连接 StarRocks 以添加或删除 BE 节点。
+通过 MySQL 客户端将 BE 节点添加至 StarRocks 集群。
 
 ```sql
 mysql> ALTER SYSTEM ADD BACKEND "host:port";
@@ -244,7 +223,7 @@ mysql> ALTER SYSTEM ADD BACKEND "host:port";
 mysql> ALTER SYSTEM decommission BACKEND "host:port";
 ```
 
-> `host` 和 `port` 与误添加的 BE 节点一致。
+> `host` 和 `port` 与添加的 BE 节点一致。
 
 ### 启动 BE 节点
 
@@ -289,9 +268,9 @@ ClusterDecommissioned: false
 1 row in set (0.01 sec)
 ```
 
-> 当 `isAlive` 为 `true` 时，当前 BE 节点正常接入集群。
+当 `isAlive` 为 `true` 时，当前 BE 节点正常接入集群。
 
-如果 BE 节点没有正常接入集群，可以通过查看 **log/be.WARNING** 日志文件发现问题。
+如果 BE 节点没有正常接入集群，可以通过查看 **log/be.WARNING** 日志文件排查问题。
 
 如果日志中出现类似以下的信息，说明 `priority_networks` 的配置存在问题。
 
@@ -319,7 +298,7 @@ MySQL> ALTER SYSTEM DROP BACKEND "172.16.xxx.xx:9050";
 
 ## 部署 Broker 节点
 
-本小节介绍如何配置部署 Broker 节点。
+本小节介绍如何配置部署 Broker。通过部署的 Broker，StarRocks 可读取对应数据源（如HDFS、S3）上的数据，利用自身的计算资源对数据进行预处理和导入。除此之外，Broker 也被应用于数据导出，备份恢复等功能。
 
 ### 下载并解压安装包
 
@@ -343,8 +322,6 @@ cd StarRocks-x.x.x/apache_hdfs_broker
 
 修改 Broker 节点配置文件 **conf/apache_hdfs_broker.conf**。因默认配置即可启动集群，以下示例并未修改 Broker 点配置。您可以直接复制自己的 HDFS 集群配置文件并粘贴至 **conf** 路径下。
 
-> 注意：Broker 节点没有且无须设置 `priority_networks` 参数，其服务默认绑定于 `0.0.0.0` 上。添加 Broker 时只需填写正确且可访问的 Broker IP 即可。
-
 ### 启动 Broker 节点
 
 通过以下命令启动 Broker。
@@ -360,6 +337,8 @@ cd StarRocks-x.x.x/apache_hdfs_broker
 ```sql
 MySQL> ALTER SYSTEM ADD BROKER broker1 "172.16.xxx.xx:8000";
 ```
+
+> 说明：默认配置中，Broker 节点的端口为 8000。
 
 ### 确认 Broker 启动成功
 
@@ -379,7 +358,7 @@ LastUpdateTime: 2022-05-19 11:28:31
 1 row in set (0.00 sec)
 ```
 
-> 当 `Alive` 为 `true` 时，当前 Broker 节点正常接入集群。
+当 `Alive` 为 `true` 时，当前 Broker 节点正常接入集群。
 
 ### 停止 Broker 节点
 
