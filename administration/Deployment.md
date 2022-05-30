@@ -190,38 +190,40 @@ $ bin/install.sh
 Q：如何设置 `ulimit`？
 A：您可以通过在**所有机器**上运行 `ulimit -n 65536` 命令设置。如果系统提示您“没有权限”，请尝试以下方案：
   
-1. 在 **/etc/security/limits.conf** 添加如下配置：
+首先，请在 **/etc/security/limits.conf** 添加如下配置：
   
-  ```Plain Text
-  # 4个元素，具体可以参考 limits.conf 中的说明，*代表所有用户。
-  * soft nofile 65535
-  * hard nofile 65535
-  ```
+```Plain Text
+# 4个元素，具体可以参考 limits.conf 中的说明，*代表所有用户。
+* soft nofile 65535
+* hard nofile 65535
+```
   
-2. 在 **/etc/pam.d/login** 和 **/etc/pam.d/sshd** 中添加如下配置：
+然后，请在 **/etc/pam.d/login** 和 **/etc/pam.d/sshd** 中添加如下配置：
   
-  ```Plain Text
-  session  required  pam_limits.so
-  ```
+```Plain Text
+session  required  pam_limits.so
+```
   
-3. 确认 **/etc/ssh/sshd_config** 中存在 **UsePAM yes**。如果没有，请添加该参数，并运行 `restart sshd`。
+最后，请确认 **/etc/ssh/sshd_config** 中存在 **UsePAM yes**。如果没有，请添加该参数，并运行 `restart sshd`。
 
 Q：安装 Python 时遇到问题 `__init__() takes 2 arguments (4 given)`，如何处理？
 A：如果在安装 Python 时遇到问题 `__init__() takes 2 arguments (4 given)`，请执行如下步骤：
 
-1. 运行 `which python` 命令确认 Python 安装路径为 **/usr/bin/python**。
-2. 删除 python-setuptools 安装包：
+首先，请运行 `which python` 命令确认 Python 安装路径为 **/usr/bin/python**。
+然后，请删除 python-setuptools 安装包：
 
-  ```shell
-  yum remove python-setuptools
-  ```
-3. 删除 setuptool 相关文件。
-  ```shell
-  rm /usr/lib/python2.7/site-packages/setuptool* -rf
-  ```
+```shell
+yum remove python-setuptools
+```
 
-4. 获取 **ez_setup.py** 文件。
+接下来，请删除 setuptool 相关文件。
 
-  ```shell
-  wget https://bootstrap.pypa.io/ez_setup.py -O - | python
-  ```
+```shell
+rm /usr/lib/python2.7/site-packages/setuptool* -rf
+```
+
+最后，您需要获取 **ez_setup.py** 文件。
+
+```shell
+wget https://bootstrap.pypa.io/ez_setup.py -O - | python
+```
