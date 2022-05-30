@@ -12,13 +12,13 @@ StarRocks 数据导入整体生态图如下。
 
 ### Broker Load
 
-[Broker Load](/loading/BrokerLoad.md) 模式通过 Broker 进程访问并读取外部数据源，然后采用 MySQL 协议向 StarRocks 创建导入作业。
+[Broker Load](/loading/BrokerLoad.md) 模式是一种异步数据导入模式，通过 Broker 进程访问并读取外部数据源，然后采用 MySQL 协议向 StarRocks 创建导入作业。
 
 Broker Load 模式适用于源数据在 Broker 进程可访问的存储系统（如 HDFS, S3）中的情景，可以支撑数据量达数百 GB 的导入作业。该导入方式支持的数据源有 Apache Hive™ 等。
 
 ### Spark Load
 
-[Spark Load](/loading/SparkLoad.md) 通过外部的 Apache Spark™ 资源实现对导入数据的预处理，提高 StarRocks 大数据量的导入性能并且节省 StarRocks 集群的计算资源。
+[Spark Load](/loading/SparkLoad.md) 是一种异步数据导入模式，通过外部的 Apache Spark™ 资源实现对导入数据的预处理，提高 StarRocks 大数据量的导入性能并且节省 StarRocks 集群的计算资源。
 
 Spark Load 模式适用于初次向 StarRocks 迁移大数据量（TB 级别）的场景。该导入方式支持的数据源应位于 Apache Spark™ 可访问的存储系统（如 HDFS）中。
 
@@ -26,17 +26,17 @@ Spark Load 模式适用于初次向 StarRocks 迁移大数据量（TB 级别）�
 
 ### Stream Load
 
-[Stream Load](/loading/StreamLoad.md) 是一种同步执行的导入方式。用户通过 HTTP 协议发送请求将本地文件或数据流导入到 StarRocks 中，并等待系统返回导入的结果状态，从而判断导入是否成功。
+[Stream Load](/loading/StreamLoad.md) 是一种同步数据导入模式。用户通过 HTTP 协议发送请求将本地文件或数据流导入到 StarRocks 中，并等待系统返回导入的结果状态，从而判断导入是否成功。
 
 Stream Load 模式适用于导入本地文件，或通过程序导入数据流中的数据。该导入方式支持的数据源有 Apache Flink®、CSV 文件等。
 
 ### Routine Load
 
-[Routine Load](/loading/RoutineLoad.md)（例行导入）提供从指定数据源进行自动数据导入的功能。用户通过 MySQL 协议提交例行导入作业，生成一个常驻线程，不间断地从数据源（如 Apache Kafka®）中读取数据并导入到 StarRocks 中。
+[Routine Load](/loading/RoutineLoad.md)（例行导入）提供从指定数据源进行自动数据导入的功能。您可以通过 MySQL 协议提交例行导入作业，生成一个常驻线程，不间断地从数据源（如 Apache Kafka®）中读取数据并导入到 StarRocks 中。
 
 ### Insert Into
 
-[Insert Into](/loading/InsertInto.md) 导入模式类似 MySQL 中的 Insert 语句，StarRocks 支持通过 `INSERT INTO tbl SELECT ...;` 的方式从 StarRocks 的表中读取数据并导入到另一张表。您也可以通过 `INSERT INTO tbl VALUES(...);` 插入单条数据。该导入方式支持的数据源有 DataX/DTS、Kettle/Informatic、以及 StarRocks 本身。
+[Insert Into](/loading/InsertInto.md) 导入模式是一种同步数据导入模式，类似 MySQL 中的 Insert 语句，StarRocks 支持通过 `INSERT INTO tbl SELECT ...;` 的方式从 StarRocks 的表中读取数据并导入到另一张表。您也可以通过 `INSERT INTO tbl VALUES(...);` 插入单条数据。该导入方式支持的数据源有 DataX/DTS、Kettle/Informatic、以及 StarRocks 本身。
 
 具体导入方式详情请参考 [数据导入](../loading/Loading_intro.md)。
 
@@ -73,7 +73,7 @@ StarRocks 兼容 MySQL 协议，其查询语句基本符合 SQL92 标准。
 select * from detailDemo;
 ```
 
-### 通过 order by 查询
+### 通过标准 SQL 查询
 
 将查询结果以 `mache_verson` 字段降序排列。
 
@@ -81,7 +81,7 @@ select * from detailDemo;
 select * from detailDemo order by mache_verson desc;
 ```
 
-StarRocks 支持多种 select 用法，包括：[Join](/sql-reference/sql-statements/data-manipulation/SELECT.md#%E8%BF%9E%E6%8E%A5join)，[子查询](/sql-reference/sql-statements/data-manipulation/SELECT.md#子查询)，[With 子表](/sql-reference/sql-statements/data-manipulation/SELECT.md#with%E5%AD%90%E5%8F%A5) 等，详见 [查询章节](/sql-reference/sql-statements/data-manipulation/SELECT.md)。
+StarRocks 支持多种 select 用法，包括：[Join](/sql-reference/sql-statements/data-manipulation/SELECT.md#%E8%BF%9E%E6%8E%A5join)，[子查询](/sql-reference/sql-statements/data-manipulation/SELECT.md#子查询)，[With 子句](/sql-reference/sql-statements/data-manipulation/SELECT.md#with%E5%AD%90%E5%8F%A5) 等，详见 [查询章节](/sql-reference/sql-statements/data-manipulation/SELECT.md)。
 
 ## 扩展支持
 
@@ -97,7 +97,7 @@ StarRocks 支持创建 [逻辑视图](/sql-reference/sql-statements/data-definit
 
 ### 外部表
 
-StarRocks 支持多种外部表：[MySQL 外部表](/using_starrocks/External_table.md#MySQL外部表)，[Elasticsearch 外部表](/using_starrocks/External_table.md#Elasticsearch外部表)，[Apache Hive™ 外表](/using_starrocks/External_table.md#Hive外表)，[StarRocks 外部表](/using_starrocks/External_table.md#StarRocks外部表)，[Apache Iceberg 外表](/using_starrocks/External_table.md#apache-iceberg%E5%A4%96%E8%A1%A8)。成功创建外部表后，可通过查询外部表的方式接入其他数据源。
+StarRocks 支持多种外部表：[MySQL 外部表](/using_starrocks/External_table.md#MySQL外部表)，[Elasticsearch 外部表](/using_starrocks/External_table.md#Elasticsearch外部表)，[Apache Hive™ 外表](/using_starrocks/External_table.md#Hive外表)，[StarRocks 外部表](/using_starrocks/External_table.md#StarRocks外部表)，[Apache Iceberg 外表](/using_starrocks/External_table.md#apache-iceberg%E5%A4%96%E8%A1%A8)，[Apache Hudi 外表](/using_starrocks/External_table.md#apache-hudi-外表)。成功创建外部表后，可通过查询外部表的方式接入其他数据源。
 
 ## 慢查询分析
 
@@ -105,19 +105,19 @@ StarRocks 支持通过多种方式分析查询瓶颈以及优化查询效率。
 
 ### 通过调整并行度优化查询效率
 
-我们推荐您通过设置 Pipeline 执行引擎变量。您也可以通过调整一个 Fragment 实例的并行数量 `set  parallel_fragment_exec_instance_num = 8;` 来设置查询并行度，从而提高 CPU 资源利用率和查询效率。详细的参数介绍及设置，参考 [查询并行度相关参数](/administration/Query_management.md)。
+我们推荐您通过设置 Pipeline 执行引擎变量。您也可以通过调整一个 [Fragment](/introduction/features.md#mpp分布式执行框架) 实例的并行数量 `set  parallel_fragment_exec_instance_num = 8;` 来设置查询并行度，从而提高 CPU 资源利用率和查询效率。详细的参数介绍及设置，参考 [查询并行度相关参数](/administration/Query_management.md)。
 
 ### 查看 Profile 并分析查询瓶颈
 
 * 查看查询计划。
 
 ```sql
-explain costs sql;
+explain costs select * from detailDemo;
 ```
 
 > StarRocks 1.19 以前版本需使用 `explain sql` 查看查询计划。
 
-* 开启打开 profile 上报
+* 开启 Profile 上报。
 
 ```sql
 set is_report_success = true;
