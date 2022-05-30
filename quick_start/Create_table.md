@@ -46,35 +46,23 @@ StarRocks 支持 [多种数据模型](../table_design/Data_model.md)，以适用
 ```sql
 use example_db;
 CREATE TABLE IF NOT EXISTS detailDemo (
-    make_time     DATE           NOT NULL COMMENT "YYYY-MM-DD",
-    mache_verson  TINYINT        COMMENT "range [-128, 127]",
-    mache_num     SMALLINT       COMMENT "range [-32768, 32767] ",
-    de_code       INT            COMMENT "range [-2147483648, 2147483647]",
-    saler_id      BIGINT         COMMENT "range [-2^63 + 1 ~ 2^63 - 1]",
-    pd_num        LARGEINT       COMMENT "range [-2^127 + 1 ~ 2^127 - 1]",
-    pd_type       CHAR(20)       NOT NULL COMMENT "range char(m),m in (1-255) ",
-    pd_desc       VARCHAR(500)   NOT NULL COMMENT "upper limit value 65533 bytes",
-    us_detail     STRING         NOT NULL COMMENT "upper limit value 65533 bytes",
-    relTime       DATETIME       COMMENT "YYYY-MM-DD HH:MM:SS",
+    recruit_date  DATE           NOT NULL COMMENT "YYYY-MM-DD",
+    region_num    TINYINT        COMMENT "range [-128, 127]",
+    num_plate     SMALLINT       COMMENT "range [-32768, 32767] ",
+    tel           INT            COMMENT "range [-2147483648, 2147483647]",
+    id            BIGINT         COMMENT "range [-2^63 + 1 ~ 2^63 - 1]",
+    password      LARGEINT       COMMENT "range [-2^127 + 1 ~ 2^127 - 1]",
+    name          CHAR(20)       NOT NULL COMMENT "range char(m),m in (1-255) ",
+    profile       VARCHAR(500)   NOT NULL COMMENT "upper limit value 65533 bytes",
+    hobby         STRING         NOT NULL COMMENT "upper limit value 65533 bytes",
+    leave_time    DATETIME       COMMENT "YYYY-MM-DD HH:MM:SS",
     channel       FLOAT          COMMENT "4 bytes",
     income        DOUBLE         COMMENT "8 bytes",
     account       DECIMAL(12,4)  COMMENT "",
     ispass        BOOLEAN        COMMENT "true/false"
 ) ENGINE=OLAP
-DUPLICATE KEY(make_time, mache_verson)
-PARTITION BY RANGE (make_time) (
-    START ("2022-03-11") END ("2022-03-15") EVERY (INTERVAL 1 day)
-)
-DISTRIBUTED BY HASH(make_time, mache_verson) BUCKETS 8
-PROPERTIES(
-    "replication_num" = "3",
-    "dynamic_partition.enable" = "true",
-    "dynamic_partition.time_unit" = "DAY",
-    "dynamic_partition.start" = "-3",
-    "dynamic_partition.end" = "3",
-    "dynamic_partition.prefix" = "p",
-    "dynamic_partition.buckets" = "8"
-);
+DUPLICATE KEY(recruit_date, region_num)
+DISTRIBUTED BY HASH(recruit_date, region_num) BUCKETS 8;
 ```
 
 > 注意：在 StarRocks 中，字段名不区分大小写，表名区分大小写。
@@ -83,7 +71,7 @@ PROPERTIES(
 
 #### 排序键
 
-StarRocks 表内部组织存储数据时会按照指定列排序，这些列为排序列（Sort Key）。明细模型中由 `DUPLICATE KEY` 指定排序列。以上示例中的 `make_time` 以及 `mache_verson` 两列为排序列。
+StarRocks 表内部组织存储数据时会按照指定列排序，这些列为排序列（Sort Key）。明细模型中由 `DUPLICATE KEY` 指定排序列。以上示例中的 `recruit_date` 以及 `region_num` 两列为排序列。
 
 > 注意：排序列在建表时应定义在其他列之前。排序键详细描述以及不同数据模型的表的设置方法请参考 [排序键](../table_design/Sort_key.md)。
 
@@ -95,9 +83,9 @@ StarRocks 表中支持多种字段类型，除以上示例中已经列举的字�
 
 #### 分区分桶
 
-`PARTITION` 关键字用于给表 [创建分区](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md)。以上示例中使用 `make_time` 进行范围分区，从 11 日到 15 日每天创建一个分区。StarRocks 支持动态生成分区，`PROPERTIES` 中 `dynamic_partition` 开头的相关属性配置全部用以为表设置动态分区。详见 [动态分区管理](/table_design/Data_distribution.md)。
+`PARTITION` 关键字用于给表 [创建分区](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md)。以上示例中使用 `recruit_date` 进行范围分区，从 11 日到 15 日每天创建一个分区。StarRocks 支持动态生成分区，详见 [动态分区管理](/table_design/Data_distribution.md)。
 
-`DISTRIBUTED` 关键字用于给表 [创建分桶](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md)，以上示例中使用 `make_time` 以及 `mache_verson` 两个字段通过 Hash 算法创建 8 个桶。
+`DISTRIBUTED` 关键字用于给表 [创建分桶](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md)，以上示例中使用 `recruit_date` 以及 `region_num` 两个字段通过 Hash 算法创建 8 个桶。
 
 创建表时合理的分区和分桶设计可以优化表的查询性能。有关分区分桶列如何选择，详见 [数据分布](/table_design/Data_distribution.md)。
 
@@ -177,16 +165,16 @@ MySQL [example_db]> desc detailDemo;
 +--------------+-----------------+------+-------+---------+-------+
 | Field        | Type            | Null | Key   | Default | Extra |
 +--------------+-----------------+------+-------+---------+-------+
-| make_time    | DATE            | No   | true  | NULL    |       |
-| mache_verson | TINYINT         | Yes  | true  | NULL    |       |
-| mache_num    | SMALLINT        | Yes  | false | NULL    |       |
-| de_code      | INT             | Yes  | false | NULL    |       |
-| saler_id     | BIGINT          | Yes  | false | NULL    |       |
-| pd_num       | LARGEINT        | Yes  | false | NULL    |       |
-| pd_type      | CHAR(20)        | No   | false | NULL    |       |
-| pd_desc      | VARCHAR(500)    | No   | false | NULL    |       |
-| us_detail    | VARCHAR(65533)  | No   | false | NULL    |       |
-| relTime      | DATETIME        | Yes  | false | NULL    |       |
+| recruit_date | DATE            | No   | true  | NULL    |       |
+| region_num   | TINYINT         | Yes  | true  | NULL    |       |
+| num_plate    | SMALLINT        | Yes  | false | NULL    |       |
+| tel          | INT             | Yes  | false | NULL    |       |
+| id           | BIGINT          | Yes  | false | NULL    |       |
+| password     | LARGEINT        | Yes  | false | NULL    |       |
+| name         | CHAR(20)        | No   | false | NULL    |       |
+| profile      | VARCHAR(500)    | No   | false | NULL    |       |
+| hobby        | VARCHAR(65533)  | No   | false | NULL    |       |
+| leave_time   | DATETIME        | Yes  | false | NULL    |       |
 | channel      | FLOAT           | Yes  | false | NULL    |       |
 | income       | DOUBLE          | Yes  | false | NULL    |       |
 | account      | DECIMAL64(12,4) | Yes  | false | NULL    |       |
