@@ -75,10 +75,10 @@ select * from detailDemo;
 
 ### 通过标准 SQL 查询
 
-将查询结果以 `mache_verson` 字段降序排列。
+将查询结果以 `region_num` 字段降序排列。
 
 ```sql
-select * from detailDemo order by mache_verson desc;
+select * from detailDemo order by region_num desc;
 ```
 
 StarRocks 支持多种 select 用法，包括：[Join](/sql-reference/sql-statements/data-manipulation/SELECT.md#%E8%BF%9E%E6%8E%A5join)，[子查询](/sql-reference/sql-statements/data-manipulation/SELECT.md#子查询)，[With 子句](/sql-reference/sql-statements/data-manipulation/SELECT.md#with%E5%AD%90%E5%8F%A5) 等，详见 [查询章节](/sql-reference/sql-statements/data-manipulation/SELECT.md)。
