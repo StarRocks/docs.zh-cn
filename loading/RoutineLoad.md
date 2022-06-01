@@ -50,10 +50,10 @@ FROM KAFKA
 
     * partitionNum：Kafka 分区数。
     * desireTaskConcurrentNum： desired_concurrent_number 任务配置，参考当前参数释义。
-    * aliveBeNum：状态为 Alive 的 be 节点个数。
+    * aliveBeNum：状态为 Alive 的 BE 节点个数。
     * max_routine_load_task_concurrent_num：be.conf 配置项，默认为5，具体可参考 [参数配置](../administration/Configuration.md)。
 
-  * **max_batch_interval**：每个子任务最大执行时间，单位是「秒」。范围为 5 到 60。默认为 10。**1.15 版本后**: 该参数是子任务的调度时间，即任务多久执行一次，任务的消费数据时间为 fe.conf 中的 routine_load_task_consume_second，默认为 3s，
+  * **max_batch_interval**：每个子任务最大执行时间，单位是「秒」。范围为 5 到 60。默认为 10。**1.15 版本后**: 该参数是子任务的调度间隔，即任务多久执行一次，任务的消费数据时间为 fe.conf 中的 routine_load_task_consume_second，默认为 3s，
   任务的执行超时时间为 fe.conf 中的 routine_load_task_timeout_second，默认为 15s。
   * **max_error_number**：采样窗口内，允许的最大错误行数。必须大于等于 0。默认是 0，即不允许有错误行。注意：被 where 条件过滤掉的行不算错误行。
 * **FROM 子句**：指定数据源，以及数据源的相关信息。本示例中数据源为 KAFKA，数据源相关的信息包含如下两项。
