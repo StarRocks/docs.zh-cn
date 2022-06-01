@@ -14,7 +14,7 @@
 以从一个本地 Kafka 集群导入 CSV 数据为例：
 
 ~~~sql
-CREATE ROUTINE LOAD load_test.routine_load_wikipedia ON routine_wiki_edit
+CREATE ROUTINE LOAD load_test.routine_wiki_edit_1589191587 ON routine_wiki_edit
 COLUMNS TERMINATED BY ",",
 COLUMNS (event_time, channel, user, is_anonymous, is_minor, is_new, is_robot, is_unpatrolled, delta, added, deleted)
 WHERE event_time > "2022-01-01 00:00:00",
@@ -33,8 +33,8 @@ FROM KAFKA
 
 **参数说明：**
 
-* **job_name**：必填。导入作业的名称，本示例为`load_test.routine_load_wikipedia`。前缀可以携带导入数据库名称，常见命名方式为时间戳+表名。
-  单个 database 内，任务名称不可重复。
+* **job_name**：必填。导入作业的名称，本示例为`routine_wiki_edit_1589191587`。导入作业的常见命名方式为表名+时间戳。在相同数据库内，导入作业的名称不可重复。
+  > 您可以在**job_name**前指定导入数据库名称。例如`load_test.routine_wiki_edit_1589191587`。
 * **table_name**：必填。导入的目标表的名称。本示例为`routine_wiki_edit`。
 * **COLUMN TERMINATED BY 子句**：选填。指定源数据文件中的列分隔符，分隔符默认为：\t。
 * **COLUMN 子句** ：选填。用于指定源数据中列和表中列的映射关系。
@@ -92,7 +92,7 @@ MySQL [load_test] > SHOW ROUTINE LOAD\G;
 *************************** 1. row ***************************
 
                   Id: 14093
-                Name: routine_load_wikipedia
+                Name: routine_wiki_edit_1589191587
           CreateTime: 2020-05-16 16:00:48
            PauseTime: N/A
              EndTime: N/A
@@ -112,7 +112,7 @@ ReasonOfStateChanged:
 1 row in set (0.00 sec)
 ~~~
 
-可以看到示例中创建的名为 routine_load_wikipedia 的导入任务，其中重要的字段释义：
+可以看到示例中创建的名为 routine_wiki_edit_1589191587 的导入任务，其中重要的字段释义：
 
 * State：导入任务状态。RUNNING，表示该导入任务处于持续运行中。
 * Statistic 为进度信息，记录了从创建任务开始后的导入信息。
@@ -131,7 +131,7 @@ ReasonOfStateChanged:
 
 ~~~sql
 MySQL [load_test] > USE load_test;
-MySQL [load_test] > SHOW ROUTINE LOAD WHERE Jobname="routine_load_wikipedia"\G;
+MySQL [load_test] > SHOW ROUTINE LOAD WHERE Jobname="routine_wiki_edit_1589191587"\G;
 *************************** 1. row ***************************
               TaskId: 645da10b-0a5c-4e90-84f0-03b33ec58b68
                TxnId: 2776810
@@ -147,11 +147,11 @@ DataSourceProperties: {"0":13634684}
 1 rows in set (0.00 sec)
 ~~~
 
-可以看到示例中创建的名为 routine_load_wikipedia 的导入子任务，其中重要的字段释义：
+可以看到示例中创建的名为 routine_wiki_edit_1589191587 的导入子任务，其中重要的字段释义：
 
 * TaskId：子任务 ID
 * TxnId：本次导入任务事物 ID
-* JobId：任务ID，例如例子中 routine_load_wikipedia 对应的 ID
+* JobId：任务ID，例如例子中 routine_wiki_edit_1589191587 对应的 ID
 * DataSourceProperties：已消费 Kafka 分区的OFFSET
 
 ### 暂停导入任务
@@ -167,12 +167,12 @@ PAUSE ROUTINE LOAD FOR [job_name];
 可以参考 [PAUSE ROUTINE LOAD](../sql-reference/sql-statements/data-manipulation/PAUSE%20ROUTINE%20LOAD.md)
 
 ~~~sql
-MySQL [load_test] > PAUSE ROUTINE LOAD FOR routine_load_wikipedia;
+MySQL [load_test] > PAUSE ROUTINE LOAD FOR routine_wiki_edit_1589191587;
 Query OK, 0 rows affected (0.01 sec)
 MySQL [load_test] > SHOW ROUTINE LOAD\G;
 *************************** 1. row ***************************
                   Id: 14093
-                Name: routine_load_wikipedia
+                Name: routine_wiki_edit_1589191587
           CreateTime: 2020-05-16 16:00:48
            PauseTime: 2020-05-16 16:03:39
              EndTime: N/A
@@ -207,12 +207,12 @@ RESUME ROUTINE LOAD FOR [job_name];
 可以参考 [RESUME ROUTINE LOAD](../sql-reference/sql-statements/data-manipulation/RESUME%20ROUTINE%20LOAD.md)
 
 ~~~sql
-MySQL [load_test] > RESUME ROUTINE LOAD FOR routine_load_wikipedia;
+MySQL [load_test] > RESUME ROUTINE LOAD FOR routine_wiki_edit_1589191587;
 Query OK, 0 rows affected (0.01 sec)
 MySQL [load_test] > SHOW ROUTINE LOAD\G;
 *************************** 1. row ***************************
                   Id: 14093
-                Name: routine_load_wikipedia
+                Name: routine_wiki_edit_1589191587
           CreateTime: 2020-05-16 16:00:48
            PauseTime: N/A
              EndTime: N/A
@@ -236,7 +236,7 @@ ReasonOfStateChanged:
 MySQL [load_test] > SHOW ROUTINE LOAD\G;
 *************************** 1. row ***************************
                   Id: 14093
-                Name: routine_load_wikipedia
+                Name: routine_wiki_edit_1589191587
           CreateTime: 2020-05-16 16:00:48
            PauseTime: N/A
              EndTime: N/A
@@ -292,12 +292,12 @@ STOP ROUTINE LOAD FOR [job_name];
 可以参考 [STOP ROUTINE LOAD](../sql-reference/sql-statements/data-manipulation/STOP%20ROUTINE%20LOAD.md)
 
 ~~~sql
-MySQL [load_test] > STOP ROUTINE LOAD FOR routine_load_wikipedia;
+MySQL [load_test] > STOP ROUTINE LOAD FOR routine_wiki_edit_1589191587;
 Query OK, 0 rows affected (0.01 sec)
 MySQL [load_test] > SHOW ALL ROUTINE LOAD\G;
 *************************** 1. row ***************************
                   Id: 14093
-                Name: routine_load_wikipedia
+                Name: routine_wiki_edit_1589191587
           CreateTime: 2020-05-16 16:00:48
            PauseTime: N/A
              EndTime: 2020-05-16 16:08:25
