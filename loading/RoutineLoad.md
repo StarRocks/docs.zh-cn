@@ -1,6 +1,6 @@
 # Routine Load
 
-本文主要介绍Routine Load 的使用方式和常见问题。
+例行导入（Routine Load）功能，支持提交一个常驻的导入任务，通过不断的从指定的数据源读取数据，将数据导入到 StarRocks 中。 目前仅支持通过无认证或者 SSL 认证方式，从 Kakfa 导入文本格式（CSV）的数据。 本文主要介绍 Routine Load 的使用方式和常见问题。
 
 ## 支持的数据格式
 
