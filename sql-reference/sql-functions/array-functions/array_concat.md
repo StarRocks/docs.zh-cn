@@ -42,7 +42,7 @@ mysql> select array_concat(["sql","storage","execute"], ["Query"], ["Vectorized"
 +----------------------------------------------------------------------------+
 ```
 
-**示例 三**
+**示例三**
 
 ```plain text
 mysql> select array_concat(["sql",null], [null], ["Vectorized", null]);
@@ -53,6 +53,6 @@ mysql> select array_concat(["sql",null], [null], ["Vectorized", null]);
 +---------------------------------------------------------+
 ```
 
-## 关键字
+## 关键词
 
 ARRAY_CONCAT

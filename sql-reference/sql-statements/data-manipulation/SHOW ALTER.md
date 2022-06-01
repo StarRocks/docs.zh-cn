@@ -36,6 +36,6 @@ SHOW ALTER [TABLE [COLUMN | ROLLUP] [FROM db_name]];
     SHOW ALTER TABLE ROLLUP FROM example_db;
     ````
 
-## Keyword
+## 关键词
 
 SHOW, ALTER

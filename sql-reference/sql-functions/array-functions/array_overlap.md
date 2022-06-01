@@ -43,7 +43,7 @@ mysql> select arrays_overlap([9, 3, 2], [null, 11]);
 +-----------------------------------+
 ```
 
-**示例 三**
+**示例三**
 
 ```plain text
 mysql> select arrays_overlap([9, 3, null, 2], [null, 11]);
@@ -54,7 +54,7 @@ mysql> select arrays_overlap([9, 3, null, 2], [null, 11]);
 +----------------------------------------+
 ```
 
-**示例 四**
+**示例四**
 
 ```plain text
 mysql> select arrays_overlap([9, 3, "SQL", 2], [null, "SQL"]);
@@ -65,6 +65,6 @@ mysql> select arrays_overlap([9, 3, "SQL", 2], [null, "SQL"]);
 +--------------------------------------------+
 ```
 
-## 关键字
+## 关键词
 
 ARRAYS_OVERLAP
