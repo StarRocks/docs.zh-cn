@@ -17,7 +17,7 @@
 CREATE ROUTINE LOAD load_test.routine_load_wikipedia ON routine_wiki_edit
 COLUMNS TERMINATED BY ",",
 COLUMNS (event_time, channel, user, is_anonymous, is_minor, is_new, is_robot, is_unpatrolled, delta, added, deleted)
-WHERE <expr>,
+WHERE event_time > "2022-01-01 00:00:00",
 PROPERTIES
 (
   "desired_concurrent_number" = "3",
@@ -33,33 +33,30 @@ FROM KAFKA
 
 **参数说明：**
 
-* **job_name**：必填。导入作业的名称，前缀可以携带导入数据库名称，常见命名方式为时间戳+表名。
+* **job_name**：必填。导入作业的名称，本示例为`load_test.routine_load_wikipedia`。前缀可以携带导入数据库名称，常见命名方式为时间戳+表名。
   单个 database 内，任务名称不可重复。
-* **table_name**：必填。导入的目标表的名称。
-* **COLUMN TERMINATED 子句**：选填。指定源数据文件中的列分隔符，分隔符默认为：\t。
+* **table_name**：必填。导入的目标表的名称。本示例为`routine_wiki_edit`。
+* **COLUMN TERMINATED BY 子句**：选填。指定源数据文件中的列分隔符，分隔符默认为：\t。
 * **COLUMN 子句** ：选填。用于指定源数据中列和表中列的映射关系。
   * 映射列：如目标表有三列 col1, col2, col3 ，源数据有 4 列，其中第 1、2、4 列分别对应 col2, col1, col3，则书写如下：COLUMNS (col2, col1, temp, col3), ，其中 temp 列为不存在的一列，用于跳过源数据中的第三列。
   * 衍生列：除了直接读取源数据的列内容之外，StarRocks 还提供对数据列的加工操作。假设目标表后加入了第四列 col4 ，其结果由 col1 + col2 产生，则可以书写如下：COLUMNS (col2, col1, temp, col3, col4 = col1 + col2),。
-  * **WHERE <expr>**：过滤条件，只有满足过滤条件的数据才会导入StarRocks中。过滤条件中所指定的列可以是映射列或衍生列。例如，如果仅需要导入列 k1 大于 100 并且列 k2 等于 1000 的数据，则需要传入`WHERE k1 > 100 and k2 = 1000`。
+* **WHERE**：过滤条件，只有满足过滤条件的数据才会导入StarRocks中。过滤条件中所指定的列可以是映射列或衍生列。例如，如果仅需要导入 col1 大于 100 并且 col2 等于 1000 的数据，则需要传入`WHERE col1 > 100 and col2 = 1000`。
 * **PROPERTIES 子句**：选填。用于指定导入作业的通用参数。
-* **desired_concurrent_number**：导入并发度，指定一个导入作业最多会被分成多少个子任务执行。必须大于 0，默认为 3。子任务最终的个数，由多个参数决定。当前 routine load 并发取决于以下参数：
+  * **desired_concurrent_number**：导入并发度，指定一个导入作业最多会被分成多少个子任务执行。必须大于 0，默认为 3。子任务最终的个数，由多个参数决定。当前 routine load 并发取决于以下参数：
 
-  ~~~plain text
-  min(min(partitionNum,min(desireTaskConcurrentNum,aliveBeNum)),max_routine_load_task_concurrent_num)
-  ~~~
+    ~~~plain text
+    min(min(partitionNum,min(desireTaskConcurrentNum,aliveBeNum)),max_routine_load_task_concurrent_num)
+    ~~~
 
-  * partitionNum：kafka 分区数
-  * desireTaskConcurrentNum： desired_concurrent_number 任务配置，参考当前参数释义
-  * aliveBeNum：状态为 Alive 的 be 节点个数
-  * max_routine_load_task_concurrent_num：be.conf 配置项，默认为5，具体可参考 [参数配置](../administration/Configuration.md)
+    * partitionNum：Kafka 分区数。
+    * desireTaskConcurrentNum： desired_concurrent_number 任务配置，参考当前参数释义。
+    * aliveBeNum：状态为 Alive 的 be 节点个数。
+    * max_routine_load_task_concurrent_num：be.conf 配置项，默认为5，具体可参考 [参数配置](../administration/Configuration.md)。
 
-* **max_batch_interval**：每个子任务最大执行时间，单位是「秒」。范围为 5 到 60。默认为 10。**1.15 版本后**: 该参数是子任务的调度时间，即任务多久执行一次，任务的消费数据时间为 fe.conf 中的 routine_load_task_consume_second，默认为 3s，
-任务的执行超时时间为 fe.conf 中的 routine_load_task_timeout_second，默认为 15s。
-* **max_error_number**：采样窗口内，允许的最大错误行数。必须大于等于 0。默认是 0，即不允许有错误行。注意：被 where 条件过滤掉的行不算错误行。
-
-* **DATA_SOURCE**：指定数据源，请使用 KAFKA。
-* **data_source_properties**: 指定数据源相关的信息。
-
+  * **max_batch_interval**：每个子任务最大执行时间，单位是「秒」。范围为 5 到 60。默认为 10。**1.15 版本后**: 该参数是子任务的调度时间，即任务多久执行一次，任务的消费数据时间为 fe.conf 中的 routine_load_task_consume_second，默认为 3s，
+  任务的执行超时时间为 fe.conf 中的 routine_load_task_timeout_second，默认为 15s。
+  * **max_error_number**：采样窗口内，允许的最大错误行数。必须大于等于 0。默认是 0，即不允许有错误行。注意：被 where 条件过滤掉的行不算错误行。
+* **FROM 子句**：指定数据源，以及数据源的相关信息。本示例中数据源为 KAFKA，数据源相关的信息包含如下两项。
   * **kafka_broker_list**：Kafka 的 broker 连接信息，格式为 ip: host。多个 broker 之间以逗号分隔。
   * **kafka_topic**：指定要订阅的 Kafka 的 topic。
 
