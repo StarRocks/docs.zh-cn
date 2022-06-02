@@ -17,7 +17,7 @@
 
 - 修复 SHOW FULL TABLES FROM DatabaseName 语句中转义字符解析报错的问题。 [#6559](https://github.com/StarRocks/starrocks/issues/6559)
 - FE 磁盘空间占用过快的问题（通过回滚 BDBJE 版本修复该bug）。[#6708](https://github.com/StarRocks/starrocks/pull/6708)
-- 修复启用列式扫描 (`enable_docvalue_scan=true`) 后，因返回的数据中没有相关字段导致 BE 宕机的问题。[#6600](https://github.com/StarRocks/starrocks/pull/6600）
+- 修复启用列式扫描 (`enable_docvalue_scan=true`) 后，因返回的数据中没有相关字段导致 BE 宕机的问题。[#6600](https://github.com/StarRocks/starrocks/pull/6600)
 
 ## 2.2.0
 
