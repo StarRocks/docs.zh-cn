@@ -368,11 +368,9 @@ LastUpdateTime: 2022-05-19 11:28:31
 ./bin/stop_broker.sh --daemon
 ```
 
-<br/>
-
 ## 下一步
 
 成功部署 StarRocks 集群后，您可以：
 
-* [创建表](Create_table.md)
-* [升级集群](../administration/Cluster_administration.md#集群升级)
+- [创建表](Create_table.md)
+- [导入和查询数据](Import_and_query.md)
