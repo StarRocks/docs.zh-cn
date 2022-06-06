@@ -47,7 +47,6 @@
   + [基于 Bitmap 实现精确去重](/using_starrocks/Using_bitmap.md)
   + [基于 HyperLogLog 实现近似去重](/using_starrocks/Using_HLL.md)
   + [时区](/using_starrocks/timezone.md)
-  + [文件管理器](/using_starrocks/filemanager.md)
   + [临时分区](/using_starrocks/Temporary_partition.md)
 + 管理手册
   + 部署使用
