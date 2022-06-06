@@ -31,7 +31,7 @@ output window_funnel(window, time, mode, array)
 示例一:
 假设现在有表action:
 
-```
+```plain text
 mysql> select * from action;
 +------+------------+---------------------+
 | uid  | event_type | time                |
@@ -58,6 +58,7 @@ mysql> select * from action;
 ```
 
 执行如下sql
+
 ```plain text
 mysql> select uid, window_funnel(1800,time,0,[event_type='浏览', event_type='点击', 
         event_type='下单', event_type='支付']) AS level from action group by uid order by uid; 
@@ -76,7 +77,8 @@ mysql> select uid, window_funnel(1800,time,0,[event_type='浏览', event_type='�
 示例二:
 
 假设现在有表action1：
-```
+
+```plain text
 mysql> select * from action1 order by time;
 +------+------------+---------------------+
 | uid  | event_type | time                |
@@ -93,7 +95,8 @@ mysql> select * from action1 order by time;
 ```
 
 执行sql
-```
+
+```plain text
 select uid, window_funnel(1800,time,0,[event_type='浏览', event_type='点击', event_type='下单', event_type='支付']) AS level from action1 group by uid order by uid;
 +------+-------+
 | uid  | level |
@@ -103,9 +106,11 @@ select uid, window_funnel(1800,time,0,[event_type='浏览', event_type='点击',
 +------+-------+
 2 rows in set (0.02 sec)
 ```
+
 我们注意到，对于uid=1，即使点击事件(2020-01-02 11:29:50)已经重复出现，但是最终依然输出4，因为我们使用了mode(0)。
 我们将mode改为1，再次执行sql
-```
+
+```plain text
 +------+-------+
 | uid  | level |
 +------+-------+
@@ -119,7 +124,8 @@ select uid, window_funnel(1800,time,0,[event_type='浏览', event_type='点击',
 示例三：
 
 假设现在有表action2：
-```
+
+```plain text
 mysql> select * from action2 order by time;
 +------+------------+---------------------+
 | uid  | event_type | time                |
@@ -134,7 +140,8 @@ mysql> select * from action2 order by time;
 ```
 
 执行sql
-```
+
+```plain text
 mysql> select uid, window_funnel(1900,time,0,[event_type='浏览', event_type='点击', event_type='下单', event_type='支付']) AS level from action2 group by uid order by uid;
 +------+-------+
 | uid  | level |
@@ -144,9 +151,11 @@ mysql> select uid, window_funnel(1900,time,0,[event_type='浏览', event_type='�
 +------+-------+
 2 rows in set (0.02 sec)
 ```
+
 可以看到对于uid=1，输出的level为3，支付(2020-01-02 11:30:00)这一跳跃的事件并没阻断筛选出的事件链。
 我们将mode改为2，再次执行sql
-```
+
+```plain text
 mysql> select uid, window_funnel(1900,time,2,[event_type='浏览', event_type='点击', event_type='下单', event_type='支付']) AS level from action2 group by uid order by uid;
 +------+-------+
 | uid  | level |
@@ -156,6 +165,7 @@ mysql> select uid, window_funnel(1900,time,2,[event_type='浏览', event_type='�
 +------+-------+
 2 rows in set (0.06 sec)
 ```
+
 可以看到输出为2，此时筛选出的最大事件链是浏览-点击。
 
 ## 关键字
