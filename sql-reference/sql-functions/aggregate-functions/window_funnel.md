@@ -20,7 +20,7 @@ output window_funnel(window, time, mode, array)
 * window：滑动窗户的大小，筛选出的事件链中第一个事件和最后一个事件的最大间隔，类型为BIGINT。单位取决于time。
 * time：时间戳。类型目前支持date和datetime。
 * mode：默认为0，表示执行最一般的漏斗计算。类型为INT。该参数通过设置不同的bit来添加限制，目前提供如下两种mode：DEDUPLICATION/FIXED。其中DEDUPLICATION表示被筛选出的事件链，不能在原事件链中有重复的事件，假设array参数为[event_type='A', event_type='B', event_type='C', event_type='D']，原事件链为A-B-C-B-D，由于事件B重复，那么筛选出的事件链只能是A-B-C。FIXED表示被筛选出的事件链，不能在原本的事件链中有跳跃的事件，假设array参数如上不变，原事件链为A-B-D-C，由于事件D跳跃，那么筛选出的事件链只能是A-B。
-* array：有序的事件列表，类型为Array<BOOLEAN>。
+* array：有序的事件列表，类型为Array\<BOOLEAN\>。
 
 ## 返回值说明
 
