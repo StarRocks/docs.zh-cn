@@ -119,6 +119,7 @@ select uid, window_funnel(1800,time,0,[event_type='浏览', event_type='点击',
 +------+-------+
 2 rows in set (0.05 sec)
 ```
+
 可以看到输出为3，此时筛选出的最长事件链为浏览-点击-下单。
 
 示例三：
