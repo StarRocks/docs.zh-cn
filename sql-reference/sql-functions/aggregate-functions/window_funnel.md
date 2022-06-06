@@ -97,7 +97,8 @@ mysql> select * from action1 order by time;
 执行sql
 
 ```plain text
-select uid, window_funnel(1800,time,0,[event_type='浏览', event_type='点击', event_type='下单', event_type='支付']) AS level from action1 group by uid order by uid;
+mysql> select uid, window_funnel(1800,time,0,[event_type='浏览', 
+        event_type='点击', event_type='下单', event_type='支付']) AS level from action1 group by uid order by uid;
 +------+-------+
 | uid  | level |
 +------+-------+
@@ -143,7 +144,8 @@ mysql> select * from action2 order by time;
 执行sql
 
 ```plain text
-mysql> select uid, window_funnel(1900,time,0,[event_type='浏览', event_type='点击', event_type='下单', event_type='支付']) AS level from action2 group by uid order by uid;
+mysql> select uid, window_funnel(1900,time,0,[event_type='浏览', event_type='点击', 
+        event_type='下单', event_type='支付']) AS level from action2 group by uid order by uid;
 +------+-------+
 | uid  | level |
 +------+-------+
@@ -157,7 +159,8 @@ mysql> select uid, window_funnel(1900,time,0,[event_type='浏览', event_type='�
 我们将mode改为2，再次执行sql
 
 ```plain text
-mysql> select uid, window_funnel(1900,time,2,[event_type='浏览', event_type='点击', event_type='下单', event_type='支付']) AS level from action2 group by uid order by uid;
+mysql> select uid, window_funnel(1900,time,2,[event_type='浏览', event_type='点击', 
+        event_type='下单', event_type='支付']) AS level from action2 group by uid order by uid;
 +------+-------+
 | uid  | level |
 +------+-------+
