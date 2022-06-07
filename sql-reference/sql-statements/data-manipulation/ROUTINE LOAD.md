@@ -2,7 +2,7 @@
 
 ## 功能
 
-例行导入（Routine Load）功能支持用户提交一个常驻的导入任务，通过不断的从指定的数据源读取数据，将数据导入到 StarRocks 中。目前仅支持通过无认证或者 SSL 认证方式，从 Kafka 导入文本格式（CSV）的数据。Routine Load 的使用场景，请参见 [Routine load](/loading/RoutineLoad.md) 章节。
+例行导入（Routine Load）功能支持用户提交一个常驻的导入任务，通过不断的从指定的数据源读取数据，将数据导入到 StarRocks 中。目前仅支持通过无认证或者 SSL 认证方式，从 Kafka 导入文本格式（CSV）或 JSON 格式数据。Routine Load 的使用场景，请参见 [Routine load](/loading/RoutineLoad.md) 章节。
 
 ## 语法
 
@@ -20,7 +20,7 @@ FROM data_source
 
 1. **[db.]job_name**
 
-    必填。导入作业的名称。导入作业的常见命名方式为表名+时间戳。同一数据库内，导入作业的名称必须唯一。
+    必填。导入作业的名称。导入作业的常见命名方式为表名+时间戳。同一数据库内，导入作业的名称必须唯一。您也可以在 `job_name` 前指定导入的数据库名称。
 
 2. **tbl_name**
 
@@ -37,7 +37,7 @@ FROM data_source
     [PARTITION ([ <partition_name> [, ...] ])]
 
     column_assignment:
-    <column_name> = column_expression
+    <column_name> = column_expression;
     ```
 
     1. **COLUMNS TERMINATED BY**
@@ -48,7 +48,7 @@ FROM data_source
         COLUMNS TERMINATED BY ","
         ```
 
-        默认为：\t。
+       默认为：\t。
 
     2. **COLUMNS**
 
@@ -72,17 +72,17 @@ FROM data_source
             接上一个示例，假设目标表还有第 4 列 v2，v2 由 k1 和 k2 的和产生。则可以书写如下：
 
             ```plain text
-            COLUMNS (k2, k1, xxx, v1, v2 = k1 + k2);
+            COLUMNS (k2, k1, xxx, v1, v2 = k1 + k2)
             ```
 
         对于 CSV 格式的数据，`COLUMNS` 中映射列的个数必须要与源数据中的列个数一致。
 
     3. WHERE
 
-        用于指定过滤条件，只有满足过滤条件的数据才会导入 StarRocks 中。过滤条件中指定的列可以是映射列或衍生列。例如只希望导入 k1 大于 100 并且 k2 等于 1000 的列，则需要书写如下：
+        用于指定过滤条件，只有满足过滤条件的数据才会导入到 StarRocks 中。过滤条件中指定的列可以是映射列或衍生列。例如只希望导入 k1 大于 100 并且 k2 等于 1000 的列，则可以书写如下：
 
         ```plain text
-        WHERE k1 > 100 and k2 = 1000
+        WHERE k1 > 100 and k2 = 1000；
         ```
 
     4. PARTITION
@@ -127,7 +127,7 @@ FROM data_source
         示例：
 
         ```plain text
-        "max_batch_interval" = "20"
+        "max_batch_interval" = "20";
         ···
 
     3. `max_error_number/max_batch_rows`
@@ -272,7 +272,7 @@ FROM data_source
 
 ### 示例1：创建 Routine Load 任务消费 Kafka 数据
 
-为 `example_db` 的 `example_tbl` 创建一个名为 `test1` 的 Kafka 例行导入任务。指定列分隔符， `group.id` 和 `client.id`，并且默认消费所有分区，且从有数据的位置（`OFFSET_BEGINNING`）开始订阅。
+为 `example_db` 的 `example_tbl` 创建一个名为 `test1` 的 Kafka 例行导入任务。指定列分隔符、 `group.id` 和 `client.id`，默认消费所有分区，且从有数据的位置（`OFFSET_BEGINNING`）开始订阅。
 
 ```sql
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl
@@ -296,7 +296,7 @@ FROM KAFKA
 
 ### 示例2：设置导入任务为严格模式
 
-为 `example_db` 的 `example_tbl` 创建一个名为 `test1` 的 Kafka 例行导入任务。导入任务为严格模式。
+为 `example_db` 的 `example_tbl` 创建一个名为 `test1` 的 Kafka 例行导入任务。导入任务为严格模式。指定消费分区以及offsets。
 
 ```sql
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl
@@ -377,7 +377,7 @@ FROM KAFKA
 
 ### 示例5：指定 `jsonpaths` 导入 JSON 格式数据
 
-精准导入 JSON 数据格式
+匹配模式导入 JSON 数据格式。
 
 ```sql
 CREATE TABLE `example_tbl` (
