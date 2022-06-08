@@ -17,7 +17,7 @@ INT YEAR(DATETIME date)
 ## 返回值说明
 
 返回INT类型的值，范围1000-9999。
-如果`date`的数据类型非DATE或DATETIME，或日期格式错误，返回NULL。如果`date`值为NULL, 返回NULL。
+此函数会对整数和字符串类型的输入进行隐式转换。如果未能从输入中解析出合法年份，如 `year('string')`，则返回NULL。如果输入数据类型非法，如 `year(3.1415)`，则返回报错。
 
 ## 示例
 
