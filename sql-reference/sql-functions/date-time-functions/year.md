@@ -12,7 +12,7 @@ INT YEAR(DATETIME date)
 
 ## 参数说明
 
-`date`: 必填。支持DATE或DATETIME类型。
+`date`: 必填。支持DATE和DATETIME类型。
 
 ## 返回值说明
 
