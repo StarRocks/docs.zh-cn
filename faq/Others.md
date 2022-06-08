@@ -35,7 +35,7 @@ VARCHAR(32) 和 STRING 都是变长数据类型。当储存相同长度的数据
 
 ## MySQL 中定义的字符串长度跟 StarRocks 定义的是一致的吗？
 
-在 StarRocks 中，VARCHAR(n) 中的n代表字节数，而在 MySQL 中，VARCHAR(n) 中的 n 代表字符数。根据UTF-8，1 个汉字等于 3 个字节。当 StarRocks 和 MySQL 将 n 定义成相同数字时，MySQL 保存的字符数是 StarRocks 的 3 倍。
+在 StarRocks 中，VARCHAR(n) 中的n代表字节数，而在 MySQL 中，VARCHAR(n) 中的 n 代表字符数。根据 UTF-8，1 个汉字等于 3 个字节。当 StarRocks 和 MySQL 将 n 定义成相同数字时，MySQL 保存的字符数是 StarRocks 的 3 倍。
 
 ## 表的分区字段可以是 FLOAT、DOUBLE、或 DECIMAL 数据类型吗？
 
@@ -57,7 +57,7 @@ ALTER DATABASE example_db SET DATA QUOTA 10T;
 
 ## StarRocks 支持通过 UPSERT 语法实现部分字段更新吗？
 
-StarRocks 2.2及以上版本可以通过主键 (Primary Key) 模型实现部分字段更新。StarRocks 1.9及以上版本可以通过主键 (Primary Key) 模型实现全部字段更新。更多信息，参见StarRocks 2.2版本的[主键模型](https://docs.starrocks.com/zh-cn/2.2/table_design/Data_model#%E4%B8%BB%E9%94%AE%E6%A8%A1%E5%9E%8B)。
+StarRocks 2.2 及以上版本可以通过主键 (Primary Key) 模型实现部分字段更新。StarRocks 1.9 及以上版本可以通过主键 (Primary Key) 模型实现全部字段更新。更多信息，参见 StarRocks 2.2 版本的[主键模型](https://docs.starrocks.com/zh-cn/2.2/table_design/Data_model#%E4%B8%BB%E9%94%AE%E6%A8%A1%E5%9E%8B)。
 
 ## 如何使用原子替换表和原子替换分区功能？
 
@@ -147,14 +147,14 @@ ERROR 1064 (HY000): HdfsOrcScanner::do_open failed. reason = Invalid ORC postscr
 
 解决方案有以下两种：
 
-- 将 StarRocks 升级到2.2或更高版本。
+- 将 StarRocks 升级到 2.2 或更高版本。
 - 手动刷新 Apache Hive™ 表。更多信息，参见[更新缓存](../using_starrocks/External_table#%E7%BC%93%E5%AD%98%E6%9B%B4%E6%96%B0)。
 
 ## 连接 MySQL 外表报错 "caching_sha2_password cannot be loaded"
 
 ### **问题描述**
 
-MySQL 5.7版本默认的认证方式为 mysql_native_password，如使用MySQL 8.0版本默认的认证方式  caching_sha2_password 来进行认证会导致连接报错。
+MySQL 5.7 版本默认的认证方式为 mysql_native_password，如使用 MySQL 8.0 版本默认的认证方式  caching_sha2_password 来进行认证会导致连接报错。
 
 ### **解决方案**
 
@@ -186,11 +186,11 @@ MySQL 5.7版本默认的认证方式为 mysql_native_password，如使用MySQL 8
 
 ## 如何设置FE的内存大小？
 
-元数据信息都保存在FE的内存中。可以参考 Tablet 的数量来设置 FE 的内存大小。一千万个 Tablet 内存使用在 20 GB左右。FE的内存最多可设置为 20 GB。
+元数据信息都保存在 FE 的内存中。可以参考 Tablet 的数量来设置 FE 的内存大小。一千万个 Tablet 内存使用在 20 GB左右。FE 的内存最多可设置为 20 GB。
 
 ## StarRocks如何计算查询时间?
 
-StarRocks是多线程计算，查询时间即为查询最慢的线程所用的时间。
+StarRocks 是多线程计算，查询时间即为查询最慢的线程所用的时间。
 
 ## StarRocks 支持导出数据到本地时设置路径吗？
 
