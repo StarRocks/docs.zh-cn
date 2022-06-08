@@ -104,13 +104,24 @@ sh bin/stop_be.sh
 
 ## 升级集群
 
-您可以通过滚动升级的方式平滑升级 StarRocks。
+您可以通过滚动升级的方式平滑升级 StarRocks。StarRocks 的版本号遵循 Major.Minor.Patch 的命名方式，分别代表重大版本，大版本以及小版本。
 
-> 注意：由于 StarRocks 保证 BE 后向兼容 FE，因此您需要**先升级 BE 节点，再升级 FE 节点**。错误的升级顺序可能导致新旧 FE、BE 节点不兼容，进而导致 BE 节点停止服务。
+> 注意：
+>
+> * 由于 StarRocks 保证 BE 后向兼容 FE，因此您需要**先升级 BE 节点，再升级 FE 节点**。错误的升级顺序可能导致新旧 FE、BE 节点不兼容，进而导致 BE 节点停止服务。
+> * StarRocks 2.0 之前的大版本升级时必须逐个大版本升级，2.0 之后的版本可以跨大版本升级。StarRocks 2.0 是当前的长期支持版本（Long Term Support，LTS），维护期为半年以上。
+> 
+> |版本|可直接升级版本|注意事项|是否为 LTS 版本|
+> |----|------------|--------|--------------|
+> |1.18.x||更早版本需要按照 <a href="update_from_dorisdb.md">标准版 DorisDB 升级到社区版 StarRocks</a> 操作。|否|
+> |1.19.x|必须从1.18.x升级||否|
+> |2.0.x|必须从1.19.x升级|升级过程中需要暂时关闭 Clone。|是|
+> |2.1.x|必须从2.0.x 升级|灰度升级前需要修改 <code>vector_chunk_size</code> 和 <code>batch_size</code>。|否|
+> |2.2.x|可以从2.0.x 或 2.1.x 升级|回滚需要特殊配置 <code>ignore_unknown_log_id</code>。||
 
 ### 下载安装文件
 
-在完成数据正确性验证后，将新版本的 BE 和 FE 节点的安装包下载并分发至各自路径下。
+在完成数据正确性验证后，将新版本的 BE 和 FE 节点的安装包下载并分发至各自路径下。您也可以 [在 Docker 中编译](Build_in_docker.md) 对应 tag 的源码。建议您选择小版本号最高的版本。
 
 ### 测试 BE 升级的正确性
 
@@ -118,7 +129,7 @@ sh bin/stop_be.sh
 2. 重启该 BE 节点，通过 BE 日志 **be.INFO** 查看是否启动成功。
 3. 如果该 BE 节点启动失败，您可以可以先排查失败原因。如果错误不可恢复，您可以直接通过 `DROP BACKEND` 删除该 BE、清理数据后，使用上一个版本的 **starrocks_be** 重新启动该 BE 节点。然后通过 `ADD BACKEND` 重新添加 BE 节点。
 
-> 警告：**该方法会导致系统丢失一个数据副本，请务必确保 3 副本完整的情况下，执行这个操作。**
+> 警告：**该方法会导致系统丢失一个数据副本，请务必确保 3 副本完整的情况下执行这个操作。**
 
 ### 升级 BE 节点
 
@@ -218,7 +229,25 @@ sh bin/start_broker.sh --daemon
 sh bin/start_broker.sh --daemon
 ```
 
-### 关于 StarRocks 2.0 灰度升级至 2.1
+### 关于 StarRocks 1.19 升级至 2.0.x
+
+如果您需要将 StarRocks 1.19 升级至 2.0.x，您必须在升级过程中关闭 Clone 以避免触发旧版本中的 Bug。该操作同样适用于从 StarRocks 2.1.5 或之前版本升级至 2.1.6 或之后版本。
+
+升级开始前，您需要关闭 Clone。
+
+```sql
+ADMIN SET FRONTEND CONFIG ("max_scheduling_tablets" = "0"); 
+ADMIN SET FRONTEND CONFIG ("max_balancing_tablets" = "0"); 
+```
+
+升级结束后，开启 Clone。
+
+```sql
+ADMIN SET FRONTEND CONFIG ("max_scheduling_tablets" = "2000"); 
+ADMIN SET FRONTEND CONFIG ("max_balancing_tablets" = "100");
+```
+
+### 关于 StarRocks 2.0.x 灰度升级至 2.1.x
 
 如果您需要将 StarRocks 2.0 灰度升级至 2.1，则必须确保所有 BE 节点拥有一致的 `chunk size`，即 BE 节点在每个批次中处理数据的行数。
 
@@ -329,3 +358,10 @@ sh bin/start_broker.sh --daemon
 ```shell
 ps aux | grep broker
 ```
+
+### 关于 StarRocks 2.2.x 回滚至较早版本
+
+StarRocks 2.2 版本中 FE 节点新增了日志类型。如果直接从 2.2.x 回滚至较早版本，您可能会碰到较早版本的 FE 无法识别的错误。您可以通过以下方式解决：
+
+1. 在 **fe.conf** 中增加配置项 `ignore_unknown_log_id=true`，然后重启 FE。否则回滚后系统可能无法启动。
+2. Checkpoint 完成后，推荐您将该设置项恢复为 `ignore_unknown_log_id=false`，然后重启 FE 以恢复正常配置。
