@@ -36,8 +36,8 @@ FROM KAFKA
 * **job_name**：必填。导入作业的名称，本示例为`routine_wiki_edit_1589191587`。导入作业的常见命名方式为表名+时间戳。在相同数据库内，导入作业的名称不可重复。
   > 您可以在**job_name**前指定导入数据库名称。例如`load_test.routine_wiki_edit_1589191587`。
 * **table_name**：必填。导入的目标表的名称。本示例为`routine_wiki_edit`。
-* **COLUMN TERMINATED BY 子句**：选填。指定源数据文件中的列分隔符，分隔符默认为：\t。
-* **COLUMN 子句** ：选填。用于指定源数据中列和表中列的映射关系。
+* **COLUMNS TERMINATED BY 子句**：选填。指定源数据文件中的列分隔符，分隔符默认为：\t。
+* **COLUMNS 子句** ：选填。用于指定源数据中列和表中列的映射关系。
   * 映射列：如目标表有三列 col1, col2, col3 ，源数据有 4 列，其中第 1、2、4 列分别对应 col2, col1, col3，则书写如下：COLUMNS (col2, col1, temp, col3), ，其中 temp 列为不存在的一列，用于跳过源数据中的第三列。
   * 衍生列：除了直接读取源数据的列内容之外，StarRocks 还提供对数据列的加工操作。假设目标表后加入了第四列 col4 ，其结果由 col1 + col2 产生，则可以书写如下：COLUMNS (col2, col1, temp, col3, col4 = col1 + col2),。
 * **WHERE 子句**：过滤条件，只有满足过滤条件的数据才会导入StarRocks中。过滤条件中所指定的列可以是映射列或衍生列。例如，如果仅需要导入 col1 大于 100 并且 col2 等于 1000 的数据，则需要传入`WHERE col1 > 100 and col2 = 1000`。
