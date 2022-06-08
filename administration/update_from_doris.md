@@ -31,8 +31,8 @@
 
     检查 **be.conf** 文件中 `default_rowset_type` 配置项的值：
 
-    - 如果该配置项的值为 `ALPHA`，则说明全部数据都使用 segmentV1 格式，需要修改配置项为 BETA，并做后续检查和转换。
-    - 如果该配置项的值为 `BETA`，则说明数据已使用 segmentV2 格式，但可能仍有部分 Tablet 或 Rowset 使用 segmentV1 格式，需要做后续检查和转换。  
+    * 如果该配置项的值为 `ALPHA`，则说明全部数据都使用 segmentV1 格式，需要修改配置项为 BETA，并做后续检查和转换。
+    * 如果该配置项的值为 `BETA`，则说明数据已使用 segmentV2 格式，但可能仍有部分 Tablet 或 Rowset 使用 segmentV1 格式，需要做后续检查和转换。  
 
 4. 测试 SQL 情况。
 
@@ -100,13 +100,13 @@
 
     c. 重复运行数据格式检查工具查看数据格式状态。如果已经显示成功设置 `storage_format` 为 `V2` 了，但仍有数据为 segmentV1 格式，您可以通过以下方式进一步检查并转换：
 
-        i.   逐个查询所有表，获取表的元数据链接。
+        i. 逐个查询所有表，获取表的元数据链接。
 
         ```sql
         SHOW TABLET FROM table_name;
         ```
 
-        ii.  通过元数据链接获取 Tablet 元数据。
+        ii. 通过元数据链接获取 Tablet 元数据。
 
         示例：
 
@@ -116,7 +116,7 @@
 
         iii. 查看本地的元数据 JSON 文件，确认其中的 `rowset_type` 的值。如果为 `ALPHA_ROWSET`，则表明该数据为 segmentV1 格式，需要进行转换。
 
-        iv.  如果仍有数据为 segmentV1 格式，您需要通过以下示例中的方法转换。
+        iv. 如果仍有数据为 segmentV1 格式，您需要通过以下示例中的方法转换。
 
         示例：
 
@@ -150,13 +150,13 @@
 
 2. 比较并拷贝原有 **conf/be.conf** 的内容到新的 BE **conf/be.conf** 中。
 
-```bash
-# 比较并修改和拷贝
-vimdiff /home/doris/Starrocks/be/conf/be.conf /home/doris/doris/be/conf/be.conf
+    ```bash
+    # 比较并修改和拷贝
+    vimdiff /home/doris/Starrocks/be/conf/be.conf /home/doris/doris/be/conf/be.conf
 
-# 拷贝以下配置到新 BE 配置文件中，建议您使用原有数据目录。
-storage_root_path =     // 原有数据目录
-```
+    # 拷贝以下配置到新 BE 配置文件中，建议您使用原有数据目录。
+    storage_root_path =     // 原有数据目录
+    ```
 
 3. 检查系统是否使用 Supervisor 启动 BE，并关闭 BE。
 
@@ -250,10 +250,11 @@ storage_root_path =     // 原有数据目录
     ```
 
 2. 通过 MySQL 客户端确定各 FE 节点的 Master 和 Follower 身份。
-    
+
     ```sql
     SHOW FRONTENDS;
     ```
+
     如果 `IsMaster` 为 `true`，代表该节点为 Master，否则为 Follower 或 Observer。
 
 3. 检查系统是否使用 Supervisor 启动的 FE，并关闭 FE。
@@ -313,7 +314,6 @@ storage_root_path =     // 原有数据目录
     ```bash
     sh /home/doris/Starrocks/fe/bin/start_fe.sh --daemon
     ```
-
 
 8. 检查升级结果。
 
