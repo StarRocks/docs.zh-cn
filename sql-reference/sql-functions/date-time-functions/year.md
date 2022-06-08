@@ -1,18 +1,25 @@
 # year
 
-## description
+## 功能
 
-### Syntax
+返回指定日期中的年份。
+
+## 语法
 
 ```Haskell
 INT YEAR(DATETIME date)
 ```
 
-返回date类型的year部分，范围从1000-9999
+## 参数说明
 
-参数为Date或者Datetime类型
+`date`: 必填。支持DATE或DATETIME类型。
 
-## example
+## 返回值说明
+
+返回INT类型的值，范围1000-9999。
+如果`date`的数据类型非DATE或DATETIME，或日期格式错误，返回NULL。如果`date`值为NULL, 返回NULL。
+
+## 示例
 
 ```Plain Text
 MySQL > select year('1987-01-01');
@@ -22,7 +29,3 @@ MySQL > select year('1987-01-01');
 |                        1987 |
 +-----------------------------+
 ```
-
-## keyword
-
-YEAR
