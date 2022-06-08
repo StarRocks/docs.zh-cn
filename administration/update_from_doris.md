@@ -100,39 +100,39 @@
 
     c. 重复运行数据格式检查工具查看数据格式状态。如果已经显示成功设置 `storage_format` 为 `V2` 了，但仍有数据为 segmentV1 格式，您可以通过以下方式进一步检查并转换：
 
-        i.   逐个查询所有表，获取表的元数据链接。
-  
-        ```sql
-        SHOW TABLET FROM table_name;
-        ```
+      i.   逐个查询所有表，获取表的元数据链接。
 
-        ii.  通过元数据链接获取 Tablet 元数据。
+    ```sql
+    SHOW TABLET FROM table_name;
+    ```
 
-        示例：
+      ii.  通过元数据链接获取 Tablet 元数据。
 
-        ```shell
-        wget http://172.26.92.139:8640/api/meta/header/11010/691984191
-        ```
+    示例：
 
-        iii. 查看本地的元数据 JSON 文件，确认其中的 `rowset_type` 的值。如果为 `ALPHA_ROWSET`，则表明该数据为 segmentV1 格式，需要进行转换。
+    ```shell
+    wget http://172.26.92.139:8640/api/meta/header/11010/691984191
+    ```
 
-        iv.  如果仍有数据为 segmentV1 格式，您需要通过以下示例中的方法转换。
+      iii. 查看本地的元数据 JSON 文件，确认其中的 `rowset_type` 的值。如果为 `ALPHA_ROWSET`，则表明该数据为 segmentV1 格式，需要进行转换。
 
-        示例：
+      iv.  如果仍有数据为 segmentV1 格式，您需要通过以下示例中的方法转换。
 
-        ```SQL
-        ALTER TABLE dwd_user_tradetype_d
-        ADD TEMPORARY PARTITION p09
-        VALUES [('2020-09-01'), ('2020-10-01')]
-        ("replication_num" = "3")
-        DISTRIBUTED BY HASH(`dt`, `c`, `city`, `trade_hour`) BUCKETS 16;
+      示例：
 
-        INSERT INTO dwd_user_tradetype_d TEMPORARY partition(p09)
-        select * from dwd_user_tradetype_d partition(p202009);
+    ```SQL
+    ALTER TABLE dwd_user_tradetype_d
+    ADD TEMPORARY PARTITION p09
+    VALUES [('2020-09-01'), ('2020-10-01')]
+    ("replication_num" = "3")
+    DISTRIBUTED BY HASH(`dt`, `c`, `city`, `trade_hour`) BUCKETS 16;
 
-        ALTER TABLE dwd_user_tradetype_d
-        REPLACE PARTITION (p202009) WITH TEMPORARY PARTITION (p09);
-        ```
+    INSERT INTO dwd_user_tradetype_d TEMPORARY partition(p09)
+    select * from dwd_user_tradetype_d partition(p202009);
+
+    ALTER TABLE dwd_user_tradetype_d
+    REPLACE PARTITION (p202009) WITH TEMPORARY PARTITION (p09);
+    ```
 
 ## 升级 BE 节点
 
