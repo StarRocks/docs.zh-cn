@@ -17,6 +17,16 @@ AS SELECT query
 [ ... ]
 ```
 
+异步执行CTAS语法的一种方式，该语法会创建一个Task，并触发Task执行，成生一个TaskRun。
+
+可以通过跟踪TaskRun可以获得CTAS语句的执行情况。
+
+```SQL
+SUBMIT [/*+ SET_VAR(key=value) */] TASK [[database.]<task_name>]
+AS
+  <CTAS>;
+```
+
 注：方括号 [] 中内容可省略不写。
 
 ### 参数说明
@@ -37,6 +47,15 @@ AS SELECT query
 
 支持 `... AS SELECT query` 使用表达式，并且建议您为新表的列设置具有业务意义的别名，便于后续识别，比如 `... AS SELECT a+1 AS x, b+2 AS y, c*c AS z FROM table_a;`，设置新列名为 x，y，z。
 
+#### 异步CTAS部分
+
+| FE配置参数              |  默认值       |说明                                                   |
+| --------------------- | ------------ |------------------------------------------------------ |
+| task_ttl_second       |3 * 24 * 3600 |生成Task后，默认追加的存活时间，单位秒。 |
+| task_runs_ttl_second  |3 * 24 * 3600 |生成TaskRun后，默认追加的存活时间，单位秒。只会清理成功或失败状态的TaskRun。|
+| task_runs_concurrency |20            |TaskRun的同一时间在运行状态的任务数量。 |
+| task_runs_queue_length|500           |TaskRun的PENDING队列最大容量，超过容量Submit会被拒绝。 |
+
 ## 使用说明
 
 - 仅支持 ENGINE 类型为 OLAP ；[数据模型](/table_design/Data_model.md) 为 [Duplicate Key](/table_design/Data_model.md#明细模型)，排序键为前三列（数据类型的存储空间不能超过 36 字节）。
@@ -45,6 +64,8 @@ AS SELECT query
   - 新表可能已创建且未删除。
   - 新表可能已创建，此时，如果除 CTAS 外存在其他导入（比如 INSERT ）将数据导入至新表，则首次成功导入的数据，视为该数据的第一版本。
 - 创建成功后，您需要手动授予用户权限。
+- 当使用Submit语法来异步执行CTAS语句时，不写Task名称的时候，会自动生成名称。
+- Task跟TaskRun内部会有一个过期时间，在创建的时候生成，当前时间超过过期时间会自动清理。
 
 ## 示例
 
@@ -144,4 +165,24 @@ FROM lineorder AS l
 INNER JOIN customer AS c ON c.C_CUSTKEY = l.LO_CUSTKEY
 INNER JOIN supplier AS s ON s.S_SUPPKEY = l.LO_SUPPKEY
 INNER JOIN part AS p ON p.P_PARTKEY = l.LO_PARTKEY;
+```
+
+示例五：异步执行一条CTAS并查看Task信息和TaskRun的状态，最后查询结果。
+
+```SQL
+-- 发送一个异步的CTAS查询
+SUBMIT TASK AS CREATE TABLE order_statistics AS SELECT COUNT(*) FROM order_detail;
++-------------------------------------------+-----------+
+| TaskName                                  | Status    |
++-------------------------------------------+-----------+
+| ctas-df6f7930-e7c9-11ec-abac-bab8ee315bf2 | SUBMITTED |
++-------------------------------------------+-----------+
+
+-- 查询Task信息
+SELECT * FROM INFORMATION_SCHEMA.tasks;
+-- 查询TaskRun状态
+SELECT * FROM INFORMATION_SCHEMA.task_runs;
+-- 查询统计表的结果
+SELECT * FROM order_statistics
+
 ```
