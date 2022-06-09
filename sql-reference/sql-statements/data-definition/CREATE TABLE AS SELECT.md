@@ -51,8 +51,8 @@ AS
 
 | FE配置参数              |  默认值       |说明                                                   |
 | --------------------- | ------------ |------------------------------------------------------ |
-| task_ttl_second       |3 * 24 * 3600 |生成Task后，默认追加的存活时间，单位秒。 |
-| task_runs_ttl_second  |3 * 24 * 3600 |生成TaskRun后，默认追加的存活时间，单位秒。只会清理成功或失败状态的TaskRun。|
+| task_ttl_second       |259200        |生成Task后，默认追加的存活时间，单位秒。 |
+| task_runs_ttl_second  |259200        |生成TaskRun后，默认追加的存活时间，单位秒。只会清理成功或失败状态的TaskRun。|
 | task_runs_concurrency |20            |TaskRun的同一时间在运行状态的任务数量。 |
 | task_runs_queue_length|500           |TaskRun的PENDING队列最大容量，超过容量Submit会被拒绝。 |
 
