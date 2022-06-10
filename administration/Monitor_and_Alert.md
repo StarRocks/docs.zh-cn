@@ -225,11 +225,11 @@ Data Source 配置项简介
 
 页面左上角为 Dashboard 名称，右上角显示当前监控时间范围。您可以下拉选择不同的时间范围，还可以指定定时刷新页面间隔。
 
-  * cluster_name: 即 Prometheus 配置文件中的各个 `job_name`，代表一个 StarRocks 集群。如果选择不同的 Cluster，下方的图表将展示对应集群的监控信息。
-  * fe_master: 对应集群的 FE Master  节点。
-  * fe_instance: 对应集群的所有 FE 节点。选择不同的 FE，下方的图表将展示对应 FE 的监控信息。
-  * be_instance: 对应集群的所有 BE 节点。选择不同的 BE，下方的图表将展示对应 BE 的监控信息。
-  * interval: 部分图表展示了速率相关的监控项，这里可选择以特定间隔进行采样计算速率。
+* cluster_name: 即 Prometheus 配置文件中的各个 `job_name`，代表一个 StarRocks 集群。如果选择不同的 Cluster，下方的图表将展示对应集群的监控信息。
+* fe_master: 对应集群的 FE Master  节点。
+* fe_instance: 对应集群的所有 FE 节点。选择不同的 FE，下方的图表将展示对应 FE 的监控信息。
+* be_instance: 对应集群的所有 BE 节点。选择不同的 BE，下方的图表将展示对应 BE 的监控信息。
+* interval: 部分图表展示了速率相关的监控项，这里可选择以特定间隔进行采样计算速率。
 
 > 注意：建议您不要使用 15s 作为时间间隔，因其可能导致一些图表无法显示。
 
@@ -241,14 +241,14 @@ Grafana 中，Row 代表一组图表的集合。如上图中的 Overview、Clust
 
 当前 Dashboard 有如下 Row（持续更新中）：
 
-  * Overview: 所有 StarRocks 集群的汇总展示。
-  * Cluster Overview: 选定集群的汇总展示。
-  * Query Statistic: 选定集群的查询相关监控。
-  * Jobs: 导入任务相关监控。
-  * Transaction: 事务相关监控。
-  * FE JVM: 选定 FE 的 JVM 监控。
-  * BE: 选定集群 BE 的汇总展示。
-  * BE Task: 选定集群 BE 的任务信息展示。
+* Overview: 所有 StarRocks 集群的汇总展示。
+* Cluster Overview: 选定集群的汇总展示。
+* Query Statistic: 选定集群的查询相关监控。
+* Jobs: 导入任务相关监控。
+* Transaction: 事务相关监控。
+* FE JVM: 选定 FE 的 JVM 监控。
+* BE: 选定集群 BE 的汇总展示。
+* BE Task: 选定集群 BE 的任务信息展示。
 
 * **图表**
 
