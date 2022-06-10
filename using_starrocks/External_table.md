@@ -546,6 +546,7 @@ StarRocks 支持通过外表的方式查询 Apache Iceberg 数据湖中的数据
 * 支持 Iceberg 文件的压缩格式为 GZIP（默认值），ZSTD，LZ4 和 SNAPPY。
 * 仅支持 Iceberg 的 Catalog 类型为 Hive Catalog，数据存储格式为 Parquet 和 ORC。
 * StarRocks 暂不⽀持同步 Iceberg 中的 [schema evolution](https://iceberg.apache.org/#evolution#schema-evolution)，如果 Iceberg 表 schema evolution 发生变更，您需要在 StarRocks 中删除对应 Iceberg 外表并重新建立。
+* 相应的 hive 和 hdfs 的域名与 ip 的映射需要配置到/etc/hosts 中
 
 ### 操作步骤
 
@@ -664,6 +665,7 @@ StarRocks 支持通过外表的方式查询 Apache Hudi 数据湖中的数据，
 * 当前支持 Hudi 的表类型为 Copy on write(下文简称 COW)，暂不支持 Merge on read(下文简称 MOR)表类型。COW 和 MOR 之间的更多区别，请参见 [Apache Hudi 官网](https://hudi.apache.org/docs/table_types)。
 * 支持 Hudi 文件的压缩格式为 GZIP（默认值），ZSTD，LZ4 和 SNAPPY。
 * StarRocks 暂不⽀持同步 Hudi 中的 [schema evolution](https://hudi.apache.org/docs/schema_evolution)，如果 Hudi 表 schema evolution 发生变更，您需要在 StarRocks 中删除对应 Hudi 外表并重新建立。
+* 相应的 hive 和 hdfs 的域名与 ip 的映射需要配置到/etc/hosts 中
 
 ### 操作步骤
 
