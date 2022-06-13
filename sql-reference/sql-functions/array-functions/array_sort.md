@@ -53,6 +53,3 @@ mysql> select c1, array_sort(c2) from test;
 +------+------------------+
 ```
 
-## 关键词
-
-ARRAY_SORT, ARRAY

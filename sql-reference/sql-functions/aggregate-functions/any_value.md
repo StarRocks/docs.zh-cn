@@ -56,6 +56,3 @@ mysql> select c,any_value(a),sum(b) from any_value_test group by c;
 
 ```
 
-## 关键词
-
-ANY_VALUE

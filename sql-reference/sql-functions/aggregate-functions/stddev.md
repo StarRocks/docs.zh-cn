@@ -41,6 +41,3 @@ group by datetime;
 +-------------------------+
 ```
 
-## 关键词
-
-STDDEV, STDDEV_POP, POP
