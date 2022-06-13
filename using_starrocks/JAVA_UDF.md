@@ -183,7 +183,7 @@ SELECT MY_UDF_JSON_GET('{"key":"{\\"in\\":2}"}', '$.key.in');
 
 1. 编写  UDAF 的代码，示例如下。
 
-   本文以 `MY_SUM_INT`  函数为例进行说明。与内置函数`SUM`（返回值为 BIGINT 类型）区别在于，`SUMINT`  函数支持传入参数和返回参数的类型为 INT。
+   本文以 `MY_SUM_INT`  函数为例进行说明。与内置函数`SUM`（返回值为 BIGINT 类型）区别在于，`MY_SUM_INT`  函数支持传入参数和返回参数的类型为 INT。
 
     ```Java
     package com.starrocks.udf.sample;
@@ -411,7 +411,7 @@ FROM test_basic;
 
 ### UDTF
 
-> 目前仅支持使用UDTF返回多行单列。
+> 说明：目前 UDTF 只支持返回多行单列。
 
 #### 步骤一：创建 Maven 项目
 
@@ -451,8 +451,6 @@ FROM test_basic;
 #### 步骤三：在 StarRocks 中创建 UDTF 函数
 
 执行如下命令，在 StarRocks 中创建 UDTF 函数。
-
-> 目前 UDTF 只支持返回**多行单列**。
 
 ```SQL
 CREATE TABLE FUNCTION MY_UDF_SPLIT(string)

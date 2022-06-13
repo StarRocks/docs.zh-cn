@@ -11,16 +11,20 @@
 从 Docker Hub 下载开发环境的镜像文件。该镜像中集成了 LLVM 及 Clang 作为第三方工具。
 
 ```shell
-docker pull starrocks/dev-env:{version}
+docker pull starrocks/dev-env:{branch-name}
 ```
 
-> 说明：请使用下表中相应的镜像版本号替换命令中的 `{version}`。
+> 说明：请使用下表中相应的镜像 Tag 替换命令中的 `{branch-name}`。
 
 StarRocks 版本分支与开发环境镜像版本的对应关系如下所示：
 
-|StarRocks 版本分支|开发环境镜像版本|
-|-----------------|---------------|
-|main|starrocks/dev-env:main|
+| StarRocks 版本    | 镜像 Tag                      |
+| ---------------- | ------------------------------|
+| main             | starrocks/dev-env:main        |
+| StarRocks-2.2.*  | starrocks/dev-env:branch-2.2  |
+| StarRocks-2.1.*  | starrocks/dev-env:branch-2.1  |
+| StarRocks-2.0.*  | starrocks/dev-env:branch-2.0  |
+| StarRocks-1.19.* | starrocks/dev-env:branch-1.19 |
 
 ## 编译 StarRocks
 
@@ -29,28 +33,29 @@ StarRocks 版本分支与开发环境镜像版本的对应关系如下所示：
 - 挂载本地存储编译 StarRocks。
 
   ```shell
-  docker run -it \
-  -v /{local-path}/.m2:/root/.m2 \
-  -v /{local-path}/starrocks:/root/starrocks \
-  --name {container-name} \
-  -d starrocks/dev-env:{version}
+  mkdir {local-path}
+  cd {local-path}
+
+  git clone https://github.com/StarRocks/starrocks.git
+  git checkout {branch-name}
+
+  docker run -it -v /{local-path}/.m2:/root/.m2 -v /{local-path}/starrocks:/root/starrocks --name {container-name} -d starrocks/dev-env:{branch-name}
+  docker exec -it {container-name} /root/starrocks/build.sh
   
   docker exec -it {container-name} /root/starrocks/build.sh
   ```
 
   > 注意：请避免在 Docker 容器中重复下载 **.m2** 内的 Java 依赖。您无需从 Docker 容器中复制 **starrocks/output** 内已编译好的二进制包。
 
-- 拷贝代码库编译 StarRocks。
+- 不使用本地存储编译 StarRocks。
 
   ```shell
-  docker run -it --name {container-name} -d starrocks/dev-env:{version}
-  
+  docker run -it --name {container-name} -d starrocks/dev-env:{branch-name}
   docker exec -it {container-name} /bin/bash
   
-  # 在 Docker 容器内任意路径下拷贝 StarRocks 代码库。
+  # 下载 StarRocks 代码。
   git clone https://github.com/StarRocks/starrocks.git
   
   cd starrocks
-  
-  ./build.sh
+  sh /build.sh
   ```
