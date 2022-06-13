@@ -1,52 +1,46 @@
 # dev-env image 使用说明
 
+## starrocks 与 image 对应关系
+
+| starrocks                 | image tag                     |
+| ------------------------- | ------------------------------|
+| main                      | starrocks/dev-env:main        |
+| branch-2.2/tags-2.2.*     | starrocks/dev-env:branch-2.2  |
+| branch-2.1/tags-2.1.*     | starrocks/dev-env:branch-2.1  |
+| branch-2.0/tags-2.0.*     | starrocks/dev-env:branch-2.0  |
+| branch-1.19/tags-1.19.*   | starrocks/dev-env:branch-1.19 |
+
 ## image 下载
 
 ```shell
 # 从 dockerhub 上下载 image
-docker pull starrocks/dev-env:{version}
+docker pull starrocks/dev-env:{branch-name}
 ```
 
-## starrocks 与 image 对应关系
+## 通过Docker编译
 
-| starrocks branch | image tag                     |
-| ---------------- | ------------------------------|
-| main             | starrocks/dev-env:main        |
-| StarRocks-2.2.*  | starrocks/dev-env:branch-2.2  |
-| StarRocks-2.1.*  | starrocks/dev-env:branch-2.1  |
-| StarRocks-2.0.*  | starrocks/dev-env:branch-2.0  |
-| StarRocks-1.19.* | starrocks/dev-env:branch-1.19 |
+- 挂载本地盘（建议使用）
 
-## 使用方式
+  ```shell
+  mkdir {local-path} && cd {local-path}
+
+  git clone https://github.com/StarRocks/starrocks.git
+  cd starrocks && git checkout {branch-name}
+
+  docker run -it -v /{local-path}/.m2:/root/.m2 -v /{local-path}/starrocks:/root/starrocks --name {container-name} -d starrocks/dev-env:{version}
+  docker exec -it {container-name} /root/starrocks/build.sh
+  ```
 
 - 不挂载本地盘
 
   ```shell
   docker run -it --name {container-name} -d starrocks/dev-env:{version}
-  
   docker exec -it {container-name} /bin/bash
   
-  # 在 container 内任意路径下执行 git clone starrocks
   git clone https://github.com/StarRocks/starrocks.git
-  
-  cd starrocks
+  cd starrocks && git checkout {branch-name}
   
   ./build.sh
-  ```
-
-- 挂载本地盘（建议使用）
-
-  - 避免在 container 内重新下载 .m2 内 java dependency
-  - 不用从 container 内 copy starrocks/output 内编译好的二进制包
-  
-  ```shell
-  docker run -it \
-  -v /{local-path}/.m2:/root/.m2 \
-  -v /{local-path}/starrocks:/root/starrocks \
-  --name {container-name} \
-  -d starrocks/dev-env:{version}
-  
-  docker exec -it {container-name} /root/starrocks/build.sh
   ```
 
 ## 三方工具
