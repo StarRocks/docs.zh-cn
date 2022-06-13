@@ -62,7 +62,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |max_query_retry_time|2|FE 上查询重试的次数|
 |max_create_table_timeout_second|60|建表最大超时时间|
 |max_running_rollup_job_num_per_table|1|每个 Table 执行 Rollup 任务的最大并发度|
-|max_planner_scalar_rewrite_num|10_0000|优化器重写 ScalarOperator 允许的最大次数|
+|max_planner_scalar_rewrite_num|100000|优化器重写 ScalarOperator 允许的最大次数|
 |statistics_manager_sleep_time_sec|60*10|自动创建统计信息表的周期，默认 10min|
 |statistic_collect_interval_sec|120*60|统计信息功能执行周期，默认 2h|
 |statistic_update_interval_sec|24 *60\* 60|统计信息 Job 的默认收集间隔时间，默认为 1 天|
@@ -223,8 +223,8 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |master_sync_policy|SYNC|Master 日志刷盘的方式，默认是 SYNC|
 |replica_sync_policy|SYNC|Follower 日志刷盘的方式，默认是 SYNC|
 |replica_ack_policy|SIMPLE_MAJORITY|日志被认为有效的形式，默认是多数派返回确认消息，就认为生效|
-|meta_delay_toleration_second|300|非 master 节点容忍的最大元数据落后的时间|
-|cluster_id|-1|相同 cluster_id 的 FE/BE 节点属于同一个集群。等于-1 则在 master FE 第一次启动时随机生成一个|
+|meta_delay_toleration_second|300|非 leader 节点容忍的最大元数据落后的时间|
+|cluster_id|-1|相同 cluster_id 的 FE/BE 节点属于同一个集群。等于-1 则在 leader FE 第一次启动时随机生成一个|
 
 * **Query Engine**
 
@@ -281,8 +281,8 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |hive_meta_load_concurrency|4|Hive 元数据并发线程数。|
 |hive_meta_cache_refresh_interval_s|4096|定时刷新 Hive 外表元数据缓存的周期。|
 |hive_meta_cache_ttl_s|3600 *2|HIve 外表元数据缓存失效时间，默认 2h。|
-|hive_meta_store_timeout_s|3600 *24|连接 Hive MetaStore 的超时时间，默认 24h。|
-|es_state_sync_interval_second|10|FE 获取 ElasticSearch Index 的时间|
+|hive_meta_store_timeout_s|3600 *24|连接 Hive Metastore 的超时时间，默认 24h。|
+|es_state_sync_interval_second|10|FE 获取 Elasticsearch Index 的时间|
 |enable_auth_check|TRUE|是否开启鉴权。|
 |auth_token|空字符串|为空则在 Master FE 第一次启动时随机生成一个。|
 |enable_metric_calculator|TRUE|是否开启定期收集 metrics。|
@@ -316,6 +316,7 @@ BE 配置项暂不支持在线修改，生效需在 be.conf 中修改并重启 b
 |alter_tablet_timeout_seconds|86400|Schema change 超时时间|
 |sys_log_dir|${DORIS_HOME}/log|存放日志的地方，包括 INFO, WARNING, ERROR, FATAL 等日志|
 |user_function_dir|${DORIS_HOME}/lib/udf|UDF 程序存放的地方|
+|small_file_dir|${STARROCKS_HOME}/lib/small_file|保存文件管理器下载的文件的目录|
 |sys_log_level|INFO|日志级别，INFO < WARNING < ERROR < FATAL|
 |sys_log_roll_mode|SIZE-MB-1024|日志拆分的大小，每 1G 拆分一个日志|
 |sys_log_roll_num|10|日志保留的数目|
