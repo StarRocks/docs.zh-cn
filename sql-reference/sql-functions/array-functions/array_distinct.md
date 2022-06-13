@@ -50,4 +50,3 @@ mysql> select c1, array_distinct(c2) from test;
 |    4 | [null]               |
 +------+----------------------+
 ```
-

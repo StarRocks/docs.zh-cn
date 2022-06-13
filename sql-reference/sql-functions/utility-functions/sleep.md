@@ -29,4 +29,3 @@ mysql> select sleep(3);
 +----------+
 1 row in set (1.00 sec)
 ```
-

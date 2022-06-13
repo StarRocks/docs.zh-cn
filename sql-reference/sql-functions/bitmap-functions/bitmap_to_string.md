@@ -50,4 +50,3 @@ MySQL > select bitmap_to_string(bitmap_or(to_bitmap(1), to_bitmap(2)));
 +---------------------------------------------------------+
 
 ```
-

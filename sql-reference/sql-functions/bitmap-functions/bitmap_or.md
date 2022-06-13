@@ -37,4 +37,3 @@ MySQL > select bitmap_count(bitmap_or(to_bitmap(1), to_bitmap(1))) cnt;
 |    1 |
 +------+
 ```
-

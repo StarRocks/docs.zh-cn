@@ -33,4 +33,3 @@ mysql> select nullif(1,2);
 +--------------+
 1 row in set (0.01 sec)
 ```
-
