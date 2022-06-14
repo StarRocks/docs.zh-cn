@@ -32,14 +32,14 @@ MySQL > select bitmap_to_string(bitmap_from_string(""));
 -- 返回`0,1,2`。
 MySQL > select bitmap_to_string(bitmap_from_string("0, 1, 2"));
 +-------------------------------------------------+
-|    bitmap_to_string(bitmap_from_string('0, 1, 2'))    |
+| bitmap_to_string(bitmap_from_string('0, 1, 2')) |
 +-------------------------------------------------+
 | 0,1,2                                           |
 +-------------------------------------------------+
 
 -- 输入非法，返回NULL。
 MySQL > select bitmap_from_string("-1, 0, 1, 2");
-+-----------------------------------------------+
++----------------------------------------+
 |   bitmap_from_string('-1, 0, 1, 2')    |
 +----------------------------------------+
 | NULL                                   |
