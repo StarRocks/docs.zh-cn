@@ -306,7 +306,7 @@ PROPERTIES("replication_num" = "3",
   a. 假设表的主键为:  `dt date (4byte), id bigint(8byte) = 12byte`  
   b. 假设热数据有1000W行, 存储3副本  
   c. 则内存占用: `(12 + 9(每行固定开销) ) * 1000W * 3 * 1.5(hash表平均额外开销) = 945M`  
-7. `enable_persistent_index`：是否开启持久化内存，主键索引同时存储在磁盘和内存中，避免主键索引占用过大内存空间。取值为 `true` 或者 `false`。如果磁盘速度足够快，则建议设置为 `true`。
+7. `enable_persistent_index`：是否持久化主键索引，将主键索引同时存储在磁盘和内存中，避免主键索引占用过大内存空间。取值为 `true` 或者 `false`。如果磁盘为固态硬盘 SSD，则建议设置为 `true`。
 
 #### 数据变更
 
