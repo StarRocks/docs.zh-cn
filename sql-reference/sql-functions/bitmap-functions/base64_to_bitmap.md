@@ -93,7 +93,7 @@ public class BitmapBase64Test {
 }
 ```
 
-### Stream Load
+### Stream Load demo
 
 有JSON格式文件**simpledata**, 内容如下，其中编码后的`userid`来源于上面的Java示例。
 - 文件内容
