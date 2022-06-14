@@ -88,7 +88,7 @@ StarRocks 的 FE 进程负责接收用户连接和查询请求，其本身是可
     > 注意：这里 `password` 输入值为密文。例如，root 用户密码为 `root123`，则 `password` 输入为 `*FAAFFE644E901CFAFAEC7562415E5FAEC243B8B2`。您可以通过 `password()`函数获取具体输入的加密值。
     >
     > 示例：
-
+    >
     > ```plain text
     > mysql> select password('root123');
     > +---------------------------------------------+
