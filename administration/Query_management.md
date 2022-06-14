@@ -65,9 +65,11 @@ SET GLOBAL parallel_fragment_exec_instance_num = INT;
 SET exec_mem_limit = INT;
 ```
 
+`exec_mem_limit`：单个 Instance 的内存限制，单位是 Byte。
+
 ## 调整数据库存储容量 Quota
 
-默认设置下，每个数据库的存储容量无限制。您可以通过以下命令调整
+默认设置下，每个数据库的存储容量无限制。您可以通过以下命令调整。
 
 ```sql
 ALTER DATABASE db_name SET DATA QUOTA quota;
