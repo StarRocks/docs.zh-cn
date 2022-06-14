@@ -106,4 +106,3 @@ StarRocks 的 FE 进程负责接收用户连接和查询请求，其本身是可
     load mysql query rules to runtime; 
     save mysql query rules to disk;
     ```
-
