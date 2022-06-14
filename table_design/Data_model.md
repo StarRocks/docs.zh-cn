@@ -269,7 +269,8 @@ PARTITION BY RANGE(`dt`) (
     PARTITION p20210929 VALUES [('2021-09-29'), ('2021-09-30')),
     PARTITION p20210930 VALUES [('2021-09-30'), ('2021-10-01'))
 ) DISTRIBUTED BY HASH(order_id) BUCKETS 4
-PROPERTIES("replication_num" = "3");
+PROPERTIES("replication_num" = "3",
+"enable_persistent_index" = "true");
 ~~~
 
 以下语句只用主键模型创建一个用户状态表:
@@ -290,7 +291,8 @@ create table users (
     ....
 ) PRIMARY KEY (user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 4
-PROPERTIES("replication_num" = "3");
+PROPERTIES("replication_num" = "3",
+"enable_persistent_index" = "true");
 ~~~
 
 注意:
@@ -304,6 +306,7 @@ PROPERTIES("replication_num" = "3");
   a. 假设表的主键为:  `dt date (4byte), id bigint(8byte) = 12byte`  
   b. 假设热数据有1000W行, 存储3副本  
   c. 则内存占用: `(12 + 9(每行固定开销) ) * 1000W * 3 * 1.5(hash表平均额外开销) = 945M`  
+7. `enable_persistent_index`：是否开启持久化内存，主键索引同时存储在磁盘和内存中，避免主键索引占用过大内存空间。取值为 `true` 或者 `false`。如果磁盘速度足够快，则建议设置为 `true`。
 
 #### 数据变更
 
