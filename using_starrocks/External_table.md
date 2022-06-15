@@ -268,6 +268,7 @@ PROPERTIES (
     |  DOUBLE | DOUBLE |
     | FLOATE | FLOAT|
     | DECIMAL | DECIMAL |
+    | BOOLEAN | BOOLEAN |
 
     说明：
 
