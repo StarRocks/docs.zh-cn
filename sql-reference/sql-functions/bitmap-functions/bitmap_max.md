@@ -6,7 +6,9 @@
 
 ## 语法
 
-`BITMAP_MAX(bitmap)`
+```Plain Text
+BITMAP_MAX(bitmap)
+```
 
 ## 参数说明
 
@@ -37,7 +39,7 @@ MySQL > select bitmap_max(bitmap_empty());
 +----------------------------------+
 |       bitmap_max(bitmap_empty()) |
 +----------------------------------+
-|                  0               |
+|                      NULL        |
 +----------------------------------+
 
 mysql> select bitmap_max(bitmap_from_string("1, 16501189037412846863"));
@@ -48,7 +50,3 @@ mysql> select bitmap_max(bitmap_from_string("1, 16501189037412846863"));
 +--------------------------------------------------------------+
 1 row in set (0.02 sec)
 ```
-
-## 关键词
-
-BITMAP_MAX, BITMAP
