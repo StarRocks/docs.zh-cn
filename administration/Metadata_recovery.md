@@ -65,6 +65,7 @@ lastVLSN 内容如下所示：
 
     > 说明：`metadata_failure_recovery=true` 的含义为，清空 BDBJE 中其他 FE 节点的元数据，只保留待恢复的 FE 节点的元数据。如此，该 FE 节点将不会连接其他 FE 节点，而作为一个独立的 FE 节点启动。
 
+
     > 注意：该参数只有在恢复启动时才需要设置为 `true`。恢复完成后，请务必将其设置为 `false` (后面有步骤说明)。否则再次重启后，BDBJE 中的元数据将会被再次被清空，导致其他 FE 节点无法正常工作。
 2. 启动当前 FE 节点。
 
@@ -94,8 +95,9 @@ lastVLSN 内容如下所示：
 
     > 说明：`metadata_failure_recovery=true` 的含义为，清空 BDBJE 中其他 FE 节点的元数据，只保留待恢复的 FE 节点的元数据。如此，该 FE 节点将不会连接其他 FE 节点，而作为一个独立的 FE 节点启动。
 
+
     > 注意：该参数只有在恢复启动时才需要设置为 `true`。恢复完成后，请务必将其设置为 `false` (后面有步骤说明)。否则再次重启后，BDBJE 中的元数据将会被再次被清空，导致其他 FE 节点无法正常工作。
-2. 启动当前 FE 节点。
+3. 启动当前 FE 节点。
 
     ```shell
     sh bin/start_fe.sh --daemon
@@ -103,48 +105,48 @@ lastVLSN 内容如下所示：
 
     正常情况下，当前 FE 节点会以 MASTER 的角色启动。您可以在当前节点的 **fe.log** 中查询到 `transfer from XXXX to MASTER` 的日志条目。
 
-3. 启动完成后，通过 MySQL 连接至当前 FE节点，执行查询导入操作，检查集群是否能够正常访问。如果无法正常防伪，您需要查看 FE 节点的启动日志，排查问题后重新启动 FE 节点。
-4. 确认启动成功后，检查当前 FE 节点角色。
+4. 启动完成后，通过 MySQL 连接至当前 FE节点，执行查询导入操作，检查集群是否能够正常访问。如果无法正常防伪，您需要查看 FE 节点的启动日志，排查问题后重新启动 FE 节点。
+5. 确认启动成功后，检查当前 FE 节点角色。
 
     ```sql
     show frontends;
     ```
 
     由于当前使用 OBSERVER 节点恢复，以上命令的返回中您可以看到当前 FE 角色为 OBSERVER，但是 IsMaster 显示为 true。
-5. 将当前节点的 **fe.conf** 中 `metadata_failure_recovery=true` 注释掉。
+6. 将当前节点的 **fe.conf** 中 `metadata_failure_recovery=true` 注释掉。
 
     > 注意：请不要重启该节点，以防止这个节点再加入集群的时候报错。
 
-6. DROP 当前 OBSERVER 节点以外的所有 FE 节点。
+7. DROP 当前 OBSERVER 节点以外的所有 FE 节点。
 
     ```sql
     ALTER SYSTEM DROP BACKEND "host:heartbeat_service_port"[, "host:heartbeat_service_port", ...];
     ```
 
-7. 添加一个新的 FOLLOWER FE，假设在 hostA 上。
+8. 添加一个新的 FOLLOWER FE，假设在 hostA 上。
 
     ```sql
     ALTER SYSTEM ADD FOLLOWER "hostA:edit_log_port";
     ```
 
-8. 在 hostA 上启动一个全新的 FE，并通过 `--helper` 的方式加入集群。
+9. 在 hostA 上启动一个全新的 FE，并通过 `--helper` 的方式加入集群。
 
     ```sql
     bin/start_fe.sh --helper "fe_host:edit_log_port" --daemon
     ```
 
-9. 启动成功后，检查当前 FE 节点角色。
+10. 启动成功后，检查当前 FE 节点角色。
 
     ```sql
     show frontends;
     ```
 
     在返回结果中，你可以观察到两个 FE 节点，其中一个是之前的 OBSERVER，另一个是新添加的 FOLLOWER，且此时 OBSERVER 为 Master。
-10. 确认新的 FOLLOWER 是否可以正常工作。观察如图所示的 ID 是否同步完成即可了解新的 FOLLOWER 是否正常工作。
+11. 确认新的 FOLLOWER 是否可以正常工作。观察如图所示的 ID 是否同步完成即可了解新的 FOLLOWER 是否正常工作。
 
     ![8-4](../assets/8-4.png)
 
-11. 确认当前新的 FOLLOWER 可以正常工作之后，跳转至第四步骤，用这个新的 FOLLOWER 的元数据，重新执行[基于 FOLLOWER 节点恢复](#基于-FOLLOWER-节点恢复)操作。以上步骤目的即为人为地制造出一个 FOLLOWER 节点的元数据，然后用该元数据重新开始故障恢复，从而避免了从 OBSERVER 恢复元数据导致的不一致的问题。
+12. 确认当前新的 FOLLOWER 可以正常工作之后，跳转至第四步骤，用这个新的 FOLLOWER 的元数据，重新执行[基于 FOLLOWER 节点恢复](#基于-FOLLOWER-节点恢复)操作。以上步骤目的即为人为地制造出一个 FOLLOWER 节点的元数据，然后用该元数据重新开始故障恢复，从而避免了从 OBSERVER 恢复元数据导致的不一致的问题。
 
 ## 重新部署 FE 集群
 
