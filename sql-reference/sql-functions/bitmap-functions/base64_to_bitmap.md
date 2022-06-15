@@ -82,12 +82,9 @@ public class BitmapBase64Test {
 
     public static void main(String[] args) {
         String encode = serialize();
+        System.out.println(encode);
 
         // 通过使用 base64_to_bitmap 函数写入数据到bitmap_table表中。
-        String isql = "insert into bitmapdb.bitmap_table values('持有产品','保险',base64_to_bitmap('" + encode + "'));";
-        System.out.println(isql);
-
-        // then insert into db use this sql
         // Example: insert into bitmapdb.bitmap_table values('持有产品','保险',base64_to_bitmap('AjowAAABAAAAAAACABAAAAABAAIAAwA='));
     }
 }
