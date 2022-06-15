@@ -88,7 +88,7 @@ public class BitmapBase64Test {
         System.out.println(isql);
 
         // then insert into db use this sql
-        // .... .......
+        // Example: insert into bitmapdb.bitmap_table values('持有产品','保险',base64_to_bitmap('AjowAAABAAAAAAACABAAAAABAAIAAwA='));
     }
 }
 ```
