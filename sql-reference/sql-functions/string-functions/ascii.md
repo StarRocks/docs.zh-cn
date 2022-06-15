@@ -1,16 +1,24 @@
 # ascii
 
-## description
-
-### Syntax
-
-```Haskell
-INT ascii(VARCHAR str)
-```
+## 功能
 
 返回字符串第一个字符对应的 ascii 码
 
-## example
+## 语法
+
+```Haskell
+ascii(str)
+```
+
+## 参数说明
+
+`str`: 支持的数据类型为 VARCHAR
+
+## 返回值说明
+
+返回值的数据类型为 INT
+
+## 示例
 
 ```Plain Text
 MySQL > select ascii('1');
@@ -27,7 +35,3 @@ MySQL > select ascii('234');
 |           50 |
 +--------------+
 ```
-
-## keyword
-
-ASCII

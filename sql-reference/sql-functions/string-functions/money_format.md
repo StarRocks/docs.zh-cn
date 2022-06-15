@@ -1,14 +1,24 @@
 # money_format
 
-## description
+## 功能
 
-### Syntax
+将数字按照货币格式输出, 整数部分每隔 3 位用逗号分隔, 小数部分保留 2 位
 
-VARCHAR money_format(Number)
+## 语法
 
-将数字按照货币格式输出，整数部分每隔3位用逗号分隔，小数部分保留2位
+```Haskell
+money_format(num)
+```
 
-## example
+## 参数说明
+
+`num`: 支持的数据类型为 NUMBER
+
+## 返回值说明
+
+返回值的数据类型为 VARCHAR
+
+## 示例
 
 ```Plain Text
 MySQL > select money_format(17014116);
@@ -32,7 +42,3 @@ MySQL > select money_format(1123.4);
 | 1,123.40             |
 +----------------------+
 ```
-
-## keyword
-
-MONEY_FORMAT,MONEY,FORMAT

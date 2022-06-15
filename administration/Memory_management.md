@@ -7,7 +7,7 @@
 | 标识 | Metric 名称 | 说明 | BE 相关配置 |
 | --- | --- | --- | --- |
 | process | starrocks_be_process_mem_bytes | BE 进程实际使用的内存（不包含预留的空闲内存）| mem_limit |
-| query_pool | starrocks_be_column_pool_mem_bytes | BE 查询层使用总内存 | |
+| query_pool | starrocks_be_query_mem_bytes | BE 查询层使用总内存 | |
 | load | starrocks_be_load_mem_bytes | 导入使用的总内存 | load_process_max_memory_limit_bytes, load_process_max_memory_limit_percent |
 | table_meta | starrocks_be_tablet_meta_mem_bytes | 元数据总内存 | |
 | compaction | starrocks_be_compaction_mem_bytes | 版本合并总内存 | compaction_max_memory_limit, compaction_max_memory_limit_percent |
@@ -42,8 +42,9 @@
 
 | 名称| 默认值| 说明|
 |  --- |  --- | --- |
-| exec_mem_limit| 2147483648| 单个 instance 内存限制|
-| load_mem_limit| 0| 单个导入任务的内存限制，如果是0,会取exec_mem_limit|
+| exec_mem_limit| 2147483648| 单个 instance 的内存限制，单位是 Byte。一个查询可以使用的内存为 instance 数量*exec_mem_limit。只有在配置项 query_mem_limit 为 0 时，exec_mem_limit 才会生效。 |
+| load_mem_limit| 0| 单个导入任务的内存限制，单位是 Byte。如果此配置项被设置为 0，那么系统会使用 exec_mem_limit 来限制内存。 |
+| query_mem_limit | 0 | 单个查询的内存限制，单位是 Byte。如果此配置项被设置为 0，那么系统会使用 exec_mem_limit 来限制内存。建议设置为 17179869184（16GB）以上。 |
 
 ## 查看内存使用
 

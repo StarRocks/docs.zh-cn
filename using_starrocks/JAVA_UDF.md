@@ -1,6 +1,6 @@
-# Java UDF
+# Java UDF【公测中】
 
-自 2.2.0 版本起，StarRocks 支持使用Java语言编写用户定义函数UDF（User Defined Function，UDF）。您可以根据业务场景开发自定义函数，扩展StarRocks的函数能力。本文介绍StarRocks支持的 UDF 类型，开发流程和使用方式。
+自 2.2.0 版本起，StarRocks 支持使用 Java 语言编写用户定义函数 UDF（User Defined Function，UDF），该功能正在公测中。您可以根据业务场景开发自定义函数，扩展StarRocks的函数能力。本文介绍StarRocks支持的 UDF 类型，开发流程和使用方式。
 
 ## UDF 类型
 
@@ -183,7 +183,7 @@ SELECT MY_UDF_JSON_GET('{"key":"{\\"in\\":2}"}', '$.key.in');
 
 1. 编写  UDAF 的代码，示例如下。
 
-   本文以 `MY_SUM_INT`  函数为例进行说明。与内置函数`SUM`（返回值为 BIGINT 类型）区别在于，`SUMINT`  函数支持传入参数和返回参数的类型为 INT。
+   本文以 `MY_SUM_INT`  函数为例进行说明。与内置函数`SUM`（返回值为 BIGINT 类型）区别在于，`MY_SUM_INT`  函数支持传入参数和返回参数的类型为 INT。
 
     ```Java
     package com.starrocks.udf.sample;
@@ -411,7 +411,7 @@ FROM test_basic;
 
 ### UDTF
 
-> 目前仅支持使用UDTF返回多行单列。
+> 说明：目前 UDTF 只支持返回多行单列。
 
 #### 步骤一：创建 Maven 项目
 
@@ -452,8 +452,6 @@ FROM test_basic;
 
 执行如下命令，在 StarRocks 中创建 UDTF 函数。
 
-> 目前 UDTF 只支持返回**多行单列**。
-
 ```SQL
 CREATE TABLE FUNCTION MY_UDF_SPLIT(string)
 RETURNS string
@@ -478,7 +476,7 @@ SELECT t1.a,t1.b,t1.c1 FROM t1;
 1,2.1,"hello world"
 2,2.2,"hello UDTF."
 
--- 使用UDFSplit函数
+-- 使用 MY_UDF_SPLIT 函数
 SELECT t1.a,t1.b, MY_UDF_SPLIT FROM t1, MY_UDF_SPLIT(t1.c1); 
 > output:
 1,2.1,"hello"
