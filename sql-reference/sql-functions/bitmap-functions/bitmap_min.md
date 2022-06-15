@@ -1,4 +1,4 @@
-# BITMAP_MIN
+# bitmap_min
 
 ## 功能
 
@@ -6,7 +6,9 @@
 
 ## 语法
 
-`BITMAP_MIN(bitmap)`
+```Plain Text
+bitmap_min(bitmap)
+```
 
 ## 参数说明
 
@@ -37,7 +39,7 @@ MySQL > select bitmap_min(bitmap_empty());
 +----------------------------------+
 |       bitmap_min(bitmap_empty()) |
 +----------------------------------+
-|                               -1 |
+|                             NULL |
 +----------------------------------+
 
 mysql> select bitmap_min(bitmap_from_string("16501189037412846863"));
@@ -48,7 +50,3 @@ mysql> select bitmap_min(bitmap_from_string("16501189037412846863"));
 +--------------------------------------------------------+
 1 row in set (0.03 sec)
 ```
-
-## 关键词
-
-BITMAP_MIN, BITMAP
