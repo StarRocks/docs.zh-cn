@@ -34,8 +34,8 @@ TabletChecker 作为常驻的后台进程，会定期检查所有分片的状态
     +----------+-----------------------------+----------+--------------+----------+-----------+------------+--------------------+-----------------------+
     ```
 
-    - `UnhealthyTabletNum` 列显示了对应的 Database 中，有多少 Tablet 处于非健康状态。
-    - `InconsistentTabletNum` 列显示了对应的 Database 中，有多少 Tablet 处于副本不一致的状态。
+    * `UnhealthyTabletNum` 列显示了对应的 Database 中，有多少 Tablet 处于非健康状态。
+    * `InconsistentTabletNum` 列显示了对应的 Database 中，有多少 Tablet 处于副本不一致的状态。
 
     `Total` 行对整个集群进行了统计。正常情况下 `UnhealthyTabletNum` 和 `InconsistentTabletNum` 应为0。如果不为零，可以进一步查看具体有哪些 Tablet。如上图中，UM_TEST 数据库有 1 个 Tablet 状态不健康。
 
@@ -43,8 +43,9 @@ TabletChecker 作为常驻的后台进程，会定期检查所有分片的状态
 
     ```sql
     SHOW PROC '/statistic/DbId';
-    ```  
-    `DbId`：数据库所对应的 DbId。
+    ```
+
+    `DbId` 为数据库所对应的 ID。
 
     示例：
 
@@ -146,7 +147,7 @@ TabletChecker 作为常驻的后台进程，会定期检查所有分片的状态
     ```
 
     结果展示了当前 Tablet 所对应的数据库、表、分区、上卷表等信息。
-    
+
     您可以复制并执行 `DetailCmd` 列中的命令以查看详细信息。
 
     ```plain text
