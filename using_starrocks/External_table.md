@@ -73,12 +73,15 @@ PROPERTIES (
 
 参数说明：
 
-* **host**：ES 集群连接地址，可指定一个或多个，StarRocks 通过这个地址获取到 ES 版本号、index 的 shard 分布信息
-* **user**：开启 **basic 认证** 的 ES 集群的用户名，需要确保该用户有访问 /*cluster/state/* nodes/http 等路径权限和对 index 的读权限
-* **password**：对应用户的密码信息
-* **index**：StarRocks 中的表对应的 ES 的 index 名字，可以是 alias
-* **type**：指定 index 的 type，默认是 **doc**
-* **transport**：内部保留，默认为 **http**
+* **host**：ES 集群连接地址，可指定一个或多个，StarRocks 通过这个地址获取到 ES 版本号、index 的 shard 分布信息。
+* **user**：开启 **basic 认证** 的 ES 集群的用户名，需要确保该用户有访问 /*cluster/state/* nodes/http 等路径权限和对 index 的读权限。
+* **password**：对应用户的密码信息。
+* **index**：StarRocks 中的表对应的 ES 的 index 名字，可以是 alias。
+* **type**：指定 index 的 type，默认是 **doc**。
+* **transport**：内部保留，默认为 **http**。
+* **es.nodes.wan.only**：表示 StarRocks 是否仅使用host指定的地址，去访问 ES 集群并获取数据。
+  * true：StarRocks 仅使用 hosts 指定的地址去访问 ES 集群并获取数据，不会探测 ES 集群的索引每个分片所在的数据节点地址。如果 StarRocks 无法访问 ES 集群内部数据节点的地址，则需要配置为true。
+  * false：默认值，StarRocks 通过 host 中的地址，探测 ES 集群索引各个分片所在数据节点的地址。StarRocks 经过查询规划后，相关 BE 节点会直接去请求 ES 集群内部的数据节点，获取索引的分片数据。如果 StarRocks 可以访问 ES 集群内部数据节点的地址，则建议保持默认值false。
 
 <br/>
 
