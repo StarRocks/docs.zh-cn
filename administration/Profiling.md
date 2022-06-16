@@ -152,7 +152,7 @@ StarRocks 支持对数据进行有序存储，在数据有序的基础上为其�
 
 StarRocks 支持倒排索引，采用位图技术构建索引（Bitmap Index）。您可以将索引应用在 DUPLICATE KEY 数据模型的所有列和 AGGREGATE KEY 和 UNIQUE KEY 模型的 Key 列上。位图索引适合取值空间较小的列，例如性别、城市、省份等信息列上。随着取值空间的增加，位图索引会同步膨胀。
 
-### 物化视图
+### 使用物化视图
 
 物化视图（Rollup）本质上可以理解为原始表（Base table）的一个物化索引。建立物化视图时，您可以只选取 Base table 中的部分列作为 schema，schema 中的字段顺序也可与Base table 不同。下列情形可以考虑建立物化视图：
 
