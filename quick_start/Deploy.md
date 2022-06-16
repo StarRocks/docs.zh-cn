@@ -151,6 +151,8 @@ insert into sr_on_mac values (3, '2022-02-03', '2022-02-03 10:47:57', '333');
 select * from sr_on_mac where c1 >= '2022-02-02';
 ```
 
+如果无错误返回，则表明您已成功在 Docker 环境中部署 StarRocks。
+
 ## 通过命令行部署
 
 您可以通过命令行跨节点部署 StarRocks。
