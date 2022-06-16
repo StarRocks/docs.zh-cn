@@ -1,6 +1,6 @@
 # Flink Connector
 
-本文介绍 Flink 如何通过 flink-connector-starrocks 的 source 功能读取 StarRocks 数据。
+自 StarRocks 1.19 版本， flink-connector-starrocks 支持 Flink 批量读取 StarRocks 数据。本文介绍实现方案以及如何使用 flink-connector-starrocks 实现 Flink 批量读取 StarRocks 数据。
 
 > 如果 Flink 需要通过 flink-connector-starrocks 的 sink 功能，将数据写入至 StarRocks，请参见数据导入章节的 [Flink connector](../loading/Flink-connector-starrocks.md)。
 
@@ -20,7 +20,7 @@ Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks �
 
 ### 步骤一：准备flink-connector-starrocks
 
-1. 根据 Flink 的版本，选择对应版本。下载 JAR 包 [flink-connector-starrocks](https://github.com/StarRocks/flink-connector-starrocks/releases)。
+1. 根据 Flink 的版本，选择对应版本。下载 JAR 包 [flink-connector-starrocks](https://github.com/StarRocks/flink-connector-starrocks/releases)（必须为1.2.x及以上版本）。
 2. 如需调试代码，可选择对应分支代码自行编译
 3. 将下载或者编译的 JAR 包放在 Flink 的 lib 目录中。
 4. 重启 Flink。
