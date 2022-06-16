@@ -91,7 +91,7 @@ properties.put("disabledAuthenticationPlugins", "com.mysql.jdbc.authentication.M
 
 您需要在 ODBC 的 DSN 中添加以下配置，并配上用户名和密码。
 
-```
+```conf
 default_auth = mysql_clear_password
 ENABLE_CLEARTEXT_PLUGIN = 1
 ```
