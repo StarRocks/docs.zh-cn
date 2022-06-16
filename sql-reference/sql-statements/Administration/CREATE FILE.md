@@ -32,7 +32,7 @@ CREATE FILE "file_name" [IN database]
 
 ## 示例
 
-- 创建一个名为 **ca.pem** 的文件，所属类别为 kafka。
+- 创建一个名为 **test.pem** 的文件，所属类别为 kafka。
 
 ```SQL
 CREATE FILE "test.pem"
