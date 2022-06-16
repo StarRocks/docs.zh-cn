@@ -153,18 +153,18 @@ select * from sr_on_mac where c1 >= '2022-02-02';
 
 如果无错误返回，则表明您已成功在 Docker 环境中部署 StarRocks。
 
-## 通过命令行部署
+## 通过二进制安装包部署
 
-您可以通过命令行跨节点部署 StarRocks。
+您可以通过二进制安装包跨节点部署 StarRocks。
 
 ### 前提条件
 
 在部署 StarRocks 之前，请确保如下环境要求已满足。
-|需求种类|需求细节|说明|
+|分类|描述|说明|
 |-----------|------------|------|
-|硬件需求|<ul><li>集群至少拥有两台物理或虚拟节点。</li><li>BE 节点 CPU 需支持 AVX2 指令集。</li><li>各节点间需要通过万兆网卡及万兆交换机连接。</li></ul>|<ul><li>FE 节点建议配置 8 核 或以上 CPU，16GB 或以上内存。</li> <li>BE 节点建议配置 16 核 或以上 CPU，64GB 或以上内存。</li><li>通过运行 <code>cat /proc/cpuinfo \|grep avx2</code> 命令查看节点 CPU 支持的指令集，若有结果返回则表明 CPU 支持 AVX2 指令集。</li></ul>|
+|硬件要求|<ul><li>集群至少拥有两台物理或虚拟节点。</li><li>BE 节点 CPU 需支持 AVX2 指令集。</li><li>各节点间需要通过万兆网卡及万兆交换机连接。</li></ul>|<ul><li>FE 节点建议配置 8 核 或以上 CPU，16GB 或以上内存。</li> <li>BE 节点建议配置 16 核 或以上 CPU，64GB 或以上内存。</li><li>通过运行 <code>cat /proc/cpuinfo \|grep avx2</code> 命令查看节点 CPU 支持的指令集，若有结果返回则表明 CPU 支持 AVX2 指令集。</li></ul>|
 |操作系统|所有节点操作系统需为 CentOS（7 或以上）。| |
-|软件需求|所有节点需安装：<ul><li><a   href="https://www.oracle.com/java/technologies/downloads/">Oracle Java</a>（1.8 或以上）</li><li><a href="https://www.mysql.com/downloads/">MySQL 客户端</a>（5.5 或以上） </li></ul>|  |
+|软件要求|所有节点需安装：<ul><li><a   href="https://www.oracle.com/java/technologies/downloads/">Oracle Java</a>（1.8 或以上）</li><li><a href="https://www.mysql.com/downloads/">MySQL 客户端</a>（5.5 或以上） </li></ul>|  |
 |系统环境|<ul><li>集群时钟需保持同步。 </li> <li> 用户需要有设置 <code>ulimit -n</code> 权限。 </li> </ul> | |
 
 其他系统参数配置：
