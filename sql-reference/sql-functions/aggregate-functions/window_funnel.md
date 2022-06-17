@@ -2,34 +2,35 @@
 
 ## 功能
 
-根据滑动窗口中的事件链，计算得到其中存在的最大事件数。
-该函数遵守如下规则：
-
-* 在事件链中搜索第一个条件，并将事件计数器设置为1，这是滑动窗口启动的时刻。
-* 如果事件链中，在窗口中的事件顺序发生，将计数器递增；如果超出了窗口，则计数器不再增加。
-* 如果在不同的时间段，筛选出不同的事件链，则仅输出具有最长链的长度。
+搜索滑动时间窗口内的事件列表，计算条件匹配的事件链里的最大连续事件数。该函数是比较常见的转化分析方法，用于分析用户在各阶段行为的转化率。
+函数遵循如下规则：
+- 从事件链中的第一个条件开始判断。如果数据中包含符合条件的事件，则向计数器加1，并以此事件对应的时间作为滑动窗口的起始时间。如果未能找到符合第一个条件的数据，则返回为0.
+- 在滑动窗口内，如果事件链中的事件按顺序发生，则计数器递增；如果超出了时间窗口，则计数器不再增加。
+- 如有多条符合条件的事件链，则输出最长的事件链。
 
 ## 语法
 
 ```Haskell
-output window_funnel(window, time, mode, array)
+output window_funnel(window, time, mode, array[cond1, cond2, ..., condN])
 ```
 
 ## 参数说明
 
-* window：滑动窗户的大小，筛选出的事件链中第一个事件和最后一个事件的最大间隔，类型为BIGINT。单位取决于time。
-* time：时间戳。类型目前支持date和datetime。
-* mode：默认为0，表示执行最一般的漏斗计算。类型为INT。该参数通过设置不同的bit来添加限制，目前提供如下两种mode：DEDUPLICATION/FIXED。其中DEDUPLICATION表示被筛选出的事件链，不能在原事件链中有重复的事件，假设array参数为[event_type='A', event_type='B', event_type='C', event_type='D']，原事件链为A-B-C-B-D，由于事件B重复，那么筛选出的事件链只能是A-B-C。FIXED表示被筛选出的事件链，不能在原本的事件链中有跳跃的事件，假设array参数如上不变，原事件链为A-B-D-C，由于事件D跳跃，那么筛选出的事件链只能是A-B。
-* array：有序的事件列表，类型为Array\<BOOLEAN\>。
-
+* `window`：滑动窗口的大小，类型为BIGINT。单位取决于`time`参数，如果`time`的取值类型为DATE，窗口单位为天；如果`time`的取值类型为DATETIME，窗口单位为秒。如果某个事件超出该窗口，不会被计入。
+* `time`：包含时间戳的列。目前支持DATE和DATETIME类型。
+* `mode`：事件链的筛选模式，类型为INT。取值范围：0，1，2。  
+  - 默认值为0，表示执行最一般的漏斗计算。
+  - 取值为1时表示DEDUPLICATION模式，即筛选出的事件链不能有重复的事件。假设array参数为[event_type='A', event_type='B', event_type='C', event_type='D']，原事件链为"A-B-C-B-D"，由于事件B重复，那么筛选出的事件链只能是"A-B-C"。
+  - 取值为2时表示FIXED模式，即筛选出的事件链不能有跳跃的事件，假设array参数如上不变，原事件链为"A-B-D-C"，由于事件D跳跃，那么筛选出的事件链只能是"A-B"。
+* `array`：定义的事件链，类型为ARRAY。
 ## 返回值说明
 
-类型为BIGINT，值为滑动时间窗口内连续触发事件的最大数量。
+返回BIGINT类型的值，值为滑动窗口内满足条件的最大连续事件数。
 
 ## 示例
 
-示例一:
-假设现在有表action:
+**示例一：筛选出不同uid对应的最大连续事件数，窗口为1800s，筛选模式为`0`。**
+假设有表`action`，数据以`uid`排序：
 
 ```plain text
 mysql> select * from action;
@@ -57,7 +58,7 @@ mysql> select * from action;
 17 rows in set (0.01 sec)
 ```
 
-执行如下sql
+执行如下SQL语句计算最大连续事件数：
 
 ```plain text
 mysql> select uid, window_funnel(1800,time,0,[event_type='浏览', event_type='点击', 
@@ -73,15 +74,21 @@ mysql> select uid, window_funnel(1800,time,0,[event_type='浏览', event_type='�
 | 6    |     3 |
 +------+-------+
 ```
+可以看到：
+- uid=1匹配的事件链为“浏览-点击-下单-支付”，输出为4，因为最后一个浏览事件的时间不符合条件，未计入；
+- uid=2对应的事件链未从第一个事件“浏览”开始，输出为0；
+- uid=3对应的事件链为“浏览”，输出为1，因为“点击”事件超过1800s窗口，未计入； 
+- uid=4对应的事件链为“浏览-点击”，输出为2；
+- uid=5的事件链为“浏览-点击”，输出为2，因为下单时间不属于该事件链，未计入；
+- uid=6事件链为“浏览-点击-下单”，输出为3。
 
-示例二:
+**示例二：筛选出不同`uid`对应的最大连续事件数，窗口为1800s，分别计算筛选模式为`0`和`1`的结果。**
 
-假设现在有表action1：
+假设有表`action1`，数据以`time`排序：
 
 ```plain text
 mysql> select * from action1 order by time;
-+------+------------+---------------------+
-| uid  | event_type | time                |
++------+------------+---------------------+      
 +------+------------+---------------------+
 | 1    | 浏览       | 2020-01-02 11:00:00 |
 | 2    | 浏览       | 2020-01-02 11:00:01 |
@@ -94,7 +101,7 @@ mysql> select * from action1 order by time;
 7 rows in set (0.03 sec)
 ```
 
-执行sql
+执行如下SQL语句计算最大连续事件数：
 
 ```plain text
 mysql> select uid, window_funnel(1800,time,0,[event_type='浏览', 
@@ -108,8 +115,8 @@ mysql> select uid, window_funnel(1800,time,0,[event_type='浏览',
 2 rows in set (0.02 sec)
 ```
 
-我们注意到，对于uid=1，即使点击事件(2020-01-02 11:29:50)已经重复出现，但是最终依然输出4，因为我们使用了mode(0)。
-我们将mode改为1，再次执行sql
+可以看到，对于uid=1，即使点击事件 (2020-01-02 11:29:50) 已经重复出现，但是依然计入，最终输出4，因为使用了模式0。 
+将`mode`改为1，进行去重，再次执行SQL:
 
 ```plain text
 +------+-------+
@@ -121,11 +128,11 @@ mysql> select uid, window_funnel(1800,time,0,[event_type='浏览',
 2 rows in set (0.05 sec)
 ```
 
-可以看到输出为3，此时筛选出的最长事件链为浏览-点击-下单。
+可以看到输出为3，去重后筛选出的最长事件链为“浏览-点击-下单”。
 
-示例三：
+**示例三：筛选出`uid`对应的最大连续事件数，窗口为1900s，分别计算筛选模式为`0`和`2`的结果。**
 
-假设现在有表action2：
+假设有表`action2`，数据以`time`排序：
 
 ```plain text
 mysql> select * from action2 order by time;
@@ -141,7 +148,7 @@ mysql> select * from action2 order by time;
 5 rows in set (0.01 sec)
 ```
 
-执行sql
+执行如下SQL语句计算最大连续事件数：
 
 ```plain text
 mysql> select uid, window_funnel(1900,time,0,[event_type='浏览', event_type='点击', 
@@ -155,8 +162,8 @@ mysql> select uid, window_funnel(1900,time,0,[event_type='浏览', event_type='�
 2 rows in set (0.02 sec)
 ```
 
-可以看到对于uid=1，输出的level为3，支付(2020-01-02 11:30:00)这一跳跃的事件并没阻断筛选出的事件链。
-我们将mode改为2，再次执行sql
+可以看到对于uid=1，输出为`3`，因为使用了模式 `0`，所以支付(2020-01-02 11:30:00)这一跳跃的事件并没有阻断筛选出的事件链。
+将`mode`改为`2`，再次执行SQL：
 
 ```plain text
 mysql> select uid, window_funnel(1900,time,2,[event_type='浏览', event_type='点击', 
@@ -170,8 +177,4 @@ mysql> select uid, window_funnel(1900,time,2,[event_type='浏览', event_type='�
 2 rows in set (0.06 sec)
 ```
 
-可以看到输出为2，此时筛选出的最大事件链是浏览-点击。
-
-## 关键字
-
-window_funnel
+输出为2，因为“支付”事件跳跃，停止计数，此时筛选出的最大事件链是“浏览-点击”。
