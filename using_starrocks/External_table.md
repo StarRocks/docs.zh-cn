@@ -197,6 +197,12 @@ SHOW RESOURCES;
 DROP RESOURCE "hive0";
 ~~~
 
+StarRocks 2.3 及以上版本支持修改 `hive.metastore.uris`。如将资源'hive0'中的 `hive.metastore.uris` 的值修改为 `thrift://10.10.44.97:9083`，命令如下：
+
+~~~sql
+ALTER RESOURCE 'hive0' SET PROPERTIES ("hive.metastore.uris" = "thrift://10.10.44.97:9083")
+~~~
+
 <br/>
 
 ### 创建数据库
