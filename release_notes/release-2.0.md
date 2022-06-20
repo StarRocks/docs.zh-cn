@@ -1,5 +1,16 @@
 # StarRocks version 2.0
 
+## 2.0.7
+
+发布日期：2022年6月13日
+
+### Bug 修复
+
+修复了如下 Bug：
+
+- 在进行表压缩 (Compaction) 时，如果某列的任意一个值重复出现的次数超过 0x40000000，会导致 Compaction 卡住。[#6513](https://github.com/StarRocks/starrocks/issues/6513)
+- BDB JE v7.3.8 版本引入了一些问题，导致 FE 启动后磁盘 I/O 很高、磁盘使用率持续异常增长、且没有恢复迹象，回退到 BDB JE v7.3.7 版本后 FE 恢复正常。[#6634] (<https://github.com/StarRocks/starrocks/issues/6634>)
+
 ## 2.0.6
 
 发布日期：2022年5月25日
@@ -9,7 +20,7 @@
 修复了如下 Bug：
 
 - 某些图形化界面工具会自动设置 `set_sql_limit` 变量，导致 SQL 语句 ORDER BY LIMIT 被忽略，从而导致返回的数据行数不正确。[#5966](https://github.com/StarRocks/starrocks/issues/5966)
-- 从 StarRocks v2.1.1 升级到 StarRocks v2.1.6 后，JOIN 语句无法使用 Colocate Join 了。
+- 当一个 Colocation Group 中包含的表比较多、导入频率又比较高时，可能会导致该 Colocation Group 无法保持 `stable` 状态，从而导致 JOIN 语句无法使用 Colocate Join。现优化为导入数据时稍微多等一会，这样可以尽量保证导入的 Tablet 副本的完整性。
 - 少数副本由于负载较高、网络延迟等原因导致导入失败，系统会触发副本克隆操作。在这种情况下，会有一定概率引发死锁，从而可能出现进程负载极低、却有大量请求超时的现象。[#5646](https://github.com/StarRocks/starrocks/issues/5646) [#6290](https://github.com/StarRocks/starrocks/issues/6290)
 - 主键模型的表经过表结构变更以后，在数据导入时，可能会报 "duplicate key xxx" 错误。[#5878](https://github.com/StarRocks/starrocks/issues/5878)
 - 执行 DROP SCHEMA 语句，会导致直接强制删除数据库，并且删除的数据库不可恢复。[#6201](https://github.com/StarRocks/starrocks/issues/6201)
