@@ -44,6 +44,7 @@
   + [CBO优化器](/using_starrocks/Cost_based_optimizer.md)
   + [Lateral Join](/using_starrocks/Lateral_join.md)
   + [时区](/using_starrocks/timezone.md)
+  + [文件管理器](/using_starrocks/filemanager.md)
 + 参考手册
   + SQL参考
     + 用户账户管理
@@ -69,6 +70,8 @@
       + [ADMIN SHOW REPLICA STATUS](/sql-reference/sql-statements/Administration/ADMIN%20SHOW%20REPLICA%20STATUS.md)
       + [ALTER SYSTEM](/sql-reference/sql-statements/Administration/ALTER%20SYSTEM.md)
       + [CANCEL DECOMMISSION](/sql-reference/sql-statements/Administration/CANCEL%20DECOMMISSION.md)
+      + [CREATE FILE](/sql-reference/sql-statements/Administration/CREATE%20FILE.md)
+      + [DROP FILE](/sql-reference/sql-statements/Administration/DROP%20FILE.md)
       + [ENTER](/sql-reference/sql-statements/Administration/ENTER.md)
       + [INSTALL PLUGIN](/sql-reference/sql-statements/Administration/INSTALL%20PLUGIN.md)
       + [LINK DATABASE](/sql-reference/sql-statements/Administration/LINK%20DATABASE.md)
@@ -81,6 +84,7 @@
       + [SHOW MIGRATIONS](/sql-reference/sql-statements/Administration/SHOW%20MIGRATIONS.md)
       + [SHOW PLUGINS](/sql-reference/sql-statements/Administration/SHOW%20PLUGINS.md)
       + [SHOW TABLE STATUS](/sql-reference/sql-statements/Administration/SHOW%20TABLE%20STATUS.md)
+      + [SHOW FILE](/sql-reference/sql-statements/Administration/SHOW%20FILE.md)
       + [UNINSTALL PLUGIN](/sql-reference/sql-statements/Administration/UNINSTALL%20PLUGIN.md)
     + DDL
       + [ALTER DATABASE](/sql-reference/sql-statements/data-definition/ALTER%20DATABASE.md)
