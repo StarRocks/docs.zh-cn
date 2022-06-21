@@ -342,7 +342,7 @@ properties (
 * `resource`：JDBC 资源名称，必须和创建资源时指定的 JDBC 资源名称保持一致。
 * `table`：目标数据库的表名。
 
-支持的数据类型以及与 StarRocks 的数据类型映射关系，请参见[数据类型映射](./External_table.md##数据类型映射)。
+支持的数据类型以及与 StarRocks 的数据类型映射关系，请参见[数据类型映射](./External_table.md#数据类型映射)。
 
 > 说明：
 >
