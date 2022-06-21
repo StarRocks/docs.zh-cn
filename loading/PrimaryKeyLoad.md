@@ -39,7 +39,7 @@ Stream Load 和 Broker Load 导入数据的操作方式类似，根据导入的�
         http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
     # 指定 __op 列的操作类型。
     curl --location-trusted -u root: -H "label:lineorder" \
-        -H "column_separator:," -H " columns:__op ='upsert'" -T demo.csv \
+        -H "column_separator:," -H "columns:__op='upsert'" -T demo.csv \
         http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
     ```
 
