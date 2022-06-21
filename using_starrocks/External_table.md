@@ -203,6 +203,8 @@ StarRocks 2.3 及以上版本支持修改 `hive.metastore.uris`。如将资源 `
 ALTER RESOURCE 'hive0' SET PROPERTIES ("hive.metastore.uris" = "thrift://10.10.44.97:9083")
 ~~~
 
+如修改 `hive.metastore.uris` 前，已经引用该资源创建外部表来查询对应的 Apache Hive 数据，那么修改后，该外部表是不可用的。如要查询修改前对应的 Apache Hive 数据，需要引用修改后的资源重新创建外部表。
+
 <br/>
 
 ### 创建数据库
