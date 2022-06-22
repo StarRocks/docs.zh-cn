@@ -79,7 +79,7 @@ PROPERTIES
 
 #### 从 Amazon S3 导入 CSV 格式的数据
 
-```sql
+~~~sql
 LOAD LABEL example_db.label14
 (
 DATA INFILE("s3a://my_bucket/input/file.csv")
@@ -92,7 +92,7 @@ WITH BROKER my_broker
     "fs.s3a.secret.key" = "yyyyyyyyyyyyyyyyyyyy",
     "fs.s3a.endpoint" = "s3-ap-northeast-1.amazonaws.com"
 )
-```
+~~~
 
 #### 阿里云 OSS 导入示例
 
@@ -113,7 +113,7 @@ WITH BROKER my_broker
 
 #### 从腾讯云 COS 导入 CSV 格式的数据
 
-```sql
+~~~sql
 LOAD LABEL example_db.label13
 (
 DATA INFILE("cosn://my_bucket/input/file.csv")
@@ -126,7 +126,7 @@ WITH BROKER my_broker
     "fs.cosn.userinfo.secretKey" = "yyyyyyyyyyyyyyyy",
     "fs.cosn.bucket.endpoint_suffix" = "cos.ap-beijing.myqcloud.com"
 )
-```
+~~~
 
 **Label：**
 
