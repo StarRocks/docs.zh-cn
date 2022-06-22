@@ -27,7 +27,7 @@ broker进程部署可以参考手册（[部署Broker](../quick_start/Deploy.md)�
 
 ### 创建导入任务
 
-* **Apache HDFS导入示例：**
+#### Apache HDFS 导入示例
 
 ~~~sql
 LOAD LABEL db1.label1
@@ -59,7 +59,24 @@ PROPERTIES
 );
 ~~~
 
-* **阿里云 OSS导入示例：**
+#### 从 Amazon S3 导入 CSV 格式的数据
+
+```sql
+LOAD LABEL example_db.label14
+(
+DATA INFILE("s3a://my_bucket/input/file.csv")
+INTO TABLE `my_table`
+(k1, k2, k3)
+)
+WITH BROKER my_broker
+(
+    "fs.s3a.access.key" = "xxxxxxxxxxxxxxxxxxxx",
+    "fs.s3a.secret.key" = "yyyyyyyyyyyyyyyyyyyy",
+    "fs.s3a.endpoint" = "s3-ap-northeast-1.amazonaws.com"
+)
+```
+
+#### 阿里云 OSS 导入示例
 
 ~~~SQL
 LOAD LABEL example_db.label12
@@ -75,6 +92,23 @@ WITH BROKER my_broker
     "fs.oss.endpoint" = "oss-cn-zhangjiakou-internal.aliyuncs.com"
 )
 ~~~
+
+#### 从腾讯云 COS 导入 CSV 格式的数据
+
+```sql
+LOAD LABEL example_db.label13
+(
+DATA INFILE("cosn://my_bucket/input/file.csv")
+INTO TABLE `my_table`
+(k1, k2, k3)
+)
+WITH BROKER my_broker
+(
+    "fs.cosn.userinfo.secretId" = "xxxxxxxxxxxxxxxxx",
+    "fs.cosn.userinfo.secretKey" = "yyyyyyyyyyyyyyyy",
+    "fs.cosn.bucket.endpoint_suffix" = "cos.ap-beijing.myqcloud.com"
+)
+```
 
 **Label：**
 
