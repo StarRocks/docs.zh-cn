@@ -45,31 +45,7 @@ Broker Load需要借助Broker进程访问远端存储，因此使用Broker Load�
 
 ### 创建导入任务
 
-**语法：**
-
-~~~SQL
-LOAD LABEL db_name.label_name 
-    (data_desc, ...)
-WITH BROKER broker_name broker_properties
-    [PROPERTIES (key1=value1, ... )]
-
-data_desc:
-    DATA INFILE ('file_path', ...)
-    [NEGATIVE]
-    INTO TABLE tbl_name
-    [PARTITION (p1, p2)]
-    [COLUMNS TERMINATED BY column_separator ]
-    [FORMAT AS file_type]
-    [(col1, ...)]
-    [COLUMNS FROM PATH AS (colx, ...)]
-    [SET (k1=f1(xx), k2=f2(xx))]
-    [WHERE predicate]
-
-broker_properties: 
-    (key2=value2, ...)
-~~~
-
-**Apache HDFS导入示例：**
+#### Apache HDFS 导入示例
 
 ~~~sql
 LOAD LABEL db1.label1
@@ -101,7 +77,24 @@ PROPERTIES
 );
 ~~~
 
-**阿里云 OSS导入示例：**
+#### 从 Amazon S3 导入 CSV 格式的数据
+
+```sql
+LOAD LABEL example_db.label14
+(
+DATA INFILE("s3a://my_bucket/input/file.csv")
+INTO TABLE `my_table`
+(k1, k2, k3)
+)
+WITH BROKER my_broker
+(
+    "fs.s3a.access.key" = "xxxxxxxxxxxxxxxxxxxx",
+    "fs.s3a.secret.key" = "yyyyyyyyyyyyyyyyyyyy",
+    "fs.s3a.endpoint" = "s3-ap-northeast-1.amazonaws.com"
+)
+```
+
+#### 阿里云 OSS 导入示例
 
 ~~~SQL
 LOAD LABEL example_db.label12
@@ -118,8 +111,23 @@ WITH BROKER my_broker
 )
 ~~~
 
-执行`HELP BROKER LOAD`可查看创建导入作业的详细语法。这里主要介绍命令中参数的意义和注意事项。
-  
+#### 从腾讯云 COS 导入 CSV 格式的数据
+
+```sql
+LOAD LABEL example_db.label13
+(
+DATA INFILE("cosn://my_bucket/input/file.csv")
+INTO TABLE `my_table`
+(k1, k2, k3)
+)
+WITH BROKER my_broker
+(
+    "fs.cosn.userinfo.secretId" = "xxxxxxxxxxxxxxxxx",
+    "fs.cosn.userinfo.secretKey" = "yyyyyyyyyyyyyyyy",
+    "fs.cosn.bucket.endpoint_suffix" = "cos.ap-beijing.myqcloud.com"
+)
+```
+
 **Label：**
 
 导入任务的标识。每个导入任务，都有**一个数据库**内部唯一的Label。Label是用户在导入命令中自定义的名称。通过这个Label，用户可以查看对应导入任务的执行情况，并且Label可以用来防止用户导入相同的数据。当导入任务状态为FINISHED时，对应的Label就不能再次使用了。当 Label 对应的导入任务状态为CANCELLED时，**可以再次使用**该Label提交导入作业。
