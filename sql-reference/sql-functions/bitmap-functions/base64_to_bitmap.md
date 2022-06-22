@@ -36,7 +36,9 @@ PROPERTIES (
 );
 ```
 
-### Java demo
+### Java
+
+目的：生成编码后的字符串。
 
 步骤1：将StarRocks压缩包中的FE模块**spark-dpp-1.0.0.jar**，存放到本地的Maven仓库对应目录，比如：**~/.m2/repository/com/starrocks/spark-dpp/1.0.0/**。
 
@@ -85,12 +87,11 @@ public class BitmapBase64Test {
         System.out.println(encode);
 
         // 通过使用 base64_to_bitmap 函数写入数据到bitmap_table表中。
-        // Example: insert into bitmapdb.bitmap_table values('持有产品','保险',base64_to_bitmap('AjowAAABAAAAAAACABAAAAABAAIAAwA='));
     }
 }
 ```
 
-### Stream Load demo
+### Stream Load
 
 有JSON格式文件**simpledata**, 内容如下，其中编码后的`userid`来源于上面的Java示例。
 
@@ -105,7 +106,14 @@ public class BitmapBase64Test {
 - 导入JSON文件中的数据到`bitmap_table`。
 
 ```plain text
-curl --location-trusted -u root: -H "columns: c1,c2,c3,tagname=c1,tagvalue=c2,userid=base64_to_bitmap(c3)" -H "label:bitmap123" -H "format: json" -H "jsonpaths: [\"$.tagname\",\"$.tagvalue\",\"$.userid\"]" -T simpleData http://0.0.0.0:8030/api/bitmapdb/bitmap_table/_stream_load
+curl --location-trusted -u ${username}:${password} -H "columns: c1,c2,c3,tagname=c1,tagvalue=c2,userid=base64_to_bitmap(c3)" -H "format: json" -H "jsonpaths: [\"$.tagname\",\"$.tagvalue\",\"$.userid\"]" -T simpleData http://0.0.0.0:8030/api/bitmapdb/bitmap_table/_stream_load
+```
+
+- 变量解释
+
+```plain text
+${username}：登录的用户名；
+${password}：登录的密码，为空则不填。
 ```
 
 - 从`bitmap_table`表中查询数据。
