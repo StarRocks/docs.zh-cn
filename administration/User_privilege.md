@@ -56,7 +56,6 @@ CREATE USER 'jack'@['example_domain'] IDENTIFIED BY '12345';
 > * 拥有非 GLOBAL 层级 GRANT 权限的用户，不可以设置已存在用户的密码，仅能在创建用户时指定密码。
 > * 除了 root 用户自身，任何用户都不能重置 root 用户的密码。
 
-
 ```sql
 SET PASSWORD [FOR user_identity] = [PASSWORD('plain password')]|['hashed password'];
 ```
@@ -115,7 +114,7 @@ GRANT privilege_list ON RESOURCE resource_name TO user_identity [ROLE role_name]
   * ALTER_PRIV：对数据库、表的更改权限。包括重命名 库/表、添加/删除/变更 列、添加/删除 分区等操作。
   * CREATE_PRIV：创建数据库、表、视图的权限。
   * DROP_PRIV：删除数据库、表、视图的权限。
-  * USAGE_PRIV：资源的使用权限。 
+  * USAGE_PRIV：资源的使用权限。
 * `db_name`：数据库名。
 * `tbl_name`：表名。
 * `user_identity`：用户标识。
