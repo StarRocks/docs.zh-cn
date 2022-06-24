@@ -6,13 +6,15 @@ StarRocks 支持通过导入作业，对主键模型的表进行数据变更（�
 
 目前支持的导入方式有 Stream Load、Broker Load 和 Routine Load。
 
+> 说明：
+>
 > - 暂不支持通过 Spark Load 插入、更新或删除数据。
 >
-> - 暂不支持通过 SQL DML 语句（INSERT 和 UPDATE）插入、更新或删除数据，将在未来版本中支持。
+> - 暂不支持通过 SQL DML 语句（INSERT、UPDATE 和 DELETE）插入、更新或删除数据，将在未来版本中支持。
 
 导入时，所有操作默认为 UPSERT 操作，暂不支持区分 INSERT 和 UPDATE 操作。 值得注意的是，为同时支持 UPSERT 和 DELETE 操作，StarRocks 在 Stream Load 和 Broker Load 作业的创建语法中增加 `op` 字段，用于存储操作类型。在导入时，可以新增一列 `__op`，用于存储操作类型，取值为 `0` 时代表 UPSERT 操作，取值为 `1` 时代表 DELETE 操作。
 
-> 建表时无需添加列 `__op`。
+> 说明：建表时无需添加列 `__op`。
 
 ## 通过 Stream Load 或 Broker Load 变更数据
 
@@ -32,35 +34,37 @@ Stream Load 和 Broker Load 导入数据的操作方式类似，根据导入的�
 
 - 如果选择 Stream Load 导入方式，执行如下语句：
 
-    ```Bash
-    # 不指定 __op 列的操作类型。
-    curl --location-trusted -u root: -H "label:lineorder" \
-        -H "column_separator:," -T demo.csv \
-        http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
-    # 指定 __op 列的操作类型。
-    curl --location-trusted -u root: -H "label:lineorder" \
-        -H "column_separator:," -H " columns:__op ='upsert'" -T demo.csv \
-        http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
-    ```
+  ```Bash
+  # 不指定 __op 列的操作类型。
+  curl --location-trusted -u root: -H "label:lineorder" \
+      -H "column_separator:," -T demo.csv \
+      http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
+  # 指定 __op 列的操作类型。
+  curl --location-trusted -u root: -H "label:lineorder" \
+      -H "column_separator:," -H " columns:__op ='upsert'" -T demo.csv \
+      http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
+  ```
 
 - 如果选择 Broker Load 导入方式，执行如下语句：
 
-    ```SQL
-    # 不指定 __op 列的操作类型。
-    load label demo_db.label1 (
-        data infile("hdfs://localhost:9000/demo.csv")
-        into table demo_tbl1
-        format as "csv"
-    ) with broker "broker1";
-        
-    # 指定 __op 列的操作类型。
-    load label demo_db.label2 (
-        data infile("hdfs://localhost:9000/demo.csv")
-    into table demo_tbl1
-        format as "csv"
-        set (__op ='upsert')
-        ) with broker "broker1";
-    ```
+  ```SQL
+  # 不指定 __op 列的操作类型。
+  load label demo_db.label1 (
+      data infile("hdfs://localhost:9000/demo.csv")
+      into table demo_tbl1
+      columns terminated by ","
+      format as "csv"
+  ) with broker "broker1";
+    
+  # 指定 __op 列的操作类型。
+  load label demo_db.label2 (
+      data infile("hdfs://localhost:9000/demo.csv")
+      into table demo_tbl1
+      columns terminated by ","
+      format as "csv"
+      set (__op ='upsert')
+  ) with broker "broker1";
+  ```
 
 ### 示例 2
 
@@ -72,30 +76,31 @@ Stream Load 和 Broker Load 导入数据的操作方式类似，根据导入的�
 4, dddd
 ```
 
-> 注意：DELETE 操作虽然只用到主键列，但同样要提供全部的列，这一点与 UPSERT 操作要求一致。
+> 说明：DELETE 操作虽然只用到主键列，但同样要提供全部的列，这一点与 UPSERT 操作要求一致。
 
 - 如果选择 Stream Load 导入方式，执行如下语句：
-
-    ```Bash
-    curl --location-trusted -u root: -H "label:lineorder" -H "column_separator:," \
-        -H "columns:__op='delete'" -T demo.csv \
-        http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
-    ```
+  
+  ```Bash
+  curl --location-trusted -u root: -H "label:lineorder" -H "column_separator:," \
+      -H "columns:__op='delete'" -T demo.csv \
+      http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
+  ```
 
 - 如果选择 Broker Load 导入方式，执行如下语句：
 
-    ```SQL
-    load label demo_db.label3 (
-        data infile("hdfs://localhost:9000/demo.csv")
-        into table demo_tbl1
-        format as "csv"
-        set (__op ='delete')
-    ) with broker "broker1";  
-    ```
+  ```SQL
+  load label demo_db.label3 (
+      data infile("hdfs://localhost:9000/demo.csv")
+      into table demo_tbl1
+      columns terminated by ","
+      format as "csv"
+      set (__op ='delete')
+  ) with broker "broker1";  
+  ```
 
 ### 示例 3
 
-当导入的数据文件中同时包含 UPSERT 和 DELETE 操作时，需要指定额外的 `__op` 来表明操作类型。例如，想要删除 `id` 为 `1`、`4` 的行，并且添加 `id`为 `5`、`6` 的行：
+当导入的数据文件中同时包含 UPSERT 和 DELETE 操作时，需要指定额外的 `__op` 来表明操作类型。例如，想要删除 `id` 为 `1`、`4` 的行，并且添加 `id` 为 `5`、`6` 的行：
 
 ```Plain
 1,bbbb,1
@@ -104,33 +109,32 @@ Stream Load 和 Broker Load 导入数据的操作方式类似，根据导入的�
 6,ffff,0
 ```
 
-> 注意：
->
-> DELETE 操作虽然只用到主键列，但同样要提供全部的列，这一点与 UPSERT 操作要求一致。
+> 说明：DELETE 操作虽然只用到主键列，但同样要提供全部的列，这一点与 UPSERT 操作要求一致。
 
 - 如果选择 Stream Load 导入方式，执行如下语句：
-
-    ```Bash
-    curl --location-trusted -u root: -H "label:lineorder" -H "column_separator:," \
-        -H " columns: c1,c2,c3,pk=c1,col0=c2,__op=c3 " -T demo.csv \
-        http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
-    ```
+  
+  ```Bash
+  curl --location-trusted -u root: -H "label:lineorder" -H "column_separator:," \
+      -H " columns: c1,c2,c3,pk=c1,col0=c2,__op=c3 " -T demo.csv \
+      http://localhost:8030/api/demo_db/demo_tbl1/_stream_load
+  ```
 
   其中，指定了 `__op` 为第三列。
 
 - 如果选择 Broker Load 导入方式，执行如下语句：
 
-    ```Bash
-    load label demo_db.label4 (
-        data infile("hdfs://localhost:9000/demo.csv")
-        into table demo_tbl1
-        format as "csv"
-        (c1,c2,c3)
-        set (pk=c1,col0=c2,__op=c3)
-    ) with broker "broker1";
-    ```
+  ```Bash
+  load label demo_db.label4 (
+      data infile("hdfs://localhost:9000/demo.csv")
+      into table demo_tbl1
+      columns terminated by ","
+      format as "csv"
+      (c1,c2,c3)
+      set (pk=c1,col0=c2,__op=c3)
+  ) with broker "broker1";
+  ```
 
-    其中，指定了 `__op` 为第三列。
+  其中，指定了 `__op` 为第三列。
 
 更多关于 Stream Load 和 Broker Load 的使用方法，可参考 [Stream Load](/loading/StreamLoad.md) 和 [Broker Load](/loading/BrokerLoad.md)。
 
@@ -300,7 +304,7 @@ mysql > select * from demo_db.demo_tbl2;
 
 ## 部分更新【公测中】
 
-> 自 StarRocks v2.2 起，主键模型的表支持部分更新，您可以选择只更新部分指定的列。
+> 说明：自 StarRocks v2.2 起，主键模型的表支持部分更新，您可以选择只更新部分指定的列。
 
 以表 `demo` 为例，假设表 `demo` 包含 `id`、`name` 和 `age` 三列。
 
@@ -323,7 +327,7 @@ create table demo(
 4,dddd
 ```
 
-> 注意：
+> 说明：
 >
 > - 所更新的列必须包含主键列，`demo` 表中是指 `id` 列。
 >
@@ -333,50 +337,46 @@ create table demo(
 
 - 如果选择 Stream Load 导入方式，执行如下命令：
 
-    ```Bash
-    curl --location-trusted -u root: \
-        -H "label:lineorder" -H "column_separator:," \
-        -H "partial_update:true" -H "columns:id,name" \
-        -T demo.csv http://localhost:8030/api/demo/demo/_stream_load
-    ```
+  ```Bash
+  curl --location-trusted -u root: \
+      -H "label:lineorder" -H "column_separator:," \
+      -H "partial_update:true" -H "columns:id,name" \
+      -T demo.csv http://localhost:8030/api/demo/demo/_stream_load
+  ```
 
-  > 注意：需要设置 `-H "partial_update:true"`，以指定为部分列更新，并且指定所需更新的列名 `"columns:id,name"`。有关 Stream Load 的具体设置方式，可参考 [Stream Load](/loading/StreamLoad.md)。
+  > 说明：需要设置 `-H "partial_update:true"`，以指定为部分列更新，并且指定所需更新的列名 `"columns:id,name"`。有关 Stream Load 的具体设置方式，可参考 [Stream Load](/loading/StreamLoad.md)。
 
 - 如果选择 Broker Load 导入方式，执行如下命令：
 
-    ```SQL
-    load label demo.demo (
-        data infile("hdfs://localhost:9000/demo.csv")
-        into table t
-        format as "csv"
-        (c1, c2)
-        set (id=c1, name=c2)
-    ) with broker "broker1"
-    properties (
-        "partial_update" = "true"
-    );
-    ```
+  ```SQL
+  load label demo.demo (
+      data infile("hdfs://localhost:9000/demo.csv")
+      into table t
+      format as "csv"
+      (c1, c2)
+      set (id=c1, name=c2)
+  ) with broker "broker1"
+  properties (
+      "partial_update" = "true"
+  );
+  ```
 
-  > 注意：在 `properties` 中设置 `"partial_update" = "true"`，指定为部分列更新，并且指定所需更新的列名 `set (id=c1, name=c2)`。有关 Broker Load 的具体设置方式，可参考 [Broker Load](/loading/BrokerLoad.md)。
+  > 说明：在 `properties` 中设置 `"partial_update" = "true"`，指定为部分列更新，并且指定所需更新的列名 `set (id=c1, name=c2)`。有关 Broker Load 的具体设置方式，可参考 [Broker Load](/loading/BrokerLoad.md)。
 
 - 如果选择 Routine Load 导入方式，执行如下命令：
 
-    ```SQL
-    CREATE ROUTINE LOAD routine_load_demo on demo 
-    COLUMNS (id, name),
-    COLUMNS TERMINATED BY ','
-    PROPERTIES (
-        "partial_update" = "true"
-    ) FROM KAFKA (
-        "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
-        "kafka_topic" = "my_topic",
-        "kafka_partitions" = "0,1,2,3",
-        "kafka_offsets" = "101,0,0,200"
-    );
-    ```
+  ```SQL
+  CREATE ROUTINE LOAD routine_load_demo on demo 
+  COLUMNS (id, name),
+  COLUMNS TERMINATED BY ','
+  PROPERTIES (
+      "partial_update" = "true"
+  ) FROM KAFKA (
+      "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
+      "kafka_topic" = "my_topic",
+      "kafka_partitions" = "0,1,2,3",
+      "kafka_offsets" = "101,0,0,200"
+  );
+  ```
 
-  > 注意：在 `properties` 中设置 `"partial_update" = "true"`，指定为部分列更新，并且指定所需更新的列名 `COLUMNS (id, name)`。有关 Routine Load 的具体设置方式，可参考 [Routine Load](https://docs.starrocks.com/zh-cn/main/loading/RoutineLoad)。
-
-## 参考文档
-
-有关 DELETE 语句在主键模型的更多使用方法，请参考 [DELETE](/sql-reference/sql-statements/data-manipulation/DELETE.md)。
+  > 说明：在 `properties` 中设置 `"partial_update" = "true"`，指定为部分列更新，并且指定所需更新的列名 `COLUMNS (id, name)`。有关 Routine Load 的具体设置方式，可参考 [Routine Load](/loading/RoutineLoad.md)。
