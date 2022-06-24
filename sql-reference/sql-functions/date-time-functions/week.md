@@ -1,15 +1,20 @@
 # week
 
-## description
+## 功能
 
-### Syntax
+计算指定日期属于一年中的第几周。该函数与 MySQL 中的 WEEK 函数语义相同。
+
+### 语法
 
 ```Haskell
 INT WEEK(DATETIME/DATE date, INT mode)
 ```
 
-与mysql中week函数的语义相同，根据mode返回date所在，是属于该年中的第几个周。
-mode的取值范围是[0-7], 具体的语义由如下表格指定:
+### 参数说明
+
+- `date`: 支持的数据类型为 DATETIME 和 DATE。
+- `mode`: 可选，支持的数据类型为 INT。用于确定周数计算逻辑，即一周起始于周日还是周一，以及返回值的范围是0~53还是1~53。该参数取值范围0~7，默认值为`0`。如果未指定该函数，默认按照模式`0`对应的规则计算。
+具体的语义如下：
 
 ```Plain Text
 Mode    First day of week    Range    Week 1 is the first week …
@@ -23,11 +28,16 @@ Mode    First day of week    Range    Week 1 is the first week …
 7       Monday               1-53     with a Monday in this year
 ```
 
-## example
+### 返回值说明
 
-对于‘2007-01-01’, 经过查询得知是周一。
+返回 INT 类型的值。取值范围0~53，具体的范围由`mode`参数决定。
+如果`date`取值类型不合法或输入为空，则返回NULL。
 
-那么mode=0, 可以得到结果为0，此时周日是作为一周的第一天，‘2007-01-01’不能作为第一周。
+## 示例
+
+查询`2007-01-01`所在的周，`2007-01-01`是周一。
+
+- `mode`设置为`0`，返回结果为0。此时周日作为一周的第一天，`2007-01-01`不能作为第一周，因此返回`0`。
 
 ```Plain Text
 mysql> SELECT WEEK('2007-01-01', 0);
@@ -39,7 +49,7 @@ mysql> SELECT WEEK('2007-01-01', 0);
 1 row in set (0.02 sec)
 ```
 
-mode=1，得到结果为1，此时周一作为了一周的第一天。
+- `mode`设置为`1`，返回结果为`1`。此时周一作为一周的第一天。
 
 ```Plain Text
 mysql> SELECT WEEK('2007-01-01', 1);
@@ -51,7 +61,7 @@ mysql> SELECT WEEK('2007-01-01', 1);
 1 row in set (0.02 sec)
 ```
 
-mode=2, 得到结果53，此刻同样周日作为一周的第一天，但是取值范围是[1-53]，所以返回53，表示这是上一年的最后一周。
+- `mode`设置为`2`, 返回结果`53`。此时周日作为一周的第一天，但是取值范围是1~53，所以返回53，表示这是上一年的最后一周。
 
 ```Plain Text
 mysql> SELECT WEEK('2007-01-01', 2);
@@ -62,7 +72,3 @@ mysql> SELECT WEEK('2007-01-01', 2);
 +-----------------------+
 1 row in set (0.01 sec)
 ```
-
-## keyword
-
-WEEK
