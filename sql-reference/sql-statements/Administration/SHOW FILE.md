@@ -1,34 +1,31 @@
 # SHOW FILE
 
-## description
+SHOW FILE 语句用于查看保存在数据库中的文件的信息。
 
-该语句用于展示一个 database 内创建的文件
+## 语法
 
-语法：
-
-```sql
+```SQL
 SHOW FILE [FROM database];
 ```
 
-说明：
+语句返回的信息如下：
 
-``` plain text
-FileId:     文件ID，全局唯一
-DbName:     所属数据库名称
-Catalog:    自定义分类
-FileName:   文件名
-FileSize:   文件大小，单位字节
-MD5:        文件的 MD5
+- `FileId`: 文件ID，全局唯一。
+
+- `DbName`: 所属数据库。
+
+- `Catalog`: 自定义类别。
+
+- `FileName`: 文件名。
+
+- `FileSize`: 文件大小，单位字节。
+
+- `MD5`: 消息摘要算法，用于检查文件。
+
+## 示例
+
+查看保存在数据库 `my_database` 中的文件。
+
+```SQL
+SHOW FILE FROM my_database;
 ```
-
-## example
-
-1. 查看数据库 my_database 中已上传的文件
-
-    ```sql
-    SHOW FILE FROM my_database;
-    ```
-
-## keyword
-
-SHOW,FILE
