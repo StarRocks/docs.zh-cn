@@ -12,7 +12,7 @@ VARCHAR concat_ws(VARCHAR sep, VARCHAR str,...)
 
 ### 参数说明
 
-- `sep`: 分隔符，数据类型 VARCHAR.
+- `sep`: 分隔符，数据类型 VARCHAR。
 - `str`: 待拼接的字符串，数据类型 VARCHAR。该函数不会跳过空字符串，会跳过 NULL 值。
 
 ### 返回值说明
