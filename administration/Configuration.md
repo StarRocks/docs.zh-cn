@@ -293,99 +293,99 @@ BE 配置项暂不支持在线修改，生效需在 **be.conf** 中修改并重�
 
 |配置项|默认值|描述|
 |---|---|---|
-|be_port|9060|BE 上 thrift server 的端口，用于接收来自 FE 的请求。|
-|brpc_port|8060|BRPC 的端口，可以查看 BRPC 的一些网络统计信息。|
-|brpc_num_threads|-1|BRPC 的 bthreads 线程数量，-1 表示和 CPU 核数一样。|
-|priority_networks|空字符串|以 CIDR 形式 10.10.10.0/24 指定 BE IP 地址，适用于机器有多个 IP，需要指定优先使用的网络。|
-|heartbeat_service_port|9050|心跳服务端口（thrift），用户接收来自 FE 的心跳。|
-|heartbeat_service_thread_count|1|心跳线程数。|
-|create_tablet_worker_count|3|创建 tablet 的线程数。|
-|drop_tablet_worker_count|3|删除 tablet 的线程数。|
-|push_worker_count_normal_priority|3|导入线程数，处理 NORMAL 优先级任务。|
-|push_worker_count_high_priority|3|导入线程数，处理 HIGH 优先级任务。|
-|publish_version_worker_count|2|生效版本的线程数。|
-|clear_transaction_task_worker_count|1|清理事务的线程数。|
-|alter_tablet_worker_count|3|进行 schema change 的线程数。|
-|clone_worker_count|3|克隆的线程数。|
-|storage_medium_migrate_count|1|介质迁移的线程数，SATA 迁移到 SSD。|
-|check_consistency_worker_count|1|计算 tablet 的校验和 checksum。|
-|report_task_interval_seconds|10|汇报单个任务的间隔。建表，删除表，导入，schema change 都可以被认定是任务。|
-|report_disk_state_interval_seconds|60|汇报磁盘状态的间隔，单位为秒。|
-|report_tablet_interval_seconds|60|汇报 tablet 的间隔，单位为秒。|
-|alter_tablet_timeout_seconds|86400|Schema change 超时时间，单位为秒。|
-|sys_log_dir|${DORIS_HOME}/log|存放日志的目录，包括 INFO, WARNING, ERROR, FATAL 等日志。|
-|user_function_dir|${DORIS_HOME}/lib/udf|UDF 程序存放的地方。|
-|small_file_dir|${STARROCKS_HOME}/lib/small_file|保存文件管理器下载的文件的目录。|
-|sys_log_level|INFO|日志级别，INFO < WARNING < ERROR < FATAL。|
-|sys_log_roll_mode|SIZE-MB-1024|日志拆分的大小，每 1G 拆分一个日志。|
-|sys_log_roll_num|10|日志保留的数目。|
-|sys_log_verbose_modules|*|日志打印的模块，写 olap 就只打印 olap 模块下的日志。|
-|sys_log_verbose_level|10|日志显示的级别，用于控制代码中 VLOG 开头的日志输出。|
-|log_buffer_level|空字符串|日志刷盘的策略，默认保持在内存中。|
-|num_threads_per_core|3|每个 CPU core 启动的线程数。|
-|compress_rowbatches|TRUE|BE 之间 rpc 通信是否压缩 RowBatch，用于查询层之间的数据传输。|
-|serialize_batch|FALSE|BE 之间 rpc 通信是否序列化 RowBatch，用于查询层之间的数据传输。|
-|status_report_interval|5|查询汇报 profile 的间隔，用于 FE 收集查询统计信息。|
-|doris_scanner_thread_pool_thread_num|48|存储引擎并发扫描磁盘的线程数，统一管理在线程池中。|
-|doris_scanner_thread_pool_queue_size|102400|存储引擎最多接收的任务数。|
-|doris_scan_range_row_count|524288|存储引擎拆分查询任务的粒度，单位为 Byte。|
-|doris_scanner_queue_size|1024|存储引擎支持的扫描任务数。|
-|doris_scanner_row_num|16384|每个扫描线程单次执行最多返回的数据行数。|
-|doris_max_scan_key_num|1024|查询最多拆分的 scan key 数目。|
-|column_dictionary_key_ratio_threshold|0|字符串类型的取值比例，小于这个比例采用字典压缩算法。|
-|column_dictionary_key_size_threshold|0|字典压缩列大小，小于这个值采用字典压缩算法。|
-|memory_limitation_per_thread_for_schema_change|2|单个 schema change 任务允许占用的最大内存。|
-|max_unpacked_row_block_size|104857600|单个 block 最大的字节数，单位为 Byte。|
-|file_descriptor_cache_clean_interval|3600|文件句柄缓存清理的间隔，用于清理长期不用的文件句柄。|
-|disk_stat_monitor_interval|5|磁盘状态检测的间隔。|
-|unused_rowset_monitor_interval|30|清理过期 Rowset 的时间间隔。|
-|storage_root_path|空字符串|存储数据的目录。|
-|max_percentage_of_error_disk|0|磁盘错误达到一定比例，BE 退出。|
-|default_num_rows_per_data_block|1024|每个 block 的数据行数。|
-|max_tablet_num_per_shard|1024|每个 shard 的 tablet 数目，用于划分 tablet，防止单个目录下 tablet 子目录过多。|
-|pending_data_expire_time_sec|1800|存储引擎保留的未生效数据的最大时长，单位为秒。|
-|inc_rowset_expired_sec|1800|导入生效的数据，存储引擎保留的时间，用于增量克隆，单位为秒。|
-|max_garbage_sweep_interval|3600|磁盘进行垃圾清理的最大间隔。|
-|min_garbage_sweep_interval|180|磁盘进行垃圾清理的最小间隔。|
-|snapshot_expire_time_sec|172800|快照文件清理的间隔，单位为秒。|
-|trash_file_expire_time_sec|259200|回收站清理的间隔，单位为秒。|
-|row_nums_check|TRUE|Compaction 完成之后，前后 Rowset 行数对比。|
-|file_descriptor_cache_capacity|32768|文件句柄缓存的容量。|
-|min_file_descriptor_number|60000|BE 进程的文件句柄 limit 要求的下线。|
-|index_stream_cache_capacity|10737418240|BloomFilter/Min/Max 等统计信息缓存的容量。|
-|storage_page_cache_limit|20G|PageCache 的容量。|
-|disable_storage_page_cache|FALSE|是否开启 PageCache。|
-|base_compaction_start_hour|20|BaseCompaction 开启的时间。|
-|base_compaction_end_hour|7|BaseCompaction 结束的时间。|
-|base_compaction_check_interval_seconds|60|BaseCompaction 线程轮询的间隔。|
-|base_compaction_num_cumulative_deltas|5|BaseCompaction 触发条件之一：Cumulative 文件数目要达到的限制。|
-|base_compaction_num_threads_per_disk|1|每个磁盘 BaseCompaction 线程的数目。|
-|base_cumulative_delta_ratio|0.3|BaseCompaction 触发条件之一：Cumulative 文件大小达到 Base 文件的比例。|
-|base_compaction_interval_seconds_since_last_operation|86400|BaseCompaction 触发条件之一：上一轮 BaseCompaction 距今的间隔，单位为秒。|
-|cumulative_compaction_check_interval_seconds|10|CumulativeCompaction 线程轮询的间隔，单位为秒。|
-|min_cumulative_compaction_num_singleton_deltas|5|CumulativeCompaction 触发条件之一：Singleton 文件数目要达到的下限。|
-|max_cumulative_compaction_num_singleton_deltas|1000|CumulativeCompaction 触发条件之一：Singleton 文件数目要达到的上限。|
-|cumulative_compaction_write_mbytes_per_sec|100|CumulativeCompaction 写磁盘的限速，单位为 MB/秒。|
+|be_port|9060|BE 上 thrift server 的端口，用于接收来自 FE 的请求|
+|brpc_port|8060|BRPC 的端口，可以查看 BRPC 的一些网络统计信息|
+|brpc_num_threads|-1|BRPC 的 bthreads 线程数量，-1 表示和 CPU 核数一样|
+|priority_networks|空字符串|以 CIDR 形式 10.10.10.0/24 指定 BE IP 地址，适用于机器有多个 IP，需要指定优先使用的网络|
+|heartbeat_service_port|9050|心跳服务端口（thrift），用户接收来自 FE 的心跳|
+|heartbeat_service_thread_count|1|心跳线程数|
+|create_tablet_worker_count|3|创建 tablet 的线程数|
+|drop_tablet_worker_count|3|删除 tablet 的线程数|
+|push_worker_count_normal_priority|3|导入线程数，处理 NORMAL 优先级任务|
+|push_worker_count_high_priority|3|导入线程数，处理 HIGH 优先级任务|
+|publish_version_worker_count|2|生效版本的线程数|
+|clear_transaction_task_worker_count|1|清理事务的线程数|
+|alter_tablet_worker_count|3|进行 schema change 的线程数|
+|clone_worker_count|3|克隆的线程数|
+|storage_medium_migrate_count|1|介质迁移的线程数，SATA 迁移到 SSD|
+|check_consistency_worker_count|1|计算 tablet 的校验和(checksum)|
+|report_task_interval_seconds|10|汇报单个任务的间隔。建表，删除表，导入，schema change 都可以被认定是任务|
+|report_disk_state_interval_seconds|60|汇报磁盘状态的间隔。汇报各个磁盘的状态，以及上面的数据量等等|
+|report_tablet_interval_seconds|60|汇报 tablet 的间隔。汇报所有的 tablet 的最新版本|
+|alter_tablet_timeout_seconds|86400|Schema change 超时时间|
+|sys_log_dir|${DORIS_HOME}/log|存放日志的地方，包括 INFO, WARNING, ERROR, FATAL 等日志|
+|user_function_dir|${DORIS_HOME}/lib/udf|UDF 程序存放的地方|
+|small_file_dir|${STARROCKS_HOME}/lib/small_file|保存文件管理器下载的文件的目录|
+|sys_log_level|INFO|日志级别，INFO < WARNING < ERROR < FATAL|
+|sys_log_roll_mode|SIZE-MB-1024|日志拆分的大小，每 1G 拆分一个日志|
+|sys_log_roll_num|10|日志保留的数目|
+|sys_log_verbose_modules|*|日志打印的模块，写 olap 就只打印 olap 模块下的日志|
+|sys_log_verbose_level|10|日志显示的级别，用于控制代码中 VLOG 开头的日志输出|
+|log_buffer_level|空字符串|日志刷盘的策略，默认保持在内存中|
+|num_threads_per_core|3|每个 CPU core 启动的线程数|
+|compress_rowbatches|TRUE|BE 之间 rpc 通信是否压缩 RowBatch，用于查询层之间的数据传输|
+|serialize_batch|FALSE|BE 之间 rpc 通信是否序列化 RowBatch，用于查询层之间的数据传输|
+|status_report_interval|5|查询汇报 profile 的间隔，用于 FE 收集查询统计信息|
+|doris_scanner_thread_pool_thread_num|48|存储引擎并发扫描磁盘的线程数，统一管理在线程池中|
+|doris_scanner_thread_pool_queue_size|102400|存储引擎最多接收的任务数|
+|doris_scan_range_row_count|524288|存储引擎拆分查询任务的粒度，512K|
+|doris_scanner_queue_size|1024|存储引擎支持的扫描任务数|
+|doris_scanner_row_num|16384|每个扫描线程单次执行最多返回的数据行数|
+|doris_max_scan_key_num|1024|查询最多拆分的 scan key 数目|
+|column_dictionary_key_ratio_threshold|0|字符串类型的取值比例，小于这个比例采用字典压缩算法|
+|column_dictionary_key_size_threshold|0|字典压缩列大小，小于这个值采用字典压缩算法|
+|memory_limitation_per_thread_for_schema_change|2|单个 schema change 任务允许占用的最大内存|
+|max_unpacked_row_block_size|104857600|单个 block 最大的字节数，100MB|
+|file_descriptor_cache_clean_interval|3600|文件句柄缓存清理的间隔，用于清理长期不用的文件句柄|
+|disk_stat_monitor_interval|5|磁盘状态检测的间隔|
+|unused_rowset_monitor_interval|30|清理过期 Rowset 的时间间隔|
+|storage_root_path|空字符串|存储数据的目录|
+|max_percentage_of_error_disk|0|磁盘错误达到一定比例，BE 退出|
+|default_num_rows_per_data_block|1024|每个 block 的数据行数|
+|max_tablet_num_per_shard|1024|每个 shard 的 tablet 数目，用于划分 tablet，防止单个目录下 tablet 子目录过多|
+|pending_data_expire_time_sec|1800|存储引擎保留的未生效数据的最大时长|
+|inc_rowset_expired_sec|1800|导入生效的数据，存储引擎保留的时间，用于增量克隆|
+|max_garbage_sweep_interval|3600|磁盘进行垃圾清理的最大间隔|
+|min_garbage_sweep_interval|180|磁盘进行垃圾清理的最小间隔|
+|snapshot_expire_time_sec|172800|快照文件清理的间隔，48 个小时|
+|trash_file_expire_time_sec|259200|回收站清理的间隔，72 个小时|
+|row_nums_check|TRUE|Compaction 完成之后，前后 Rowset 行数对比|
+|file_descriptor_cache_capacity|32768|文件句柄缓存的容量|
+|min_file_descriptor_number|60000|BE 进程的文件句柄 limit 要求的下线|
+|index_stream_cache_capacity|10737418240|BloomFilter/Min/Max 等统计信息缓存的容量|
+|storage_page_cache_limit|20G|PageCache 的容量|
+|disable_storage_page_cache|FALSE|是否开启 PageCache|
+|base_compaction_start_hour|20|BaseCompaction 开启的时间|
+|base_compaction_end_hour|7|BaseCompaction 结束的时间|
+|base_compaction_check_interval_seconds|60|BaseCompaction 线程轮询的间隔|
+|base_compaction_num_cumulative_deltas|5|BaseCompaction 触发条件之一：Cumulative 文件数目要达到的限制|
+|base_compaction_num_threads_per_disk|1|每个磁盘 BaseCompaction 线程的数目|
+|base_cumulative_delta_ratio|0.3|BaseCompaction 触发条件之一：Cumulative 文件大小达到 Base 文件的比例|
+|base_compaction_interval_seconds_since_last_operation|86400|BaseCompaction 触发条件之一：上一轮 BaseCompaction 距今的间隔|
+|cumulative_compaction_check_interval_seconds|10|CumulativeCompaction 线程轮询的间隔|
+|min_cumulative_compaction_num_singleton_deltas|5|CumulativeCompaction 触发条件之一：Singleton 文件数目要达到的下限|
+|max_cumulative_compaction_num_singleton_deltas|1000|CumulativeCompaction 触发条件之一：Singleton 文件数目要达到的上限|
+|cumulative_compaction_write_mbytes_per_sec|100|CumulativeCompaction 写磁盘的限速|
 |min_compaction_failure_interval_sec|600|Tablet Compaction 失败之后，再次被调度的间隔。|
 |max_compaction_concurrency|4|BaseCompaction + CumulativeCompaction 的最大并发， -1 代表没有限制。|
-|compaction_trace_threshold|60|单次 Compaction 打印 trace 的时间阈值，如果单次 compaction 时间超过该阈值就打印 trace，单位为秒。|
-|webserver_port|8040|Http Server 端口。|
-|webserver_num_workers|5|Http Server 线程数。|
-|periodic_counter_update_period_ms|500|Counter 统计信息的间隔，单位为 ms。|
-|load_data_reserve_hours|4|小批量导入生成的文件保留的时间，单位为小时。|
-|load_error_log_reserve_hours|48|导入数据信息保留的时长，单位为小时。|
-|number_tablet_writer_threads|16|流式导入的线程数。|
-|streaming_load_max_mb|10240|流式导入单个文件大小的上限。|
-|streaming_load_rpc_max_alive_time_sec|1200|流式导入 RPC 的超时时间，单位为秒。|
-|tablet_writer_rpc_timeout_sec|600|TabletWriter 的超时时长，单位为秒。|
-|fragment_pool_thread_num|64|查询线程数，默认启动 64 个线程，后续查询请求动态创建线程。|
-|fragment_pool_queue_size|1024|单节点上能够处理的查询请求上限。|
-|enable_partitioned_hash_join|FALSE|使用 PartitionHashJoin。|
-|enable_partitioned_aggregation|TRUE|使用 PartitionAggregation。|
-|enable_token_check|TRUE|Token 开启检验。|
-|enable_prefetch|TRUE|查询提前预取。|
-|load_process_max_memory_limit_bytes|107374182400|单节点上所有的导入线程占据的内存上限，单位为 Byte。|
-|load_process_max_memory_limit_percent|80|单节点上所有的导入线程占据的内存上限比例，单位为 Byte。|
+|compaction_trace_threshold|60|单次 Compaction 打印 trace 的时间阈值，如果单次 compaction 时间超过该阈值就打印 trace，单位为秒|
+|webserver_port|8040|Http Server 端口|
+|webserver_num_workers|5|Http Server 线程数|
+|periodic_counter_update_period_ms|500|Counter 统计信息的间隔|
+|load_data_reserve_hours|4|小批量导入生成的文件保留的时间|
+|load_error_log_reserve_hours|48|导入数据信息保留的时长|
+|number_tablet_writer_threads|16|流式导入的线程数|
+|streaming_load_max_mb|10240|流式导入单个文件大小的上限|
+|streaming_load_rpc_max_alive_time_sec|1200|流式导入 RPC 的超时时间|
+|tablet_writer_rpc_timeout_sec|600|TabletWriter 的超时时长|
+|fragment_pool_thread_num|64|查询线程数，默认启动 64 个线程，后续查询请求动态创建线程|
+|fragment_pool_queue_size|1024|单节点上能够处理的查询请求上限|
+|enable_partitioned_hash_join|FALSE|使用 PartitionHashJoin|
+|enable_partitioned_aggregation|TRUE|使用 PartitionAggregation|
+|enable_token_check|TRUE|Token 开启检验|
+|enable_prefetch|TRUE|查询提前预取|
+|load_process_max_memory_limit_bytes|107374182400|单节点上所有的导入线程占据的内存上限，100GB|
+|load_process_max_memory_limit_percent|80|单节点上所有的导入线程占据的内存上限比例，100GB|
 |sync_tablet_meta|FALSE|存储引擎是否开 sync 保留到磁盘上。|
 |thrift_rpc_timeout_ms|5000|Thrift 超时的时长，单位为 ms。|
 |txn_commit_rpc_timeout_ms|10000|Txn 超时的时长，单位为 ms。|
@@ -418,7 +418,7 @@ Broker 配置项暂不支持在线修改，生效需在 **broker.conf** 中修�
 
 |参数名称|描述|建议值|修改方式|
 |---|---|---|---|
-|Overcommit|不建议使用 Overcommit。|1|echo 1 \| sudo tee /proc/sys/vm/overcommit_memory|
+|Overcommit|建议使用 Overcommit。|1|echo 1 \| sudo tee /proc/sys/vm/overcommit_memory|
 |Huge Pages|禁止 transparent huge pages，这个会干扰内存分配器，导致性能下降。|madvise|echo 'madvise' \| sudo tee /sys/kernel/mm/transparent_hugepage/enabled|
 |Swappiness|关闭交换区，消除交换内存到虚拟内存时对性能的扰动。|0|echo 0 \| sudo tee /proc/sys/vm/swappiness|
 

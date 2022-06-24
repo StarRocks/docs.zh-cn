@@ -1,6 +1,6 @@
 # 导入和查询数据
 
-本文档介绍如何在 StarRocks 中导入和查询数据。
+本文介绍如何在 StarRocks 中导入和查询数据。
 
 ## 导入数据
 
@@ -97,7 +97,7 @@ StarRocks 支持创建 [逻辑视图](/sql-reference/sql-statements/data-definit
 
 ### 外部表
 
-StarRocks 支持多种外部表：[MySQL 外部表](/using_starrocks/External_table.md#MySQL外部表)，[Elasticsearch 外部表](/using_starrocks/External_table.md#Elasticsearch外部表)，[Apache Hive™ 外表](/using_starrocks/External_table.md#Hive外表)，[StarRocks 外部表](/using_starrocks/External_table.md#StarRocks外部表)，[Apache Iceberg 外表](/using_starrocks/External_table.md#apache-iceberg%E5%A4%96%E8%A1%A8)，[Apache Hudi 外表](/using_starrocks/External_table.md#apache-hudi-外表)。成功创建外部表后，可通过查询外部表的方式接入其他数据源。
+StarRocks 支持多种外部表：[MySQL 外部表](/using_starrocks/External_table.md#mysql-外部表)，[Elasticsearch 外部表](/using_starrocks/External_table.md#elasticsearch-外部表)，[Apache Hive™ 外表](/using_starrocks/External_table.md#hive-外表)，[StarRocks 外部表](/using_starrocks/External_table.md#starrocks-外部表)，[Apache Iceberg 外表](/using_starrocks/External_table.md#apache-iceberg-外表)，[Apache Hudi 外表](/using_starrocks/External_table.md#apache-hudi-外表)。成功创建外部表后，可通过查询外部表的方式接入其他数据源。
 
 ## 慢查询分析
 
@@ -119,11 +119,14 @@ explain costs select * from detailDemo;
 
 * 开启 Profile 上报。
 
+> 注意：通过此方式设置 Profile 上报仅在当前 session 生效。
+
 ```sql
 set is_report_success = true;
 ```
 
 * 社区版用户可以通过 `http:FE_IP:FE_HTTP_PORT/query` 查看当前的查询和 Profile 信息。
-* 企业版用户可以在 StarRocksManager 的查询页面查看图形化 Profile 展示，点击查询链接可以在 **执行时间** 页面看到树状展示，并可以在 **执行详情** 页面看到完整的 Profile 详细信息。如果以上方法仍达不到预期，您可以发送执行详情页面的文本到社区或者技术支持群以寻求帮助。
+* 企业版用户可以在 StarRocks Manager 的查询页面查看图形化 Profile 展示，点击查询链接可以在 **执行时间** 页面看到树状展示，并可以在 **执行详情** 页面看到完整的 Profile 详细信息。如果以上方法仍达不到预期，您可以发送执行详情页面的文本到社区或者技术支持群以寻求帮助。
 
+> 注意：如果通过 StarRocks Manager 查看 profile, 在配置 StarRocks Manager 时需要在**ADMIN SET FRONTEND CONFIG**命令里设置FE参数 `enable_collect_query_detail_info`为`true`。
 > 有关 Plan 和 Profile 的详细介绍，参考 [查询分析](../administration/Query_planning.md) 和 [性能优化](../administration/Profiling.md) 章节。
