@@ -41,6 +41,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |max_backend_down_time_second|3600|BE 和 FE 失联之后，FE 容忍 BE 重新加回来的最长时间，单位为秒。|
 |drop_backend_after_decommission|TRUE|BE 被下线后，是否删除该 BE。|
 |catalog_try_lock_timeout_ms|5000|Catalog Lock 获取的超时时长，单位为 ms。|
+|enable_collect_query_detail_info|false|否需要查看查询的 profile。|
 
 * **Query Engine**
 
@@ -117,8 +118,6 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |capacity_used_percent_high_water|0.75|BE 上磁盘使用容量的度量值，超过 0.75 之后，尽量不在往这个 tablet 上发送建表，克隆的任务，直到恢复正常。|
 |storage_high_watermark_usage_percent|85|BE 存储目录下空间使用率的最大值。|
 |storage_min_left_capacity_bytes|2 *1024\* 1024\*1024|BE 存储目录下剩余空间的最小值，单位为 Byte。|
-|storage_flood_stage_left_capacity_bytes|1 *1024\* 1024\*1024|如果剩余空间小于该值，会拒绝 Load Restore 作业，单位为 Byte。|
-|storage_flood_stage_usage_percent|95|如果空间使用率超过该值，会拒绝 Load 和 Restore 作业。|
 |catalog_trash_expire_second|86400|删表/数据库之后，元数据在回收站中保留的时长，超过这个时长，数据就不可以在恢复，单位为秒。|
 |alter_table_timeout_second|86400|Schema change 超时时间，单位为秒。|
 |balance_load_disk_safe_threshold|0.5|disk_and_tablet 策略有效。如果所有 BE 的磁盘使用率低于 50%，认为磁盘使用均衡。|
@@ -289,7 +288,104 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 
 ## BE 配置项
 
-BE 配置项暂不支持在线修改，生效需在 **be.conf** 中修改并重启 BE 服务。
+部分 BE 节点配置项为动态参数，您可以通过命令在线修改。其他配置项为静态参数，需要通过修改 **be.conf** 文件后重启 FE 服务使相关修改生效。
+
+### 配置 BE 动态参数
+
+您可以通过 `curl` 命令在线修改 BE 节点动态参数。
+
+~~~shell
+curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
+~~~
+
+以下是 BE 动态参数列表：
+
+|配置项|默认值|描述|
+|-----|-----|----|
+|tc_use_memory_min |10737418240 |TCmalloc 最小预留内存，小于该值，StarRocks 不会将空闲内存返还给操作系统。 |
+|tc_free_memory_rate |20| |
+|tc_gc_period  |60| |
+|report_task_interval_seconds|10|汇报单个任务的间隔。建表，删除表，导入，schema change 都可以被认定是任务。|
+|report_disk_state_interval_seconds|60|汇报磁盘状态的间隔。汇报各个磁盘的状态，以及其中数据量等。|
+|report_tablet_interval_seconds|60|汇报 tablet 的间隔。汇报所有的 tablet 的最新版本。|
+|report_workgroup_interval_seconds |5| |
+|max_download_speed_kbps|50000| |
+|download_low_speed_limit_kbps|50| |
+|download_low_speed_time|300| |
+|status_report_interval|5|查询汇报 profile 的间隔，用于 FE 收集查询统计信息|
+|doris_scanner_thread_pool_thread_num|48|存储引擎并发扫描磁盘的线程数，统一管理在线程池中。|
+|thrift_client_retry_interval_ms   |100| |
+|doris_scan_range_row_count|524288|存储引擎拆分查询任务的粒度，默认为 512K。|
+|doris_scanner_queue_size|1024|存储引擎支持的扫描任务数。|
+|doris_scanner_row_num|16384|每个扫描线程单次执行最多返回的数据行数。|
+|doris_max_scan_key_num|1024|查询最多拆分的 scan key 数目。|
+|max_pushdown_conditions_per_column|1024| |
+|doris_max_pushdown_conjuncts_return_rate |90| |
+|exchg_node_buffer_size_bytes|10485760    | |
+|column_dictionary_key_ratio_threshold|0|字符串类型的取值比例，小于这个比例采用字典压缩算法。|
+|column_dictionary_key_size_threshold|0|字典压缩列大小，小于这个值采用字典压缩算法。|
+|memory_limitation_per_thread_for_schema_change|2|单个 schema change 任务允许占用的最大内存。|
+|update_cache_expire_sec|360| |
+|file_descriptor_cache_clean_interval|3600|文件句柄缓存清理的间隔，用于清理长期不用的文件句柄。|
+|disk_stat_monitor_interval|5|磁盘状态检测的间隔。|
+|unused_rowset_monitor_interval|30|清理过期 Rowset 的时间间隔。|
+|max_percentage_of_error_disk|0|磁盘错误达到一定比例，BE 退出。|
+|default_num_rows_per_column_file_block |1024| |
+|pending_data_expire_time_sec|1800|存储引擎保留的未生效数据的最大时长。|
+|inc_rowset_expired_sec|1800|导入生效的数据，存储引擎保留的时间，用于增量克隆。|
+|tablet_rowset_stale_sweep_time_sec|1800| |
+|snapshot_expire_time_sec|172800|快照文件清理的间隔，默认 48 个小时。|
+|trash_file_expire_time_sec|259200|回收站清理的间隔，默认 72 个小时。|
+|base_compaction_check_interval_seconds|60|BaseCompaction 线程轮询的间隔。|
+|min_base_compaction_num_singleton_deltas |5| |
+|max_base_compaction_num_singleton_deltas |100| |
+|base_compaction_interval_seconds_since_last_operation|86400|BaseCompaction 触发条件之一：上一轮 BaseCompaction 距今的间隔。|
+|base_compaction_write_mbytes_per_sec   |5| |
+|cumulative_compaction_check_interval_seconds|10|CumulativeCompaction 线程轮询的间隔。|
+|min_cumulative_compaction_num_singleton_deltas|5|CumulativeCompaction 触发条件之一：Singleton 文件数目要达到的下限|
+|max_cumulative_compaction_num_singleton_deltas|1000|CumulativeCompaction 触发条件之一：Singleton 文件数目要达到的上限|
+|cumulative_compaction_budgeted_bytes   |104857600   | |
+|cumulative_compaction_skip_window_seconds|30| |
+|update_compaction_check_interval_seconds |60| |
+|min_compaction_failure_interval_sec|600|Tablet Compaction 失败之后，再次被调度的间隔。|
+|base_compaction_trace_threshold   |120| |
+|cumulative_compaction_trace_threshold  |60| |
+|update_compaction_trace_threshold |20| |
+|periodic_counter_update_period_ms|500|Counter 统计信息的间隔。|
+|load_error_log_reserve_hours|48|导入数据信息保留的时长。|
+|streaming_load_max_mb|10240|流式导入单个文件大小的上限。|
+|streaming_load_max_batch_size_mb  |100| |
+|olap_table_sink_send_interval_ms  |10| |
+|memory_maintenance_sleep_time_s   |10| |
+|write_buffer_size  |104857600   | |
+|tablet_stat_cache_update_interval_second |300| |
+|result_buffer_cancelled_interval_time  |300| |
+|priority_queue_remaining_tasks_increased_frequency    |512| |
+|thrift_rpc_timeout_ms|5000|Thrift 超时的时长，单位为 ms。|
+|txn_commit_rpc_timeout_ms|10000|Txn 超时的时长，单位为 ms。|
+|max_consumer_num_per_group|3| |
+|max_memory_sink_batch_count|20| |
+|scan_context_gc_interval_min|5| |
+|path_gc_check_step |1000| |
+|path_gc_check_step_interval_ms    |10| |
+|path_scan_interval_second|86400| |
+|storage_flood_stage_left_capacity_bytes|1073741824|如果剩余空间小于该值，会拒绝 Load Restore 作业，单位为 Byte。|
+|storage_flood_stage_usage_percent|95|如果空间使用率超过该值，会拒绝 Load 和 Restore 作业。|
+|tablet_meta_checkpoint_min_new_rowsets_num|10|TabletMeta Checkpoint 的最小 Rowset 数目。|
+|tablet_meta_checkpoint_min_interval_secs|600|TabletMeta Checkpoint 线程轮询的时间间隔，单位为秒。|
+|max_runnings_transactions_per_txn_map  |100| |
+|sys_minidump_max_files|16| |
+|sys_minidump_limit |20480| |
+|sys_minidump_interval|600| |
+|tablet_max_pending_versions|1000| |
+|max_hdfs_file_handle |1000| |
+|parquet_buffer_stream_reserve_size|1048576| |
+|experimental_s3_max_single_part_size   |16777216    | |
+|experimental_s3_min_upload_part_size   |16777216    | |
+
+### BE 静态参数
+
+以下 BE 配置项为静态参数，不支持在线修改，您需要在 **be.conf** 中修改并重启 BE 服务。
 
 |配置项|默认值|描述|
 |---|---|---|
@@ -309,9 +405,6 @@ BE 配置项暂不支持在线修改，生效需在 **be.conf** 中修改并重�
 |clone_worker_count|3|克隆的线程数|
 |storage_medium_migrate_count|1|介质迁移的线程数，SATA 迁移到 SSD|
 |check_consistency_worker_count|1|计算 tablet 的校验和(checksum)|
-|report_task_interval_seconds|10|汇报单个任务的间隔。建表，删除表，导入，schema change 都可以被认定是任务|
-|report_disk_state_interval_seconds|60|汇报磁盘状态的间隔。汇报各个磁盘的状态，以及上面的数据量等等|
-|report_tablet_interval_seconds|60|汇报 tablet 的间隔。汇报所有的 tablet 的最新版本|
 |alter_tablet_timeout_seconds|86400|Schema change 超时时间|
 |sys_log_dir|${DORIS_HOME}/log|存放日志的地方，包括 INFO, WARNING, ERROR, FATAL 等日志|
 |user_function_dir|${DORIS_HOME}/lib/udf|UDF 程序存放的地方|
@@ -325,30 +418,19 @@ BE 配置项暂不支持在线修改，生效需在 **be.conf** 中修改并重�
 |num_threads_per_core|3|每个 CPU core 启动的线程数|
 |compress_rowbatches|TRUE|BE 之间 rpc 通信是否压缩 RowBatch，用于查询层之间的数据传输|
 |serialize_batch|FALSE|BE 之间 rpc 通信是否序列化 RowBatch，用于查询层之间的数据传输|
-|status_report_interval|5|查询汇报 profile 的间隔，用于 FE 收集查询统计信息|
-|doris_scanner_thread_pool_thread_num|48|存储引擎并发扫描磁盘的线程数，统一管理在线程池中|
 |doris_scanner_thread_pool_queue_size|102400|存储引擎最多接收的任务数|
 |doris_scan_range_row_count|524288|存储引擎拆分查询任务的粒度，512K|
-|doris_scanner_queue_size|1024|存储引擎支持的扫描任务数|
 |doris_scanner_row_num|16384|每个扫描线程单次执行最多返回的数据行数|
 |doris_max_scan_key_num|1024|查询最多拆分的 scan key 数目|
-|column_dictionary_key_ratio_threshold|0|字符串类型的取值比例，小于这个比例采用字典压缩算法|
-|column_dictionary_key_size_threshold|0|字典压缩列大小，小于这个值采用字典压缩算法|
 |memory_limitation_per_thread_for_schema_change|2|单个 schema change 任务允许占用的最大内存|
 |max_unpacked_row_block_size|104857600|单个 block 最大的字节数，100MB|
 |file_descriptor_cache_clean_interval|3600|文件句柄缓存清理的间隔，用于清理长期不用的文件句柄|
-|disk_stat_monitor_interval|5|磁盘状态检测的间隔|
-|unused_rowset_monitor_interval|30|清理过期 Rowset 的时间间隔|
 |storage_root_path|空字符串|存储数据的目录|
 |max_percentage_of_error_disk|0|磁盘错误达到一定比例，BE 退出|
 |default_num_rows_per_data_block|1024|每个 block 的数据行数|
 |max_tablet_num_per_shard|1024|每个 shard 的 tablet 数目，用于划分 tablet，防止单个目录下 tablet 子目录过多|
-|pending_data_expire_time_sec|1800|存储引擎保留的未生效数据的最大时长|
-|inc_rowset_expired_sec|1800|导入生效的数据，存储引擎保留的时间，用于增量克隆|
 |max_garbage_sweep_interval|3600|磁盘进行垃圾清理的最大间隔|
 |min_garbage_sweep_interval|180|磁盘进行垃圾清理的最小间隔|
-|snapshot_expire_time_sec|172800|快照文件清理的间隔，48 个小时|
-|trash_file_expire_time_sec|259200|回收站清理的间隔，72 个小时|
 |row_nums_check|TRUE|Compaction 完成之后，前后 Rowset 行数对比|
 |file_descriptor_cache_capacity|32768|文件句柄缓存的容量|
 |min_file_descriptor_number|60000|BE 进程的文件句柄 limit 要求的下线|
@@ -357,25 +439,16 @@ BE 配置项暂不支持在线修改，生效需在 **be.conf** 中修改并重�
 |disable_storage_page_cache|FALSE|是否开启 PageCache|
 |base_compaction_start_hour|20|BaseCompaction 开启的时间|
 |base_compaction_end_hour|7|BaseCompaction 结束的时间|
-|base_compaction_check_interval_seconds|60|BaseCompaction 线程轮询的间隔|
 |base_compaction_num_cumulative_deltas|5|BaseCompaction 触发条件之一：Cumulative 文件数目要达到的限制|
 |base_compaction_num_threads_per_disk|1|每个磁盘 BaseCompaction 线程的数目|
 |base_cumulative_delta_ratio|0.3|BaseCompaction 触发条件之一：Cumulative 文件大小达到 Base 文件的比例|
-|base_compaction_interval_seconds_since_last_operation|86400|BaseCompaction 触发条件之一：上一轮 BaseCompaction 距今的间隔|
-|cumulative_compaction_check_interval_seconds|10|CumulativeCompaction 线程轮询的间隔|
-|min_cumulative_compaction_num_singleton_deltas|5|CumulativeCompaction 触发条件之一：Singleton 文件数目要达到的下限|
-|max_cumulative_compaction_num_singleton_deltas|1000|CumulativeCompaction 触发条件之一：Singleton 文件数目要达到的上限|
 |cumulative_compaction_write_mbytes_per_sec|100|CumulativeCompaction 写磁盘的限速|
-|min_compaction_failure_interval_sec|600|Tablet Compaction 失败之后，再次被调度的间隔。|
 |max_compaction_concurrency|4|BaseCompaction + CumulativeCompaction 的最大并发， -1 代表没有限制。|
 |compaction_trace_threshold|60|单次 Compaction 打印 trace 的时间阈值，如果单次 compaction 时间超过该阈值就打印 trace，单位为秒|
 |webserver_port|8040|Http Server 端口|
 |webserver_num_workers|5|Http Server 线程数|
-|periodic_counter_update_period_ms|500|Counter 统计信息的间隔|
 |load_data_reserve_hours|4|小批量导入生成的文件保留的时间|
-|load_error_log_reserve_hours|48|导入数据信息保留的时长|
 |number_tablet_writer_threads|16|流式导入的线程数|
-|streaming_load_max_mb|10240|流式导入单个文件大小的上限|
 |streaming_load_rpc_max_alive_time_sec|1200|流式导入 RPC 的超时时间|
 |tablet_writer_rpc_timeout_sec|600|TabletWriter 的超时时长|
 |fragment_pool_thread_num|64|查询线程数，默认启动 64 个线程，后续查询请求动态创建线程|
@@ -387,11 +460,7 @@ BE 配置项暂不支持在线修改，生效需在 **be.conf** 中修改并重�
 |load_process_max_memory_limit_bytes|107374182400|单节点上所有的导入线程占据的内存上限，100GB|
 |load_process_max_memory_limit_percent|80|单节点上所有的导入线程占据的内存上限比例，100GB|
 |sync_tablet_meta|FALSE|存储引擎是否开 sync 保留到磁盘上。|
-|thrift_rpc_timeout_ms|5000|Thrift 超时的时长，单位为 ms。|
-|txn_commit_rpc_timeout_ms|10000|Txn 超时的时长，单位为 ms。|
 |routine_load_thread_pool_size|10|例行导入的线程池数目。|
-|tablet_meta_checkpoint_min_new_rowsets_num|10|TabletMeta Checkpoint 的最小 Rowset 数目。|
-|tablet_meta_checkpoint_min_interval_secs|600|TabletMeta Checkpoint 线程轮询的时间间隔，单位为秒。|
 |default_rowset_type|ALPHA|存储引擎的格式，默认新 ALPHA，后面会替换成 BETA。|
 |brpc_max_body_size|209715200|BRPC 最大的包容量，单位为 Byte。|
 |max_runnings_transactions|2000|存储引擎支持的最大事务数。|
@@ -412,23 +481,23 @@ Broker 配置项暂不支持在线修改，生效需在 **broker.conf** 中修�
 
 |参数名称|描述|建议值|修改方式|
 |---|---|---|---|
-|performance|scaling governor 用于控制 CPU 的能耗模式，默认是 on-demand 模式，使用 performance 能耗最高，性能也最好，StarRocks 部署建议采用 performance 模式。|performance|echo 'performance' \| sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor|
+|performance|scaling governor 用于控制 CPU 的能耗模式，默认是 on-demand 模式，使用 performance 能耗最高，性能也最好，StarRocks 部署建议采用 performance 模式。|performance|echo 'performance' \|sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor|
 
 * **内存**
 
 |参数名称|描述|建议值|修改方式|
 |---|---|---|---|
-|Overcommit|建议使用 Overcommit。|1|echo 1 \| sudo tee /proc/sys/vm/overcommit_memory|
-|Huge Pages|禁止 transparent huge pages，这个会干扰内存分配器，导致性能下降。|madvise|echo 'madvise' \| sudo tee /sys/kernel/mm/transparent_hugepage/enabled|
-|Swappiness|关闭交换区，消除交换内存到虚拟内存时对性能的扰动。|0|echo 0 \| sudo tee /proc/sys/vm/swappiness|
+|Overcommit|建议使用 Overcommit。|1|echo 1 \|sudo tee /proc/sys/vm/overcommit_memory|
+|Huge Pages|禁止 transparent huge pages，这个会干扰内存分配器，导致性能下降。|madvise|echo 'madvise' \|sudo tee /sys/kernel/mm/transparent_hugepage/enabled|
+|Swappiness|关闭交换区，消除交换内存到虚拟内存时对性能的扰动。|0|echo 0 \|sudo tee /proc/sys/vm/swappiness|
 
 * **磁盘**
 
 |参数名称|描述|建议值|修改方式|
 |---|---|---|---|
-|SATA|mq-deadline 调度算法会排序和合并 I/O 请求，适合 SATA 磁盘。|mq-deadline|echo mq-deadline \| sudo tee /sys/block/vdb/queue/scheduler|
-|调度算法|kyber 调度算法适用于延迟低的设备，例如 NVME/SSD|kyber。|echo kyber \| sudo tee /sys/block/vdb/queue/scheduler|
-|调度算法|如果系统不支持 kyber，建议使用 none 调度算法。|none|echo none \| sudo tee /sys/block/vdb/queue/scheduler|
+|SATA|mq-deadline 调度算法会排序和合并 I/O 请求，适合 SATA 磁盘。|mq-deadline|echo mq-deadline \|sudo tee /sys/block/vdb/queue/scheduler|
+|调度算法|kyber 调度算法适用于延迟低的设备，例如 NVME/SSD|kyber。|echo kyber \|sudo tee /sys/block/vdb/queue/scheduler|
+|调度算法|如果系统不支持 kyber，建议使用 none 调度算法。|none|echo none \|sudo tee /sys/block/vdb/queue/scheduler|
 
 * **网络**
 
@@ -440,8 +509,8 @@ Broker 配置项暂不支持在线修改，生效需在 **broker.conf** 中修�
 
 ~~~shell
 df -Th
-Filesystem     Type      Size  Used Avail Use% Mounted on
-/dev/vdb1      ext4     1008G  903G   55G  95% /home/disk1
+FilesystemTypeSize  Used Avail Use% Mounted on
+/dev/vdb1ext41008G  903G   55G  95% /home/disk1
 ~~~
 
 * **高并发配置**
@@ -468,5 +537,5 @@ ulimit -u 40960
 
 |参数名称|建议值|修改方式|
 |---|---|---|
-|tcp abort on overflow|1|echo 1 \| sudo tee /proc/sys/net/ipv4/tcp_abort_on_overflow|
-|somaxconn|1024|echo 1024 | sudo tee /proc/sys/net/core/somaxconn|
+|tcp abort on overflow|1|echo 1 \|sudo tee /proc/sys/net/ipv4/tcp_abort_on_overflow|
+|somaxconn|1024|echo 1024 |sudo tee /proc/sys/net/core/somaxconn|
