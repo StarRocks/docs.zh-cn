@@ -8,13 +8,14 @@
 
 同时，StarRocks 还支持对慢查询中的 SQL 语句进行归类，并为各类 SQL 语句计算出 SQL 指纹。
 
+
 ## 查看分析 Query Plan
 
 SQL 语句在 StarRocks 中的生命周期可以分为查询解析（Query Parsing）、规划（Query Plan）、执行（Query Execution）三个阶段。通常对于 StarRocks 而言，查询解析不会成为查询性能的瓶颈，因为分析型需求的 QPS 普遍不高。
 
 决定 StarRocks 中查询性能的关键就在于查询规划（Query Plan）和查询执行（Query Execution），二者的关系可以描述为 Query Plan 负责组织算子（Join/Order/Aggregation）之间的关系，Query Exectuion 负责执行具体算子。
 
-Query Plan 可以为数据库管理者提供一个宏观的视角，从而获取查询执行的相关信息。优秀的 Query Plan 很大程度上决定了查询的性能，所以数据库管理者需要频繁查看 Query Plan，以确保其是否生成得当。
+Query Plan 可以为数据库管理者提供一个宏观的视角，从而获取查询执行的相关信息。优秀的 Query Plan 很大程度上决定了查询的性能，所以数据库管理者需要频繁查看 Query Plan，以确保其是否生成得当。本章以TPC-DS的query96为例，展示如何查看StarRocks的Query Plan。
 
 以下示例以 TPCDS 的 query96 为例，展示如何查看分析 StarRocks 的 Query Plan。
 
@@ -45,7 +46,7 @@ Query Plan 可以分为逻辑执行计划（Logical Query Plan），和物理执
 EXPLAIN sql_statement;
 ```
 
-示例：
+TPC-DS query96.sql对应的Query Plan展示如下：
 
 ```plain text
 mysql> EXPLAIN select count(*)
@@ -231,10 +232,7 @@ Fragment 1 集成了三个 Join 算子的执行，采用默认的 BROADCAST 方�
 
 在分析 Query Plan 后，您可以分析 BE 的执行结果 Profile 了解集群性能。
 
-如果您是企业版用户，您可以在 StarRocksManager 中执行查询，然后点击 **查询历史**，就可看在 **执行详情** Tab 中看到 Profile 的详细文本信息，并在 **执行时间** Tab 中看到图形化的展示。
-
-> 注意
-> 如需通过 StarRocksManager 查看 Profile，您需要设置 `enable_collect_query_detail_info` 参数为 `true`。
+如果您是企业版用户，您可以在 StarRocksManager 中执行查询，然后点击 **查询历史**，就可看在 **执行详情** Tab 中看到 Profile 的详细文本信息，并在 **执行时间** Tab 中看到图形化的展示。以下使用 TPC-H 的 Q4 查询来作为例子。
 
 以下示例以 TPCH 的 Q4 查询为例。
 
@@ -253,7 +251,7 @@ group by o_orderpriority
 order by o_orderpriority;
 ```
 
-以上查询包含了相关子查询，即 group by，order by 和 count。其中 `order` 是订单表，`lineitem` 是货品明细表，这两张表均为数据量较大的的事实表。这个查询的含义是按照订单的优先级分组，统计每个分组的订单数量，同时有两个过滤条件：
+以上查询包含了相关子查询，即 group by，order by 和 count 查询。其中 `order` 是订单表，`lineitem` 是货品明细表，这两张表均为数据量较大的的事实表。这个查询的含义是按照订单的优先级分组，统计每个分组的订单数量，同时有两个过滤条件：
 
 * 订单创建时间处于 `1993 年 7 月` 至 `1993 年 10 月` 之间。
 * 订单对应的产品的提交日期 `l_commitdate` 小于收货日期 `l_receiptadate`。
@@ -308,7 +306,7 @@ order by o_orderpriority;
 执行结果如下所示：
 
 ![8-7](../assets/8-7.png)
-  
+
 新的 SQL 执行时间从 3.106s 降低至 1.042s。两张大表没有了 Exchange 节点，直接通过 Colocate Join 进行 Join。除此之外，调换左右表顺序后，整体性能大幅提升，新的 Join Node 信息如下：
 
 ```sql
