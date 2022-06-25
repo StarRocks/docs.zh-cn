@@ -8,7 +8,6 @@
 
 同时，StarRocks 还支持对慢查询中的 SQL 语句进行归类，并为各类 SQL 语句计算出 SQL 指纹。
 
-
 ## 查看分析 Query Plan
 
 SQL 语句在 StarRocks 中的生命周期可以分为查询解析（Query Parsing）、规划（Query Plan）、执行（Query Execution）三个阶段。通常对于 StarRocks 而言，查询解析不会成为查询性能的瓶颈，因为分析型需求的 QPS 普遍不高。
