@@ -248,6 +248,7 @@ UDAF，即用户自定义的聚合函数，对多行数据进行操作，输出�
 
     > 注意
     > `java.nio.ByteBuffer` 序列化相关事项：
+    >
     > - 不支持依赖 ByteBuffer 的 `remaining` 方法来反序列化 State。
     > - 不支持对 ByteBuffer 调用 `clear` 方法。
     > - `serializeLength` 需要与实际写入数据的长度保持一致，否则序列化和反序列化过程中会造成结果错误。
@@ -450,7 +451,7 @@ UDTF，即用户自定义表值函数，读入一行数据，输出多个值可�
 
 1. 编写 UDTF 的代码。
 
-    以下示例以 `MY_UDF_SPLIT` 函数为例进行说明。`MY_UDF_SPLIT` 函数支持分隔符为空格 ` `，传入参数和返回参数的类型为 STRING。
+    以下示例以 `MY_UDF_SPLIT` 函数为例进行说明。`MY_UDF_SPLIT` 函数支持分隔符为空格，传入参数和返回参数的类型为 STRING。
 
     ```java
     public class UDFSplit{
@@ -462,9 +463,9 @@ UDTF，即用户自定义表值函数，读入一行数据，输出多个值可�
     ```
 
     用户自定义类必须实现如下方法：
-
-    > 
-    > 说明：方法中请求参数和返回参数的数据类型，需要和步骤三中的 `CREATE FUNCTION` 语句中声明的相同，且两者的类型映射关系需要符合[类型映射关系](#类型映射关系)。
+    
+    > 说明
+    > 方法中请求参数和返回参数的数据类型，需要和步骤三中的 `CREATE FUNCTION` 语句中声明的相同，且两者的类型映射关系需要符合[类型映射关系](#类型映射关系)。
 
     | 方法                | 含义                                      |
     | ------------------ | ------------------------------------------- |
@@ -476,7 +477,7 @@ UDTF，即用户自定义表值函数，读入一行数据，输出多个值可�
     mvn package
     ```
 
-   **target** 目录下会生成两个文件：**udf-1.0-SNAPSHOT.jar** 和 **udf-1.0-SNAPSHOT-jar-with-dependencies.jar**。
+    **target** 目录下会生成两个文件：**udf-1.0-SNAPSHOT.jar** 和 **udf-1.0-SNAPSHOT-jar-with-dependencies.jar**。
 
 3. 将文件 **udf-1.0-SNAPSHOT-jar-with-dependencies.jar** 上传至 FE 和 BE 能访问的 HTTP 服务器，并且 HTTP 服务需要一直开启。
 
