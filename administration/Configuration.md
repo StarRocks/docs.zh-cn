@@ -62,8 +62,8 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |max_running_rollup_job_num_per_table|1|每个 Table 执行 Rollup 任务的最大并发度。|
 |max_planner_scalar_rewrite_num|100000|优化器重写 ScalarOperator 允许的最大次数。|
 |statistics_manager_sleep_time_sec|60*10|自动创建统计信息表的周期，单位为秒。|
-|statistic_collect_interval_sec|120 * 60|统计信息功能执行周期，单位为秒。|
-|statistic_update_interval_sec|24 * 60 * 60|统计信息 Job 的默认收集间隔时间，单位为秒。|
+|statistic_collect_interval_sec|120 \* 60|统计信息功能执行周期，单位为秒。|
+|statistic_update_interval_sec|24 \* 60 \* 60|统计信息 Job 的默认收集间隔时间，单位为秒。|
 |statistic_sample_collect_rows|200000|采样统计信息 Job 的默认采样行数。|
 |enable_statistic_collect|TRUE|统计信息收集功能开关。|
 |enable_local_replica_selection|FALSE|优化器优先选择与这个 FE 相同 IP 的 BE 节点上的 tablet。|
@@ -116,7 +116,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |enable_strict_storage_medium_check|FALSE|在创建表时，FE 是否检查 BE 的可用的存储介质空间。|
 |capacity_used_percent_high_water|0.75|BE 上磁盘使用容量的度量值，超过 0.75 之后，尽量不在往这个 tablet 上发送建表，克隆的任务，直到恢复正常。|
 |storage_high_watermark_usage_percent|85|BE 存储目录下空间使用率的最大值。|
-|storage_min_left_capacity_bytes|2 * 1024 * 1024 * 1024|BE 存储目录下剩余空间的最小值，单位为 Byte。|
+|storage_min_left_capacity_bytes|2 \* 1024 \* 1024 \* 1024|BE 存储目录下剩余空间的最小值，单位为 Byte。|
 |catalog_trash_expire_second|86400|删表/数据库之后，元数据在回收站中保留的时长，超过这个时长，数据就不可以在恢复，单位为秒。|
 |alter_table_timeout_second|86400|Schema change 超时时间，单位为秒。|
 |balance_load_disk_safe_threshold|0.5|disk_and_tablet 策略有效。如果所有 BE 的磁盘使用率低于 50%，认为磁盘使用均衡。|
@@ -126,8 +126,8 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |max_balancing_tablets|100|如果正在均衡的 tablet 数量超过该值，跳过 tablet 重新均衡。|
 |disable_colocate_balance|FALSE|禁用 Colocate Table 的副本均衡。|
 |recover_with_empty_tablet|FALSE|在 tablet 副本丢失/损坏时，使用空的 tablet 代替它。这样可以保证在有 tablet 副本丢失/损坏时，query 依然能被执行（但是由于缺失了数据，结果可能是错误的）。|
-|min_clone_task_timeout_sec|3 * 60|克隆 Tablet 的最小超时时间，单位为秒。|
-|max_clone_task_timeout_sec|2 * 60 * 60|克隆 Tablet 的最大超时时间，单位为秒。|
+|min_clone_task_timeout_sec|3 \* 60|克隆 Tablet 的最小超时时间，单位为秒。|
+|max_clone_task_timeout_sec|2 \* 60 \* 60|克隆 Tablet 的最大超时时间，单位为秒。|
 |tablet_create_timeout_second|1|建表超时时长，单位为秒。|
 |tablet_delete_timeout_second|2|删除表的超时时间，单位为秒。|
 |tablet_repair_delay_factor_second|60|FE 控制进行副本修复的间隔，单位为秒。|
@@ -141,7 +141,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |---|---|---|
 |plugin_enable|TRUE|是否开启了插件功能。只能在 master 安装/卸载插件|
 |max_small_file_number|100|允许存储小文件数目的最大值。|
-|max_small_file_size_bytes|1024 * 1024|存储文件的大小上限，单位为 Byte。|
+|max_small_file_size_bytes|1024 \* 1024|存储文件的大小上限，单位为 Byte。|
 |agent_task_resend_wait_time_ms|5000|当代理任务的创建时间被设置，并且距离现在超过该值，才能重新发送代理任务，单位为 ms。|
 |backup_job_default_timeout_ms|86400*1000|Backup 作业的超时时间，单位为 ms。|
 |report_queue_size|100|Disk/Task/Tablet 的 Report 的等待队列长度。|
