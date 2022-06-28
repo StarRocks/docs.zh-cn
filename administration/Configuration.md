@@ -338,7 +338,7 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 |max_base_compaction_num_singleton_deltas |100| |
 |base_compaction_interval_seconds_since_last_operation|86400|BaseCompaction 触发条件之一：上一轮 BaseCompaction 距今的间隔。|
 |base_compaction_write_mbytes_per_sec   |5| |
-|cumulative_compaction_check_interval_seconds|10|CumulativeCompaction 线程轮询的间隔。|
+|cumulative_compaction_check_interval_seconds|1|CumulativeCompaction 线程轮询的间隔。|
 |min_cumulative_compaction_num_singleton_deltas|5|CumulativeCompaction 触发条件之一：Singleton 文件数目要达到的下限|
 |max_cumulative_compaction_num_singleton_deltas|1000|CumulativeCompaction 触发条件之一：Singleton 文件数目要达到的上限|
 |cumulative_compaction_budgeted_bytes   |104857600   | |
