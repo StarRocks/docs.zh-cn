@@ -344,7 +344,7 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 |cumulative_compaction_budgeted_bytes   |104857600   | |
 |cumulative_compaction_skip_window_seconds|30| |
 |update_compaction_check_interval_seconds |60| |
-|min_compaction_failure_interval_sec|600|Tablet Compaction 失败之后，再次被调度的间隔。|
+|min_compaction_failure_interval_sec|120|Tablet Compaction 失败之后，再次被调度的间隔。|
 |base_compaction_trace_threshold   |120| |
 |cumulative_compaction_trace_threshold  |60| |
 |update_compaction_trace_threshold |20| |
@@ -358,8 +358,8 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 |tablet_stat_cache_update_interval_second |300| |
 |result_buffer_cancelled_interval_time  |300| |
 |priority_queue_remaining_tasks_increased_frequency    |512| |
-|thrift_rpc_timeout_ms|10000|Thrift 超时的时长，单位为 ms。|
-|txn_commit_rpc_timeout_ms|10000|Txn 超时的时长，单位为 ms。|
+|thrift_rpc_timeout_ms|5000|Thrift 超时的时长，单位为 ms。|
+|txn_commit_rpc_timeout_ms|20000|Txn 超时的时长，单位为 ms。|
 |max_consumer_num_per_group|3| |
 |max_memory_sink_batch_count|20| |
 |scan_context_gc_interval_min|5| |
@@ -396,7 +396,7 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 |drop_tablet_worker_count|3|删除 tablet 的线程数|
 |push_worker_count_normal_priority|3|导入线程数，处理 NORMAL 优先级任务|
 |push_worker_count_high_priority|3|导入线程数，处理 HIGH 优先级任务|
-|publish_version_worker_count|2|生效版本的线程数|
+|transaction_publish_version_worker_count|8|生效版本的线程数|
 |clear_transaction_task_worker_count|1|清理事务的线程数|
 |alter_tablet_worker_count|3|进行 schema change 的线程数|
 |clone_worker_count|3|克隆的线程数|
@@ -422,46 +422,47 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 |memory_limitation_per_thread_for_schema_change|2|单个 schema change 任务允许占用的最大内存|
 |max_unpacked_row_block_size|104857600|单个 block 最大的字节数，100MB|
 |file_descriptor_cache_clean_interval|3600|文件句柄缓存清理的间隔，用于清理长期不用的文件句柄|
-|storage_root_path|空字符串|存储数据的目录|
+|storage_root_path|${STARROCKS_HOME}/storage|存储数据的目录|
 |max_percentage_of_error_disk|0|磁盘错误达到一定比例，BE 退出|
 |default_num_rows_per_data_block|1024|每个 block 的数据行数|
 |max_tablet_num_per_shard|1024|每个 shard 的 tablet 数目，用于划分 tablet，防止单个目录下 tablet 子目录过多|
 |max_garbage_sweep_interval|3600|磁盘进行垃圾清理的最大间隔|
 |min_garbage_sweep_interval|180|磁盘进行垃圾清理的最小间隔|
 |row_nums_check|TRUE|Compaction 完成之后，前后 Rowset 行数对比|
-|file_descriptor_cache_capacity|32768|文件句柄缓存的容量|
+|file_descriptor_cache_capacity|16384|文件句柄缓存的容量|
 |min_file_descriptor_number|60000|BE 进程的文件句柄 limit 要求的下线|
 |index_stream_cache_capacity|10737418240|BloomFilter/Min/Max 等统计信息缓存的容量|
-|storage_page_cache_limit|20G|PageCache 的容量|
-|disable_storage_page_cache|FALSE|是否开启 PageCache|
+|storage_page_cache_limit|0|PageCache 的容量，string，可写为 “20G”。|
+|disable_storage_page_cache|TRUE|是否开启 PageCache|
 |base_compaction_start_hour|20|BaseCompaction 开启的时间|
 |base_compaction_end_hour|7|BaseCompaction 结束的时间|
 |base_compaction_num_cumulative_deltas|5|BaseCompaction 触发条件之一：Cumulative 文件数目要达到的限制|
 |base_compaction_num_threads_per_disk|1|每个磁盘 BaseCompaction 线程的数目|
 |base_cumulative_delta_ratio|0.3|BaseCompaction 触发条件之一：Cumulative 文件大小达到 Base 文件的比例|
 |cumulative_compaction_write_mbytes_per_sec|100|CumulativeCompaction 写磁盘的限速|
-|max_compaction_concurrency|4|BaseCompaction + CumulativeCompaction 的最大并发， -1 代表没有限制。|
+|max_compaction_concurrency|-1|BaseCompaction + CumulativeCompaction 的最大并发， -1 代表没有限制。|
 |compaction_trace_threshold|60|单次 Compaction 打印 trace 的时间阈值，如果单次 compaction 时间超过该阈值就打印 trace，单位为秒|
 |webserver_port|8040|Http Server 端口|
-|webserver_num_workers|5|Http Server 线程数|
+|webserver_num_workers|48|Http Server 线程数|
 |load_data_reserve_hours|4|小批量导入生成的文件保留的时间|
 |number_tablet_writer_threads|16|流式导入的线程数|
 |streaming_load_rpc_max_alive_time_sec|1200|流式导入 RPC 的超时时间|
 |tablet_writer_rpc_timeout_sec|600|TabletWriter 的超时时长|
-|fragment_pool_thread_num|64|查询线程数，默认启动 64 个线程，后续查询请求动态创建线程|
-|fragment_pool_queue_size|1024|单节点上能够处理的查询请求上限|
+|fragment_pool_thread_num_min|64|最小查询线程数，默认启动 64 个线程。|
+|fragment_pool_thread_num_max|4096|最大查询线程数。|
+|fragment_pool_queue_size|2048|单节点上能够处理的查询请求上限|
 |enable_partitioned_hash_join|FALSE|使用 PartitionHashJoin|
 |enable_partitioned_aggregation|TRUE|使用 PartitionAggregation|
 |enable_token_check|TRUE|Token 开启检验|
 |enable_prefetch|TRUE|查询提前预取|
 |load_process_max_memory_limit_bytes|107374182400|单节点上所有的导入线程占据的内存上限，100GB|
-|load_process_max_memory_limit_percent|80|单节点上所有的导入线程占据的内存上限比例，100GB|
+|load_process_max_memory_limit_percent|30|单节点上所有的导入线程占据的内存上限比例，100GB|
 |sync_tablet_meta|FALSE|存储引擎是否开 sync 保留到磁盘上。|
 |routine_load_thread_pool_size|10|例行导入的线程池数目。|
 |default_rowset_type|ALPHA|存储引擎的格式，默认新 ALPHA，后面会替换成 BETA。|
-|brpc_max_body_size|209715200|BRPC 最大的包容量，单位为 Byte。|
-|max_runnings_transactions|2000|存储引擎支持的最大事务数。|
-|tablet_map_shard_size|1|Tablet 分组数。|
+|brpc_max_body_size|2147483648|BRPC 最大的包容量，单位为 Byte。|
+|max_runnings_transactions_per_txn_map|100|存储引擎支持的最大事务数。|
+|tablet_map_shard_size|32|Tablet 分组数。|
 |enable_bitmap_union_disk_format_with_set|FALSE|Bitmap 新存储格式，可以优化 bitmap_union 性能。|
 
 ## Broker 配置项
