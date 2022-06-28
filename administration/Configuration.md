@@ -244,9 +244,8 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |spark_launcher_log_dir|sys_log_dir + "/spark_launcher_log"|Spark 日志目录。|
 |yarn_client_path|StarRocksFE.STARROCKS_HOME_DIR + "/lib/yarn-client/hadoop/bin/yarn"|Yarn 客户端根目录。|
 |yarn_config_dir|StarRocksFE.STARROCKS_HOME_DIR + "/lib/yarn-config"|Yarn 配置文件目录。|
-|export_checker_interval_second|5|导出线程轮询间隔。|
-|export_task_pool_size|5|导出任务线程池大小。|
 |export_checker_interval_second|5|导出作业调度器的调度周期。|
+|export_task_pool_size|5|导出任务线程池大小。|
 
 * **存储相关**
 
