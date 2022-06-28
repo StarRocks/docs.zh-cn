@@ -40,7 +40,6 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |ignore_meta_check|FALSE|忽略元数据落后的情形。|
 |max_backend_down_time_second|3600|BE 和 FE 失联之后，FE 容忍 BE 重新加回来的最长时间，单位为秒。|
 |drop_backend_after_decommission|TRUE|BE 被下线后，是否删除该 BE。|
-|catalog_try_lock_timeout_ms|5000|Catalog Lock 获取的超时时长，单位为 ms。|
 |enable_collect_query_detail_info|false|否需要查看查询的 profile。|
 
 * **Query Engine**
@@ -59,12 +58,12 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |dynamic_partition_enable|TRUE|是否开启动态分区功能。|
 |max_partitions_in_one_batch|4096|批量创建分区时，分区数目的最大值。|
 |max_query_retry_time|2|FE 上查询重试的次数。|
-|max_create_table_timeout_second|60|建表最大超时时间，单位为秒。|
+|max_create_table_timeout_second|600|建表最大超时时间，单位为秒。|
 |max_running_rollup_job_num_per_table|1|每个 Table 执行 Rollup 任务的最大并发度。|
 |max_planner_scalar_rewrite_num|100000|优化器重写 ScalarOperator 允许的最大次数。|
 |statistics_manager_sleep_time_sec|60*10|自动创建统计信息表的周期，单位为秒。|
-|statistic_collect_interval_sec|120*60|统计信息功能执行周期，单位为秒。|
-|statistic_update_interval_sec|24 *60\* 60|统计信息 Job 的默认收集间隔时间，单位为秒。|
+|statistic_collect_interval_sec|120 * 60|统计信息功能执行周期，单位为秒。|
+|statistic_update_interval_sec|24 * 60 * 60|统计信息 Job 的默认收集间隔时间，单位为秒。|
 |statistic_sample_collect_rows|200000|采样统计信息 Job 的默认采样行数。|
 |enable_statistic_collect|TRUE|统计信息收集功能开关。|
 |enable_local_replica_selection|FALSE|优化器优先选择与这个 FE 相同 IP 的 BE 节点上的 tablet。|
@@ -88,17 +87,17 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |db_used_data_quota_update_interval_secs|300|更新数据库使用配额的时间周期，单位为秒。|
 |history_job_keep_max_second|604800|历史任务最大的保留时长，例如 schema change 任务，单位为秒。|
 |label_keep_max_num|1000|一定时间内所保留导入任务的最大数量。|
-|label_keep_max_second|259200|label 保留时长，，单位为秒。设定过大将会消耗大量内存。|
+|label_keep_max_second|259200|label 保留时长，单位为秒。设定过大将会消耗大量内存。|
 |max_routine_load_job_num|100|最大的 routine load 作业数。|
 |max_routine_load_task_concurrent_num|5|每个 routine load 作业最大并发执行的 task 数。|
 |max_routine_load_task_num_per_be|5|每个 BE 最大并发执行的 routine load task 数，需要小于等于 BE 的配置项 routine_load_thread_pool_size 的值。|
-|max_routine_load_batch_size|524288000|每个 routine load task 导入的最大数据量，单位为Byte。|
-|routine_load_task_consume_second|3|每个 routine load task 消费数据的最大时间，单位为秒。|
-|routine_load_task_timeout_second|15|每个 routine load task 超时时间，单位为秒。|
+|max_routine_load_batch_size|4294967296|每个 routine load task 导入的最大数据量，单位为Byte。|
+|routine_load_task_consume_second|15|每个 routine load task 消费数据的最大时间，单位为秒。|
+|routine_load_task_timeout_second|60|每个 routine load task 超时时间，单位为秒。|
 |max_tolerable_backend_down_num|0|如果故障的 BE 节点数超过该阈值，则不能自动恢复 Routine Load 作业。|
 |period_of_auto_resume_min|5|自动恢复 Routine Load 的时间间隔，单位为分钟。|
 |spark_load_default_timeout_second|86400|Spark 导入的超时时间，单位为秒。|
-|spark_home_default_dir|STARROCKS_HOME_DIR/lib/spark2x|Spark 客户端根目录|
+|spark_home_default_dir|StarRocksFE.STARROCKS_HOME_DIR + "/lib/spark2x"|Spark 客户端根目录|
 |stream_load_default_timeout_second|600|StreamLoad 超时时间，单位为秒。|
 |max_stream_load_timeout_second|259200|Stream 导入的超时时间允许设置的最大值，单位为秒。|
 |insert_load_default_timeout_second|3600|Insert Into 语句的超时时间，，单位为秒。|
@@ -117,7 +116,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |enable_strict_storage_medium_check|FALSE|在创建表时，FE 是否检查 BE 的可用的存储介质空间。|
 |capacity_used_percent_high_water|0.75|BE 上磁盘使用容量的度量值，超过 0.75 之后，尽量不在往这个 tablet 上发送建表，克隆的任务，直到恢复正常。|
 |storage_high_watermark_usage_percent|85|BE 存储目录下空间使用率的最大值。|
-|storage_min_left_capacity_bytes|2 *1024\* 1024\*1024|BE 存储目录下剩余空间的最小值，单位为 Byte。|
+|storage_min_left_capacity_bytes|2 * 1024 * 1024 * 1024|BE 存储目录下剩余空间的最小值，单位为 Byte。|
 |catalog_trash_expire_second|86400|删表/数据库之后，元数据在回收站中保留的时长，超过这个时长，数据就不可以在恢复，单位为秒。|
 |alter_table_timeout_second|86400|Schema change 超时时间，单位为秒。|
 |balance_load_disk_safe_threshold|0.5|disk_and_tablet 策略有效。如果所有 BE 的磁盘使用率低于 50%，认为磁盘使用均衡。|
@@ -127,8 +126,8 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |max_balancing_tablets|100|如果正在均衡的 tablet 数量超过该值，跳过 tablet 重新均衡。|
 |disable_colocate_balance|FALSE|禁用 Colocate Table 的副本均衡。|
 |recover_with_empty_tablet|FALSE|在 tablet 副本丢失/损坏时，使用空的 tablet 代替它。这样可以保证在有 tablet 副本丢失/损坏时，query 依然能被执行（但是由于缺失了数据，结果可能是错误的）。|
-|min_clone_task_timeout_sec|3*60|克隆 Tablet 的最小超时时间，单位为秒。|
-|max_clone_task_timeout_sec|2 *60\* 60|克隆 Tablet 的最大超时时间，单位为秒。|
+|min_clone_task_timeout_sec|3 * 60|克隆 Tablet 的最小超时时间，单位为秒。|
+|max_clone_task_timeout_sec|2 * 60 * 60|克隆 Tablet 的最大超时时间，单位为秒。|
 |tablet_create_timeout_second|1|建表超时时长，单位为秒。|
 |tablet_delete_timeout_second|2|删除表的超时时间，单位为秒。|
 |tablet_repair_delay_factor_second|60|FE 控制进行副本修复的间隔，单位为秒。|
@@ -142,7 +141,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |---|---|---|
 |plugin_enable|TRUE|是否开启了插件功能。只能在 master 安装/卸载插件|
 |max_small_file_number|100|允许存储小文件数目的最大值。|
-|max_small_file_size_bytes|1024*1024|存储文件的大小上限，单位为 Byte。|
+|max_small_file_size_bytes|1024 * 1024|存储文件的大小上限，单位为 Byte。|
 |agent_task_resend_wait_time_ms|5000|当代理任务的创建时间被设置，并且距离现在超过该值，才能重新发送代理任务，单位为 ms。|
 |backup_job_default_timeout_ms|86400*1000|Backup 作业的超时时间，单位为 ms。|
 |report_queue_size|100|Disk/Task/Tablet 的 Report 的等待队列长度。|
@@ -156,25 +155,25 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |配置项|默认值|描述|
 |---|---|---|
 |log_roll_size_mb|1024|日志拆分的大小，每 1G 拆分一个日志，单位为 MB。|
-|sys_log_dir|StarRocksFe.STARROCKS_HOME_DIR/log|日志保留的目录。|
+|sys_log_dir|StarRocksFE.STARROCKS_HOME_DIR + "/log"|日志保留的目录。|
 |sys_log_level|INFO|日志级别，INFO < WARN < ERROR < FATAL。|
 |sys_log_roll_num|10|日志保留的数目。|
 |sys_log_verbose_modules|空字符串|日志打印的模块，写 org.apache.starrocks.catalog 就只打印 catalog 模块下的日志。|
 |sys_log_roll_interval|DAY|日志拆分的时间间隔。|
 |sys_log_delete_age|7d|日志删除的间隔。|
-|sys_log_roll_mode|1024|日志拆分的大小，每 1G 拆分一个日志。|
+|sys_log_roll_mode|SIZE-MB-1024|日志拆分的大小，每 1G 拆分一个日志。|
 |sys_log_roll_num|10|每个 sys_log_roll_interval 时间内，保留的日志文件数目。|
-|audit_log_dir|starrocksFe.STARROCKS_HOME_DIR/log|审计日志保留的目录。|
+|audit_log_dir|StarRocksFE.STARROCKS_HOME_DIR + "/log"|审计日志保留的目录。|
 |audit_log_roll_num|90|审计日志保留的数目。|
 |audit_log_modules|"slow_query", "query"|审计日志打印的模块，默认保留 slow_query 和 query。|
 |audit_log_roll_interval|DAY|审计日志拆分的时间间隔, DAY 或者 HOUR。|
 |audit_log_delete_age|30d|审计日志删除的间隔。|
 |audit_log_roll_mode|TIME-DAY|审计日志拆分模式。|
-|dump_log_dir|STARROCKS_HOME_DIR/log|Dump 日志的目录。|
+|dump_log_dir|StarRocksFE.STARROCKS_HOME_DIR + "/log"|Dump 日志的目录。|
 |dump_log_modules|"query"|Dump 日志打印的模块，默认保留 query。|
 |dump_log_roll_interval|DAY|"Dump 日志拆分的时间间隔。日志文件的后缀为 yyyyMMdd（DAY）或 yyyyMMddHH（HOUR）"。|
-|dump_log_roll_num|90|每个 dump_log_roll_interval 时间内，保留的 Dump 日志文件数目。|
-|dump_log_delete_age|30d|Dump 日志保留的时间长度。|
+|dump_log_roll_num|10|每个 dump_log_roll_interval 时间内，保留的 Dump 日志文件数目。|
+|dump_log_delete_age|7d|Dump 日志保留的时间长度。|
 
 * **Server**
 
@@ -187,15 +186,14 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |cluster_name|StarRocks Cluster|Web 页面中 Title 显示的集群名称。|
 |rpc_port|9020|FE 上的 thrift server 端口。|
 |thrift_backlog_num|1024|Thrift Server 的 backlog 队列长度。|
-|thrift_server_type|THREAD_POOL|FE 的 Thrift 服务使用的服务模型，SIMPLE/THREADED/THREAD_POOL。|
+|thrift_server_type|ThriftServer.THREAD_POOL|FE 的 Thrift 服务使用的服务模型，SIMPLE/THREADED/THREAD_POOL。|
 |thrift_server_max_worker_threads|4096|Thrift Server 最大工作线程数。|
 |thrift_client_timeout_ms|0|Client 超时时间，，单位为 ms。设置于 0 时永远不会超时。|
-|thrift_server_type|THREAD_POOL|FE 的 Thrift 服务使用的服务模型，SIMPLE/THREADED/THREAD_POOL。|
 |brpc_number_of_concurrent_requests_processed|4096|并发处理 BRPC 请求数目。|
 |brpc_idle_wait_max_time|10000|BRPC 的空闲等待时间，单位为 ms。|
 |enable_brpc_share_channel|TRUE|在 BRPC Client 之间共享 channel。|
 |query_port|9030|FE 上的 mysql server 端口。|
-|mysql_service_nio_enabled|FALSE|FE 连接服务的 nio 是否开启。|
+|mysql_service_nio_enabled|TRUE|FE 连接服务的 nio 是否开启。|
 |mysql_service_io_threads_num|4|FE 连接服务线程数。|
 |mysql_nio_backlog_num|1024|MySQL Server 的 backlog 队列长度。|
 |max_mysql_service_task_threads_num|4096|MySQL Server 处理任务的最大线程数。|
@@ -207,10 +205,10 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 
 |配置项|默认值|描述|
 |---|---|---|
-|meta_dir|StarRocksFe.STARROCKS_HOME_DIR/meta|元数据保留目录。|
+|meta_dir|StarRocksFE.STARROCKS_HOME_DIR + "/meta"|元数据保留目录。|
 |heartbeat_mgr_threads_num|8|HeartbeatMgr 中发送心跳任务的线程数。|
 |heartbeat_mgr_blocking_queue_size|1024|HeartbeatMgr 中发送心跳任务的线程池的队列长度。|
-|metadata_failure_recovery|FALSE|强制重置 FE 的元数据，请谨慎使用该配置项。|
+|metadata_failure_recovery|"FALSE"|强制重置 FE 的元数据，请谨慎使用该配置项。|
 |edit_log_port|9010|FE Group(Master, Follower, Observer)之间通信用的端口。|
 |edit_log_type|BDB|Edit log 的类型，只能为 BDB。|
 |bdbje_heartbeat_timeout_second|30|BDBJE 心跳超时的间隔，单位为秒。|
@@ -231,7 +229,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |disable_colocate_join|FALSE|是否禁用 Colocate Join。|
 |enable_udf|FALSE|是否开启 UDF。|
 |publish_version_interval_ms|10|发送版本生效任务的时间间隔，单位为 ms。|
-|statistic_cache_columns|10_0000|缓存统计信息表的行数。|
+|statistic_cache_columns|100000|缓存统计信息表的行数。|
 
 * **导入和导出**
 
@@ -243,9 +241,9 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |label_clean_interval_second|14400|label 清理的间隔，单位为秒。|
 |spark_dpp_version|1.0.0|Spark dpp 版本。|
 |spark_resource_path|空字符串|Spark 依赖包的根目录。|
-|spark_launcher_log_dir|sys_log_dir/spark_launcher_log|Spark 日志目录。|
-|yarn_client_path|STARROCKS_HOME_DIR/lib/yarn-client/hadoop/bin/yarn|Yarn 客户端根目录。|
-|yarn_config_dir|STARROCKS_HOME_DIR/lib/yarn-config|Yarn 配置文件目录。|
+|spark_launcher_log_dir|sys_log_dir + "/spark_launcher_log"|Spark 日志目录。|
+|yarn_client_path|StarRocksFE.STARROCKS_HOME_DIR + "/lib/yarn-client/hadoop/bin/yarn"|Yarn 客户端根目录。|
+|yarn_config_dir|StarRocksFE.STARROCKS_HOME_DIR + "/lib/yarn-config"|Yarn 配置文件目录。|
 |export_checker_interval_second|5|导出线程轮询间隔。|
 |export_task_pool_size|5|导出任务线程池大小。|
 |export_checker_interval_second|5|导出作业调度器的调度周期。|
@@ -265,21 +263,21 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |配置项|默认值|描述|
 |---|---|---|
 |plugin_dir|STARROCKS_HOME_DIR/plugins|插件安装的目录。|
-|small_file_dir|STARROCKS_HOME_DIR/small_files|小文件的根目录。|
+|small_file_dir|StarRocksFE.STARROCKS_HOME_DIR + "/small_files"|小文件的根目录。|
 |max_agent_task_threads_num|4096|代理任务的线程池的最大线程数。|
-|authentication_ldap_simple_bind_base_dn|""|用户的 base DN，指定用户的检索范围。|
-|authentication_ldap_simple_bind_root_dn|""|检索用户时，使用的管理员账号 DN。|
-|authentication_ldap_simple_bind_root_pwd|""|检索用户时，使用的管理员账号密码。|
-|authentication_ldap_simple_server_host|""|LDAP 服务的 host 地址。|
+|authentication_ldap_simple_bind_base_dn|空字符串|用户的 base DN，指定用户的检索范围。|
+|authentication_ldap_simple_bind_root_dn|空字符串|检索用户时，使用的管理员账号 DN。|
+|authentication_ldap_simple_bind_root_pwd|空字符串|检索用户时，使用的管理员账号密码。|
+|authentication_ldap_simple_server_host|空字符串|LDAP 服务的 host 地址。|
 |authentication_ldap_simple_server_port|389|LDAP 服务的端口。|
 |authentication_ldap_simple_user_search_attr|uid|LDAP 对象中标识用户的属性名称。|
-|auth_token|空字符串|Token 是否自动开启。|
-|tmp_dir|starrocksFe.STARROCKS_HOME_DIR/temp_ddir|临时文件保存目录，例如 backup/restore 等进程保留的目录。|
+|auth_token|空字符串|Token 是否自动开启。为空则在 Master FE 第一次启动时随机生成一个。|
+|tmp_dir|StarRocksFE.STARROCKS_HOME_DIR + "/temp_dir"|临时文件保存目录，例如 backup/restore 等进程保留的目录。|
 |locale|zh_CN.UTF-8|字符集。|
 |hive_meta_load_concurrency|4|Hive 元数据并发线程数。|
-|hive_meta_cache_refresh_interval_s|4096|定时刷新 Hive 外表元数据缓存的周期。|
+|hive_meta_cache_refresh_interval_s|7200|定时刷新 Hive 外表元数据缓存的周期。|
 |hive_meta_cache_ttl_s|3600 *2|HIve 外表元数据缓存失效时间，默认 2h。|
-|hive_meta_store_timeout_s|3600 *24|连接 Hive Metastore 的超时时间，默认 24h。|
+|hive_meta_store_timeout_s|10|连接 Hive Metastore 的超时时间。|
 |es_state_sync_interval_second|10|FE 获取 Elasticsearch Index 的时间，单位为秒。|
 |enable_auth_check|TRUE|是否开启鉴权。|
 |auth_token|空字符串|为空则在 Master FE 第一次启动时随机生成一个。|
@@ -361,7 +359,7 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 |tablet_stat_cache_update_interval_second |300| |
 |result_buffer_cancelled_interval_time  |300| |
 |priority_queue_remaining_tasks_increased_frequency    |512| |
-|thrift_rpc_timeout_ms|5000|Thrift 超时的时长，单位为 ms。|
+|thrift_rpc_timeout_ms|10000|Thrift 超时的时长，单位为 ms。|
 |txn_commit_rpc_timeout_ms|10000|Txn 超时的时长，单位为 ms。|
 |max_consumer_num_per_group|3| |
 |max_memory_sink_batch_count|20| |
@@ -412,7 +410,7 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 |sys_log_level|INFO|日志级别，INFO < WARNING < ERROR < FATAL|
 |sys_log_roll_mode|SIZE-MB-1024|日志拆分的大小，每 1G 拆分一个日志|
 |sys_log_roll_num|10|日志保留的数目|
-|sys_log_verbose_modules|*|日志打印的模块，写 olap 就只打印 olap 模块下的日志|
+|sys_log_verbose_modules|空字符串|日志打印的模块，写 olap 就只打印 olap 模块下的日志|
 |sys_log_verbose_level|10|日志显示的级别，用于控制代码中 VLOG 开头的日志输出|
 |log_buffer_level|空字符串|日志刷盘的策略，默认保持在内存中|
 |num_threads_per_core|3|每个 CPU core 启动的线程数|
