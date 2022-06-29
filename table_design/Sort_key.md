@@ -79,19 +79,19 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 
 - 如果查询条件只包含 `site_id` 和 `city_code` 两列，如下所示，则可以大幅减少查询过程中需要扫描的数据行：
 
-  ```undefined
+  ```plain text
     select sum(pv) from site_access_duplicate where site_id = 123 and city_code = 2;
   ```
 
 - 如果查询条件只包含 `site_id` 一列，如下所示，可以定位到只包含 `site_id` 的数据行
 
-  ```undefined
+  ```plain text
     select sum(pv) from site_access_duplicate where site_id = 123;
   ```
 
 - 如果查询条件只包含 `city_code` 一列，如下所示，则需要扫描所有数据行，排序效果大打折扣：
 
-  ```undefined
+  ```plain text
     select sum(pv) from site_access_duplicate where city_code = 2;
   ```
 
