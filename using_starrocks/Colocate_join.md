@@ -1,6 +1,6 @@
 # Colocate Join
 
-本小节介绍如何使用 Colocate join。
+本小节介绍如何使用 Colocate Join。
 
 Colocate Join 功能是分布式系统实现 Join 数据分布的策略之一，能够减少数据多节点分布时 Join 操作引起的数据移动和网络传输，从而提高查询性能。
 
@@ -19,6 +19,8 @@ Colocate Join 使用 Colocation Group（CG）管理一组表 ，同一 CG 内的
 
 > 注意
 > StarRocks 仅支持对**同一 Database** 中的表进行 Colocate Join 操作。
+
+示例：
 
 ~~~SQL
 CREATE TABLE tbl (k1 int, v1 int sum)
@@ -61,7 +63,10 @@ CG 内表的一致的数据分布定义和子表副本映射，能够保证分�
 SHOW PROC '/colocation_group';
 ~~~
 
+示例：
+
 ~~~Plain Text
+mysql> SHOW PROC '/colocation_group';
 +-------------+--------------+--------------+------------+----------------+----------+----------+
 | GroupId     | GroupName    | TableIds     | BucketsNum | ReplicationNum | DistCols | IsStable |
 +-------------+--------------+--------------+------------+----------------+----------+----------+
@@ -84,10 +89,13 @@ SHOW PROC '/colocation_group';
 您可以通过以下命令进一步查看特定 Group 的数据分布情况。
 
 ~~~sql
-SHOW PROC '/colocation_group/10005.10008';
+SHOW PROC '/colocation_group/GroupId';
 ~~~
 
+示例：
+
 ~~~Plain Text
+mysql> SHOW PROC '/colocation_group/10005.10008';
 +-------------+---------------------+
 | BucketIndex | BackendIds          |
 +-------------+---------------------+
@@ -115,7 +123,7 @@ SHOW PROC '/colocation_group/10005.10008';
 您可以通过以下命令修改表的 Colocation Group 属性。
 
 ~~~SQL
-ALTER TABLE tbl SET ("colocate_with" = "group2");
+ALTER TABLE tbl SET ("colocate_with" = "group_name");
 ~~~
 
 如果该表之前没有指定过 Group，则该命令会检查 Schema，并将该表加入到该 Group（如 Group 不存在则会创建）。如果该表之前有指定其他 Group，则该命令会先将该表从原有 Group 中移除，并将其加入新 Group（如 Group 不存在则会创建）。
@@ -123,7 +131,7 @@ ALTER TABLE tbl SET ("colocate_with" = "group2");
 您也可以通过以下命令，删除一个表的 Colocation 属性：
 
 ~~~SQL
-ALTER TABLE tbl SET ("colocate_with" = "");
+ALTER TABLE tbl SET ("colocate_with" = "group_name");
 ~~~
 
 <br/>
@@ -136,7 +144,7 @@ ALTER TABLE tbl SET ("colocate_with" = "");
 
 Colocation 表的副本分布需遵循 Group 中指定的分布，所以其副本修复和均衡相较于普通分片有所区别。
 
-Group 具有 **Stable** 属性，当 **Stable** 为 **true** 时（即 Stable），表示当前 Group 内的表的所有分片没有正在进行的变动，Colocation 特性可以正常使用。当 **Stable** 为 **false** 时（即 Unstable），表示当前 Group 内有部分表的分片正在做修复或迁移，此时，相关表的 Colocate Join 将退化为普通 Join。
+Group 具有 **Stable** 属性，当 **Stable** 为 **true** 时（即 Stable 状态），表示当前 Group 内的表的所有分片没有正在进行的变动，Colocation 特性可以正常使用。当 **Stable** 为 **false** 时（即 Unstable 状态），表示当前 Group 内有部分表的分片正在做修复或迁移，此时，相关表的 Colocate Join 将退化为普通 Join。
 
 ### 副本修复
 
@@ -157,7 +165,7 @@ StarRocks 会将 Colocation 表的分片尽可能均匀地分布在所有 BE 节
 
 以下示例基于同一 CG 中的表 1 和表 2。
 
-表1：
+表 1：
 
 ~~~SQL
 CREATE TABLE `tbl1` (
@@ -177,7 +185,7 @@ PROPERTIES (
 );
 ~~~
 
-表2：
+表 2：
 
 ~~~SQL
 CREATE TABLE `tbl2` (
@@ -301,13 +309,21 @@ EXPLAIN SELECT * FROM tbl1 INNER JOIN tbl2 ON (tbl1.k2 = tbl2.k2);
 
 `disable_colocate_balance`：是否关闭自动 Colocation 副本均衡功能。默认为 `false`，即不关闭。该参数只影响 Colocation 表的副本均衡，不影响普通表。
 
-以上参数支持动态修改，您可以通过 `HELP ADMIN SHOW CONFIG;` 和 `HELP ADMIN SET CONFIG;` 命令了解其设置方式。
+以上参数支持动态修改，您可以通过以下命令关闭。
+
+```sql
+ADMIN SET FRONTEND CONFIG ("disable_colocate_balance" = "TRUE");
+```
 
 ### Session 变量
 
-`disable_colocate_join`：是否在 session 粒度关闭 Colocate Join 功能。
+`disable_colocate_join`：是否在 session 粒度关闭 Colocate Join 功能。默认为 `false`，即不关闭。
 
-以上参数可以动态修改，设置方式请参阅[系统变量](../reference/System_variable.md)章节。
+以上参数可以动态修改，您可以通过以下命令关闭。
+
+```sql
+SET disable_colocate_join = TRUE;
+```
 
 ### HTTP Restful API
 
@@ -318,7 +334,7 @@ StarRocks 提供了多个与 Colocation Join 有关的 HTTP Restful API，用于
 1. 查看集群的全部 Colocation 信息。
 
     ~~~shell
-    curl -u<user>:<password> http://fe_host:fe_http_port/api/colocate
+    curl -u<user>:<password> http://<fe_host>:<fe_http_port>/api/colocate
     ~~~
 
     示例：
@@ -384,24 +400,20 @@ StarRocks 提供了多个与 Colocation Join 有关的 HTTP Restful API，用于
 2. 将 Group 标记为 Stable 或 Unstable。
 
     ~~~shell
-    
+    # 标记为 Stable。
+    curl -u<user>:<password> http://<fe_host>:<fe_http_port>/api/colocate/group_stable?db_id=<dbId>&group_id=<grpId>
+    # 标记为 Unstable。
+    curl -u<user>:<password> http://<fe_host>:<fe_http_port>/api/colocate/group_unstable?db_id=<dbId>&group_id=<grpId>
     ~~~
 
-    * 标记为 Stable。
-
-        `POST /api/colocate/group_stable?db_id=10005&group_id=10008`
-
-        `返回：200`
-
-    * 标记为 Unstable。
-
-        `POST /api/colocate/group_unstable?db_id=10005&group_id=10008`
-
-        `返回：200`
+    若返回为 `200`， 则表示标记修改成功。
 
 3. 设置 Group 的数据分布。
 
     该接口可以强制设置某一 Group 的数据分布。
+
+    > 注意
+    > 使用该命令，需要将 FE 的配置 `disable_colocate_balance` 设为 `true`，即关闭系统自动 Colocation 副本修复和均衡。否则在修改数据分布设置后可能会被系统自动重置。
 
     `POST /api/colocate/bucketseq?db_id=10005&group_id=10008`
 
