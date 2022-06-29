@@ -311,9 +311,9 @@ EXPLAIN SELECT * FROM tbl1 INNER JOIN tbl2 ON (tbl1.k2 = tbl2.k2);
 
 以上参数支持动态修改，您可以通过以下命令关闭。
 
-```sql
+~~~sql
 ADMIN SET FRONTEND CONFIG ("disable_colocate_balance" = "TRUE");
-```
+~~~
 
 ### Session 变量
 
@@ -321,9 +321,9 @@ ADMIN SET FRONTEND CONFIG ("disable_colocate_balance" = "TRUE");
 
 以上参数可以动态修改，您可以通过以下命令关闭。
 
-```sql
+~~~sql
 SET disable_colocate_join = TRUE;
-```
+~~~
 
 ### HTTP Restful API
 
