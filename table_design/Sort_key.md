@@ -78,19 +78,22 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 以上述示例 1 中的建表语句为例，排序效果可以分为三种情况：
 
 - 如果查询条件只包含 `site_id` 和 `city_code` 两列，如下所示，则可以大幅减少查询过程中需要扫描的数据行：
-  - ```undefined
-    select sum(pv) from site_access_duplicate where site_id = 123 and city_code = 2;
-    ```
 
-- 如果查询条件只包含 `site_id` 一列，如下所示，可以定位到只包含 `site_id` 的数据行：
-  - ```undefined
+  ```undefined
+    select sum(pv) from site_access_duplicate where site_id = 123 and city_code = 2;
+  ```
+
+- 如果查询条件只包含 `site_id` 一列，如下所示，可以定位到只包含 `site_id` 的数据行
+
+  ```undefined
     select sum(pv) from site_access_duplicate where site_id = 123;
-    ```
+  ```
 
 - 如果查询条件只包含 `city_code` 一列，如下所示，则需要扫描所有数据行，排序效果大打折扣：
-  - ```undefined
+
+  ```undefined
     select sum(pv) from site_access_duplicate where city_code = 2;
-    ```
+  ```
 
 在第一种情况下，为了定位到数据行的位置，需进行二分查找，以找到指定区间。如果数据行非常多，直接对 `site_id` 和 `city_code` 两列进行二分查找，需要把两列数据都加载到内存中，这样会消耗大量的内存空间。这时候您可以使用前缀索引来减少缓存的数据量、并有效加速查询。另外，在实际业务场景中，如果指定的排序列非常多，也会占用大量内存，为了避免这种情况，StarRocks 对前缀索引做了如下限制:
 
