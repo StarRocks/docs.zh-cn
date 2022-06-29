@@ -22,7 +22,7 @@ http://fe_host:http_port/api/{db}/{table}/_stream_load
 
 ### 参数解析
 
-**user:passwd**
+**user 和 passwd**
 
 用于登录的用户名和密码。Stream Load 创建导入作业使用的是 HTTP 协议，可通过基本认证 (Basic Access Authentication) 进行签名。StarRocks 系统会根据签名来验证登录用户的身份和导入权限。
 
