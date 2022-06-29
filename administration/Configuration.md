@@ -341,7 +341,7 @@ BE 配置项暂不支持在线修改，生效需在 be.conf 中修改并重启 b
 |file_descriptor_cache_clean_interval|3600|文件句柄缓存清理的间隔，用于清理长期不用的文件句柄|
 |disk_stat_monitor_interval|5|磁盘状态检测的间隔|
 |unused_rowset_monitor_interval|30|清理过期 Rowset 的时间间隔|
-|storage_root_path|空字符串|存储数据的目录|
+|storage_root_path|空字符串|存储数据的目录，多块盘配置使用分隔符";"间隔，例如：/data1/starrocks;/data2/starrocks|
 |max_percentage_of_error_disk|0|磁盘错误达到一定比例，BE 退出|
 |default_num_rows_per_data_block|1024|每个 block 的数据行数|
 |max_tablet_num_per_shard|1024|每个 shard 的 tablet 数目，用于划分 tablet，防止单个目录下 tablet 子目录过多|
@@ -372,7 +372,7 @@ BE 配置项暂不支持在线修改，生效需在 be.conf 中修改并重启 b
 |max_compaction_concurrency|4|BaseCompaction + CumulativeCompaction 的最大并发， -1 代表没有限制。|
 |compaction_trace_threshold|60|单次 Compaction 打印 trace 的时间阈值，如果单次 compaction 时间超过该阈值就打印 trace，单位为秒|
 |webserver_port|8040|Http Server 端口|
-|webserver_num_workers|5|Http Server 线程数|
+|webserver_num_workers|48|Http Server 线程数|
 |periodic_counter_update_period_ms|500|Counter 统计信息的间隔|
 |load_data_reserve_hours|4|小批量导入生成的文件保留的时间|
 |load_error_log_reserve_hours|48|导入数据信息保留的时长|
