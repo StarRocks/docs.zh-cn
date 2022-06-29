@@ -157,7 +157,6 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |log_roll_size_mb|1024|日志拆分的大小，每 1G 拆分一个日志，单位为 MB。|
 |sys_log_dir|StarRocksFE.STARROCKS_HOME_DIR + "/log"|日志保留的目录。|
 |sys_log_level|INFO|日志级别，INFO < WARN < ERROR < FATAL。|
-|sys_log_roll_num|10|日志保留的数目。|
 |sys_log_verbose_modules|空字符串|日志打印的模块，写 org.apache.starrocks.catalog 就只打印 catalog 模块下的日志。|
 |sys_log_roll_interval|DAY|日志拆分的时间间隔。|
 |sys_log_delete_age|7d|日志删除的间隔。|
