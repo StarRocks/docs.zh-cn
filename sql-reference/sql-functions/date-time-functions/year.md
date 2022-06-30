@@ -7,7 +7,7 @@
 ## 语法
 
 ```Haskell
-INT YEAR(DATETIME date)
+INT YEAR(DATE|DATETIME date)
 ```
 
 ## 参数说明
