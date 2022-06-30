@@ -165,7 +165,7 @@ StarRocks 支持导入如下数据类型：
 
   - `load_process_max_memory_limit_bytes`：指定 BE 上最大内存使用量，默认为 100 GB。
   - `load_process_max_memory_limit_percent`：指定 BE 上最大内存使用百分比，默认为 30%。该参数与 `mem_limit` 参数不同。`mem_limit` 参数指定的是 StarRocks 集群的总内存使用百分比，也就是物理内存使用百分比，默认值为 80%。
-    假设 BE 所在机器物理内存大小为 M，则用于导入的内存上限为：M * 80% * 30%。
+    假设 BE 所在机器物理内存大小为 M，则用于导入的内存上限为：M x 80% x 30%。
 
 ## 常见问题
 
