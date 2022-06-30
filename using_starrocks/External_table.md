@@ -245,7 +245,7 @@ select * from es_table where esquery(k4, ' {
 
 ## 更多数据库（支持 JDBC 驱动程序）的外部表
 
-StarRocks 支持通过外部表的方式查询支持 JDBC 驱动程序的数据库，无需将数据导入至 StarRocks，即可实现对这类数据库的极速分析。本文介绍如何在 StarRocks 创建外部表，查询支持 JDBC 驱动程序的数据库中的数据。
+自 2.3.0 版本起，StarRocks 支持通过外部表的方式查询支持 JDBC 驱动程序的数据库，无需将数据导入至 StarRocks，即可实现对这类数据库的极速分析。本文介绍如何在 StarRocks 创建外部表，查询支持 JDBC 驱动程序的数据库中的数据。
 
 ### 前提条件
 
