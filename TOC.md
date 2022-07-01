@@ -8,14 +8,14 @@
   + [系统架构](/introduction/system_architecture.md)
   + [产品特性](/introduction/features.md)
 + 快速开始
-  + [StarRocks 部署](/quick_start/Deploy.md)
-  + [表创建](/quick_start/Create_table.md)
-  + [数据导入和查询](/quick_start/Import_and_query.md)
+  + [手动部署 StarRocks](/quick_start/Deploy.md)
+  + [创建表](/quick_start/Create_table.md)
+  + [导入和查询数据](/quick_start/Import_and_query.md)
 + 表设计
-  + [理解StarRocks表设计](/table_design/StarRocks_table_design.md)
+  + [理解 StarRocks 表设计](/table_design/StarRocks_table_design.md)
   + [数据模型介绍](/table_design/Data_model.md)
   + [数据分布](/table_design/Data_distribution.md)
-  + [排序键和shortkey index](/table_design/Sort_key.md)
+  + [排序键和前缀索引](/table_design/Sort_key.md)
 + 数据导入
   + [导入总览](/loading/Loading_intro.md)
   + [Stream Load](/loading/StreamLoad.md)
@@ -34,27 +34,28 @@
   + [Spark Connector](/unloading/Spark_connector.md)
   + [Flink Connector](/unloading/Flink_connector.md)
 + 使用StarRocks
-  + [CBO优化器](/using_starrocks/Cost_based_optimizer.md)
+  + [CBO 优化器](/using_starrocks/Cost_based_optimizer.md)
   + [物化视图](/using_starrocks/Materialized_view.md)
   + [外部表](/using_starrocks/External_table.md)
   + [Colocate Join](/using_starrocks/Colocate_join.md)
   + [Lateral Join](/using_starrocks/Lateral_join.md)
   + [数组](/using_starrocks/Array.md)
   + [窗口函数](/using_starrocks/Window_function.md)
-  + [JAVA UDF](/using_starrocks/JAVA_UDF.md)
-  + [Bitmap索引](/table_design/Bitmap_index.md)
-  + [Bloomfilter索引](/table_design/Bloomfilter_index.md)
+  + [Java UDF](/using_starrocks/JAVA_UDF.md)
+  + [Bitmap 索引](/table_design/Bitmap_index.md)
+  + [Bloomfilter 索引](/table_design/Bloomfilter_index.md)
   + [基于 Bitmap 实现精确去重](/using_starrocks/Using_bitmap.md)
   + [基于 HyperLogLog 实现近似去重](/using_starrocks/Using_HLL.md)
   + [时区](/using_starrocks/timezone.md)
   + [临时分区](/using_starrocks/Temporary_partition.md)
+  + [文件管理器](/using_starrocks/filemanager.md)
 + 管理手册
   + 部署使用
     + [容器编译](/administration/Build_in_docker.md)
     + [集群部署](/administration/Deployment.md)
     + [集群管理](/administration/Cluster_administration.md)
-    + [DorisDB升级StarRocks手册](/administration/update_from_dorisdb.md)
-    + [ApacheDoris升级StarRocks手册](/administration/update_from_doris.md)
+    + [DorisDB升级到StarRocks](/administration/update_from_dorisdb.md)
+    + [Apache Doris升级到StarRocks](/administration/update_from_doris.md)
   + 运维操作
     + [扩容缩容](/administration/Scale_up_down.md)
     + [备份恢复](/administration/Backup_and_restore.md)
@@ -68,7 +69,7 @@
       + [副本管理](/administration/Replica.md)
       + [黑名单管理](/administration/Blacklist.md)
   + 数据恢复
-    + [数据删除恢复](/administration/Data_recovery.md)
+    + [数据恢复](/administration/Data_recovery.md)
     + [元数据恢复](/administration/Metadata_recovery.md)
   + 用户权限及认证
     + [用户权限](/administration/User_privilege.md)
@@ -102,6 +103,8 @@
       + [ALTER SYSTEM](/sql-reference/sql-statements/Administration/ALTER%20SYSTEM.md)
       + [CANCEL DECOMMISSION](/sql-reference/sql-statements/Administration/CANCEL%20DECOMMISSION.md)
       + [CREATE RESOURCE GROUP](/sql-reference/sql-statements/Administration/CREATE%20RESOURCE%20GROUP.md)
+      + [CREATE FILE](/sql-reference/sql-statements/Administration/CREATE%20FILE.md)
+      + [DROP FILE](/sql-reference/sql-statements/Administration/DROP%20FILE.md)
       + [ENTER](/sql-reference/sql-statements/Administration/ENTER.md)
       + [INSTALL PLUGIN](/sql-reference/sql-statements/Administration/INSTALL%20PLUGIN.md)
       + [LINK DATABASE](/sql-reference/sql-statements/Administration/LINK%20DATABASE.md)
@@ -114,6 +117,7 @@
       + [SHOW MIGRATIONS](/sql-reference/sql-statements/Administration/SHOW%20MIGRATIONS.md)
       + [SHOW PLUGINS](/sql-reference/sql-statements/Administration/SHOW%20PLUGINS.md)
       + [SHOW TABLE STATUS](/sql-reference/sql-statements/Administration/SHOW%20TABLE%20STATUS.md)
+      + [SHOW FILE](/sql-reference/sql-statements/Administration/SHOW%20FILE.md)
       + [UNINSTALL PLUGIN](/sql-reference/sql-statements/Administration/UNINSTALL%20PLUGIN.md)
     + DDL
       + [ALTER DATABASE](/sql-reference/sql-statements/data-definition/ALTER%20DATABASE.md)
@@ -398,7 +402,7 @@
     + 百分位函数
       + [percentile_approx_raw](/sql-reference/sql-functions/percentile-functions/percentile_approx_raw.md)
       + [percentile_empty](/sql-reference/sql-functions/percentile-functions/percentile_empty.md)
-      + [percenntile_hash](/sql-reference/sql-functions/percentile-functions/percentile_hash.md)
+      + [percentile_hash](/sql-reference/sql-functions/percentile-functions/percentile_hash.md)
       + [percentile_union](/sql-reference/sql-functions/percentile-functions/percentile_union.md)
     + 数学函数
       + [abs](/sql-reference/sql-functions/math-functions/abs.md)
@@ -445,23 +449,21 @@
   + [部署运维](/faq/Deploy_faq.md)
   + 数据迁移
     + 导入
-      + [导入通用FAQ](/faq/loading/Loading_faq.md)
+      + [导入通用 FAQ](/faq/loading/Loading_faq.md)
       + [Stream Load](/faq/loading/Stream_load_faq.md)
       + [Routine Load](/faq/loading/Routine_load_faq.md)
       + [Broker Load](/faq/loading/Broker_load_faq.md)
-      + [Spark Load](/faq/loading/Spark_load_faq.md)
       + [Insert Into](/faq/loading/Insert_into_faq.md)
       + [Flink connector](/faq/loading/Flink_connector_faq.md)
       + [DataX](/faq/loading/DataX_faq.md)
-      + [CloudCanal数据导入](/faq/loading/CloudCanal_load_faq.md)
-      + [其他](/faq/loading/Others.md)
+      + [CloudCanal 数据导入](/faq/loading/CloudCanal_load_faq.md)
     + [导出](/faq/Exporting_faq.md)
   + [SQL FAQ](/faq/Sql_faq.md)
   + [视频资源](/faq/Video.md)
   + [其他](/faq/Others.md)
 + 性能测试
-  + [SSB性能测试](/benchmarking/SSB_Benchmarking.md)
-  + [TPC-H基准测试](/benchmarking/TPC-H_Benchmark.md)
+  + [SSB 性能测试](/benchmarking/SSB_Benchmarking.md)
+  + [TPC-H 基准测试](/benchmarking/TPC-H_Benchmark.md)
 + Release Notes
   + [v2.2](/release_notes/release-2.2.md)
   + [v2.1](/release_notes/release-2.1.md)

@@ -22,14 +22,14 @@ HyperLogLog 是一种近似的去重算法，能够使用极少的存储空间�
 
 * 试验 A：对数据集的元素计算哈希值，记录哈希值的二进制表示形式中，从最低位算起，记录 bit 1 首次出现的位置。
 * 试验 B：遍历数据集，对数据集的元素做试验 A 的处理，每次试验时，更新 bit 1 首次出现的最大位置 m；
-* 估算数据集中不重复元素的个数为m <sup>2</sup>。
+* 估算数据集中不重复元素的个数为 2 <sup>m</sup>。
 
 事实上，HLL 算法根据元素哈希值的低 k 位，将元素划分到 K=2<sup>k</sup> 个桶中，统计桶内元素的第 k+1 位起 bit 1 首次出现位置的最大值 m<sub>1</sub>, m<sub>2</sub>,..., m<sub>k</sub>, 估算桶内不重复元素元素的个数 2<sup>m<sub>1</sub></sup>, 2<sup>m<sub>2</sub></sup>,..., 2<sup>m<sub>k</sub></sup>, 数据集的不重复元素个数为桶的数量乘以桶内不重复元素个数的调和平均数: N = K(K/(2<sup>\-m<sub>1</sub></sup>+2<sup>\-m<sub>2</sub></sup>,..., 2<sup>\-m<sub>K</sub></sup>))。
 <br/>
 
 HLL 为了使结果更加精确，用修正因子和估算结果相乘，得出最终结果。
 
-为了方面读者的理解，我们参考文章[https://gist.github.com/avibryant/8275649,](https://gist.github.com/avibryant/8275649) 用 StarRocks 的 SQL 语句实现 HLL 去重算法:
+为了方便读者的理解，我们参考文章[https://gist.github.com/avibryant/8275649,](https://gist.github.com/avibryant/8275649) 用 StarRocks 的 SQL 语句实现 HLL 去重算法:
 
 ~~~sql
 SELECT floor((0.721 * 1024 * 1024) / (sum(pow(2, m * -1)) + 1024 - count(*))) AS estimate
@@ -138,4 +138,4 @@ Bitmap 仅支持 TINYINT，SMALLINT，INT，BIGINT（注意不支持 LARGEINT）
 
 对于普通列，用户还可以使用 NDV 函数进行近似去重计算。NDV 函数返回值是 COUNT(DISTINCT col) 结果的近似值聚合函数，底层实现将数据存储类型转为 HyperLogLog 类型进行计算。但 NDV 函数在计算的时候比较消耗资源，不适合于并发高的场景。
 
-如果应用场景为用户行为分析，建议使用 IntersectCount 或者自定义 UDAF 去重。
+如果应用场景为用户行为分析，建议使用 INTERSECT_COUNT 或者自定义 UDAF 去重。
