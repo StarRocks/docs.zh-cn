@@ -477,7 +477,7 @@ SHOW RESOURCES;
 DROP RESOURCE "hive0";
 ~~~
 
-<br/>
+StarRocks 2.3 及以上版本支持修改 Hive 资源的 `hive.metastore.uris`。更多信息，参见 [ALTER RESOURCE](../sql-reference/sql-statements/data-definition/ALTER%20RESOURCE.md).
 
 ### 创建数据库
 
@@ -743,7 +743,7 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
   * 不同版本 Hive Metastore 的 Events 事件可能不同，且上述开启 HiveMetastore Event 机制的配置在不同版本也存在不同。使用时相关配置可根据实际版进行适当调整。当前已经验证可以开启 Hive Metastore Event 机制的版本有 2.X 和 3.X。用户可以在 FE 日志中搜索 "event id" 来验证 event 是否开启成功，如果没有开启成功，event id 始终保持为 0。如果无法判断是否成功开启 Event 机制，请在 StarRocks 用户交流群中联系值班同学进行排查。
   * 当前 Hive 元数据缓存模式为懒加载，即：如果 Hive 新增了分区，StarRocks 只会将新增分区的 partition key 进行缓存，不会立即缓存该分区的文件信息。只有当查询该分区时或者用户手动执行 refresh 分区操作时，该分区的文件信息才会被加载。StarRocks 首次缓存该分区统计信息后，该分区后续的元数据变更就会自动同步到 StarRocks 中。
   * 手动执行缓存方式执行效率较低，相比之下自动增量更新性能开销较小，建议用户开启该功能进行更新缓存。
-  * 当前自动更新不支持 add/drop column 等 schema change 操作，Hive 表结构如有更改，需要重新创建 Hive 外表。Hive 外表支持 Schema change 将会在近期推出，敬请期待。
+  * 当 Hive 的数据存储为 Parquet、ORC、CSV 格式时，支持 Hive 外部表同步 ADD COLUMN、REPLACE COLUMN 等表结构变更（Schema Change）。
 
 ## Apache Iceberg 外部表
 
@@ -815,6 +815,7 @@ PROPERTIES ( "type" = "iceberg", "starrocks.catalog-type"="CUSTOM", "iceberg.cat
 | starrocks.catalog-type | 资源的 catalog。目前支持 Hive catalog 和 custom catalog。 如要使用 Hive catalog， 需指定该参数值为 `HIVE`。 如要使用 custom catalog，需指定该参数值为 `CUSTOM`。 |
 | iceberg.catalog-impl   | 开发的 custom catalog 的全限定类名。FE 会根据该类名查找开发的 custom catalog。如果 custom catalog 中包含自定义的配置项，需要在创建 Iceberg 外部表时将其以键值对的形式添加到 SQL 语句的 `PROPERTIES` 中。 |
 
+StarRocks 2.3 及以上版本支持修改 Iceberg 资源的 `hive.metastore.uris` 和 `iceberg.catalog-impl`。更多信息，参见 [ALTER RESOURCE](../sql-reference/sql-statements/data-definition/ALTER%20RESOURCE.md).
 **查看** **Iceberg 资源**
 
 ~~~SQL
@@ -971,6 +972,8 @@ PROPERTIES (
 |  ----  | ----  |
 | type  | 资源类型，固定取值为 **hudi**。 |
 | hive.metastore.uris | Hive Metastore 的 thrift URI。<br> Hudi 通过连接 Hive Metastore，以创建并管理表。您需要传入该 Hive Metastore 的 thrift URI。格式为 **thrift://<Hive Metadata的IP地址>: <端口号>**，端口号默认为 9083。 |
+
+StarRocks 2.3 及以上版本支持修改 Hudi 资源的 `hive.metastore.uris`。更多信息，参见 [ALTER RESOURCE](../sql-reference/sql-statements/data-definition/ALTER%20RESOURCE.md).
 
 执行如下命令，查看 StarRocks 中的所有 Hudi 资源。
 
