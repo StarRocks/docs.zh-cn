@@ -44,7 +44,7 @@
 
 - 优化 Apache Hive™ 外表功能。相关文档，请参见 [Hive 外部表](../using_starrocks/External_table.md#hive-外表)。
   - 当 Apache Hive™ 的数据存储采用 Parquet、ORC、CSV 格式时，支持 Hive 表执行 ADD COLUMN、REPLACE COLUMN 等表结构变更（Schema Change）。
-  - 支持 Hive 资源修改 `hive.metastore.uris`。
+  - 支持 Hive 资源修改 `hive.metastore.uris`。相关文档，请参见 [ALTER RESOURCE](../sql-reference/sql-statements/data-definition/ALTER RESOURCE.md)。
 
 - 优化 Apache Iceberg 外表功能，创建 Iceberg 资源时支持使用自定义目录（Catalog）。相关文档，请参见 [Apache Iceberg 外表
 ](../using_starrocks/External_table.md#apache-iceberg-外表)。
