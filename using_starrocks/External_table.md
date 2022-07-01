@@ -757,11 +757,8 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
 
 - Iceberg 外部表仅支持查询以下格式的数据：
   - Versions 1 表(Analytic Data Tables) 。暂不支持查询 Versions 2 表 (Row-level Deletes) 。更多有关 Versions 1 和 Versions 2 的信息，参见 [Iceberg Table Spec](https://iceberg.apache.org/spec/)。
-
   - 压缩格式为 gzip（默认压缩格式）、Zstd、LZ4 和 Snappy 的表。
-
   - 格式为 Parquet 和 ORC 的文件。
-
 - StarRocks 2.3 及以上版本支持同步 Iceberg 表结构，但 StarRocks 2.3 以下版本不⽀持。如果 Iceberg 表结构发生变化，您需要在 StarRocks 中删除相应的外部表并重新创建。
 
 ### 操作步骤
@@ -769,7 +766,6 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
 #### 步骤一：创建  Iceberg 资源
 
 在创建外部表之前，需先创建 Iceberg 资源，以用来管理 Apache Iceberg 的访问信息。此外，在创建Iceberg 外部表时也需要指定引用的 Iceberg 资源。您可以根据业务需求创建不同 catalog 类型的资源：
-
 - 如果 Iceberg 表的元数据是从 Hive metastore 获取的，则可以创建 catalog 类型为 `HIVE` 的资源。
 - 如果 Iceberg 表的元数据是从其他服务获取的，则可以开发一个 custom catalog （即自定义 catalog），然后创建 catalog 类型为 `CUSTOM` 的资源。
 
