@@ -37,7 +37,7 @@ StarRocksManager的监控可以分成**集群**和**节点**两个维度，在�
 
 可供选择的指标有：
 
-  |指标|单位|类型|含义|
+|指标|单位|类型|含义|
 |---|:---:|:---:|---|
 |be_broker_count|个|平均值|broker的数量|
 |be_brpc_endpoint_count|个|平均值|Brpc中StubCache的数量|
@@ -122,6 +122,13 @@ StarRocksManager的监控可以分成**集群**和**节点**两个维度，在�
 |disk_io_svctm|Ms|平均值|磁盘IO服务时间|
 |disk_io_util|百分比|平均值|磁盘使用率|
 |disk_used|bytes|平均值|已用磁盘容量|
+|starrocks_fe_query_resource_group|个|平均值|该资源组中查询任务的数量|
+|starrocks_fe_query_resource_group_latency|秒|平均值|该资源组的查询延迟百分位数|
+|starrocks_fe_query_resource_group_err|个|平均值|该资源组中报错的查询任务的数量|
+|starrocks_be_resource_group_cpu_limit_ratio|百分比|瞬时值|该资源组 CPU 配额比率的瞬时值|
+|starrocks_be_resource_group_cpu_use_ratio|百分比|瞬时值|该资源组 CPU 使用率瞬时值|
+|starrocks_be_resource_group_mem_limit_bytes|Byte|瞬时值|该资源组内存配额比率的瞬时值|
+|starrocks_be_resource_group_mem_allocated_bytes|Byte|瞬时值|该资源组内存使用率瞬时值|
 
 ## 监控报警最佳实践
 
