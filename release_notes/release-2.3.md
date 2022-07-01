@@ -14,7 +14,7 @@
 
 - Stream Load 提供事务接口，支持将“发送数据”和“提交事务”拆分执行，实现跨系统的两阶段提交，提升高并发场景下的导入性能。例如从 Flink 导入至 StarRocks 时，支持同步接收上游数据和发送数据，并且在合适的时候“提交事务”以完成一个批次的导入，客户端无需缓存完整批次数据，能够减少客户端的内存使用，并且实现“精确一次 (Exactly-Once)”语义。此外，还支持小文件在一个批次中合并导入等功能。相关文档，请参见 [使用 Stream Load 事务接口导入](../loading/Use_Stream_Load_Transaction_Interface.md)。
 
-- CREATE TABLE AS SELECT 语句可以以异步的方式执行CTAS，并将结果写入新表。相关文档，请参见 [CREATE TABLE AS SELECT](../sql-reference/sql-statements/data-definition/CREATE%20TABLE%20AS%20SELECT.md)。
+- 支持以异步的方式执行 CTAS，并将结果写入新表。相关文档，请参见 [CREATE TABLE AS SELECT](../sql-reference/sql-statements/data-definition/CREATE%20TABLE%20AS%20SELECT.md)。
 
 - 资源组相关功能：
   - 支持监控资源组：可在审计日志中查看查询所属的资源组，并通过相关 API 获取资源组的监控信息。相关文档，请参见[监控指标](../administration/Monitor_and_Alert.mdMonitor_and_Alert.md#监控指标)。
