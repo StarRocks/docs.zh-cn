@@ -8,7 +8,7 @@
 
 - 主键模型支持完整的 DELETE WHERE 语法。相关文档，请参见 [DELETE](../sql-reference/sql-statements/data-manipulation/DELETE.md#delete-与主键模型)。
 
-- 主键模型支持持久化主键索引，避免主键索引占用过大内存空间。相关文档，请参见[主键模型介绍](../table_design/Data_model.md#主键模型)。
+- 主键模型支持持久化主键索引，避免主键索引占用过大内存空间。相关文档，请参见[主键模型介绍](../table_design/Data_model.md#使用说明-3)。
 
 - 执行 Routine Load 导入场景下，构建全局字典进行低基数字段的查询优化时，支持全局字典更新，从而提升查询性能。
 
@@ -16,7 +16,7 @@
 
 - CREATE TABLE AS SELECT 语句可以以异步的方式执行CTAS，并将结果写入新表。相关文档，请参见 [CREATE TABLE AS SELECT](../sql-reference/sql-statements/data-definition/CREATE%20TABLE%20AS%20SELECT.md)。
 
-- 资源组相关功能：监控报警
+- 资源组相关功能：
   - 支持监控资源组：可在审计日志中查看查询所属的资源组，并通过相关 API 获取资源组的监控信息。相关文档，请参见[监控报警](../administration/Monitor_and_Alert.md)。
   - 支持限制大查询的 CPU、内存、或 I/O 资源；可通过匹配分类器将查询路由至资源组，或者设置会话变量直接为查询指定资源组。相关文档，请参见[资源组](../administration/Resource_Group.md)。
 
@@ -42,13 +42,15 @@
   - TopN，sort 算子。
   - 包含函数的等值比较运算符下推至 scan 算子时，支持使用 Zone Map 索引。
 
-- 优化 Apache Hive™ 外表功能。相关文档，请参见xxx。
+- 优化 Apache Hive™ 外表功能。相关文档，请参见 [Hive 外部表](../using_starrocks/External_table.md#hive-外表)。
   - 当 Apache Hive™ 的数据存储采用 Parquet、ORC、CSV 格式时，支持 Hive 表执行 ADD COLUMN、REPLACE COLUMN 等表结构变更（Schema Change）。
   - 支持 Hive 资源修改 `hive.metastore.uris`。
 
-- 优化 Apache Iceberg 外表功能，创建 Iceberg 资源时支持使用自定义目录（Catalog）。相关文档，请参见xxx。
+- 优化 Apache Iceberg 外表功能，创建 Iceberg 资源时支持使用自定义目录（Catalog）。相关文档，请参见[Apache Iceberg 外表
+](../using_starrocks/External_table.md#apache-iceberg-外表)。
 
-- 优化 Elasticsearch 外表功能，支持取消探测 Elasticsearch 集群数据节点的地址。相关文档，请参见xxx。
+- 优化 Elasticsearch 外表功能，支持取消探测 Elasticsearch 集群数据节点的地址。相关文档，请参见 [Elasticsearch 外部表]
+(../using_starrocks/External_table.md#elasticsearch-外部表)。
 
 - 当 sum() 中输入的值为 STRING 类型且为数字时，则自动进行隐式转换。
 
