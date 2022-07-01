@@ -63,7 +63,7 @@ PROPERTIES(
 
 #### 查询内部数据
 
-例如，查询`olap_db.olap_table`中的数据，操作步骤如下：
+例如，查询`olap_db.olap_table`中的数据，操作如下：
 
 1. 从 MySQL 客户端登录到 StarRocks 后查看当前集群中的所有内部数据库。
 
