@@ -8,60 +8,60 @@ CREATE TABLE AS SELECT（简称 CTAS）语句可用于同步或异步查询原�
 
 - 同步查询原表并基于查询结果创建新表，然后将查询结果插入到新表中。
 
-```SQL
-CREATE TABLE [IF NOT EXISTS] [database.]table_name
+  ```SQL
+  CREATE TABLE [IF NOT EXISTS] [database.]table_name
 
-[(column_name [, column_name2, ...]]
+  [(column_name [, column_name2, ...]]
 
-[COMMENT "table comment"]
+  [COMMENT "table comment"]
 
-[partition_desc]
+  [partition_desc]
 
-[distribution_desc]
+  [distribution_desc]
 
-[PROPERTIES ("key"="value", ...)]AS SELECT query
+  [PROPERTIES ("key"="value", ...)]AS SELECT query
 
-[ ... ]
-```
+  [ ... ]
+  ```
 
 - 异步查询原表并基于查询结果创建新表，然后将查询结果插入到新表中。
 
-```SQL
-SUBMIT [/*+ SET_VAR(key=value) */] TASK [[database.]<task_name>]AS
+  ```SQL
+  SUBMIT [/*+ SET_VAR(key=value) */] TASK [[database.]<task_name>]AS
 
-CREATE TABLE [IF NOT EXISTS] [database.]table_name
+  CREATE TABLE [IF NOT EXISTS] [database.]table_name
 
-[(column_name [, column_name2, ...]]
+  [(column_name [, column_name2, ...]]
 
-[COMMENT "table comment"]
+  [COMMENT "table comment"]
 
-[partition_desc]
+  [partition_desc]
 
-[distribution_desc]
+  [distribution_desc]
 
-[PROPERTIES ("key"="value", ...)]AS SELECT query
+  [PROPERTIES ("key"="value", ...)]AS SELECT query
 
-[ ... ]
-```
+  [ ... ]
+  ```
 
-该语法会创建一个 Task，表示一个 CTAS 语句执行任务的存储模板。查看 Task 信息的语法如下。
+  该语法会创建一个 Task，表示一个 CTAS 语句执行任务的存储模板。查看 Task 信息的语法如下。
 
-```SQL
-SELECT * FROM INFORMATION_SCHEMA.tasks;
-```
+  ```SQL
+  SELECT * FROM INFORMATION_SCHEMA.tasks;
+  ```
 
-执行 Task 后会对应生成一个 TaskRun，表示一个 CTAS 语句执行任务。TaskRun 有以下 4 种状态：
+  执行 Task 后会对应生成一个 TaskRun，表示一个 CTAS 语句执行任务。TaskRun 有以下 4 种状态：
 
-- `PEDING`：任务等待执行。
-- `RUNNING`：任务正在执行。
-- `FAILED`：任务执行失败。
-- `SUCCESS`：任务执行成功。
+  - `PEDING`：任务等待执行。
+  - `RUNNING`：任务正在执行。
+  - `FAILED`：任务执行失败。
+  - `SUCCESS`：任务执行成功。
 
-查看 TaskRun 状态的语法如下。
+  查看 TaskRun 状态的语法如下。
 
-```SQL
-SELECT * FROM INFORMATION_SCHEMA.task_runs;
-```
+  ```SQL
+  SELECT * FROM INFORMATION_SCHEMA.task_runs;
+  ```
 
 ## 参数说明
 
@@ -93,16 +93,16 @@ SELECT * FROM INFORMATION_SCHEMA.task_runs;
 - 使用 CTAS 语句创建的新表需满足如下条件：
   - `ENGINE` 类型为 `OLAP`。
 
-- 数据模型为明细模型 (Duplicate Key)。
+  - 数据模型为明细模型 (Duplicate Key)。
 
-- 排序列为前三列且这三列类型的存储空间不能超过 36 个字节。
+  - 排序列为前三列且这三列类型的存储空间不能超过 36 个字节。
 
 - CTAS 语句不支持为新表设置索引。
 
 - 如果 CTAS 语句由于 FE 重启或其他原因执行失败，可能会发生如下情况：
   - 新表创建成功，但表中没有数据。
 
-- 新表创建失败。
+  - 新表创建失败。
 
 - 新表创建后，如果存在多种方式（比如 Insert Into）将数据插入到新表中，那么最先执行完插入操作的即最先将数据插入到新表中。
 
