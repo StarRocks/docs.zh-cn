@@ -969,6 +969,7 @@ PROPERTIES (
 |  ----  | ----  |
 | type  | 资源类型，固定取值为 **hudi**。 |
 | hive.metastore.uris | Hive Metastore 的 thrift URI。<br> Hudi 通过连接 Hive Metastore，以创建并管理表。您需要传入该 Hive Metastore 的 thrift URI。格式为 **thrift://<Hive Metadata的IP地址>: <端口号>**，端口号默认为 9083。|
+
 StarRocks 2.3 及以上版本支持修改 Hudi 资源的 `hive.metastore.uris`。更多信息，参见 [ALTER RESOURCE](../sql-reference/sql-statements/data-definition/ALTER%20RESOURCE.md).
 
 执行如下命令，查看 StarRocks 中的所有 Hudi 资源。
