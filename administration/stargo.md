@@ -718,11 +718,3 @@ sr-test2         v2.0.1      test222     2022-05-15 20:08:40        /home/sr-dev
 |downgrade|降级集群。|
 |display|查看特定集群。|
 |list|查看所有集群。|
-
-
-
-
-
-
-
-
