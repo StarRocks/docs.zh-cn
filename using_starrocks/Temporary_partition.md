@@ -207,7 +207,7 @@ PROPERTIES (
 * **use_temp_partition_name**
 
     默认为 `false`。
-    
+
     当该参数为 `false`，并且待替换的分区和替换分区的个数相同时，则替换后的正式分区名称维持不变。如果为 `true`，则替换后，正式分区的名称变更为替换分区的名称。
 
     示例 1：
@@ -232,9 +232,9 @@ PROPERTIES (
 
 通过以下命令删除指定临时分区。
 
-~~~sql
+```sql
 ALTER TABLE table_name DROP TEMPORARY PARTITION temporary_partition_name;
-~~~
+```
 
 > 注意
 >
