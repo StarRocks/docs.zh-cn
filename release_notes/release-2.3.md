@@ -30,6 +30,8 @@
   - [bitmap_union_count](../sql-reference/sql-functions/bitmap-functions/bitmap_union_count.md)、[base64_to_bitmap](../sql-reference/sql-functions/bitmap-functions/base64_to_bitmap.md)
   - [week](../sql-reference/sql-functions/date-time-functions/week.md)、[time_slice](../sql-reference/sql-functions/date-time-functions/time_slice.md)
 
+- 新增 [EXECUTE AS](../sql-reference/sql-statements/account-management/EXECUTE AS.md) 语句。使用GRANT授予某用户指定权限后，您可以使用 EXECUTE AS 语句将当前会话的执行上下文切换到该用户。
+
 ### 功能优化
 
 - 优化合并机制（Compaction），对较大的元数据进行合并操作，避免因数据高频更新而导致短时间内元数据挤压，占用较多磁盘空间。
@@ -52,6 +54,8 @@
 - 优化 Elasticsearch 外表功能，支持取消探测 Elasticsearch 集群数据节点的地址。相关文档，请参见 [Elasticsearch 外部表](../using_starrocks/External_table.md#elasticsearch-外部表)。
 
 - 当 sum() 中输入的值为 STRING 类型且为数字时，则自动进行隐式转换。
+
+-支持使用 [GRANT](../sql-reference/sql-statements/account-management/GRANT.md) 授予某用户指定角色，使用 [REVOKE](../sql-reference/sql-statements/account-management/REVOKE.md) 撤销某用户的指定角色。
 
 - year、month、day 函数支持 DATE 数据类型。
 
