@@ -55,7 +55,10 @@
 
 - 当 sum() 中输入的值为 STRING 类型且为数字时，则自动进行隐式转换。
 
-- 支持使用 [GRANT](../sql-reference/sql-statements/account-management/GRANT.md) 语句授予某用户指定角色，使用 [REVOKE](../sql-reference/sql-statements/account-management/REVOKE.md) 语句撤销某用户的指定角色。
+- 优化了 [GRANT](../sql-reference/sql-statements/account-management/GRANT.md) 、REVOKE](../sql-reference/sql-statements/account-management/REVOKE.md) 语句。
+  - 使用 GRANT 可以授予某用户指定角色，或者授予用户 `a` 以用户 `b` 的身份执行操作的权限。
+
+  - 使用 REVOKE 可以撤销某用户的指定角色，或者撤销用户 `a` 以用户 `b` 的身份执行命令的权限。
 
 - year、month、day 函数支持 DATE 数据类型。
 
