@@ -48,7 +48,7 @@ GRANT 'role_name' TO user_identity;
 
 - 以上部分权限可划分为三类：
 
-- - 节点权限：`NODE_PRIV`
+  - 节点权限：`NODE_PRIV`
   - 库表权限：`SELECT_PRIV`、`LOAD_PRIV`、`ALTER_PRIV`、`CREATE_PRIV`、`DROP_PRIV`
   - 资源权限：`USAGE_PRIV`
 
@@ -56,7 +56,7 @@ GRANT 'role_name' TO user_identity;
 
 - 指定的数据库和表。支持以下格式：
 
-- - `*.*`：所有数据库及库中所有表。
+  - `*.*`：所有数据库及库中所有表。
   - `db.*`：指定数据库及库中所有表。
   - `db.tbl`：指定数据库下的指定表。
 
@@ -66,7 +66,7 @@ GRANT 'role_name' TO user_identity;
 
 - 指定的资源。支持以下格式：
 
-- - `*`：所有资源。
+  - `*`：所有资源。
   - `resource`：指定资源。
 
 > 说明：当使用`resource` 格式时，指定资源可以是不存在的资源。
