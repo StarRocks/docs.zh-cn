@@ -8,7 +8,7 @@
 
 - 主键模型支持完整的 DELETE WHERE 语法。相关文档，请参见 [DELETE](../sql-reference/sql-statements/data-manipulation/DELETE.md#delete-与主键模型)。
 
-- 主键模型支持持久化主键索引，避免主键索引占用过大内存空间。相关文档，请参见[主键模型介绍](../table_design/Data_model.md#使用说明-3)。
+- 主键模型支持持久化主键索引，避免主键索引占用过大内存空间。相关文档，请参见[主键模型](../table_design/Data_model.md#使用说明-3)。
 
 - 执行 Routine Load 导入场景下，构建全局字典进行低基数字段的查询优化时，支持全局字典更新，从而提升查询性能。
 
@@ -17,8 +17,8 @@
 - CREATE TABLE AS SELECT 语句可以以异步的方式执行CTAS，并将结果写入新表。相关文档，请参见 [CREATE TABLE AS SELECT](../sql-reference/sql-statements/data-definition/CREATE%20TABLE%20AS%20SELECT.md)。
 
 - 资源组相关功能：
-  - 支持监控资源组：可在审计日志中查看查询所属的资源组，并通过相关 API 获取资源组的监控信息。相关文档，请参见[监控报警](../administration/Monitor_and_Alert.md)。
-  - 支持限制大查询的 CPU、内存、或 I/O 资源；可通过匹配分类器将查询路由至资源组，或者设置会话变量直接为查询指定资源组。相关文档，请参见[资源组](../administration/Resource_Group.md)。
+  - 支持监控资源组：可在审计日志中查看查询所属的资源组，并通过相关 API 获取资源组的监控信息。相关文档，请参见[监控指标](../administration/Monitor_and_Alert.mdMonitor_and_Alert.md#监控指标)。
+  - 支持限制大查询的 CPU、内存、或 I/O 资源；可通过匹配分类器将查询路由至资源组，或者设置会话变量直接为查询指定资源组。相关文档，请参见[资源隔离](../administration/Resource_Group.md)。
 
 - 支持通过 JDBC 外表查询 Oracle、PostgreSQL、MySQL、SQL Server、ClickHouse 等数据库，查询时支持谓词下推。相关文档，请参见 [更多数据库（支持 JDBC 驱动程序）的外部表](../using_starrocks/External_table.md#更多数据库支持-jdbc-驱动程序的外部表)。
 
