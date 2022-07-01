@@ -93,7 +93,7 @@ GRANT SELECT_PRIV ON *.* TO 'jack'@'%';
 GRANT LOAD_PRIV ON db1.* TO ROLE 'my_role';
 ```
 
-1. 示例三：将数据库 `db1` 和表 `tbl1` 的读取、结构变更和导入权限授予用户`jack`。
+示例三：将数据库 `db1` 和表 `tbl1` 的读取、结构变更和导入权限授予用户`jack`。
 
 ```SQL
 GRANT SELECT_PRIV,ALTER_PRIV,LOAD_PRIV ON db1.tbl1 TO 'jack'@'192.8.%';
