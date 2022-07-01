@@ -755,14 +755,11 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
 
 ### 注意事项
 
-- Iceberg 外部表仅支持查询以下格式的数据：
-  - Versions 1 表(Analytic Data Tables) 。暂不支持查询 Versions 2 表 (Row-level Deletes) 。更多有关 Versions 1 和 Versions 2 的信息，参见 [Iceberg Table Spec](https://iceberg.apache.org/spec/)。
-
-  - 压缩格式为 gzip（默认压缩格式）、Zstd、LZ4 和 Snappy 的表。
-
-  - 格式为 Parquet 和 ORC 的文件。
-
-- StarRocks 2.3 及以上版本支持同步 Iceberg 表结构，但 StarRocks 2.3 以下版本不⽀持。如果 Iceberg 表结构发生变化，您需要在 StarRocks 中删除相应的外部表并重新创建。
+* Iceberg 外部表仅支持查询以下格式的数据：
+  * Versions 1 表(Analytic Data Tables) 。暂不支持查询 Versions 2 表 (Row-level Deletes) 。更多有关 Versions 1 和 Versions 2 的信息，参见 [Iceberg Table Spec](https://iceberg.apache.org/spec/)。
+  * 压缩格式为 gzip（默认压缩格式）、Zstd、LZ4 和 Snappy 的表。
+  * 格式为 Parquet 和 ORC 的文件。
+* StarRocks 2.3 及以上版本支持同步 Iceberg 表结构，但 StarRocks 2.3 以下版本不⽀持。如果 Iceberg 表结构发生变化，您需要在 StarRocks 中删除相应的外部表并重新创建。
 
 ### 操作步骤
 
@@ -770,8 +767,8 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
 
 在创建外部表之前，需先创建 Iceberg 资源，以用来管理 Apache Iceberg 的访问信息。此外，在创建Iceberg 外部表时也需要指定引用的 Iceberg 资源。您可以根据业务需求创建不同 catalog 类型的资源：
 
-- 如果 Iceberg 表的元数据是从 Hive metastore 获取的，则可以创建 catalog 类型为 `HIVE` 的资源。
-- 如果 Iceberg 表的元数据是从其他服务获取的，则可以开发一个 custom catalog （即自定义 catalog），然后创建 catalog 类型为 `CUSTOM` 的资源。
+* 如果 Iceberg 表的元数据是从 Hive metastore 获取的，则可以创建 catalog 类型为 `HIVE` 的资源。
+* 如果 Iceberg 表的元数据是从其他服务获取的，则可以开发一个 custom catalog （即自定义 catalog），然后创建 catalog 类型为 `CUSTOM` 的资源。
 
 **创建** **catalog** **类型为** `**HIVE**` **的资源**
 
@@ -881,9 +878,9 @@ PROPERTIES (
 
 > 说明：
 
-- > 外部表的名称无需和 Iceberg 表的名称保持一致。
+* > 外部表的名称无需和 Iceberg 表的名称保持一致。
 
-- > 外部表中的列名需要和 Iceberg 表的列名保持一致，但列的顺序无需保持一致。
+* > 外部表中的列名需要和 Iceberg 表的列名保持一致，但列的顺序无需保持一致。
 
 如果您在 custom catalog 中自定义了配置项，且希望在查询外部表时这些配置项能生效，您可以将这些配置项以键值对的形式添加到建表语句的 `PROPERTIES` 中。例如，在 custom catalog 中定义了一个配置项 `custom-catalog.properties`，那么创建 Iceberg 外部表的语法如下：
 
