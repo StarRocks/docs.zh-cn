@@ -26,7 +26,6 @@
 
 - 【Preview】发布全新数据源 Connector 框架，支持用户自定义外部数据目录（External Catalog）并接入 Apache Hive™ ，无需创建外部表，即可直接分析 Apache Hive™。
 
-
 - 新增如下函数：
   - [window_funnel](../sql-reference/sql-functions/aggregate-functions/window_funnel.md)
   - [ntile](../using_starrocks/Window_function.md)
