@@ -26,12 +26,12 @@ AWS CloudFormation 是 AWS 提供的一项服务，支持简单且快速地对 A
    ![指定模板](../assets/8.1.3-2.png)
    1. 在**先决条件-准备模版**部分，选择**模板已就绪。**
    2. 在**指定模版**部分，选择**模版源**为**Amazon S3 URL**。并在 **Amazon S3 URL** 中输入如下网址：
-      **https://cf-templates-1euv6e68138u2-us-east-1.s3.amazonaws.com/templates/starrocks.template.yaml** 
+      **https://cf-templates-1euv6e68138u2-us-east-1.s3.amazonaws.com/templates/starrocks.template.yaml**
       > 说明：您也可以选择**模版源**为**上传模版文件**，然后单击**选择文件**，上传 **starrocks.template.yaml** 文件。文件下载地址，请参见 StarRocks 项目中 [aws-cloudformation 仓库](https://github.com/StarRocks/aws-cloudformation)。![starrocks.template.yaml 文件](../assets/8.1.3-3.png)
 
    3. 单击**下一步**。
 
-4. 指定堆栈详细信息，包括**堆栈名称**和**参数**，并单击**下一步。**
+4. 指定堆栈详细信息，包括**堆栈名称**和**参数**，并单击**下一步**。
    1. 在**堆栈名称**框中输入堆栈名称。
       堆栈名称是帮助您从堆栈列表中查找特定堆栈的标识符。堆栈名称只能包含字母（区分大小写）、数字和连字符，长度不能超过 128 个字符，并且必须以字母开头。
 
