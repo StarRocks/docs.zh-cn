@@ -30,7 +30,7 @@
   - [bitmap_union_count](../sql-reference/sql-functions/bitmap-functions/bitmap_union_count.md)、[base64_to_bitmap](../sql-reference/sql-functions/bitmap-functions/base64_to_bitmap.md)
   - [week](../sql-reference/sql-functions/date-time-functions/week.md)、[time_slice](../sql-reference/sql-functions/date-time-functions/time_slice.md)
 
-- 新增 [EXECUTE AS](../sql-reference/sql-statements/account-management/EXECUTE AS.md) 语句。使用GRANT授予某用户指定权限后，您可以使用 EXECUTE AS 语句将当前会话的执行上下文切换到该用户。
+- 新增 [EXECUTE AS](../sql-reference/sql-statements/account-management/EXECUTE%20AS.md) 语句。使用 GRANT 语句授予某用户指定权限后，您可以使用 EXECUTE AS 语句将当前会话的执行上下文切换到该用户。
 
 ### 功能优化
 
@@ -55,7 +55,7 @@
 
 - 当 sum() 中输入的值为 STRING 类型且为数字时，则自动进行隐式转换。
 
--支持使用 [GRANT](../sql-reference/sql-statements/account-management/GRANT.md) 授予某用户指定角色，使用 [REVOKE](../sql-reference/sql-statements/account-management/REVOKE.md) 撤销某用户的指定角色。
+- 支持使用 [GRANT](../sql-reference/sql-statements/account-management/GRANT.md) 语句授予某用户指定角色，使用 [REVOKE](../sql-reference/sql-statements/account-management/REVOKE.md) 语句撤销某用户的指定角色。
 
 - year、month、day 函数支持 DATE 数据类型。
 
