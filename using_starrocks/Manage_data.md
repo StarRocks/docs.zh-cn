@@ -86,7 +86,7 @@ PROPERTIES(
     或
 
     ```SQL
-    use default_catalog.olap_db；
+    use default_catalog.olap_db;
     ```
 
 3. 查询`olap_table`表中的数据。
