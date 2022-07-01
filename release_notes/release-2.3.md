@@ -66,5 +66,5 @@
 
 - ###  其他
 
-- 提供集群管理工具 StarGo，提供集群部署、启停、升级、回滚、多集群管理等多种能力。相关文档，请参见xxx。
+- 提供集群管理工具 StarGo，提供集群部署、启停、升级、回滚、多集群管理等多种能力。相关文档，请参见[通过StarGo部署StarRocks集群](../administration/stargo.md)。
 - 支持在 AWS 上使用 CloudFormation 快速创建 StarRocks 集群。相关文档，请参见[在 AWS 上使用 AWS CloudFormation 部署 StarRocks 集群](../administration/AWS_cloudformation.md)。
