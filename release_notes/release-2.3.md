@@ -46,11 +46,10 @@
   - 当 Apache Hive™ 的数据存储采用 Parquet、ORC、CSV 格式时，支持 Hive 表执行 ADD COLUMN、REPLACE COLUMN 等表结构变更（Schema Change）。
   - 支持 Hive 资源修改 `hive.metastore.uris`。
 
-- 优化 Apache Iceberg 外表功能，创建 Iceberg 资源时支持使用自定义目录（Catalog）。相关文档，请参见[Apache Iceberg 外表
+- 优化 Apache Iceberg 外表功能，创建 Iceberg 资源时支持使用自定义目录（Catalog）。相关文档，请参见 [Apache Iceberg 外表
 ](../using_starrocks/External_table.md#apache-iceberg-外表)。
 
-- 优化 Elasticsearch 外表功能，支持取消探测 Elasticsearch 集群数据节点的地址。相关文档，请参见 [Elasticsearch 外部表]
-(../using_starrocks/External_table.md#elasticsearch-外部表)。
+- 优化 Elasticsearch 外表功能，支持取消探测 Elasticsearch 集群数据节点的地址。相关文档，请参见 [Elasticsearch 外部表](../using_starrocks/External_table.md#elasticsearch-外部表)。
 
 - 当 sum() 中输入的值为 STRING 类型且为数字时，则自动进行隐式转换。
 
