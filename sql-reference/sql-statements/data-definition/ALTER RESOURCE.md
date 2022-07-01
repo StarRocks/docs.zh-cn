@@ -1,25 +1,33 @@
-# ALTER Resource
+# ALTER RESOURCE
 
 ## 功能
 
-该语句用于修改一个Resource的properity。
+修改资源的属性。
 
 ## 语法
 
-```sql
-ALTER RESOURCE table_name SET PROPERTIES ("key"="value", ...)
+```SQL
+ALTER RESOURCE 'resource_name' SET PROPERTIES ("key"="value", ...)
 ```
 
-说明：
+## 参数说明
 
-1. 当前该语句仅支持Hive/Iceberg/Hudi Resource修改其hive metastore 实例的地址，其中Hive/Hudi Resource对应的Key为`hive.metastore.uris`, Iceberg Resource对应的Key为`iceberg.catalog.hive.metastore.uris`. 同时也支持修改Iceberg Resource的`iceberg.catalog-impl`.
+- `resource_name`：待修改的资源名称。
 
-2. 修改Resource中的Hive Metastore地址是避免用户Hive Metastore地址修改之后重新在StarRocks创建外表。在修改`hive.metastore.uris` 前，已经引用该资源创建外部表，在修改配置后，除非在新的Hive Metastore中有存在与原Hive Metastore中对应的同名称且相同Schema的表，否则对该外表查询会失败。
+- `PROPERTIES ("key"="value", ...)`: 资源属性。不同类型的资源支持修改不同的属性，当前支持修改以下资源的 Hive metastore 地址。
+  - Apache Iceberg 资源支持修改以下属性：
+    - `iceberg.catalog-impl`：[custom catalog](../using_starrocks/External_table#apache-iceberg-外表) 的全限定类名。
+    - `iceberg.catalog.hive.metastore.uris`：Hive metastore 地址。
+  - Apache Hive™ 和 Apache Hudi 资源支持修改 `hive.metastore.uris`，即 Hive metastore 地址。
 
-## example
+## 使用说明
 
-1. 修改名为"hive0"的Hive Resource中的Hive Metastore地址。
+引用一个资源创建外部表后，如果修改了该资源的 Hive metastore 地址会导致该外部表不可用。若仍想使用该外部表查询数据，需保证新 Hive metastore 中存在与原 Hive metastore 中名称和表结构相同的数据表。
 
-    ```sql
-    ALTER RESOURCE 'hive0' SET PROPERTIES ("hive.metastore.uris" = "thrift://10.10.44.91:9083")
-    ```
+## 示例
+
+修改 Apache Hive™ 资源 `hive0` 的 Hive metastore 地址。
+
+```SQL
+ALTER RESOURCE 'hive0' SET PROPERTIES ("hive.metastore.uris" = "thrift://10.10.44.91:9083")
+```
