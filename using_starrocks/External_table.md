@@ -743,11 +743,11 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
   * 不同版本 Hive Metastore 的 Events 事件可能不同，且上述开启 HiveMetastore Event 机制的配置在不同版本也存在不同。使用时相关配置可根据实际版进行适当调整。当前已经验证可以开启 Hive Metastore Event 机制的版本有 2.X 和 3.X。用户可以在 FE 日志中搜索 "event id" 来验证 event 是否开启成功，如果没有开启成功，event id 始终保持为 0。如果无法判断是否成功开启 Event 机制，请在 StarRocks 用户交流群中联系值班同学进行排查。
   * 当前 Hive 元数据缓存模式为懒加载，即：如果 Hive 新增了分区，StarRocks 只会将新增分区的 partition key 进行缓存，不会立即缓存该分区的文件信息。只有当查询该分区时或者用户手动执行 refresh 分区操作时，该分区的文件信息才会被加载。StarRocks 首次缓存该分区统计信息后，该分区后续的元数据变更就会自动同步到 StarRocks 中。
   * 手动执行缓存方式执行效率较低，相比之下自动增量更新性能开销较小，建议用户开启该功能进行更新缓存。
-  * 当 Hive 的数据存储为 Parquet、ORC、CSV 格式时，StarRocks 2.3及以上版本支持 Hive 外部表同步 ADD COLUMN、REPLACE COLUMN 等表结构变更（Schema Change）。
+  * 当 Hive 数据存储为 Parquet、ORC、CSV 格式时，StarRocks 2.3及以上版本支持 Hive 外部表同步 ADD COLUMN、REPLACE COLUMN 等表结构变更（Schema Change）。
 
 ## Apache Iceberg 外部表
 
-如要查询 Iceberg 数据，需要在 StarRocks 中创建 Iceberg 外部表，并将外部表与中需要查询的 Iceberg 表建立映射。
+如要查询 Iceberg 数据，需要在 StarRocks 中创建 Iceberg 外部表，并将外部表与需要查询的 Iceberg 表建立映射。
 
 ### 前提条件
 
@@ -877,10 +877,10 @@ PROPERTIES (
 | table    | Iceberg 表名称。                  |
 
 > 说明：
-
-* > 外部表的名称无需和 Iceberg 表的名称保持一致。
-
-* > 外部表中的列名需要和 Iceberg 表的列名保持一致，但列的顺序无需保持一致。
+   >
+   > * 外部表的名称无需和 Iceberg 表的名称保持一致。
+   >
+   > * 外部表中的列名需要和 Iceberg 表的列名保持一致，但列的顺序无需保持一致。
 
 如果您在 custom catalog 中自定义了配置项，且希望在查询外部表时这些配置项能生效，您可以将这些配置项以键值对的形式添加到建表语句的 `PROPERTIES` 中。例如，在 custom catalog 中定义了一个配置项 `custom-catalog.properties`，那么创建 Iceberg 外部表的语法如下：
 
@@ -968,8 +968,7 @@ PROPERTIES (
 |  参数   | 说明  |
 |  ----  | ----  |
 | type  | 资源类型，固定取值为 **hudi**。 |
-| hive.metastore.uris | Hive Metastore 的 thrift URI。<br> Hudi 通过连接 Hive Metastore，以创建并管理表。您需要传入该 Hive Metastore 的 thrift URI。格式为 **thrift://<Hive Metadata的IP地址>: <端口号>**，端口号默认为 9083。 |
-
+| hive.metastore.uris | Hive Metastore 的 thrift URI。<br> Hudi 通过连接 Hive Metastore，以创建并管理表。您需要传入该 Hive Metastore 的 thrift URI。格式为 **thrift://<Hive Metadata的IP地址>: <端口号>**，端口号默认为 9083。|
 StarRocks 2.3 及以上版本支持修改 Hudi 资源的 `hive.metastore.uris`。更多信息，参见 [ALTER RESOURCE](../sql-reference/sql-statements/data-definition/ALTER%20RESOURCE.md).
 
 执行如下命令，查看 StarRocks 中的所有 Hudi 资源。
