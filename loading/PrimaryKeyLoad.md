@@ -383,4 +383,5 @@ create table demo(
   > 说明：在 `properties` 中设置 `"partial_update" = "true"`，指定为部分列更新，并且指定所需更新的列名 `COLUMNS (id, name)`。有关 Routine Load 的具体设置方式，可参考 [Routine Load](/loading/RoutineLoad.md)。
 
 ## 参考文档
+
 有关 DELETE 语句在主键模型的更多使用方法，请参见 [DELETE](/sql-reference/sql-statements/data-manipulation/DELETE.md)。
