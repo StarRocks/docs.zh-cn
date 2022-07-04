@@ -25,11 +25,11 @@ PROPERTIES ("key"="value", ...);
 
 ## 示例
 
-1. 创建名为 oss_repo 的仓库，依赖 `broker "hdfs_broker"`，数据根目录为：`oss://starRocks_backup`。
+1. 创建名为 oss_repo 的仓库，依赖 `broker "oss_broker"`，数据根目录为：`oss://starRocks_backup`。
 
     ```sql
     CREATE REPOSITORY `oss_repo`
-    WITH BROKER `hdfs_broker`
+    WITH BROKER `oss_broker`
     ON LOCATION "oss://starRocks_backup"
     PROPERTIES
     (
@@ -43,7 +43,7 @@ PROPERTIES ("key"="value", ...);
 
     ```sql
     CREATE READ ONLY REPOSITORY `oss_repo`
-    WITH BROKER `hdfs_broker`
+    WITH BROKER `oss_broker`
     ON LOCATION "oss://starRocks_backup"
     PROPERTIES
     (
