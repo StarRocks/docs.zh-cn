@@ -1,12 +1,12 @@
 # 数据模型
 
-建表时，您需要指定数据模型 (Data Model)，这样数据导入至数据模型时，StarRocks 会按照排序健对数据进行排序、处理和存储。本文介绍 StarRocks 支持的各种数据模型，满足您在不同业务场景下的需求。
+建表时，您需要指定数据模型 (Data Model)，这样数据导入至数据模型时，StarRocks 会按照排序键对数据进行排序、处理和存储。本文介绍 StarRocks 支持的各种数据模型，满足您在不同业务场景下的需求。
 
 ## 基本概念
 
 ### 数据模型
 
-StarRocks 支持四种数据模型，分别是明细模型 (Duplicate Key Model)、聚合模型 (Aggregate Key Model)、更新模型 (Unique Key Model) 和聚合模型 (Primary Key Model)。这四种数据模型能够支持多种数据分析场景，例如日志分析、数据汇总分析、实时分析等。
+StarRocks 支持四种数据模型，分别是明细模型 (Duplicate Key Model)、聚合模型 (Aggregate Key Model)、更新模型 (Unique Key Model) 和主键模型 (Primary Key Model)。这四种数据模型能够支持多种数据分析场景，例如日志分析、数据汇总分析、实时分析等。
 
 ### 排序键
 
