@@ -22,6 +22,10 @@ http://fe_host:http_port/api/{db}/{table}/_stream_load
 
 ### 参数解析
 
+**user 和 passwd**
+
+用于登录的用户名和密码。Stream Load 创建导入作业使用的是 HTTP 协议，可通过基本认证 (Basic Access Authentication) 进行签名。StarRocks 系统会根据签名来验证登录用户的身份和导入权限。
+
 **label:**
 
 一次导入的标签，相同标签的数据无法多次导入。用户可以通过指定 Label 的方式来避免一份数据重复导入的问题。
@@ -31,6 +35,8 @@ http://fe_host:http_port/api/{db}/{table}/_stream_load
 
 用于指定导入文件中的列分隔符，默认为\t。如果是不可见字符，则需要加\x 作为前缀，使用十六进制来表示分隔符。
 如 hive 文件的分隔符\x01，需要指定为 `-H "column_separator:\x01"`
+
+StarRocks 2.1 及以上版本支持多字符分隔符，避免因字段值含有分隔符引起的导入解析错误。可见字符可直接指定，如 -H "column_separator:abc" 。不可见字符支持如 -H "column_separator:\x01\x02" 的格式。
 
 **columns：**
 
@@ -308,7 +314,3 @@ curl --location-trusted -u root \
 -H "columns: category, price, author" -H "label:123" -H "format: json" -H "jsonpaths: [\"$.category\",\"$.price\",\"$.author\"]" -H "strip_outer_array: true" -H "json_root: $.RECORDS" -T testData \
 http://host:port/api/testDb/testTbl/_stream_load
 ```
-
-## 关键字(keywords)
-
-STREAM, LOAD
