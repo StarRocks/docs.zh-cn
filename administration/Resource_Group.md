@@ -94,6 +94,7 @@ classifier D (user='Alice', query_type in ('insert','select', 'ctas')）
 通过设置相应会话变量开启资源组功能。
 
 ```sql
+SET enable_pipeline_engine = true;
 SET enable_resource_group = true;
 ```
 
