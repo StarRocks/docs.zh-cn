@@ -341,6 +341,7 @@
       + [last_query_id](/sql-reference/sql-functions/utility-functions/last_query_id.md)
       + [sleep](/sql-reference/sql-functions/utility-functions/sleep.md)
       + [uuid](/sql-reference/sql-functions/utility-functions/uuid.md)
+      + [uuid_numeric](/sql-reference/sql-functions/utility-functions/uuid_numeric.md)
     + 聚合函数
       + [approx_count_distinct](/sql-reference/sql-functions/aggregate-functions/approx_count_distinct.md)
       + [avg](/sql-reference/sql-functions/aggregate-functions/avg.md)
@@ -397,6 +398,7 @@
       + [array_sort](/sql-reference/sql-functions/array-functions/array_sort.md)
       + [array_sum](/sql-reference/sql-functions/array-functions/array_sum.md)
       + [array_remove](/sql-reference/sql-functions/array-functions/array_remove.md)
+      + [array_to_bitmap](/sql-reference/sql-functions/array-functions/array_to_bitmap.md)
       + [reverse](/sql-reference/sql-functions/string-functions/reverse.md)
     + bit函数
       + [bitand](/sql-reference/sql-functions/bit-functions/bitand.md)
