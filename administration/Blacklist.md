@@ -33,13 +33,13 @@ ADD SQLBLACKLIST #sql#
 * 禁止count(\*):
 
     ~~~sql
-    ADD SQLBLACKLIST "select count(\\*) from .+"
+    ADD SQLBLACKLIST "select count\\(\\*\\) from .+"
     ~~~
 
 * 禁止count(distinct ):
 
     ~~~sql
-    ADD SQLBLACKLIST "select count(distinct .+) from .+"
+    ADD SQLBLACKLIST "select count\\(distinct .+\\) from .+"
     ~~~
 
 * 禁止order by limit x, y，1 <= x <=7, 5 <=y <=7:
