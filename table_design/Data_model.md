@@ -346,7 +346,7 @@ PROPERTIES("replication_num" = "3",
    > - 如果磁盘为固态硬盘 SSD，则建议设置为 `true`。
    > - 主键必须为定长，不支持为可变长字符串 VARCHAR。
    > - 自 2.3.0 版本起，StarRocks 支持配置该参数。
-   
+
 - 创建表时，支持为指标列创建 BITMAP、Bloom Filter 等索引。
 
 - 主键模型目前不支持物化视图。
