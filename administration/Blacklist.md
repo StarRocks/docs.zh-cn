@@ -29,25 +29,25 @@ ADD SQLBLACKLIST "sql";
 * 禁止 `count(\*)`。
 
     ```sql
-    ADD SQLBLACKLIST "select count(\\*) from .+";
+    ADD SQLBLACKLIST "select count\\(\\*\\) from .+";
     ```
 
 * 禁止 `count(distinct )`。
 
     ```sql
-    ADD SQLBLACKLIST "select count(distinct .+) from .+";
+    ADD SQLBLACKLIST "select count\\(distinct .+\\) from .+";
     ```
 
 * 禁止 `order by limit x, y，1 <= x <=7, 5 <=y <=7`。
 
     ```sql
-    ADD SQLBLACKLIST "select id_int from test_all_type_select1 order by id_int limit [1-7], [5-7]"
+    ADD SQLBLACKLIST "select id_int from test_all_type_select1 order by id_int limit [1-7], [5-7]";
     ```
 
 * 禁止复杂 SQL（主要演示 `*` 和 `-` 的转义写法。）。
 
     ```sql
-    ADD SQLBLACKLIST "select id_int \\* 4, id_tinyint, id_varchar from test_all_type_nullable except select id_int, id_tinyint, id_varchar from test_basic except select (id_int \\* 9 \\- 8) \\/ 2, id_tinyint, id_varchar from test_all_type_nullable2 except select id_int, id_tinyint, id_varchar from test_basic_nullable"
+    ADD SQLBLACKLIST "select id_int \\* 4, id_tinyint, id_varchar from test_all_type_nullable except select id_int, id_tinyint, id_varchar from test_basic except select (id_int \\* 9 \\- 8) \\/ 2, id_tinyint, id_varchar from test_all_type_nullable2 except select id_int, id_tinyint, id_varchar from test_basic_nullable";
     ```
 
 ## 展示黑名单列表
