@@ -9,7 +9,7 @@
 使用 HLL 去重，需要在建表语句中，将目标的指标列的类型设置为 **HLL**，聚合函数设置为 **HLL_UNION**。
 
 > 说明
-> HLL 列是通过其它列或者导入数据里面的数据生成的，导入的时候通过 `HLL_HASH` 函数来指定数据中哪一列用于生成 HLL 列它常用于替代 `count distinct`，通过结合物化视图在业务上用于快速计算 uv。
+> HLL 列是通过其它列或者导入数据里面的数据生成的，导入的时候通过 `HLL_HASH` 函数来指定数据中特定列用于生成 HLL 列。HLL 列常用于替代 `count distinct`，通过结合物化视图在业务上用于快速计算 uv。
 
 以下示例创建 `test` 表，其中包含 DATE 数据类型列 `dt`，INT 数据类型列 `id`，以及 HLL 类型列 `uv`。
 
@@ -118,7 +118,7 @@ SELECT HLL_UNION_AGG(uv) FROM test;
 +---------------------+
 ```
 
-当在 HLL 类型列上使用 `count distinct` 时，StarRocks 会自动将其转化为 [HLL_UNION_AGG](../sql-reference/sql-functions/aggregate-functions/hll_union_agg.md) 计算。所以以上查询等价于以下查询。
+当在 HLL 类型列上使用 `count distinct` 时，StarRocks 会自动将其转化为 [HLL_UNION_AGG(hll)](../sql-reference/sql-functions/aggregate-functions/hll_union_agg.md) 计算。所以以上查询等价于以下查询。
 
 ```sql
 SELECT COUNT(DISTINCT uv) FROM test;
@@ -143,3 +143,11 @@ Bitmap 类型仅支持 TINYINT，SMALLINT，INT，BIGINT（注意不支持 LARGE
 对于普通列，您还可以使用 `NDV` 函数进行近似去重计算。`NDV` 函数返回值是 `COUNT(DISTINCT col)` 结果的近似值聚合函数，底层实现将数据存储类型转为 HyperLogLog 类型进行计算。但 `NDV` 函数在计算的时候消耗资源较大，不适合于并发高的场景。
 
 如果您的应用场景为用户行为分析，建议使用 `INTERSECT_COUNT` 或者自定义 UDAF 去重。
+
+## 相关函数
+
+* **[HLL_UNION_AGG(hll)](../sql-reference/sql-functions/aggregate-functions/hll_union_agg.md)**：此函数为聚合函数，用于计算满足条件的所有数据的基数估算。此函数还可用于分析函数，只支持默认窗口，不支持窗口从句。
+* **HLL_RAW_AGG(hll)**：此函数为聚合函数，用于聚合 HLL 类型字段，返回 HLL 类型。
+* **HLL_CARDINALITY(hll)**：此函数用于估算单条 HLL 列的基数。
+* **HLL_HASH(column_name)**：生成 HLL 列类型，用于 `insert` 或导入 HLL 类型。
+* **HLL_EMPTY()**：生成空 HLL 列，用于 `insert` 或导入数据时补充默认值。
