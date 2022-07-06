@@ -16,8 +16,10 @@ FE 的高可用集群采用主从复制架构，可避免 FE 单点故障。FE �
 
 FE 集群从 Follower 中自动选出 Master 节点，所有更改状态操作都由 Master 节点执行。最新状态可以从 FE Master 节点读取。更改操作可以由非 Master 节点发起，继而转发给 Master 节点执行，非 Master 节点在复制日志中的 LSN 记录最近一次更改操作。读操作可以直接在非 Master 节点上执行，但需要等待非 Master 节点的状态已经同步到最近一次更改操作的 LSN，因此非 Master 节点的读写操作满足顺序一致性。Observer 节点能够增加 FE 集群的读负载能力，对时效性要求放宽的非紧要用户可以选择读 Observer 节点。
 
-> 注意：FE 节点之间的时钟相差**不能超过5s**。如果节点之间存在较大时钟差，请使用 NTP 协议校准时间。
-一台机器上只可以部署单个 FE 节点。所有 FE 节点的 `http_port` 需保持相同。
+> 注意
+> * FE 节点之间的时钟相差**不能超过5s**。如果节点之间存在较大时钟差，请使用 NTP 协议校准时间。
+> * 一台机器上只可以部署单个 FE 节点。
+> * 所有 FE 节点的 `http_port` 需保持相同。
 
 #### 下载并配置新 FE 节点
 
@@ -129,7 +131,7 @@ IsMaster: false
 
 |依赖|说明|
 |----|----|
-|JDK（1.8 或以上）|下载完成后，您需要在相应的配置文件中设置 `JAVA_HOME` 配置项。|
+|JDK（1.8 或以上）|下载完成后，您需要在 FE 节点配置文件 **fe.conf** 中的 `JAVA_HOME` 配置项下指定 JDK 的安装路径。|
 |Python（2.7 或以上）| |
 |python-setuptools|您可以通过 `yum install setuptools` 或 `apt-get install setuptools` 安装。|
 |MySQL（5.5 或以上）|您需要通过 MySQL 存储 StarRocksManager 平台的数据。|
