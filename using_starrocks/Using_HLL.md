@@ -9,6 +9,7 @@
 使用 HLL 去重，需要在建表语句中，将目标的指标列的类型设置为 **HLL**，聚合函数设置为 **HLL_UNION**。
 
 > 说明
+>
 > HLL 列是通过其它列或者导入数据里面的数据生成的，导入的时候通过 `HLL_HASH` 函数来指定数据中特定列用于生成 HLL 列。HLL 列常用于替代 `count distinct`，通过结合物化视图在业务上用于快速计算 uv。
 
 以下示例创建 `test` 表，其中包含 DATE 数据类型列 `dt`，INT 数据类型列 `id`，以及 HLL 类型列 `uv`。
@@ -32,7 +33,7 @@ DISTRIBUTED BY HASH(ID) BUCKETS 32;
 
 当前示例使用以下原始数据，其 10 行数据中有 3 行数据重复。
 
-```plain text
+~~~plain text
 2022-03-10,0
 2022-03-11,1
 2022-03-12,2
@@ -43,7 +44,7 @@ DISTRIBUTED BY HASH(ID) BUCKETS 32;
 2022-03-14,4
 2022-03-15,5
 2022-03-16,6
-```
+~~~
 
 你可以通过 Stream Load 或者 Broker Load 模式导入 **test.csv**。
 
@@ -74,65 +75,65 @@ LOAD LABEL test_db.label
 
 * 基于示例表创建物化视图，使 HLL 列产生聚合。
 
-```sql
+~~~sql
 ALTER TABLE test ADD ROLLUP test_rollup(dt, uv);
-```
+~~~
 
 * 创建针对 HLL 列计算的新表，并插入原示例表中的相关数据。
 
-```sql
+~~~sql
 create table test_uv1(
 id int,
 uv_set hll hll_union)
 distributed by hash(id) buckets 32;
 
 insert into test_uv select id, uv from test;
-```
+~~~
 
 * 创建针对 HLL 列计算的新表，并插入通过 `HLL_HASH` 基于原示例表中相关数据生成的 HLL 列。
 
-```sql
+~~~sql
 create table test_uv2(
 id int,
 uv_set hll hll_union)
 distributed by hash(id) buckets 32;
 
 insert into test_uv select id, hll_hash(id) from test;
-```
+~~~
 
 ## 查询数据
 
 HLL 列不支持直接查询原始值。您可以通过函数 `HLL_UNION_AGG` 进行查询。
 
-```sql
+~~~sql
 SELECT HLL_UNION_AGG(uv) FROM test;
-```
+~~~
 
 返回如下：
 
-```plain text
+~~~plain text
 +---------------------+
 | hll_union_agg(`uv`) |
 +---------------------+
 |                   7 |
 +---------------------+
-```
+~~~
 
 当在 HLL 类型列上使用 `count distinct` 时，StarRocks 会自动将其转化为 [HLL_UNION_AGG(hll)](../sql-reference/sql-functions/aggregate-functions/hll_union_agg.md) 计算。所以以上查询等价于以下查询。
 
-```sql
+~~~sql
 SELECT COUNT(DISTINCT uv) FROM test;
-```
+~~~
 
 返回如下：
 
-```plain text
+~~~plain text
 +----------------------+
 | count(DISTINCT `uv`) |
 +----------------------+
 |                    7 |
 +----------------------+
-```
+~~~
 
 ## 选择去重方案
 
