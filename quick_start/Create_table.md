@@ -1,6 +1,6 @@
 # 创建表
 
-本文档介绍如何在 StarRocks 中建表以及进行其他相关操作。
+本文介绍如何在 StarRocks 中创建表以及进行相关操作。
 
 ## 连接 StarRocks
 
@@ -12,7 +12,7 @@ mysql -h < fe_host > -P9030 -u root
 
 ## 创建数据库
 
-通过 `root` 用户建立 `example_db` 数据库。
+使用 `root` 用户创建 `example_db` 数据库。
 
 ```sql
 CREATE DATABASE example_db;
@@ -35,11 +35,11 @@ MySQL [(none)]> SHOW DATABASES;
 
 > 说明：与 MySQL 的表结构类似，`Information_schema` 包含当前 StarRocks 集群的元数据信息，但是部分统计信息还不完善。推荐您通过 `DESC table_name` 等命令来获取数据库元数据信息。
 
-## 建表
+## 创建表
 
-在新建的数据库中建表。
+在新建的数据库中创建表。
 
-StarRocks 支持 [多种数据模型](../table_design/Data_model.md)，以适用不同的应用场景。以下示例基于 [明细表模型](../table_design/Data_model.md) 编写建表语句。
+StarRocks 支持 [多种数据模型](../table_design/Data_model.md)，以适用不同的应用场景。以下示例基于 [明细表模型](../table_design/Data_model.md#明细模型) 编写建表语句。
 
 更多建表语法，参考 [CREATE TABLE](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md) 。
 
@@ -65,7 +65,10 @@ DUPLICATE KEY(recruit_date, region_num)
 DISTRIBUTED BY HASH(recruit_date, region_num) BUCKETS 8;
 ```
 
-> 注意：在 StarRocks 中，字段名不区分大小写，表名区分大小写。
+> 注意
+>
+> * 在 StarRocks 中，字段名不区分大小写，表名区分大小写。
+> * 建表时，`DISTRIBUTED BY` 为必填字段。
 
 ### 建表语句说明
 
@@ -83,9 +86,9 @@ StarRocks 表中支持多种字段类型，除以上示例中已经列举的字�
 
 #### 分区分桶
 
-`PARTITION` 关键字用于给表 [创建分区](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md)。以上示例中使用 `recruit_date` 进行范围分区，从 11 日到 15 日每天创建一个分区。StarRocks 支持动态生成分区，详见 [动态分区管理](/table_design/Data_distribution.md)。
+`PARTITION` 关键字用于给表 [创建分区](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md#partition_desc)。以上示例中使用 `recruit_date` 进行范围分区，从 11 日到 15 日每天创建一个分区。StarRocks 支持动态生成分区，详见 [动态分区管理](/table_design/Data_distribution.md#动态分区管理)。
 
-`DISTRIBUTED` 关键字用于给表 [创建分桶](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md)，以上示例中使用 `recruit_date` 以及 `region_num` 两个字段通过 Hash 算法创建 8 个桶。
+`DISTRIBUTED` 关键字用于给表 [创建分桶](/sql-reference/sql-statements/data-definition/CREATE%20TABLE.md#distribution_desc)，以上示例中使用 `recruit_date` 以及 `region_num` 两个字段通过 Hash 算法创建 8 个桶。
 
 创建表时合理的分区和分桶设计可以优化表的查询性能。有关分区分桶列如何选择，详见 [数据分布](/table_design/Data_distribution.md)。
 

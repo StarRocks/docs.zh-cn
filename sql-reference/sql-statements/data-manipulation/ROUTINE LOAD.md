@@ -463,7 +463,3 @@ JSON 数据格式:
 {"category":"33","author":"3avc","title":"SayingsoftheCentury","timestamp":1589191387}
 ]
 }
-
-## 关键词
-
-CREATE,ROUTINE,LOAD

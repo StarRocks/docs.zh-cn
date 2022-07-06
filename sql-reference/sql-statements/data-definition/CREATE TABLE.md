@@ -38,8 +38,8 @@ col_name col_type [agg_type] [NULL | NOT NULL] [DEFAULT "default_value"]
 
 **col_type**：列类型。
 
-```plain text
 具体的列类型以及范围等信息如下：
+
 * TINYINT（1字节）
 范围：-2^7 + 1 ~ 2^7 - 1
 
@@ -85,7 +85,9 @@ hll列类型，不需要指定长度和默认值，长度根据数据的聚合�
 
 * BITMAP
 bitmap列类型，不需要指定长度和默认值。表示整型的集合，元素最大支持到2^64 - 1
-```
+
+* ARRAY
+支持在一个数组中嵌套子数组，最多可嵌套 14 层。您必须使用尖括号（`<` 和 `>`）来声明 ARRAY 类型，如 ARRAY<INT>。目前不支持将数组中的元素声明为 [Fast Decimal](../data-types/DECIMAL.md) 类型。
 
 **agg_type**：聚合类型，如果不指定，则该列为 key 列。否则，该列为 value 列。
 
@@ -222,8 +224,7 @@ PARTITION BY RANGE (k1, k2, ...)
 使用指定的 key 列和指定的数值范围进行分区。
 
 1. 分区名称仅支持字母开头，字母、数字和下划线组成。
-2. 目前仅支持以下类型的列作为 Range 分区列:
-`TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DATE, DATETIME`。
+2. 仅支持以下类型的列作为 Range 分区列：`TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DATE, DATETIME`。
 3. 分区为左闭右开区间，首个分区的左边界为做最小值。
 4. NULL 值只会存放在包含 **最小值** 的分区中。当包含最小值的分区被删除后，NULL 值将无法导入。
 5. 可以指定一列或多列作为分区列。如果分区值缺省，则会默认填充最小值。
@@ -270,7 +271,7 @@ PARTITION BY RANGE (datekey) (
 
 更详细的语法规则请参考：（[数据分布-批量创建和修改分区](../table_design/Data_distribution.md)）。
 
-#### **distribution_des**
+#### **distribution_desc**
 
 Hash 分桶
 
@@ -722,7 +723,3 @@ PROPERTIES
     "hive.metastore.uris" = "thrift://127.0.0.1: 9083"
 );
 ```
-
-## 关键字(keywords)
-
-CREATE, TABLE
