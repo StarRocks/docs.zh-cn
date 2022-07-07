@@ -415,7 +415,9 @@ StarRocks 提供了多个与 Colocation Join 有关的 HTTP Restful API，用于
     > 注意
     > 使用该命令，需要将 FE 的配置 `disable_colocate_balance` 设为 `true`，即关闭系统自动 Colocation 副本修复和均衡。否则在修改数据分布设置后可能会被系统自动重置。
 
-    `POST /api/colocate/bucketseq?db_id=10005&group_id=10008`
+    ```shell
+    curl -u<user>:<password> -X POST "http://<fe_host>:<fe_http_port>/api/colocate/bucketseq?db_id=10005&group_id=10008"
+    ```
 
     `Body:`
 
