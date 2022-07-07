@@ -59,6 +59,8 @@ PROPERTIES(
 
 如想在一个 catalog 中查询其他 catalog 中数据，可通过 `catalog_name.database_name` 或`catalog_name.database_name.table_name` 的格式来引用目标数据。
 
+<br/>
+
 ### 配置
 
 * fe 配置文件路径为$FE_HOME/conf，如果需要自定义 hadoop 集群的配置可以在该目录下添加配置文件，例如：hdfs 集群采用了高可用的 nameservice，需要将 hadoop 集群中的 hdfs-site.xml 放到该目录下，如果 hdfs 配置了 viewfs，需要将 core-site.xml 放到该目录下。
