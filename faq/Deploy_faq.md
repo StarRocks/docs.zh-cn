@@ -41,7 +41,7 @@ wget https://bootstrap.pypa.io/ez_setup.py -O - | python
 部分 FE 节点和 BE 节点配置项支持动态修改。具体操作参考 [配置参数](../administration/Configuration.md)。
 
 * 动态修改 FE 节点配置项：
-    * 使用 SQL 方式动态修改：
+  * 使用 SQL 方式动态修改：
 
     ```sql
     ADMIN SET FRONTEND CONFIG ("key" = "value");
@@ -54,7 +54,7 @@ wget https://bootstrap.pypa.io/ez_setup.py -O - | python
     ADMIN SET FRONTEND CONFIG ("enable_statistic_collect" = "false");
     ```
 
-    * 使用命令行方式动态修改：
+  * 使用命令行方式动态修改：
 
     ```shell
     curl --location-trusted -u username:password http://ip:fe_http_port/api/_set_config?key=value
@@ -67,7 +67,7 @@ wget https://bootstrap.pypa.io/ez_setup.py -O - | python
     ```
 
 * 动态修改 BE 节点配置项：
-    * 使用命令行方式动态修改：
+  * 使用命令行方式动态修改：
 
     ```plain text
     curl -XPOST -u username:password http://ip:be_http_port/api/update_config?key=value
