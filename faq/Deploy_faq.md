@@ -8,15 +8,15 @@
 
 假设当前节点有两个 IP 地址：`192.168.108.23` 和 `192.168.108.43`。
 
-- 如果您将 `priority_networks` 设定为 `192.168.108.23/24`，StarRocks 会将该地址识别为 `192.168.108.43`。
-- 如果您将 `priority_networks` 设定为 `192.168.108.23/32`，启动后 StarRocks 会出错，并将该地址识别为 `127.0.0.1`。
+* 如果您将 `priority_networks` 设定为 `192.168.108.23/24`，StarRocks 会将该地址识别为 `192.168.108.43`。
+* 如果您将 `priority_networks` 设定为 `192.168.108.23/32`，启动后 StarRocks 会出错，并将该地址识别为 `127.0.0.1`。
 
 **解决方案**
 
 以上问题有以下两种解决方案：
 
-- 删去 CIDR 后缀 `32` 或者将其改为 `28`。
-- 将 StarRocks 升级至 2.1 或更新版本。
+* 删去 CIDR 后缀 `32` 或者将其改为 `28`。
+* 将 StarRocks 升级至 2.1 或更新版本。
 
 ## 安装 BE 节点后启动失败，并返回错误 "StarRocks BE http service did not start correctly, exiting"。我该如何解决？
 
