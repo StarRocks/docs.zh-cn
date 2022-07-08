@@ -53,7 +53,6 @@
 + 管理手册
   + 部署集群
     + [通过 StarGo 部署](/administration/stargo.md)
-    + [通过 AWS CloudFormation 部署](/administration/AWS_cloudformation.md)
     + [通过 StarRocks Manager 部署](/administration/deploy_with_manager.md)
     + [通过 Docker 镜像部署](/administration/deploy_with_manager.md)
     + [通过源码编译](/administration/Build_in_docker.md)
