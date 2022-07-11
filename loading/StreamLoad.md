@@ -6,15 +6,10 @@ Stream Load 适用于导入数据量小于 10 GB 的本地文件、或通过程�
 
 ## 支持的数据格式
 
-StarRocks 支持如下数据格式：
+Stream Load 支持导入 CSV 和 JSON 格式的数据：
 
-- CSV
-
-  导入 CSV 格式的数据时，单次导入的 CSV 文件的大小不能超过 10 GB。
-
-- JSON
-
-  导入 JSON 格式的数据时，单次导入的 JSON 文件的大小不能超过 4 GB。
+- 导入 CSV 格式的数据时，单次导入的 CSV 文件的大小不能超过 10 GB。
+- 导入 JSON 格式的数据时，单次导入的 JSON 文件的大小不能超过 4 GB。
 
 ## 基本操作
 
@@ -139,7 +134,6 @@ wget http://192.168.1.1:8042/api/_load_error_log?file=__shard_0/error_log_insert
 
 ```Bash
 curl --location-trusted -u root -H "strict_mode: true" \
-
 -H "columns: category, price, author" -H "label:123" -H "format: json" -H "jsonpaths: [\"$.category\",\"$.price\",\"$.author\"]" -H "strip_outer_array: true" -H "json_root: $.RECORDS" -T testData \
 
 http://host:port/api/testDb/testTbl/_stream_load
