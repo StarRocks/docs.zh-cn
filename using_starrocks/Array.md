@@ -30,6 +30,8 @@ ARRAY<type> NOT NULL
 > * 数组列暂时不能作为 Key 列。
 > * 数组列不能作为分桶（Distribution By）列。
 > * 数组列不能作为分区（Partition By）列。
+> * 数组列暂不支持 DECIMAL V3 数据类型。
+> * 数组列最多支持 14 层嵌套。
 
 示例：
 
