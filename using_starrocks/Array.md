@@ -2,7 +2,7 @@
 
 本文介绍如何使用 StarRocks 中的数组类型相关特性。
 
-数组是数据库的一种扩展类型，其相关特性在众多数据库系统中均有支持，可以广泛的应用于 A/B Test 对比、用户标签分析、人群画像等场景。StarRocks 当前支持多维数组嵌套、数组切片、比较、过滤等特性。
+数组是数据库中的一种扩展数据类型，其相关特性在众多数据库系统中均有支持，可以广泛的应用于 A/B Test 对比、用户标签分析、人群画像等场景。StarRocks 当前支持多维数组嵌套、数组切片、比较、过滤等特性。
 
 ## 定义数组类型的列
 
@@ -15,24 +15,26 @@ ARRAY<type>
 -- 定义嵌套数组。
 ARRAY<ARRAY<type>>
 
--- 定义 NOT NULL 数组。
+-- 定义 NOT NULL 数组列。
 ARRAY<type> NOT NULL
 ~~~
 
-数组列的定义形式为 `ARRAY`，其中 `type` 是数组元素类型，默认为 nullable，暂时不支持指定元素类型为 NOT NULL，但是您可以定义数组本身为 NOT NULL。
+数组列的定义形式为 `ARRAY`，其中 `type` 是数组元素类型，默认为 nullable，暂时不支持指定数组元素类型为 NOT NULL，但是您可以定义数组列本身为 NOT NULL。
+
+数组元素支持以下数据类型：BOOLEAN、TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、VARCHAR、CHAR、DATETIME、DATE。
 
 > 注意
 > 数组类型有以下限制：
 >
-> * 您只能在 Duplicate Table 中定义数组列。StarRocks 自 2.1 版本开始支持 Primary Key 和 Unique Key 中使用数组类型。
+> * StarRocks 2.1 以前版本中，您只能在明细模型（Duplicate Key Table）中定义数组列。StarRocks 自 2.1 版本开始支持 Primary Key 和 Unique Key 中使用数组类型。
 > * 数组列暂时不能作为 Key 列。
-> * 数组列不能作为 Distribution 列。
-> * 数组列不能作为 Partition 列。
+> * 数组列不能作为分桶（Distribution By）列。
+> * 数组列不能作为分区（Partition By）列。
 
 示例：
 
 ~~~SQL
--- 建表并定义一维数组的列。
+-- 建表并指定其中的 `c1` 列为一维数组，元素类型为 INT。
 create table t0(
   c0 INT,
   c1 ARRAY<INT>
@@ -40,7 +42,7 @@ create table t0(
 duplicate key(c0)
 distributed by hash(c0) buckets 3;
 
--- 建表并定义嵌套数组的列。
+-- 建表并指定 `c1` 为两层的嵌套数组，元素类型为 VARCHAR。
 create table t1(
   c0 INT,
   c1 ARRAY<ARRAY<VARCHAR(10)>>
@@ -171,11 +173,11 @@ mysql> select array_append([], 10);
 
 ## 导入数组类型的数据
 
-StarRocks 当前支持三种方式写入数组值。ORC/Parquet 文件导入和 CSV 文件导入方式适合大规模数据导入。
+StarRocks 当前支持三种方式写入数组数据。
 
 ### 通过 INSERT INTO 语句导入数组
 
-INSERT INTO 语句导入方式适合小规模数据测试。
+INSERT INTO 语句导入方式适合小批量数据逐行导入或对 StarRocks 内外部表数据进行 ETL 处理并导入。
 
 示例：
 
@@ -189,11 +191,13 @@ distributed by hash(c0) buckets 3;
 INSERT INTO t0 VALUES(1, [1,2,3]);
 ~~~
 
-### 通过 ORC 或 Parquet 文件导入
+### 通过 Broker Load 批量导入 ORC 或 Parquet 文件中的数组
 
-StarRocks 中的数组类型，与 ORC 或 Parquet 格式中的 List 结构相对应，所以无需额外指定。具体导入方法请参考 [Broker load](../loading/BrokerLoad.md)。当前 ORC 的 List 结构可以直接导入，Parquet 格式正在开发中。
+StarRocks 中的数组类型，与 ORC 或 Parquet 格式中的 List 结构相对应，所以无需额外指定。具体导入方法请参考 [Broker load](../loading/BrokerLoad.md)。
 
-### 通过 CSV 文件导入
+当前 StarRocks 支持直接导入 ORC 文件的 List 结构。Parquet 格式导入正在开发中。
+
+### 通过 Stream Load 或 Routine Load 导入 CSV 格式数组
 
 您可以使用 [Stream Load](../loading/StreamLoad.md) 或 [Routine Load](../loading/RoutineLoad.md) 方式导入 CSV 文本文件或 Kafka 中的 CSV 格式数据，默认采用逗号分隔。
 
