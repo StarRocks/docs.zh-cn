@@ -361,10 +361,10 @@ CANCEL LOAD FROM db1 WHERE LABEL = "label1";
 
 ## 相关系统配置
 
-**FE 配置:** 下面配置属于 Spark load 的系统级别配置，也就是作用于所有 Spark load 导入任务的配置。主要通过修改 fe.conf来调整配置值。
+**FE 配置:** 下面配置属于 Spark Load 的系统级别配置，也就是作用于所有 Spark Load 导入任务的配置。主要通过修改 fe.conf 来调整配置值。
 
 * enable-spark-load：开启 Spark load 和创建 resource 功能。默认为 false，关闭此功能。
-* spark_load_default_timeout_second: 任务默认超时时间为 86400 秒（1 天）。
+* spark-load-default-timeout-second：任务默认超时时间为 86400 秒（1 天）。
 * spark-home-default-dir：spark客户端路径 (fe/lib/spark2x) 。
 * spark-resource-path：打包好的spark依赖文件路径（默认为空）。
 * spark-launcher-log-dir：spark客户端的提交日志存放的目录（fe/log/spark-launcher-log）。
