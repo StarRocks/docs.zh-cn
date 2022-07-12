@@ -56,6 +56,9 @@ StarRocks 的 FE 进程负责接收用户连接和查询请求，其本身是可
     mysql -u admin -padmin -h 127.0.0.1 -P6032
     ```
 
+    > 注意
+    > ProxySQL 默认包含两个端口，其中 `6032` 是 ProxySQL 的管理端口，`6033` 是 ProxySQL 的流量转发端口，即对外提供服务的端口。
+
 6. 配置全局日志。
 
     ```sql
@@ -106,3 +109,11 @@ StarRocks 的 FE 进程负责接收用户连接和查询请求，其本身是可
     load mysql query rules to runtime; 
     save mysql query rules to disk;
     ```
+
+完成以上步骤后，您可以通过 ProxySQL 经由 `6033` 端口对数据库进行操作。
+
+```shell
+mysql -u admin -padmin -P6033 -h 127.0.0.1 -e"select * from db_name.table_name"
+```
+
+如果结果正常返回，则表示您已成功通过 ProxySQL 连接 StarRocks。
