@@ -249,7 +249,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 
 |配置项|默认值|描述|
 |---|---|---|
-|storage_cooldown_second|-1|从 Table 创建时间点开始计算，自动降冷（从 HDD 介质迁移到 SSD 介质）的时延，值为 -1 表示不进行自动降冷，如需启用该功能请显式设置大于 0 的值。单位为秒。|
+|storage_cooldown_second|-1|从 Table 创建时间点开始计算，自动降冷（从 HDD 介质迁移到 SSD 介质）的时延。单位为秒。默认为 `-1` 表示不进行自动降冷，如需启用该功能请显式设置大于 0 的值。|
 |default_storage_medium|HDD|默认的存储介质，值为 HDD/SSD。在创建表/分区时，如果没有指定存储介质，那么会使用该值。|
 |schedule_slot_num_per_path|2|一个 BE 存储目录能够同时执行 tablet 相关任务的数目。|
 |tablet_balancer_strategy|disk_and_tablet|Tablet 均衡策略，值为 disk_and_tablet 或 be_load_score。|
