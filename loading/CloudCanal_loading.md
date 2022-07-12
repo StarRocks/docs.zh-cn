@@ -13,6 +13,7 @@ CloudCanal 社区版是一款由 [ClouGence 公司](https://www.clougence.com) �
 
 ## 功能说明
 
+- 推荐使用2.2.5.0及以上的CloudCanal版本写入StarRocks
 - 建议您在使用 CloudCanal 将 **增量数据** 导入至 StarRocks 时，控制导入的频率，CloudCanal写入StarRocks的默认导入频率可以通过参数`realFlushPauseSec`调整，默认为10秒。
 - 当前社区版本最大的内存配置为2g，如果同步任务运行产生OOM异常或者GC停顿严重可以调小以下参数减少批次大小从而减少内存占用。全量参数为`fullBatchSize`和`fullRingBufferSize`，增量参数为`increBatchSize`和`increRingBufferSize`
 - 支持的源端以及功能项：
