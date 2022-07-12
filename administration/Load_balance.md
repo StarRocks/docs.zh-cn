@@ -73,8 +73,8 @@ StarRocks 的 FE 进程负责接收用户连接和查询请求，其本身是可
 
     ```sql
     insert into mysql_servers(hostgroup_id, hostname, port) values(1, '172.26.92.139', 8533);
-    insert into mysql_servers(hostgroup_id, hostname, port) values(2, '172.26.34.139', 9931);
-    insert into mysql_servers(hostgroup_id, hostname, port) values(2, '172.26.34.140', 9931);
+    insert into mysql_servers(hostgroup_id, hostname, port) values(1, '172.26.34.139', 9931);
+    insert into mysql_servers(hostgroup_id, hostname, port) values(1, '172.26.34.140', 9931);
     load mysql servers to runtime;
     save mysql servers to disk;
     ```
