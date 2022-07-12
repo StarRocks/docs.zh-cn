@@ -1,78 +1,124 @@
-# 集群部署
+# 部署 FE 高可用集群
 
-StarRocks的集群部署分为两种模式，第一种是使用命令部署，第二种是使用 StarRocksManager 自动化部署。自动部署的版本只需要在页面上简单进行配置、选择、输入后批量完成，并且包含Supervisor进程管理、滚动升级、备份、回滚等功能。命令部署的方式适用于希望和自有运维系统打通的用户，有助于管理员理解StarRocks的内部运行机制，直接定位处理一些更复杂的问题。
+本文介绍如何部署 StarRocks 集群 FE 节点高可用集群。
 
-> 当前 StarRocksManager 为企业版功能，需要试用的用户可以到 [StarRocks官网](https://www.starrocks.com/zh-CN/download) 咨询（网页最下面，点击「现在咨询」StarRocks企业版）。
+FE 的高可用集群采用主从复制架构，可避免 FE 单点故障。FE 采用了类 Raft 的 Berkeley DB Java Edition（BDBJE）协议完成选主，日志复制和故障切换。在 FE 集群中，多实例分为两种角色：Follower 和 Observer。前者为复制协议的可投票成员，参与选主和提交日志，一般数量为奇数（2n+1），使用多数派（n+1）确认，可容忍少数派（n）故障；后者属于非投票成员，用于异步订阅复制日志，Observer 的状态落后于 Follower，类似其他复制协议中的 Learner 角色。
 
-## StarRocksManager部署
+FE 集群从 Follower 中自动选出 Leader 节点，所有更改状态操作都由 Leader 节点执行。最新状态可以从 FE Leader 节点读取。更改操作可以由非 Leader 节点发起，继而转发给 Leader 节点执行，非 Leader 节点在复制日志中的 LSN 记录最近一次更改操作。读操作可以直接在非 Leader 节点上执行，但需要等待非 Leader 节点的状态已经同步到最近一次更改操作的 LSN，因此非 Leader 节点的读写操作满足顺序一致性。Observer 节点能够增加 FE 集群的读负载能力，对时效性要求放宽的非紧要用户可以选择读 Observer 节点。
 
-### 安装依赖
+> 注意
+>
+> * FE 节点之间的时钟相差**不能超过5s**。如果节点之间存在较大时钟差，请使用 NTP 协议校准时间。
+> * 一台机器上只可以部署单个 FE 节点。
+> * 所有 FE 节点的 `http_port` 需保持相同。
 
-在所有需要部署StarRocks的节点上安装以下依赖:
+## 下载并配置新 FE 节点
 
-* JDK (1.8 以上)  并且配置好JAVA_HOME (比如 `~/.bashrc` 中增加 `export` ).
-* python (2.7 以上)
-* python-setuptools (`yum install setuptools or apt-get install setuptools`)
+详细操作请参考 [手动部署 StarRocks FE 节点](../quick_start/Deploy.md#部署-FE-节点)。
 
-另外StarRocksManager本身需要连接一个MySQL来存储Manager管理平台的数据。
+## 添加新 FE 节点
 
-### 安装StarRocksManager部署工具
+使用 MySQL 客户端连接已有 FE 节点，添加新 FE 节点的信息，包括角色、IP 地址、以及 Port。
 
-解压以后
+* 添加 FE Follower 节点。
 
-~~~shell
-$ bin/install.sh -h
--[d install_path] install_path(default: /home/disk1/starrocks/starrocks-manager-20200101)
--[y python_bin_path] python_bin_path(default: /usr/bin/python)
--[p admin_console_port] admin_console_port(default: 19321)
--[s supervisor_http_port] supervisor_http_port(default: 19320)
-$ bin/install.sh
-~~~
+```sql
+ALTER SYSTEM ADD FOLLOWER "host:port";
+```
 
-该步骤会安装一个简单的web页面来帮助安装StarRocks数据库
+* 添加 FE Observer 节点。
 
-### 安装部署StarRocks
+```sql
+ALTER SYSTEM ADD OBSERVER "host:port";
+```
 
-* 首先需要配置一个安装好的MySQL数据库，此MySQL用于存储StarRocksManager的管理、查询、报警等信息
+参数：
 
-![配置 MySQL](../assets/8.1.1.3-1.png)
+* `host`：机器的IP 地址。如果机器存在多个 IP 地址，则该项为 `priority_networks` 设置项下设定的唯一通信 IP 地址。
+* `port`：`edit_log_port` 设置项下设定的端口，默认为 `9010`。
 
-* 选择需要部署的节点，以及agent和supervisor的安装目录，agent负责采集机器的统计信息，Supervisor管理进程的启动停止，所有安装都在用户环境，不会影响系统环境。
+出于安全考虑，StarRocks 的 FE 节点和 BE 节点只会监听一个 IP 地址进行通信。如果一台机器有多块网卡，StarRocks 有可能无法自动找到正确的 IP 地址。例如，通过 `ifconfig` 命令查看到 `eth0` IP 地址为 `192.168.1.1`，`docker0` IP 地址为 `172.17.0.1`，您可以设置 `192.168.1.0/24` 子网以指定使用 `eth0` 作为通信 IP。此处采用 [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing) 的表示方法来指定 IP 所在子网范围，以便在所有的 BE 及 FE 节点上使用相同的配置。
 
-![配置节点](../assets/8.1.1.3-2.png)
+如出现错误，您可以通过命令删除相应 FE 节点。
 
-* **安装FE**： `meta dir`是StarRocks的元数据目录，和命令安装类似，建议配置一个独立的starrocks-meta和fe的log 目录，FE follower建议配置1或者3个，在请求压力比较大的情况可以酌情增加observer
+* 删除 FE Follower 节点。
 
-![配置 FE 实例](../assets/8.1.1.3-3.png)
+```sql
+ALTER SYSTEM DROP FOLLOWER "host:port";
+```
 
-* **安装BE**： 端口的含义参考下面[端口列表](#端口列表)
+* 删除 FE Observer 节点。
 
-![配置 BE 实例](../assets/8.1.1.3-4.png)
+```sql
+ALTER SYSTEM drop OBSERVER "host:port";
+```
 
-* **安装Broker**，建议在所有节点上都安装Broker
+具体操作参考[扩容缩容](../administration/Scale_up_down.md)。
 
-![HDFS Broker](../assets/8.1.1.3-5.png)
+## 连接 FE 节点
 
-* **安装Center service**： center service负责从agent拉取信息后汇总存储在MySQL中，并提供监控报警的服务。这里的邮件服务用来配置接收报警通知的邮箱，可以填空，以后再进行配置。
+FE 节点需两两之间建立通信连接方可实现复制协议选主，投票，日志提交和复制等功能。当的新FE节点**首次**被添加到已有集群并启动时，您需要指定集群中现有的一个节点作为 helper 节点，并从该节点获得集群的所有 FE 节点的配置信息，才能建立通信连接。因此，在首次启动新 FE 节点时候，您需要通过命令行指定 `--helper` 参数。
 
-![配置中心服务](../assets/8.1.1.3-6.png)
+```shell
+./bin/start_fe.sh --helper host:port --daemon
+```
 
-### 端口列表
+参数：
 
-|实例名称|端口名称|默认端口|通讯方向|说明|
-|---|---|---|---|---|
-|BE|be_port|9060|FE&nbsp;&nbsp; --> BE|BE 上 thrift server 的端口，<br/>用于接收来自 FE 的请求|
-|BE|webserver_port|8040|BE <--> BE|BE 上的 http server 的端口|
-|BE|heartbeat_service_port|9050|FE&nbsp;&nbsp; --> BE|BE 上心跳服务端口（thrift），<br/>用于接收来自 FE 的心跳|
-|BE|brpc_port|8060|FE <--> BE<br/>BE <--> BE|BE 上的 brpc 端口，<br/>用于 BE 之间通讯|
-|FE|**http_port**|**8030**|FE <--> 用户|FE 上的 http server 端口|
-|FE|rpc_port|9020|BE&nbsp;&nbsp; --> FE<br/> FE <--> FE|FE 上的 thrift server 端口|
-|FE|**query_port**|**9030**| FE <--> 用户|FE 上的 mysql server 端口|
-|FE|edit_log_port|9010|FE <--> FE|FE 上的 bdbje 之间通信端口|
-|Broker|broker_ipc_port|8000|FE&nbsp;&nbsp; --> Broker <br/>BE&nbsp;&nbsp; --> Broker|Broker 上的 thrift server，<br/>用于接收请求|
+* `host`：机器的IP 地址。如果机器存在多个 IP 地址，则该项为 `priority_networks` 设置项下设定的唯一通信 IP 地址。
+* `port`：`edit_log_port` 设置项下设定的端口，默认为 `9010`。
 
-其中 http_port(8030)、query_port(9030) 是常用端口，前者用于网页访问 FE，后者用于 MySQL 客户端访问。
+## 确认 FE 集群部署成功
 
-## 手动部署
+查看集群状态，确认部署成功。
 
-手动部署参考 [StarRocks手动部署](../quick_start/Deploy.md)。
+```sql
+SHOW PROC '/frontends'\G
+```
+
+以下示例中，`172.26.108.172_9010_1584965098874` 为主 FE 节点。
+
+```Plain Text
+mysql> SHOW PROC '/frontends'\G
+
+********************* 1. row **********************
+    Name: 172.26.108.172_9010_1584965098874
+      IP: 172.26.108.172
+HostName: starrocks-sandbox01
+......
+    Role: FOLLOWER
+IsMaster: true
+......
+   Alive: true
+......
+********************* 2. row **********************
+    Name: 172.26.108.174_9010_1584965098874
+      IP: 172.26.108.174
+HostName: starrocks-sandbox02
+......
+    Role: FOLLOWER
+IsMaster: false
+......
+   Alive: true
+......
+********************* 3. row **********************
+    Name: 172.26.108.175_9010_1584965098874
+      IP: 172.26.108.175
+HostName: starrocks-sandbox03
+......
+    Role: FOLLOWER
+IsMaster: false
+......
+   Alive: true
+......
+3 rows in set (0.05 sec)
+```
+
+节点的 `Alive` 项为 `true` 时，添加节点成功。
+
+## 下一步
+
+成功部署 StarRocks 集群后，您可以：
+
+* [创建表](Create_table.md)
+* [导入和查询数据](Import_and_query.md)

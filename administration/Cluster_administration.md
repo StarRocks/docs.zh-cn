@@ -1,621 +1,372 @@
-# 集群管理
+# 管理集群
 
-## 集群启停
+本文介绍如何管理维护 StarRocks 集群，包括启停集群，升级回滚等操作。
 
-StarRocks集群部署完成之后，紧接着就是启动集群，提供服务。启动服务之前需要保证配置文件满足要求。
+## 启动集群
 
-### FE启动
+在启动 StarRocks 集群之前，您需要确认相关节点的配置文件是否正确。
 
-FE启动前需要重点关注的配置项有：元数据放置目录(meta_dir)、通信端口。
+### 启动 FE 集群
 
-***meta_dir***：描述FE存储元数据的目录，需要提前创建好相应目录，并在配置文件中写明。由于FE的元数据是整个系统的元数据，十分关键，建议不要和其他进程混布。
+#### 确认 FE 配置
 
-FE配置的通信端口有四个:
+启动 FE 节点前，您需要确认配置文件 **fe/conf/fe.conf** 中元数据路径 `meta_dir` 和相关通信端口的配置项是否正确。
 
-|端口名称|默认端口|作用|
+|配置项|描述|默认值|
 |---|---|---|
-|http_port|8030|FE 上的 http server 端口|
-|rpc_port|9020|FE 上的 thrift server 端口|
-|query_port|9030|FE 上的 mysql server 端口|
-|edit_log_port|9010|FE Group(Master, Follower, Observer)之间通信用的端口|
+|meta_dir|FE 节点存储元数据的路径，您需要提前创建相应路径。|${STARROCKS_HOME}/meta|
+|http_port|FE 节点的 HTTP Server 端口。|8030|
+|rpc_port|FE 节点的 Thrift Server 端口。|9020|
+|query_port|FE 节点的 MySQL Server 端口。|9030|
+|edit_log_port|FE 集群（Leader，Follower，以及 Observer）间的通信端口。|9010|
 
-FE进程的启动方式十分简单：
+> 注意
+> 由于 FE 节点的元数据涉及整个 StarRocks 系统，十分关键，建议您将 `meta_dir` 部署于单独路径下。
 
-* 进入FE进程的部署目录
-  
-* 运行`sh bin/start_fe.sh --daemon`启动服务
+#### 启动 FE 进程
 
- FE为了保证高可用，会部署多个节点。线上典型的部署方式是3个FE(1 Master + 2 Follower)。
+进入 FE 进程的部署路径并运行命令启动服务。启动多 FE 节点时，您需要逐台启动 FE Follower 节点。
 
-多节点启动的时候，建议先逐台启动Follower，然后启动Master（如果Follower出错可以提前发现）。
+```shell
+cd StarRocks-x.x.x/fe
+sh bin/start_fe.sh --daemon
+```
 
-任何一台FE的启动，都建议进行验证，可以通过发送查询的方式予以验证。
+为了保证 FE 高可用，您需要部署多个 FE 节点。我们建议您部署 3 个 FE 节点，其中包含 1 个 FE Leader 节点和 2 个 FE Follower 节点。
 
-### BE启动
+> 注意
+> 当拥有多个 FE Follower 节点时，集群内需要有半数以上的 FE Follower 节点存活才能够选举出 FE Master 节点，从而提供查询服务。
 
-BE启动前需要重点关注的配置项有：数据放置目录(storage_root_path)、通信端口。
+每启动一台 FE 节点后，建议您验证该节点是否启动成功。您可以通过发送查询的方式进行验证。
 
-***storage_root_path***描述BE放置存储文件的地方，需要事先创建好相应目录，建议每个磁盘创建一个目录。
+### 启动 BE 集群
 
-BE配置的通信端口有三个:
+#### 确认 BE 配置
 
-|端口名称|默认端口|作用|
+启动 BE 节点前，您需要确认配置文件 **be/conf/be.conf** 中数据存路径 `storage_root_path` 和相关通信端口的配置项是否正确。
+
+|配置项|描述|默认值|
 |---|---|---|
-|be_port|9060|BE 上 thrift server 的端口，用于接收来自 FE 的请求|
-|webserver_port|8040|BE 上的 http server 的端口|
-|heartbeat_service_port|9050|BE 上心跳服务端口（thrift），用于接收来自 FE 的心跳|
+|storage_root_path|BE 节点存储数据路径，您需要提前创建相应路径。建议您为每个磁盘创建一个路径。|${STARROCKS_HOME}/storage|
+|be_port|BE 上 Thrift Server 的端口，用于接收来自 FE 的请求。|9060|
+|webserver_port|BE 上的 HTTP Server 的端口。|8040|
+|heartbeat_service_port|BE 上 Thrift server 端口，用于接收来自 FE 的心跳。|9050|
+|brpc_port|BE 节点间的通讯端口。|8060|
+
+#### 启动 BE 进程
+
+进入 BE 进程的部署路径并运行命令启动服务。
+
+```shell
+cd StarRocks-x.x.x/be
+sh bin/start_be.sh --daemon
+```
 
 ### 确认集群健康状态
 
-BE和FE启动完成之后，需要检查进程状态，以确定服务正常启动。
+在 BE 和 FE 启动完成之后，您需要检查进程状态，以确定服务正常启动。
 
-* 运行 `http://be_host:be_http_port/api/health`  确认BE启动状态
-
-  * 返回 {"status": "OK","msg": "To Be Added"} 表示启动正常。
-
-* 运行 `http://fe_host:fe_http_port/api/bootstrap` 确认FE启动状态。
-
-  * 返回 {"status":"OK","msg":"Success"} 表示启动正常。
-
-### 集群停止
-
-* 进入FE目录 运行`sh bin/stop_fe.sh`
-
-* 进入BE目录 运行`sh bin/stop_be.sh`
-
-## 集群升级
-
-StarRocks可以通过滚动升级的方式，平滑进行升级。**升级顺序是先升级BE，再升级FE**。StarRocks保证BE后向兼容FE。升级的过程可以分为：测试升级的正确性，滚动升级，观察服务。
-
-### 常规升级
-
-#### 升级准备
-
-* 在完成数据正确性验证后，将 BE 和 FE 新版本的二进制文件分发到各自目录下。
-
-* 小版本升级，BE 只需升级 starrocks_be；FE 只需升级 starrocks-fe.jar。
-
-* 大版本升级，则可能需要升级其他文件（包括但不限于 bin/ lib/ 等）；如果不确定是否需要替换其他文件，全部替换即可。
-
-#### 升级
-
-* 确认新版本的文件替换完成。
-
-* 逐台重启 BE 后，再逐台重启 FE。
-  
-* 确认前一个实例启动成功后，再重启下一个实例。
-
-##### BE 升级
+* 确认 BE 集群启动状态。
 
 ```shell
-cd be_work_dir 
+http://< be_host >:< be_http_port >/api/health
+```
+
+若返回 `{"status": "OK", "msg": "To Be Added"}`，则集群正常启动。
+
+* 确认 FE 集群启动状态。
+
+```shell
+http://< fe_host >:< fe_http_port >/api/bootstrap
+```
+
+若返回 `{"status": "OK", "msg": "Success"}`，则集群正常启动。
+
+## 停止集群
+
+### 停止 FE 集群
+
+进入 FE 路径，运行命令停止 FE 集群。
+
+```shell
+cd StarRocks-x.x.x/fe
+sh bin/stop_fe.sh
+```
+
+### 停止 BE 集群
+
+进入 BE 路径，运行命令停止 BE 集群。
+
+```shell
+cd StarRocks-x.x.x/be
+sh bin/stop_be.sh
+```
+
+## 升级集群
+
+您可以通过滚动升级的方式平滑升级 StarRocks。StarRocks 的版本号遵循 Major.Minor.Patch 的命名方式，分别代表重大版本，大版本以及小版本。
+
+> 注意
+>
+> * 由于 StarRocks 保证 BE 后向兼容 FE，因此您需要**先升级 BE 节点，再升级 FE 节点**。错误的升级顺序可能导致新旧 FE、BE 节点不兼容，进而导致 BE 节点停止服务。
+> * StarRocks 2.0 之前的大版本升级时必须逐个大版本升级，2.0 之后的版本可以跨大版本升级。StarRocks 2.0 是当前的长期支持版本（Long Term Support，LTS），维护期为半年以上。
+>
+> |版本|可直接升级版本|注意事项|是否为 LTS 版本|
+> |----|------------|--------|--------------|
+> |1.18.x||更早版本需要按照 <a href="update_from_dorisdb.md">标准版 DorisDB 升级到社区版 StarRocks</a> 操作。|否|
+> |1.19.x|必须从1.18.x升级||否|
+> |2.0.x|必须从1.19.x升级|升级过程中需要暂时关闭 Clone。|是|
+> |2.1.x|必须从2.0.x 升级|灰度升级前需要修改 <code>vector_chunk_size</code> 和 <code>batch_size</code>。|否|
+> |2.2.x|可以从2.0.x 或 2.1.x 升级|回滚需要特殊配置 <code>ignore_unknown_log_id</code>。||
+
+### 下载安装文件
+
+在完成数据正确性验证后，将新版本的 BE 和 FE 节点的安装包下载并分发至各自路径下。您也可以 [在 Docker 中编译](Build_in_docker.md) 对应 tag 的源码。建议您选择小版本号最高的版本。
+
+### 测试 BE 升级的正确性
+
+1. 选择任意一个 BE 节点，替换新版本 **/lib/starrocks_be** 文件。
+2. 重启该 BE 节点，通过 BE 日志 **be.INFO** 查看是否启动成功。
+3. 如果该 BE 节点启动失败，您可以可以先排查失败原因。如果错误不可恢复，您可以直接通过 `DROP BACKEND` 删除该 BE、清理数据后，使用上一个版本的 **starrocks_be** 重新启动该 BE 节点。然后通过 `ADD BACKEND` 重新添加 BE 节点。
+
+> 警告：**该方法会导致系统丢失一个数据副本，请务必确保 3 副本完整的情况下执行这个操作。**
+
+### 升级 BE 节点
+
+进入 BE 路径，并替换相关文件。以下示例以大版本升级为例。
+
+> 注意：BE 节点小版本升级中（例如从 2.0.x 升级到 2.0.y），您只需升级 **/lib/starrocks_be**。而大版本升级中（例如从 2.0.x 升级到 2.x.x），您需要替换 BE 节点路径下的 **bin** 和 **lib** 文件夹。
+
+```shell
+cd StarRocks-x.x.x/be
 mv lib lib.bak 
-cp -r /tmp/StarRocks-SE-x.x.x/be/lib  .   
+mv bin bin.bak
+cp -r /tmp/StarRocks-SE-x.x.x/be/lib  .
+cp -r /tmp/StarRocks-SE-x.x.x/be/bin  .
+```
+
+逐台重启 BE 节点。
+
+```shell
 sh bin/stop_be.sh
 sh bin/start_be.sh --daemon
+```
+
+在启动下一台实例之前，您需要确认当前实例启动成功。
+
+```shell
 ps aux | grep starrocks_be
 ```
 
-##### FE 升级
+### 测试 FE 升级的正确性
+
+> 注意
+> 由于 FE 元数据极其重要，而升级出现异常可能导致所有数据丢失，请谨慎升级。
+
+1. 在测试开发环境中单独使用新版本部署一个测试用的 FE 进程。
+2. 修改测试用的 FE 的配置文件 **fe.conf**，将所有端口设置为与生产环境不同。
+3. 在 **fe.conf** 添加配置 `cluster_id = 123456`。
+4. 在 **fe.conf** 添加配置 `metadata_failure_recovery = true`。
+5. 拷贝生产环境中 Master FE 的元数据路径 **meta** 到测试环境。
+6. 修改测试环境中 **meta/image/VERSION** 文件中的 `cluster_id` 为 `123456`（即与第 3 步中相同）。
+7. 在测试环境中，运行 `sh bin/start_fe.sh` 启动 FE。
+8. 通过 FE 日志 **fe.log** 验证测试 FE 节点是否成功启动。
+9. 如果启动成功，运行 `sh bin/stop_fe.sh` 停止测试环境的 FE 节点进程。
+
+> 说明
+> 以上第 2 至 第 6 步的目的是防止测试环境的 FE 启动后，错误连接到线上环境中。
+
+### 升级 FE 节点
+
+升级 FE 集群时，您需要先升级各 FE Follower 节点，最后升级 FE Master 节点，从而在 FE Follower 节点升级失败时可以提前发现问题，防止其影响集群查询功能。
+
+进入 FE 路径，并替换相关文件。以下示例以大版本升级为例。
+
+> 注意
+> FE 节点小版本升级中（例如从 2.0.x 升级到 2.0.y），您只需升级 **/lib/starrocks-fe.jar**。而大版本升级中（例如从 2.0.x 升级到 2.x.x），您需要替换 FE 节点路径下的 **bin** 和 **lib** 文件夹。
 
 ```shell
-cd fe_work_dir 
+cd StarRocks-x.x.x/fe
 mv lib lib.bak 
+mv bin bin.bak
 cp -r /tmp/StarRocks-SE-x.x.x/fe/lib  .   
-sh bin/stop_fe.sh
-sh bin/start_fe.sh --daemon
-ps aux | grep StarRocksFe
+cp -r /tmp/StarRocks-SE-x.x.x/fe/bin  .
 ```
 
-特别注意：
+逐台重启 FE 节点。
 
-BE、FE启动顺序不能颠倒。因为如果升级导致新旧 FE、BE 不兼容，从新 FE 发出的命令可能会导致旧的 BE 挂掉。但是因为已经部署了新的 BE 文件，BE 通过守护进程自动重启后，即已经是新的 BE 了。
+```shell
+sh bin/stop_fe.sh
+sh bin/start_fe.sh --daemon
+```
 
-#### 测试BE升级的正确性
+在启动下一台实例之前，您需要确认当前实例启动成功。
 
-* 任意选择一个BE节点，部署最新的starrocks_be二进制文件。
+```shell
+ps aux | grep StarRocksFE
+```
 
-* 重启该BE节点，通过BE日志be.INFO查看是否启动成功。
-  
-* 如果启动失败，可以先排查原因。如果错误不可恢复，可以直接通过 `DROP BACKEND` 删除该 BE、清理数据后，使用上一个版本的 starrocks_be 重新启动 BE。然后重新 `ADD BACKEND`。（**该方法会导致丢失一个数据副本，请务必确保3副本完整的情况下，执行这个操作！！！**）
-  
-#### 测试FE升级的正确性
+### 升级 Broker
 
-* 单独使用新版本部署一个测试用的 FE 进程（比如自己本地的开发机）
+进入 Broker 路径，并替换相关文件。
 
-* 修改测试用的 FE 的配置文件 fe.conf，将**所有端口设置为与线上不同**。
-  
-* 在fe.conf添加配置：cluster_id=123456
-  
-* 在fe.conf添加配置：metadata_failure_recovery=true
-  
-* 拷贝线上环境Master FE的元数据目录meta到测试环境
-  
-* 将拷贝到测试环境中的 meta/image/VERSION 文件中的 cluster_id 修改为 123456（即与第3步中相同）
-* 在测试环境中，运行 `sh bin/start_fe.sh` 启动 FE
-  
-* 通过FE日志fe.log观察是否启动成功。
-  
-* 如果启动成功，运行 `sh bin/stop_fe.sh` 停止测试环境的 FE 进程。
+```shell
+cd StarRocks-x.x.x/apache_hdfs_broker
+mv lib lib.bak 
+mv bin bin.bak
+cp -r /tmp/StarRocks-SE-x.x.x/apache_hdfs_broker/lib  .   
+cp -r /tmp/StarRocks-SE-x.x.x/apache_hdfs_broker/bin  .
+```
 
-**以上 2-6 步的目的是防止测试环境的FE启动后，错误连接到线上环境中。**
+运行命令重启 Broker。
 
-**因为FE元数据十分关键，升级出现异常可能导致所有数据丢失，请特别谨慎，尤其是大版本的升级。**
+```shell
+sh bin/stop_broker.sh
+sh bin/start_broker.sh --daemon
+```
 
-### 标准版DorisDB-x升级到社区版StarRocks-x
+在启动下一台实例之前，您需要确认当前实例启动成功。
 
->注意：StarRocks可以做到前向兼容，所以在升级的时候可以做到灰度升级，但是一定是先升级BE再升级FE。(标准版安装包命名为DorisDB*,社区版安装包命名格式为StarRocks*)
+```shell
+sh bin/start_broker.sh --daemon
+```
 
-#### 准备升级环境
+### 关于 StarRocks 1.19 升级至 2.0.x
 
->注意：请留意环境变量配置准确
+如果您需要将 StarRocks 1.19 升级至 2.0.x，您必须在升级过程中关闭 Clone 以避免触发旧版本中的 Bug。该操作同样适用于从 StarRocks 2.1.5 或之前版本升级至 2.1.6 或之后版本。
 
-1. 创建操作目录，准备环境
-  
-    ```bash
-    # 创建升级操作目录用来保存备份数据，并进入当前目录
-    mkdir DorisDB-upgrade-$(date +"%Y-%m-%d") && cd DorisDB-upgrade-$(date +"%Y-%m-%d")
-    # 设置当前目录路径作为环境变量，方便后续编写命令
-    export DSDB_UPGRADE_HOME=`pwd`
-    # 将您当前已经安装的标准版（DorisDB）路径设置为环境变量
-    export DSDB_HOME=标准版的安装路径，形如“xxx/DorisDB-SE-1.17.6”
-    ```
-
-2. 下载社区版（StarRocks）安装包，并解压，解压文件根据您下载版本进行重命名
-  
-    ```bash
-    wget "https://xxx.StarRocks-SE-1.18.4.tar.gz" -O StarRocks-1.18.4.tar.gz
-    tar -zxvf StarRocks-1.18.4.tar.gz
-    # 将社区版的解压文件路径设置为环境变量
-    export STARROCKS_HOME= 社区版的解压安装路径，形如“xxx/StarRocks-1.18.4”
-    ```
-
-#### 升级BE
-
-逐台升级BE，确保每台升级成功，保证对数据没有影响
-
-1. 先将标准版的BE停止
-
-    ```bash
-    # 停止BE
-    cd ${DSDB_HOME}/be && ./bin/stop_be.sh
-    ```
-
-2. 当前标准版BE的lib和bin移动到备份目录下
+升级开始前，您需要关闭 Clone。
 
-    ```bash
-    # 在DSDB_UPGRADE_HOME 目录下创建be目录，用于备份当前标准版be的lib
-    cd ${DSDB_UPGRADE_HOME} && mkdir -p DorisDB-backups/be
-    mv  ${DSDB_HOME}/be/lib DorisDB-backups/be/
-    mv  ${DSDB_HOME}/be/bin DorisDB-backups/be/
-    ```
+```sql
+ADMIN SET FRONTEND CONFIG ("max_scheduling_tablets" = "0"); 
+ADMIN SET FRONTEND CONFIG ("max_balancing_tablets" = "0"); 
+```
 
-3. 拷贝社区版（StarRocks）的BE文件到当前标准版(DorisDB)的BE的目录下
+升级结束后，开启 Clone。
 
-    ```bash
-    cp -rf ${STARROCKS_HOME}/be/lib/ ${DSDB_HOME}/be/lib
-    cp -rf ${STARROCKS_HOME}/be/bin/ ${DSDB_HOME}/be/bin
-    ```
+```sql
+ADMIN SET FRONTEND CONFIG ("max_scheduling_tablets" = "2000"); 
+ADMIN SET FRONTEND CONFIG ("max_balancing_tablets" = "100");
+```
 
-4. 重新启动BE
+### 关于 StarRocks 2.0.x 灰度升级至 2.1.x
 
-    ```bash
-    # 启动BE
-    cd ${DSDB_HOME}/be && ./bin/start_be.sh --daemon
-    ```
+如果您需要将 StarRocks 2.0 灰度升级至 2.1，则必须确保所有 BE 节点拥有一致的 `chunk size`，即 BE 节点在每个批次中处理数据的行数。
 
-5. 验证BE是否正确运行  
+1. 在配置文件 **conf/be.conf** 中，将所有 BE 节点的配置项 `vector_chunk_size` 设为 `4096`（默认值为 4096，单位为行）。配置项修改将在重启后生效。
+2. 为 FE 节点设定全局变量 `batch_size` 小于或等于 `4096`（默认值和建议值为 4096，单位为行）。
 
-    a. 在MySQL客户端执行show backends/show proc '/backends' \G 查看BE是否成功启动并且版本是否正确  
+示例：
 
-    b. 观察be/log/be.INFO的日志是否正常  
+```plain text
+-- 查询 batch_size
+mysql> show variables like '%batch_size%';
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| batch_size    | 1024  |
++---------------+-------+
+1 row in set (0.00 sec)
 
-    c. 观察be/log/be.WARNING 是否有异常日志  
+-- 设置 batch_size
+mysql> set global batch_size = 4096;
+```
 
-6. 第一台观察10分钟后，按照上述流程执行其他BE节点
+## 回滚集群
 
-#### 升级FE
+您可以通过命令回滚 StarRocks 版本，回滚范围包括所有安装包名为 **StarRocks-xx** 的版本。当升级后发现出现异常状况，不符合预期，想快速恢复服务的，可以按照下述操作回滚版本。
 
-> 注意：
->
-> * 逐台升级FE，先升级Observer，在升级Follower，最后升级Master
->
-> * 请将没有启动FE的节点的FE同步升级，以防后续这些节点启动FE出现FE版本不一致的情况
+> 注意
+> 回滚操作与升级操作的顺序相反，应当**先回滚 FE 节点，再回滚 BE 节点** 。错误的回滚顺序可能导致新旧 FE、BE 节点不兼容，进而导致 BE 节点停止服务。
 
-1. 先将当前节点FE停止
+### 下载安装文件
 
-    ```bash
-    cd ${DSDB_HOME}/fe && ./bin/stop_fe.sh
-    ```
+在完成数据正确性验证后，将需要回滚的旧版本 BE 和 FE 节点安装包下载并分发至各自路径下。
 
-2. 创建FE目录备份标准版的FE的lib和bin
+### 回滚 FE 节点
 
-    ```bash
-    cd ${DSDB_UPGRADE_HOME} && mkdir -p DorisDB-backups/fe
-    mv ${DSDB_HOME}/fe/bin DorisDB-backups/fe/
-    mv ${DSDB_HOME}/fe/lib DorisDB-backups/fe/
-    ```
+进入 FE 路径，并替换相关文件。以下示例以大版本回滚为例。
 
-3. 拷贝社区版FE的lib和bin文件到标准版FE的目录下  
+> 注意
+> FE 节点小版本回滚中（例如从 2.0.y 回滚到 2.0.x），您只需回滚 **/lib/starrocks-fe.jar**。而大版本回滚中（例如从 2.x.x 升级到 2.0.x），您需要替换 FE 节点路径下的 **bin** 和 **lib** 文件夹。
 
-    ```bash
-    cp -r ${STARROCKS_HOME}/fe/lib/ ${DSDB_HOME}/fe
-    cp -r ${STARROCKS_HOME}/fe/bin/ ${DSDB_HOME}/fe
-    ```
+```shell
+cd StarRocks-x.x.x/fe
+mv lib libtmp.bak 
+mv bin bintmp.bak 
+mv lib.bak lib   
+mv bin.bak bin 
+```
 
-4. 备份meta_dir元数据信息  
-  
-    a. 将标准版的/fe/conf/fe.conf中设置的meta_dir目录进行备份，如未更改过配置文件中meta_dir属性，默认为“${DSDB_HOME}/doris-meta”；下例中设置为“${DSDB_HOME}/meta”,  
-  
-    b. 注意保证“命令中元数据目录”和“元数据实际目录”还有“配置文件”中一致，如您原目录名为“doris-meta”，建议您将目录重命名，同步需要更改配置文件  
-  
-    ```bash
-    mv doris-meta/ meta
-    ```
-  
-    c. 配置文件示例：
-  
-    ```bash
-    # store metadata, create it if it is not exist.
-    # Default value is ${DORIS_HOME}/doris-meta
-    # meta_dir = ${DORIS_HOME}/doris-meta
-    meta_dir=xxxxx/DorisDB-SE-1.17.6/meta
-    ```
-  
-    其中，meta_dir设置为创建的元数据存储目录路径
+逐台重启 FE 节点。
 
-    ```bash
-    cd “配置文件中设置的meta_dir目录,到meta的上级目录”
-    # 拷贝meta文件，meta为本例中设置路径，请根据您配置文件中设置进行更改
-    cp -r meta meta-$(date +"%Y-%m-%d")
-    ```
-  
-5. 启动FE服务
+```shell
+sh bin/stop_fe.sh
+sh bin/start_fe.sh --daemon
+```
 
-    ```bash
-    cd ${DSDB_HOME}/fe && ./bin/start_fe.sh --daemon
-    ```
+在启动下一台实例之前，您需要确认当前实例启动成功。
 
-6. 验证FE是否正确运行  
+```shell
+ps aux | grep StarRocksFE
+```
 
-    a. 在MySQL客户端执行show frontends /show proc '/frontends' \G查看FE是否成功启动并且版本是否正确  
+### 回滚 BE 节点
 
-    b. 观察fe/log/fe.INFO的日志是否正常  
+进入 BE 路径，并替换相关文件。以下示例以大版本回滚为例。
 
-    c. 观察fe/log/fe.WARNING 是否有异常日志  
+> 注意
+> BE 节点小版本回滚中（例如从 2.0.y 回滚到 2.0.x），您只需回滚 **/lib/starrocks_be**。而大版本回滚中（例如从 2.x.x 升级到 2.0.x），您需要替换 BE 节点路径下的 **bin** 和 **lib** 文件夹。
 
-7. 第一台观察10分钟后，按照上述流程执行其他FE节点
+```shell
+cd StarRocks-x.x.x/be
+mv lib libtmp.bak 
+mv bin bintmp.bak 
+mv lib.bak lib
+mv bin.bak bin
+```
 
-#### 升级brokers
+逐台重启 BE 节点。
 
-1. 停止当前节点的broker
+```shell
+sh bin/stop_be.sh
+sh bin/start_be.sh --daemon
+```
 
-    ```bash
-    cd ${DSDB_HOME}/apache_hdfs_broker && ./bin/stop_broker.sh
-    ```
+在启动下一台实例之前，您需要确认当前实例启动成功。
 
-2. 备份当前标准版的Broker运行的lib和bin
+```shell
+ps aux | grep starrocks_be
+```
 
-    ```bash
-    cd ${DSDB_UPGRADE_HOME} && mkdir -p DorisDB-backups/apache_hdfs_broker
-    mv ${DSDB_HOME}/apache_hdfs_broker/lib DorisDB-backups/apache_hdfs_broker/
-    mv ${DSDB_HOME}/apache_hdfs_broker/bin DorisDB-backups/apache_hdfs_broker/
-    ```
+### 回滚 Broker
 
-3. 拷贝社区版本Broker的lib和bin文件到执行Broker的目录下
+进入 Broker 路径，并替换相关文件。
 
-    ```bash
-    cp -rf ${STARROCKS_HOME}/apache_hdfs_broker/lib ${DSDB_HOME}/apache_hdfs_broker
-    cp -rf ${STARROCKS_HOME}/apache_hdfs_broker/bin ${DSDB_HOME}/apache_hdfs_broker
-    ```
+```shell
+cd StarRocks-x.x.x/be
+mv lib libtmp.bak 
+mv bin bintmp.bak
+mv lib.bak lib
+mv bin.bak bin
+```
 
-4. 启动当前Broker
+逐台重启 BE 节点。
 
-    ```bash
-    cd ${DSDB_HOME}/apache_hdfs_broker && ./bin/start_broker.sh --daemon
-    ```
+```shell
+sh bin/stop_broker.sh
+sh bin/start_broker.sh --daemon
+```
 
-5. 验证Broker是否正确运行
+在启动下一台实例之前，您需要确认当前实例启动成功。
 
-    a. 在MySQL客户端执行show broker 查看Broker是否成功启动并且版本是否正确
+```shell
+ps aux | grep broker
+```
 
-    b. 观察broker/log/broker.INFO的日志是否正常  
+### 关于 StarRocks 2.2.x 回滚至较早版本
 
-    c. 观察broker/log/broker.WARNING 是否有异常日志  
+StarRocks 2.2 版本中 FE 节点新增了日志类型。如果直接从 2.2.x 回滚至较早版本，您可能会碰到较早版本的 FE 无法识别的错误。您可以通过以下方式解决：
 
-6. 按照上述流程执行其他Broker节点
-
-#### 回滚方案
-
->注意：从标准版DorisDB升级至社区版StarRocks，暂时不支持回滚，建议先在测试环境验证测试没问题后再升级线上。如有遇到问题无法解决，可以添加下面企业微信寻求帮助。
-
-![二维码](../assets/8.3.1.png)
-
-### 从 ApacheDoris 升级为 DorisDB 标准版操作手册
-
-#### 升级环境
-
-> 注意：当前只支持从apache doris的0.13.15（不包括）版本以前升级。0.13.15版本在升级fe时需要修改源码处理，具体方法见升级Fe的部分。0.14及以后的版本暂时不支持升级。
-
-1. 获取原有集群信息
-
-    如果原有集群 FE/BE/broker 信息未给出，可以通过 MySQL 连接到 FE 的方式，并使用以下 SQL 命令查看并确认清楚：
-
-    ```SQL
-    show frontends;
-    show backends;
-    show broker;
-    ```
-
-    重点关注：
-
-    a. FE、BE 的 数量/IP/版本 等信息；
-  
-    b. FE 的 Leader、Follower、Observer 情况；  
-
-2. 假设
-
-    这里假设原Apache Doris目录为 `/home/doris/doris/`, 手工安装的 DorisDB 新目录为 `/home/doris/dorisdb/`，为了减少操作失误，后续步骤采用全路径方式。如有具体升级中个，存在路径差异，建议统一修改文档中对应路径，然后严格按照操作步骤执行。
-
-    有些`/home/doris`是软链接，可能会使用`/disk1/doris`等，具体情况下得注意
-
-3. 检查 BE 配置文件
-
-    ```bash
-    # 检查BE 配置文件的一些字段
-    vim /home/doris/doris/be/conf/be.conf
-    ```
-
-    重点是，检查default_rowset_type=BETA配置项，确认是否是 BETA 类型：
-
-    a. 如果为 BETA，说明已经开始使用 segmentV2 格式，但还有可能有部分tablet或 rowset还是 segmentV1 格式，也需要检查和转换。  
-
-    b. 如果是 ALPHA，说明全部数据都是 segmentV1 格式，则需要修改配置为 BETA，并做后续检查和转换。  
-
-4. 测试SQL
-    可以测试下，看看当前数据的情况。
-
-    ```SQL
-    show databases;
-    use {one_db};
-    show tables;
-    show data;
-    select count(*) from {one_table};
-    ```
-
-#### 升级步骤
-
-1. 检查文件格式
-
-    a. 下载文件格式检测工具
-
-    ```bash
-    # git clone 或直接从其他地方下载包
-    http://dorisdb-public.oss-cn-zhangjiakou.aliyuncs.com/show_segment_status.tar.gz
-    ```
-
-    b. 解压`show_segment_status.tar.gz`包
-
-    ```bash
-    tar -zxvf show_segment_status.tar.gz
-    ```
-
-    c. 修改`cong`文件
-
-    ```bash
-    vim conf
-
-    进行修改文件
-
-    [cluster]
-    fe_host =10.0.2.170
-    query_port =9030
-    user = root
-    query_pwd = ****
-
-    # Following confs are optional
-    # select one database
-    db_names =  数据库名
-    # select one table
-    table_names =  表明
-    # select one be. when value is 0 means all bes
-    be_id = 0
-    ```
-
-    d. 设置完成后，运行检测脚本，检测是否已经转换为了segmentV2。
-
-    ```bash
-    python show_segment_status.py
-    ```
-
-    e. 检查工具输出信息：rowset_count的两个值是否相等，数目不相等时，就说明存在这种segmentv1的表，需要进行转换。
-
-2. 寻找segmentv1的表，进行转换
-    针对每一个有 segmentV1 格式数据的表，进行格式转换：
-
-    ```SQL
-    -- 修改格式
-    ALTER TABLE table_name SET ("storage_format" = "v2");
-
-    -- 等待任务完成。如果 status 为 FINISHED 即可
-    SHOW ALTER TABLE column;
-    ```
-
-    并再次重复运行python`show_segment_status.py`语句来检查：
-
-    如果已经显示成功设置 storage_format 为 V2 了，但还是有数据是 v1 格式的，则可以通过以下方式进一步检查：
-
-    a. 逐个寻找所有表，通过`show tablet from table_name`获取表的元数据链接；
-
-    b. 通过MetaUrl，类似`wget http://172.26.92.139:8640/api/meta/header/11010/691984191获取tablet`的元数据；
-
-    c. 这时候本地会出现一个`691984191`的JSON文件，查看其中的`rowset_type`看看内容是不是`ALPHA_ROWSET/BETA_ROWSET`；
-
-    d. 如果是ALPHA_ROWSET，就表明是segmentV1的数据，需要进行转换到segmentV2。
-
-    如果直接修改 storage_format为 v2 的方法执行后，还是有数据为 v1 版本，则需要再使用如下方法处理（但一般不会有问题，这个方法也比较麻烦）：
-
-    ```SQL
-    -- 方法2:参考SQL 通过重新导入数据到临时分区，然后分区替换的方式来处理SegmentV2的转化
-    alter table dwd_user_tradetype_d
-    ADD TEMPORARY PARTITION p09
-    VALUES [('2020-09-01'), ('2020-10-01'))
-    ("replication_num" = "3")
-    DISTRIBUTED BY HASH(`dt`, `c`, `city`, `trade_hour`) BUCKETS 16;
-
-    insert into dwd_user_tradetype_d TEMPORARY partition(p09)
-    select * from dwd_user_tradetype_d partition(p202009);
-
-    ALTER TABLE dwd_user_tradetype_d
-    REPLACE PARTITION (p202009) WITH TEMPORARY PARTITION (p09);
-    ```
-
-3. 升级BE
-
-    > 注意：BE升级采用逐台升级的方式，确保机器升级无误后，隔点时间/隔一天再升级其他机器
-
-    准备工作：解压缩DorisDB，并重命名为dorisdb；
-
-    ```bash
-    cd ~
-    tar xzf DorisDB-EE-1.14.6/file/DorisDB-1.14.6.tar.gz
-    mv DorisDB-1.14.6/ dorisdb
-    ```
-
-    * 比较并拷贝原有 conf/be.conf的内容到新的 BE 中的conf/be.conf中；
-
-    ```bash
-    # 比较并修改和拷贝
-    vimdiff /home/doris/dorisdb/be/conf/be.conf /home/doris/doris/be/conf/be.conf
-
-    # 重要关注下面（拷贝此行配置到新 BE 中，一般建议继续使用原数据目录）
-    storage_root_path = {data_path}
-    ```
-
-    * 检查是否是用 supervisor 启动的 BE：
-      * 如果是supervisor启动的，就需要通过supervisor发送命令重启BE
-      * 如果没有部署supervisor, 则需要手动重启BE
-
-    ```bash
-    # check 原有进程（原来的是 palo_be)
-    ps aux | grep palo_be
-    # 检查是否有 supervisor(只需要看 doris 账户下的进程）
-    ps aux | grep supervisor
-
-    ## 下面 a/b 是二选一
-    # a、如果没有supervisor，则直接关闭原有be 进程
-    sh /home/doris/doris/be/bin/stop_be.sh
-    # b、如果有 supervisor，用 control.sh脚本关闭 be
-    cd /home/doris/doris/be && ./control.sh stop && cd -
-
-    # !!！检查： mysql中确保 Alive 为 false，以及 LastStartTime 为最新时间（见下图）
-    mysql> show backends;
-    # !!!   并且进程不在了（palo_be)
-    ps aux | grep be
-    ps aux | grep supervisor
-
-    # 启动新 BE
-    sh /home/doris/dorisdb/be/bin/start_be.sh --daemon
-    # 检查：以及进程存在（新进程名为 dorisdb_be)
-    ps aux | grep dorisdb_be
-    # 检查：mysql 中 alive 为 true（见下图）
-    mysql> show backends;
-    ```
-
-    * 观察升级结果：
-        * 观察 be.out，查看是否有异常日志。
-        * 观察 be.INFO，查看heartbeat是否正常。
-        * 观察 be.WARN, 查看有什么异常。
-        * 登录集群，发送show backends, 查看是否Alive这一栏是否为true。
-    * 升级 2 个 BE 后，show frontends 下，看ReplayedJournalId是否在增长，以说明导入是否没问题。
-
-4. 升级FE
-
-    > 注意：FE升级采用先升级Observer，再升级Follower，最后升级Master的逻辑。
-    > 如果是从apache doris 0.13.15版本升级，先要修改starrocks的fe模块的源码，并重新编译fe模块。如果没有编译过fe模块，可以找官方技术支持提供帮助。
-
-    * 修改fe源码(如果不是从apache doris 0.13.15版本升级，跳过此步骤)
-        * 下载源码patch
-
-        ```bash
-        wget "http://starrocks-public.oss-cn-zhangjiakou.aliyuncs.com/upgrade_from_apache_0.13.15.patch"
-        ```
-
-        * git命令合入patch
-
-        ```bash
-        git apply --reject upgrade_from_apache_0.13.15.patch
-        ```
-
-        * 如果本地代码没有在git环境中，也可以根据patch的内容手动合入。
-
-        * 编译fe模块
-
-        ```bash
-        ./build.sh --fe --clean
-        ```
-
-    * 登录集群，确定Master和Follower，如果IsMaster为true，代表是Master。其他的都是Follower/Observer。
-    * 升级Follower或者Master之前确保备份元数据，这一步非常重要，因为要确保没有问题。
-        * cp doris-meta doris-meta.20210313 用升级的日期做备份时间即可。
-    * 比较并拷贝原有 conf/fe.conf的内容到新的 FE 中的conf/fe.conf中；
-
-    ```bash
-    # 比较并修改和拷贝 
-    vimdiff /home/doris/dorisdb/fe/conf/fe.conf /home/doris/doris/fe/conf/fe.conf
-
-    # 重要关注下面（修改此行配置到新 FE 中，在原 doris 目录，新的 meta 文件（后面会拷贝）)
-    meta_dir = /home/doris/doris/fe/doris-meta
-    # 维持原有java堆大小等信息
-    JAVA_OPTS="-Xmx8192m
-    ```
-
-    ```bash
-    # check 原有进程
-    ps aux | grep fe
-    # 检查是否有 supervisor(只需要看 doris 账户下的进程）
-    ps aux | grep supervisor
-
-    ## 下面 a/b 是二选一
-    # a、如果没有supervisor，则直接关闭原有fe 进程
-    sh /home/doris/doris/fe/bin/stop_fe.sh
-    # b、如果有 supervisor，用 control.sh脚本关闭 fe
-    cd /home/doris/doris/fe && ./control.sh stop && cd -
-
-    # !!！并检查： mysql中确保 Alive 为 false
-    mysql> show frontends;
-    # !!!   并且进程不在了
-    ps aux | grep fe
-    ps aux | grep supervisor
-
-    # !!! 如果更改 meta 目录，则需要先停止后，再复制 meta
-    cp -r /home/doris/doris/fe/palo-meta /home/doris/doris/fe/doris-meta
-    
-    # 启动新 FE 
-    sh /home/doris/dorisdb/fe/bin/start_fe.sh --daemon
-    # 检查：进程是否已经存在
-    ps aux | grep dorisdb/fe
-    # 检查：用当前 FE 登录 mysql，并且其中alive 为 true
-    #  ，ReplayedJournalId 在同步甚至增长，以及进程存在
-    mysql> show frontends;
-    ```
-
-    * 观察升级结果：
-        * 观察 fe.out/fe.log 查看是否有错误信息。
-        * 如果fe.log始终是UNKNOWN状态， 没有变成Follower、Observer，说明有问题。
-        * fe.out报各种Exception，也有问题。
-    （注意要先升级 Observer ，再升级Follower ）
-
-    * 如果是修改源码升级的，需要等元数据产生新image之后(meta/image目录下有image.xxx的新文件产生)，将fe的lib包替换回发布包。
-
-#### FAQs
-
-1. 大量表有segmentV1的格式，需要转换，改怎么操作？
-
-    segmentV1转segmentV2需要费时间来完成，这个可能需要一定时间，建议用户平时就可以进行这个操作。
-2. FE/BE升级有没有顺序？
-
-    需要先升级 BE、再升级 FE，因为DorisDB的标准版中BE是兼容FE的。升级BE的过程中，需要进行灰度升级，先升级一台BE，过一天观察无误，再升级其他FE。
-3. 升级出问题是否能进行回滚？
-
-    暂时不支持回滚，建议先在测试环境验证测试没问题后再升级线上。如有遇到问题无法解决，可以官网联系寻求帮助。
+1. 在 **fe.conf** 中增加配置项 `ignore_unknown_log_id=true`，然后重启 FE。否则回滚后系统可能无法启动。
+2. Checkpoint 完成后，推荐您将该设置项恢复为 `ignore_unknown_log_id=false`，然后重启 FE 以恢复正常配置。

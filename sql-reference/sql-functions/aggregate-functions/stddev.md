@@ -1,17 +1,25 @@
 
-# STDDEV,STDDEV_POP
+# STDDEV, STDDEV_POP
 
-## description
+## 功能
 
-### Syntax
+返回 expr 表达式的标准差
+
+### 语法
 
 ```Haskell
 STDDEV(expr)
 ```
 
-返回expr表达式的标准差
+## 参数说明
 
-## example
+`epxr`: 被选取的表达式
+
+## 返回值说明
+
+返回值为数值类型
+
+## 示例
 
 ```plain text
 MySQL > select stddev(scan_rows)
@@ -32,7 +40,3 @@ group by datetime;
 |      2.3722760595994914 |
 +-------------------------+
 ```
-
-## keyword
-
-STDDEV,STDDEV_POP,POP

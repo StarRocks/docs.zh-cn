@@ -1,15 +1,16 @@
 # DROP FUNCTION
 
-## description
+## 功能
 
-### Syntax
+删除函数。
+
+## 语法
 
 ```sql
-DROP FUNCTION function_name
-(arg_type [, ...])
+DROP FUNCTION function_name (arg_type [, ...]);
 ```
 
-### Parameters
+说明：
 
 `function_name`: 要删除函数的名字
 
@@ -17,14 +18,10 @@ DROP FUNCTION function_name
 
 删除一个自定义函数。函数的名字、参数类型完全一致才能够被删除。
 
-## example
+## 示例
 
 1. 删除掉一个函数
 
     ```sql
     DROP FUNCTION my_add(INT, INT)
     ```
-
-## keyword
-
-DROP,FUNCTION

@@ -1,105 +1,130 @@
 # GRANT
 
-## description
+## 功能
 
-GRANT 命令用于赋予指定用户或角色指定的权限。
+GRANT 语句用于将指定权限授予某用户或某角色，该语句也可用于将指定角色授予某用户。
 
-### Syntax
+## 语法
 
-GRANT privilege_list ON db_name[.tbl_name] TO user_identity [ROLE role_name]
+- 将数据库和表的指定权限授予某用户或某角色。如果授予的角色不存在，那么系统会自动创建该角色。
 
-GRANT privilege_list ON RESOURCE resource_name TO user_identity [ROLE role_name]
-
-privilege_list 是需要赋予的权限列表，以逗号分隔。当前 StarRocks 支持如下权限：
-
-```plain text
-NODE_PRIV：集群节点操作权限，包括节点上下线等操作，只有 root 用户有该权限，不可赋予其他用户。
-ADMIN_PRIV：除 NODE_PRIV 以外的所有权限。
-GRANT_PRIV: 操作权限的权限。包括创建删除用户、角色，授权和撤权，设置密码等。
-SELECT_PRIV：对指定的库或表的读取权限
-LOAD_PRIV：对指定的库或表的导入权限
-ALTER_PRIV：对指定的库或表的schema变更权限
-CREATE_PRIV：对指定的库或表的创建权限
-DROP_PRIV：对指定的库或表的删除权限
-USAGE_PRIV: 对指定资源的使用权限
+```SQL
+GRANT privilege_list ON db_name[.tbl_name] TO {user_identity | ROLE 'role_name'}；
 ```
 
-旧版权限中的 ALL 和 READ_WRITE 会被转换成：SELECT_PRIV,LOAD_PRIV,ALTER_PRIV,CREATE_PRIV,DROP_PRIV；
-READ_ONLY 会被转换为 SELECT_PRIV。
+- 将资源的指定权限授予某用户或某角色。如果授予的角色不存在，那么系统会自动创建该角色。
 
-权限分类：
-
-```plain text
-1. 节点权限：NODE_PRIV
-2. 库表权限：SELECT_PRIV,LOAD_PRIV,ALTER_PRIV,CREATE_PRIV,DROP_PRIV
-3. 资源权限：USAGE_PRIV
+```SQL
+GRANT privilege_list ON RESOURCE 'resource_name' TO {user_identity | ROLE 'role_name'};
 ```
 
-db_name[.tbl_name] 支持以下三种形式：
+- 授予用户 `a` 以用户 `b` 的身份执行操作的权限。
 
-```plain text
-1. *.* 权限可以应用于所有库及其中所有表
-2. db.* 权限可以应用于指定库下的所有表
-3. db.tbl 权限可以应用于指定库下的指定表
+```SQL
+GRANT IMPERSONATE ON user_identity_b TO user_identity_a;
 ```
 
-这里指定的库或表可以是不存在的库和表。
+- 将指定角色的权限授予某用户。指定角色必须存在。
 
-resource_name 支持以下两种形式：
-
-```plain text
-1. * 权限应用于所有资源
-2. resource 权限应用于指定资源
+```SQL
+GRANT 'role_name' TO user_identity;
 ```
 
-这里指定的资源可以是不存在的资源。
+## 参数说明
 
-```plain text
-user_identity：
+### privilege_list
+
+授予某用户或某角色的指定权限。如果要一次性授予某用户或某角色多种权限，需要用逗号 (`,`) 将不同权限分隔开。支持权限如下：
+
+- `NODE_PRIV`：集群节点操作权限，如节点上下线。该权限只能授予 root 用户。
+- `ADMIN_PRIV`：除 `NODE_PRIV` 以外的所有权限。
+- `GRANT_PRIV`：操作权限，如创建用户和角色、删除用户和角色、授权、撤权、和设置账户密码等。
+- `SELECT_PRIV`：数据库和表的读取权限。
+- `LOAD_PRIV`：数据库和表的导入权限。
+- `ALTER_PRIV`：数据库和表的结构变更权限。
+- `CREATE_PRIV`：数据库和表的创建权限。
+- `DROP_PRIV`：数据库和表的删除权限。
+- `USAGE_PRIV`：资源的使用权限。
+
+- 以上部分权限可划分为三类：
+
+  - 节点权限：`NODE_PRIV`
+  - 库表权限：`SELECT_PRIV`、`LOAD_PRIV`、`ALTER_PRIV`、`CREATE_PRIV`、`DROP_PRIV`
+  - 资源权限：`USAGE_PRIV`
+
+### db_name [.tbl_name]
+
+指定的数据库和表。支持以下格式：
+
+- `*.*`：所有数据库及库中所有表。
+- `db.*`：指定数据库及库中所有表。
+- `db.tbl`：指定数据库下的指定表。
+
+> 说明：当使用`db.*` 或 `db.tbl` 格式时，指定数据库和指定表可以是不存在的数据库和表。
+
+### resource_name
+
+指定的资源。支持以下格式：
+
+- `*`：所有资源。
+- `resource`：指定资源。
+
+> 说明：当使用`resource` 格式时，指定资源可以是不存在的资源。
+
+### user_identity
+
+该参数由两部分组成：`user_name` 和 `host`。 `user_name` 表示用户名。`host` 表示用户的主机地址，可以不指定，也可以指定为域名。如不指定，host 默认值为 `%`，表示该用户可以从任意 host 连接 StarRocks。如指定 `host` 为域名，权限的生效时间可能会有 1 分钟左右的延迟。`user_identity` 必须是使用 [CREATE USER](../account-management/CREATE%20USER.md) 语句创建的。
+
+### role_name
+
+角色名。
+
+## 示例
+
+示例一：将所有数据库及库中所有表的读取权限授予用户 `jack` 。
+
+```SQL
+GRANT SELECT_PRIV ON *.* TO 'jack'@'%';
 ```
 
-这里的 user_identity 语法同 CREATE USER。且必须为使用 CREATE USER 创建过的 user_identity。user_identity 中的host可以是域名，如果是域名的话，权限的生效时间可能会有1分钟左右的延迟。
+示例二：将数据库 `db1` 及库中所有表的导入权限授予角色 `my_role`。
 
-也可以将权限赋予指定的 ROLE，如果指定的 ROLE 不存在，则会自动创建。
+```SQL
+GRANT LOAD_PRIV ON db1.* TO ROLE 'my_role';
+```
 
-## example
+示例三：将数据库 `db1` 和表 `tbl1` 的读取、结构变更和导入权限授予用户`jack`。
 
-1. 授予所有库和表的权限给用户
+```SQL
+GRANT SELECT_PRIV,ALTER_PRIV,LOAD_PRIV ON db1.tbl1 TO 'jack'@'192.8.%';
+```
 
-    ```sql
-    GRANT SELECT_PRIV ON *.* TO 'jack'@'%';
-    ```
+示例四：将所有资源的使用权限授予用户 `jack`。
 
-2. 授予指定库表的权限给用户
+```SQL
+GRANT USAGE_PRIV ON RESOURCE * TO 'jack'@'%';
+```
 
-    ```sql
-    GRANT SELECT_PRIV,ALTER_PRIV,LOAD_PRIV ON db1.tbl1 TO 'jack'@'192.8.%';
-    ```
+示例五：将资源 spark_resource 的使用权限授予用户 `jack`。
 
-3. 授予指定库表的权限给角色
+```SQL
+GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO 'jack'@'%';
+```
 
-    ```sql
-    GRANT LOAD_PRIV ON db1.* TO ROLE 'my_role';
-    ```
+示例六：将资源 spark_resource 的使用权限授予角色 `my_role` 。
 
-4. 授予所有资源的使用权限给用户
+```SQL
+GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO ROLE 'my_role';
+```
 
-    ```sql
-    GRANT USAGE_PRIV ON RESOURCE * TO 'jack'@'%';
-    ```
+示例七：将角色 `my_role` 授予用户 `jack`。
 
-5. 授予指定资源的使用权限给用户
+```SQL
+GRANT 'my_role' TO 'jack'@'%';
+```
 
-    ```sql
-    GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO 'jack'@'%';
-    ```
+示例八：授予用户 `jack` 以用户 `rose` 的身份执行操作的权限。
 
-6. 授予指定资源的使用权限给角色
-
-    ```sql
-    GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO ROLE 'my_role';
-    ```
-
-## keyword
-
-GRANT
+```SQL
+GRANT IMPERSONATE ON 'rose'@'%' TO 'jack'@'%';
+```

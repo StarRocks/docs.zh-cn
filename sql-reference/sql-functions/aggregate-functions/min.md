@@ -1,16 +1,24 @@
 # MIN
 
-## description
+## 功能
 
-### Syntax
+返回 expr 表达式的最小值
+
+## 语法
 
 ```Haskell
 MIN(expr)
 ```
 
-返回expr表达式的最小值
+## 参数说明
 
-## example
+`epxr`: 被选取的表达式
+
+## 返回值说明
+
+返回值为数值类型
+
+## 示例
 
 ```plain text
 MySQL > select min(scan_rows)
@@ -22,7 +30,3 @@ group by datetime;
 |                0 |
 +------------------+
 ```
-
-## keyword
-
-MIN
