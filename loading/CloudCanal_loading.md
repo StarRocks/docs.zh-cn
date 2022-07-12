@@ -7,14 +7,14 @@ CloudCanal社区版是一款由[ClouGence公司](https://www.clougence.com)发�
 
 ## 下载安装
 
-[CloudCanal最新版下载地址](https://cloudcanal-community.oss-cn-hangzhou.aliyuncs.com/latest/cloudcanal.7z)
+[CloudCanal最新版下载地址](https://clougence.com)
 
 [CloudCanal社区版安装部署参考文档](https://doc-cloudcanal.clougence.com/operation/install_linux)
 
 ## 功能说明
 
-- StarRocks对端版本支持：支持StarRocks版本为1.18.x、1.19.x和2.0.x
 - 支持的源端以及功能项：
+  
   | 数据源\功能项 | 结构迁移 | 全量数据迁移 | 增量实时同步 | 数据校验 |
   | --- | --- | --- | --- | --- |
   | Oracle源端 | 支持 | 支持 | 支持 | 支持 |
