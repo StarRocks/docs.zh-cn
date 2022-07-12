@@ -112,7 +112,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 
 |配置项|默认值|描述|
 |---|---|---|
-|enable_strict_storage_medium_check|FALSE|在创建表时，FE 是否检查 BE 的可用的存储介质空间。|
+|enable_strict_storage_medium_check|TRUE|在创建表时，FE 是否检查 BE 的可用的存储介质空间。|
 |capacity_used_percent_high_water|0.75|BE 上磁盘使用容量的度量值，超过 0.75 之后，尽量不在往这个 tablet 上发送建表，克隆的任务，直到恢复正常。|
 |storage_high_watermark_usage_percent|85|BE 存储目录下空间使用率的最大值。|
 |storage_min_left_capacity_bytes|2 \* 1024 \* 1024 \* 1024|BE 存储目录下剩余空间的最小值，单位为 Byte。|
@@ -249,7 +249,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 
 |配置项|默认值|描述|
 |---|---|---|
-|storage_cooldown_second|2592000|介质迁移的时间，单位为秒。|
+|storage_cooldown_second|-1|从 Table 创建时间点开始计算，自动降冷（从 HDD 介质迁移到 SSD 介质）的时延，值为 -1 表示不进行自动降冷，如需启用该功能请显式设置大于 0 的值。单位为秒。|
 |default_storage_medium|HDD|默认的存储介质，值为 HDD/SSD。在创建表/分区时，如果没有指定存储介质，那么会使用该值。|
 |schedule_slot_num_per_path|2|一个 BE 存储目录能够同时执行 tablet 相关任务的数目。|
 |tablet_balancer_strategy|disk_and_tablet|Tablet 均衡策略，值为 disk_and_tablet 或 be_load_score。|
@@ -298,14 +298,14 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 |配置项|默认值|描述|
 |-----|-----|----|
 |tc_use_memory_min |10737418240 |TCmalloc 最小预留内存，小于该值，StarRocks 不会将空闲内存返还给操作系统。 |
-|tc_free_memory_rate |20| |
-|tc_gc_period  |60| |
-|report_task_interval_seconds|10|汇报单个任务的间隔。建表，删除表，导入，schema change 都可以被认定是任务。|
-|report_disk_state_interval_seconds|60|汇报磁盘状态的间隔。汇报各个磁盘的状态，以及其中数据量等。|
-|report_tablet_interval_seconds|60|汇报 tablet 的间隔。汇报所有的 tablet 的最新版本。|
-|report_workgroup_interval_seconds |5| |
-|max_download_speed_kbps|50000| |
-|download_low_speed_limit_kbps|50| |
+|tc_free_memory_rate |20|Tcmalloc向操作系统返还内存时，自身所保留的空闲内存占总使用内存的最大比例。如果当前空闲内存的占比小于这个值，那么不会向操作系统返还内存。|
+|tc_gc_period  |60|Tcmalloc GC的周期，单位为秒。|
+|report_task_interval_seconds|10|汇报单个任务的间隔。任务可以包括建表，删除表，导入，schema change，单位为秒。|
+|report_disk_state_interval_seconds|60|汇报磁盘状态的间隔。汇报各个磁盘的状态，以及其中数据量等，单位为秒。|
+|report_tablet_interval_seconds|60|汇报 tablet 的间隔。汇报所有的 tablet 的最新版本，单位为秒。|
+|report_workgroup_interval_seconds |5|汇报 workgroup 的间隔。汇报所有 workgroup 的最新版本，单位为秒。|
+|max_download_speed_kbps|50000|单个HTTP请求的最大下载速率。这个值会影响 BE 之间同步数据副本的速度，单位为 KB/s。|
+|download_low_speed_limit_kbps|50|单个HTTP请求的下载速率下限，如果在 `download_low_speed_time` 秒内下载速度一直低于 `download_low_speed_limit_kbps`，那么请求会被终止，单位为 KB/s。|
 |download_low_speed_time|300| |
 |status_report_interval|5|查询汇报 profile 的间隔，用于 FE 收集查询统计信息|
 |scanner_thread_pool_thread_num|48|存储引擎并发扫描磁盘的线程数，统一管理在线程池中。|
