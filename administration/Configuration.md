@@ -308,14 +308,12 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 |download_low_speed_limit_kbps|50| |
 |download_low_speed_time|300| |
 |status_report_interval|5|查询汇报 profile 的间隔，用于 FE 收集查询统计信息|
-|doris_scanner_thread_pool_thread_num|48|存储引擎并发扫描磁盘的线程数，统一管理在线程池中。|
+|scanner_thread_pool_thread_num|48|存储引擎并发扫描磁盘的线程数，统一管理在线程池中。|
 |thrift_client_retry_interval_ms   |100| |
-|doris_scan_range_row_count|524288|存储引擎拆分查询任务的粒度，默认为 512K。|
-|doris_scanner_queue_size|1024|存储引擎支持的扫描任务数。|
-|doris_scanner_row_num|16384|每个扫描线程单次执行最多返回的数据行数。|
-|doris_max_scan_key_num|1024|查询最多拆分的 scan key 数目。|
+|scanner_thread_pool_queue_size|102400|存储引擎支持的扫描任务数。|
+|scanner_row_num|16384|每个扫描线程单次执行最多返回的数据行数。|
+|max_scan_key_num|1024|查询最多拆分的 scan key 数目。|
 |max_pushdown_conditions_per_column|1024| |
-|doris_max_pushdown_conjuncts_return_rate |90| |
 |exchg_node_buffer_size_bytes|10485760    | |
 |column_dictionary_key_ratio_threshold|0|字符串类型的取值比例，小于这个比例采用字典压缩算法。|
 |column_dictionary_key_size_threshold|0|字典压缩列大小，小于这个值采用字典压缩算法。|
@@ -401,8 +399,8 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 |storage_medium_migrate_count|1|介质迁移的线程数，SATA 迁移到 SSD|
 |check_consistency_worker_count|1|计算 tablet 的校验和(checksum)|
 |alter_tablet_timeout_seconds|86400|Schema change 超时时间|
-|sys_log_dir|${DORIS_HOME}/log|存放日志的地方，包括 INFO, WARNING, ERROR, FATAL 等日志|
-|user_function_dir|${DORIS_HOME}/lib/udf|UDF 程序存放的地方|
+|sys_log_dir|${STARROCKS_HOME}/log|存放日志的地方，包括 INFO, WARNING, ERROR, FATAL 等日志|
+|user_function_dir|${STARROCKS_HOME}/lib/udf|UDF 程序存放的地方|
 |small_file_dir|${STARROCKS_HOME}/lib/small_file|保存文件管理器下载的文件的目录|
 |sys_log_level|INFO|日志级别，INFO < WARNING < ERROR < FATAL|
 |sys_log_roll_mode|SIZE-MB-1024|日志拆分的大小，每 1G 拆分一个日志|
@@ -413,10 +411,6 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 |num_threads_per_core|3|每个 CPU core 启动的线程数|
 |compress_rowbatches|TRUE|BE 之间 rpc 通信是否压缩 RowBatch，用于查询层之间的数据传输|
 |serialize_batch|FALSE|BE 之间 rpc 通信是否序列化 RowBatch，用于查询层之间的数据传输|
-|doris_scanner_thread_pool_queue_size|102400|存储引擎最多接收的任务数|
-|doris_scan_range_row_count|524288|存储引擎拆分查询任务的粒度，512K|
-|doris_scanner_row_num|16384|每个扫描线程单次执行最多返回的数据行数|
-|doris_max_scan_key_num|1024|查询最多拆分的 scan key 数目|
 |memory_limitation_per_thread_for_schema_change|2|单个 schema change 任务允许占用的最大内存|
 |max_unpacked_row_block_size|104857600|单个 block 最大的字节数，100MB|
 |file_descriptor_cache_clean_interval|3600|文件句柄缓存清理的间隔，用于清理长期不用的文件句柄|
