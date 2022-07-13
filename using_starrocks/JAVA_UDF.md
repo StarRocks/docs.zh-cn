@@ -1,6 +1,6 @@
 # Java UDF【公测中】
 
-本文介绍如何编写并使用 Java 语言用户定义函数（User Defined Function，UDF）。
+本文介绍如何使用 Java 语言编写用户定义函数（User Defined Function，UDF）。
 
 自 2.2.0 版本起，StarRocks 支持使用 Java 语言编写用户定义函数 UDF。您可以根据业务场景开发自定义函数，扩展 StarRocks 的函数能力。本文介绍 StarRocks 支持的 UDF 类型，开发流程和使用方式。
 
@@ -407,7 +407,7 @@ RETURNS Int
 properties 
 (
     "analytic" = "true",
-    "symbol" = "WindowSumInt", 
+    "symbol" = "com.starrocks.udf.sample.WindowSumInt", 
     "type" = "StarrocksJar", 
     "file" = "http://http_host:http_port/udf-1.0-SNAPSHOT-jar-with-dependencies.jar"    
 );
@@ -429,7 +429,7 @@ CREATE TABLE FUNCTION MY_UDF_SPLIT(string)
 RETURNS string
 properties 
 (
-    "symbol" = "UDFSplit", 
+    "symbol" = "com.starrocks.udf.sample.UDFSplit", 
     "type" = "StarrocksJar", 
     "file" = "http://http_host:http_port/udf-1.0-SNAPSHOT-jar-with-dependencies.jar"
 );
