@@ -6,6 +6,16 @@ Catalog（数据目录）用于管理数据。StarRocks 2.3 及以上版本提�
 
 - **External catalog**：外部数据目录，用于管理外部数据源中的数据。创建外部数据目录时需指定外部数据源访问信息。创建后，无需创建外部表即可查询外部数据。
 
+## 节点配置
+
+如果要访问的 Apache Hadoop® 集群开启了 Kerberos 认证，那么您需要在每一个 FE 的配置文件路径 **$FE_HOME/conf** 和每一个 BE 的配置文件路径 **$BE_HOME/conf** 下添加 Hadoop 集群的配置文件。具体操作步骤如下：
+
+1. 在 JDK 环境中为 BE 所在的机器配置 `JAVA_HOME` 环境变量。注意不能在 JRE 环境中配置该变量。
+2. 在所有 FE 和 BE 机器上执行 `kinit -kt keytab_path principal` 命令登录。注意使用该命令登录是有实效性的，所以需要将该命令放入 crontab 中定期执行。登录用户需要有访问 Hive 集群和 HDFS 集群的权限。
+3. 把 Hadoop 集群中的 **hive-site.xml**、**core-site.xml** 和 **hdfs-site.xml** 文件放到每个 FE 的 **$FE_HOME/conf** 下，再把 **core-site.xml** 和 **hdfs-site.xml** 文件放到每个 BE 的 **$BE_HOME/conf** 下。
+4. 在每个 **$BE_HOME/conf/be.conf** 和每个 **$FE_HOME/conf/fe.conf** 文件中设置`JAVA_OPTS="-Djava.security.krb5.conf=/etc/krb5.conf"`和`JAVA_OPTS_FOR_JDK_9="-Djava.security.krb5.conf=/etc/krb5.conf"`，其中 `/etc/krb5.conf` 是 **krb5.conf** 文件的路径。
+5. 将 Hive 节点域名和 IP 的映射关系，以及 HDFS 节点域名和 IP 的映射关系配置到 **/etc/hosts** 路径中。注意 Hive 资源的 Hive metastore URI 需使用如下格式：`thrift://<Hive元数据的IP地址>:<端口号>`，例如`"hive.metastore.uris" = "thrift://10.10.44.98:9083"`。
+
 ## 创建 external catalog
 
 ### 语法
@@ -58,20 +68,6 @@ PROPERTIES(
 ### 跨 catalog 查询数据
 
 如想在一个 catalog 中查询其他 catalog 中数据，可通过 `catalog_name.database_name` 或`catalog_name.database_name.table_name` 的格式来引用目标数据。
-
-<br/>
-
-### 配置
-
-- fe 配置文件路径为$FE_HOME/conf，如果需要自定义 hadoop 集群的配置可以在该目录下添加配置文件，例如：hdfs 集群采用了高可用的 nameservice，需要将 hadoop 集群中的 hdfs-site.xml 放到该目录下，如果 hdfs 配置了 viewfs，需要将 core-site.xml 放到该目录下。
-- be 配置文件路径为$BE_HOME/conf，如果需要自定义 hadoop 集群的配置可以在该目录下添加配置文件，例如：hdfs 集群采用了高可用的 nameservice，需要将 hadoop 集群中的 hdfs-site.xml 放到该目录下，如果 hdfs 配置了 viewfs，需要将 core-site.xml 放到该目录下。
-- be 所在的机器也需要配置 JAVA_HOME，一定要配置成 jdk 环境，不能配置成 jre 环境
-- kerberos 支持
-  1. 在所有的 fe/be 机器上用 `kinit -kt keytab_path principal` 登陆，该用户需要有访问 hive 和 hdfs 的权限。kinit 命令登陆是有实效性的，需要将其放入 crontab 中定期执行。
-  2. 把 hadoop 集群中的 hive-site.xml/core-site.xml/hdfs-site.xml 放到$FE_HOME/conf 下，把 core-site.xml/hdfs-site.xml 放到$BE_HOME/conf 下。
-  3. 在$FE_HOME/conf/fe.conf 文件中的 JAVA_OPTS/JAVA_OPTS_FOR_JDK_9 选项加上 -Djava.security.krb5.conf=/etc/krb5.conf，/etc/krb5.conf 是 krb5.conf 文件的路径，可以根据自己的系统调整。
-  4. 在$BE_HOME/conf/be.conf 文件增加选项 JAVA_OPTS/JAVA_OPTS_FOR_JDK_9="-Djava.security.krb5.conf=/etc/krb5.conf"，其中 /etc/krb5.conf 是 krb5.conf 文件的路径，可以根据自己的系统调整。
-  5. resource 中的 uri 地址一定要使用域名，并且相应的 hive 和 hdfs 的域名与 ip 的映射都需要配置到/etc/hosts 中。
 
 ### 示例
 
