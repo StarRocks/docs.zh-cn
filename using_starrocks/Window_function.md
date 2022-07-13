@@ -17,7 +17,7 @@
 语法：
 
 ~~~SQL
-FUNCTION(args) OVER(partition_by_clause order_by_clause [window_clause])
+FUNCTION(args) OVER([partition_by_clause] [order_by_clause] [order_by_clause window_clause])
 partition_by_clause ::= PARTITION BY expr [, expr ...]
 order_by_clause ::= ORDER BY expr [ASC | DESC] [, expr [ASC | DESC] ...]
 ~~~
@@ -45,6 +45,9 @@ order_by_clause ::= ORDER BY expr [ASC | DESC] [, expr [ASC | DESC] ...]
     ~~~SQL
     ROWS BETWEEN [ { m | UNBOUNDED } PRECEDING | CURRENT ROW] [ AND [CURRENT ROW | { UNBOUNDED | n } FOLLOWING] ]
     ~~~
+
+    > 注意
+    > Window 从句必须位于 Order By 从句之下。
 
 ## 使用 AVG() 窗口函数
 
