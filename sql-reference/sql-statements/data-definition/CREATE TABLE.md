@@ -87,7 +87,7 @@ hll列类型，不需要指定长度和默认值，长度根据数据的聚合�
 bitmap列类型，不需要指定长度和默认值。表示整型的集合，元素最大支持到2^64 - 1
 
 * ARRAY
-支持在一个数组中嵌套子数组，最多可嵌套 14 层。您必须使用尖括号（`<` 和 `>`）来声明 ARRAY 类型，如 ARRAY<INT>。目前不支持将数组中的元素声明为 [Fast Decimal](../data-types/DECIMAL.md) 类型。
+支持在一个数组中嵌套子数组，最多可嵌套 14 层。您必须使用尖括号（ < 和 > ）来声明 ARRAY 类型，如 ARRAY < INT >。目前不支持将数组中的元素声明为 [Fast Decimal](../data-types/DECIMAL.md) 类型。
 
 **agg_type**：聚合类型，如果不指定，则该列为 key 列。否则，该列为 value 列。
 
@@ -278,11 +278,11 @@ Hash 分桶
 语法：
 
 ```sql
-`DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]`
+DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]
 ```
 
 说明：
-使用指定的 key 列进行哈希分桶。默认分桶数为 10。
+使用指定的 key 列进行哈希分桶。默认分桶数为 10。`DISTRIBUTED BY` 为必填字段。
 
 建议: 建议使用 Hash 分桶方式
 
