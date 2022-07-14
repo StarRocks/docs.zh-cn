@@ -118,38 +118,33 @@ json_root 为合法的 jsonpath 字符串，用于指定 json document 的根节
 
 ### 返回值
 
-导入完成后，会以 Json 格式返回这次导入的相关内容。当前包括一下字段
-**Status** 导入最后的状态。
+导入完成后，会以 Json 格式返回这次导入的相关内容，包括：
 
-**Success** 表示导入成功，数据已经可见；
+**Status**：导入最后的状态。
 
-**Publish Timeout** 表述导入作业已经成功 Commit，但是由于某种原因并不能立即可见。用户可以视作已经成功不必重试导入。
-**Label Already Exists** 表明该 Label 已经被其他作业占用，可能是导入成功，也可能是正在导入。
-用户需要通过 `get label state` 命令来确定后续的操作。
+**Success**：表示导入成功，数据已经可见；
 
-**其他** 此次导入失败，用户可以指定 Label 重试此次作业
-Message: 导入状态详细的说明。失败时会返回具体的失败原因。
+**Publish Timeout**：表述导入作业已经成功 Commit，但是由于某种原因并不能立即可见。用户可以视作已经成功不必重试导入。
 
-**NumberTotalRows**
-从数据流中读取到的总行数。
+**Label Already Exists**：表明该 Label 已经被其他作业占用，可能是导入成功，也可能是正在导入。用户需要通过 `get label state` 命令来确定后续的操作。
 
-**NumberLoadedRows**
-此次导入的数据行数，只有在 Success 时有效。
+**其他**：此次导入失败，用户可以指定 Label 重试此次作业
 
-**NumberFilteredRows**
-此次导入过滤掉的行数，即数据质量不合格的行数。
+**Message**：导入状态详细的说明。失败时会返回具体的失败原因。
 
-**NumberUnselectedRows**
-此次导入，通过 where 条件被过滤掉的行数。
+**NumberTotalRows**：从数据流中读取到的总行数。
 
-**LoadBytes**
-此次导入的源文件数据量大小。
+**NumberLoadedRows**：此次导入的数据行数，只有在 Success 时有效。
 
-**LoadTimeMs**
-此次导入所用的时间。
+**NumberFilteredRows**：此次导入过滤掉的行数，即数据质量不合格的行数。
 
-**ErrorURL**
-被过滤数据的具体内容，仅保留前 1000 条。
+**NumberUnselectedRows**：此次导入，通过 where 条件被过滤掉的行数。
+
+**LoadBytes**：此次导入的源文件数据量大小。
+
+**LoadTimeMs**：此次导入所用的时间。
+
+**ErrorURL**：被过滤数据的具体内容，仅保留前 1000 条。
 
 ### 错误信息
 
