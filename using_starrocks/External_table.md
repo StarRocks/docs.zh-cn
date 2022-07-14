@@ -113,7 +113,7 @@ insert into external_t select * from other_table;
 
 ## Elasticsearch 外部表
 
-StarRocks 与 Elasticsearch 都是目前流行的分析系统，StarRocks 强于大规模分布式计算，Elasticsearch 擅长全文检索。StarRocks 支持 Elasticsearch 访问的目的，就在于将这两种能力结合，提供更完善的一个 OLAP 解决方案。
+如要查询 Elasticsearch 中的数据，需要在 StarRocks 中创建 Elasticsearch 外部表，并将外部表与中需要查询的 Elasticsearch 表建立映射。StarRocks 与 Elasticsearch 都是目前流行的分析系统。StarRocks 擅长大规模分布式计算，且 StarRocks 支持通过外部表查询 Elasticsearch。Elasticsearch 擅长全文检索。两者结合提供了一个更完善的 OLAP 解决方案。
 
 ### 建表示例
 
@@ -151,7 +151,24 @@ PROPERTIES (
   * true：StarRocks 仅使用 `hosts` 指定的地址去访问 Elasticsearch 集群并获取数据，不会探测 Elasticsearch 集群的索引每个分片所在的数据节点地址。如果 StarRocks 无法访问 Elasticsearch 集群内部数据节点的地址，则需要配置为 `true`。
   * false：默认值，StarRocks 通过 `host` 中的地址，探测 Elasticsearch 集群索引各个分片所在数据节点的地址。StarRocks 经过查询规划后，相关 BE 节点会直接去请求 Elasticsearch 集群内部的数据节点，获取索引的分片数据。如果 StarRocks 可以访问 Elasticsearch 集群内部数据节点的地址，则建议保持默认值 `false`。
 
-<br/>
+创建外部表时，需根据 Elasticsearch 表的列类型指定外部表的列类型，具体映射关系如下：
+
+| **Elasticsearch 表** | **Elasticsearch 外部表**          |
+| -------------------- | --------------------------------- |
+| BOOLEAN              | BOOL                              |
+| BYTE                 | TINYINT / SMALLINT / INT / BIGINT |
+| SHORT                | SMALLINT / INT / BIGINT           |
+| INTEGER              | INT / BIGINT                      |
+| LONG                 | BIGINT                            |
+| FLOAT                | FLOAT                             |
+| DOUBLE               | DOUBLE                            |
+| KEYWORD              | CHAR / VARCHAR                    |
+| TEXT                 | CHAR / VARCHAR                    |
+| DATE                 | DATE / DATETIME                   |
+| NESTED               | CHAR / VARCHAR                    |
+| OBJECT               | CHAR / VARCHAR                    |
+
+> 说明：StarRocks 会通过 JSON 相关函数读取嵌套字段。
 
 ### 谓词下推
 
