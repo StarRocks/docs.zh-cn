@@ -126,6 +126,7 @@ SUM(expr)
     ```Plain Text
     MySQL > select sum(income) from employees
     WHERE income > 30000;
+
     +-------------+
     | sum(income) |
     +-------------+
