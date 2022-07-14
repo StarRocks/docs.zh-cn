@@ -569,8 +569,7 @@ PROPERTIES (
   说明：
 
   * Hive 表 Schema 变更 **不会自动同步**，需要在 StarRocks 中重建 Hive 外表。
-  * 支持 Hive 的存储格式为 Parquet，ORC 和 CSV 格式。
-  > 如果为 CSV 格式，则暂不支持引号为转义字符。
+  * 支持 Hive 的存储格式为 Parquet，ORC 和 CSV 格式。如果为 CSV 格式，则暂不支持引号为转义字符。
   * 压缩格式支持 snappy，lz4。
 
 <br/>
