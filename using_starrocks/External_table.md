@@ -151,22 +151,22 @@ PROPERTIES (
   * true：StarRocks 仅使用 `hosts` 指定的地址去访问 Elasticsearch 集群并获取数据，不会探测 Elasticsearch 集群的索引每个分片所在的数据节点地址。如果 StarRocks 无法访问 Elasticsearch 集群内部数据节点的地址，则需要配置为 `true`。
   * false：默认值，StarRocks 通过 `host` 中的地址，探测 Elasticsearch 集群索引各个分片所在数据节点的地址。StarRocks 经过查询规划后，相关 BE 节点会直接去请求 Elasticsearch 集群内部的数据节点，获取索引的分片数据。如果 StarRocks 可以访问 Elasticsearch 集群内部数据节点的地址，则建议保持默认值 `false`。
 
-创建外部表时，需根据 Elasticsearch 的字段类型指定外部表的列类型，具体映射关系如下：
+创建外部表时，需根据 Elasticsearch 的字段类型指定 StarRocks 外部表的列类型，具体映射关系如下：
 
-| **Elasticsearch 字段类型** | **Elasticsearch 外部表列类型**          |
-| -------------------- | --------------------------------- |
-| BOOLEAN              | BOOL                              |
-| BYTE                 | TINYINT / SMALLINT / INT / BIGINT |
-| SHORT                | SMALLINT / INT / BIGINT           |
-| INTEGER              | INT / BIGINT                      |
-| LONG                 | BIGINT                            |
-| FLOAT                | FLOAT                             |
-| DOUBLE               | DOUBLE                            |
-| KEYWORD              | CHAR / VARCHAR                    |
-| TEXT                 | CHAR / VARCHAR                    |
-| DATE                 | DATE / DATETIME                   |
-| NESTED               | CHAR / VARCHAR                    |
-| OBJECT               | CHAR / VARCHAR                    |
+| **Elasticsearch**          | **StarRocks**                     |
+| -------------------------- | --------------------------------- |
+| BOOLEAN                    | BOOLEAN                           |
+| BYTE                       | TINYINT / SMALLINT / INT / BIGINT |
+| SHORT                      | SMALLINT / INT / BIGINT           |
+| INTEGER                    | INT / BIGINT                      |
+| LONG                       | BIGINT                            |
+| FLOAT                      | FLOAT                             |
+| DOUBLE                     | DOUBLE                            |
+| KEYWORD                    | CHAR / VARCHAR                    |
+| TEXT                       | CHAR / VARCHAR                    |
+| DATE                       | DATE / DATETIME                   |
+| NESTED                     | CHAR / VARCHAR                    |
+| OBJECT                     | CHAR / VARCHAR                    |
 
 > 说明：StarRocks 会通过 JSON 相关函数读取嵌套字段。
 
@@ -552,21 +552,19 @@ PROPERTIES (
   * **hive.resource**：指定使用的 Hive 资源。
   * **database**：指定 Hive 中的数据库。
   * **table**：指定 Hive 中的表，**不支持 view**。
-* 支持的列类型对应关系如下表：
-
-    |  Hive 列类型   | StarRocks 列类型    | 描述 |
-    | --- | --- | ---|
-    |   INT/INTEGER  | INT    |
-    |   BIGINT  | BIGINT    |
-    |   TIMESTAMP  | DATETIME    |TIMESTAMP 转成 DATETIME，会损失精度和时区信息，<br/> 根据 sessionVariable 中的时区转成无时区 DATETIME|
-    |  STRING  | VARCHAR   |
-    |  VARCHAR  | VARCHAR   |
-    |  CHAR  | CHAR   |
-    |  DOUBLE | DOUBLE |
-    | FLOAT | FLOAT|
-    | DECIMAL | DECIMAL |
-    | ARRAY | ARRAY |
-    | BOOLEAN | BOOLEAN |
+* 创建外部表时，需根据 Hive 表列类型指定 StarRocks 中外部表列类型，具体映射关系如下：
+| **Hive**      | **StarRocks**                                                |
+| ------------- | ------------------------------------------------------------ |
+| INT / INTEGER | INT                                                          |
+| BIGINT        | BIGINT                                                       |
+| TIMESTAMP     | DATETIME <br />注意 TIMESTAMP 转成 DATETIME会损失精度和时区信息，并根据 sessionVariable 中的时区转成无时区 DATETIME。 |
+| STRING        | VARCHAR                                                      |
+| VARCHAR       | VARCHAR                                                      |
+| CHAR          | CHAR                                                         |
+| DOUBLE        | DOUBLE                                                       |
+| FLOAT         | FLOAT                                                        |
+| DECIMAL       | DECIMAL                                                      |
+| ARRAY         | ARRAY                                                        |
 
     说明：
 
@@ -925,9 +923,9 @@ PROPERTIES (
 ); 
 ~~~
 
-创建外部表时，需根据 Iceberg 表的列类型指定外部表的列类型，具体映射关系如下：
+创建外部表时，需根据 Iceberg 表的列类型指定 StarRocks 中外部表的列类型，具体映射关系如下：
 
-| **Iceberg 表** | **Iceberg 外部表**       |
+| **Iceberg**    | **StarRocks**            |
 | -------------- | ------------------------ |
 | BOOLEAN        | BOOLEAN                  |
 | INT            | TINYINT / SMALLINT / INT |
@@ -1043,9 +1041,10 @@ PROPERTIES (
 
 * 表名无需与 Hudi 实际表名保持一致。
 * 列名需要与 Hudi 实际列名保持一致，列的顺序无需保持一致。
-* 您可以按照业务需求选择 Hudi 表中的全部或部分列。支持的数据类型以及与 StarRocks 对应关系，请参见下表。
+* 您可以按照业务需求选择 Hudi 表中的全部或部分列。
+* 创建外部表时，需根据 Hive 表列类型指定 StarRocks 中外部表列类型，具体映射关系如下：
 
-| Apache Hudi 中列的数据类型 | StarRocks 中列的数据类型 |
+| **Hudi**                     | **StarRocks**           |
 | ---------------------------- | ----------------------- |
 | BOOLEAN                      | BOOLEAN                 |
 | INT                          | TINYINT/SMALLINT/INT    |
