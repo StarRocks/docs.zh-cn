@@ -156,17 +156,17 @@ PROPERTIES (
 | **Elasticsearch**          | **StarRocks**                     |
 | -------------------------- | --------------------------------- |
 | BOOLEAN                    | BOOLEAN                           |
-| BYTE                       | TINYINT / SMALLINT / INT / BIGINT |
-| SHORT                      | SMALLINT / INT / BIGINT           |
-| INTEGER                    | INT / BIGINT                      |
+| BYTE                       | TINYINT/SMALLINT/INT/BIGINT |
+| SHORT                      | SMALLINT/INT/BIGINT           |
+| INTEGER                    | INT/BIGINT                      |
 | LONG                       | BIGINT                            |
 | FLOAT                      | FLOAT                             |
 | DOUBLE                     | DOUBLE                            |
-| KEYWORD                    | CHAR / VARCHAR                    |
-| TEXT                       | CHAR / VARCHAR                    |
-| DATE                       | DATE / DATETIME                   |
-| NESTED                     | CHAR / VARCHAR                    |
-| OBJECT                     | CHAR / VARCHAR                    |
+| KEYWORD                    | CHAR/VARCHAR                    |
+| TEXT                       | CHAR/VARCHAR                    |
+| DATE                       | DATE/DATETIME                   |
+| NESTED                     | CHAR/VARCHAR                    |
+| OBJECT                     | CHAR/VARCHAR                    |
 
 > 说明：StarRocks 会通过 JSON 相关函数读取嵌套字段。
 
@@ -555,7 +555,7 @@ PROPERTIES (
 
 | **Hive**      | **StarRocks**                                                |
 | ------------- | ------------------------------------------------------------ |
-| INT / INTEGER | INT                                                          |
+| INT/INTEGER | INT                                                          |
 | BIGINT        | BIGINT                                                       |
 | TIMESTAMP     | DATETIME <br />注意 TIMESTAMP 转成 DATETIME会损失精度和时区信息，并根据 sessionVariable 中的时区转成无时区 DATETIME。 |
 | STRING        | VARCHAR                                                      |
@@ -927,16 +927,16 @@ PROPERTIES (
 | **Iceberg**    | **StarRocks**            |
 | -------------- | ------------------------ |
 | BOOLEAN        | BOOLEAN                  |
-| INT            | TINYINT / SMALLINT / INT |
+| INT            | TINYINT/SMALLINT/INT |
 | LONG           | BIGINT                   |
 | FLOAT          | FLOAT                    |
 | DOUBLE         | DOUBLE                   |
 | DECIMAL(P, S)  | DECIMAL                  |
-| DATE           | DATE / DATETIME          |
+| DATE           | DATE/DATETIME          |
 | TIME           | BIGINT                   |
 | TIMESTAMP      | DATETIME                 |
-| STRING         | STRING / VARCHAR         |
-| UUID           | STRING / VARCHAR         |
+| STRING         | STRING/VARCHAR         |
+| UUID           | STRING/VARCHAR         |
 | FIXED(L)       | CHAR                     |
 | BINARY         | VARCHAR                  |
 
@@ -1046,13 +1046,13 @@ PROPERTIES (
 | **Hudi**                     | **StarRocks**           |
 | ---------------------------- | ----------------------- |
 | BOOLEAN                      | BOOLEAN                 |
-| INT                          | TINYINT / SMALLINT / INT    |
+| INT                          | TINYINT/SMALLINT/INT    |
 | DATE                         | DATE                    |
 | TimeMillis/TimeMicros        | TIME                    |
 | LONG                         | BIGINT                  |
 | FLOAT                        | FLOAT                   |
 | DOUBLE                       | DOUBLE                  |
-| STRING                       | CHAR / VARCHAR            |
+| STRING                       | CHAR/VARCHAR            |
 | ARRAY                        | ARRAY                   |
 | DECIMAL                      | DECIMAL                 |
 
