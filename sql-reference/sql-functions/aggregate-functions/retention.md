@@ -82,6 +82,7 @@ retention(cond1 [,cond2, ..., cond31])
     from test 
     group by id
     order by id;
+    
     +------+-----------+
     | id   | retention |
     +------+-----------+
@@ -113,6 +114,7 @@ retention(cond1 [,cond2, ..., cond31])
     from test 
     group by id 
     order by id) t;
+    
     +-----------+---------------------------+
     | sum(r[1]) | (sum(r[2])) / (sum(r[1])) |
     +-----------+---------------------------+
