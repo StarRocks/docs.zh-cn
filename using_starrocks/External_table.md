@@ -566,7 +566,7 @@ PROPERTIES (
 | DECIMAL       | DECIMAL                                                      |
 | ARRAY         | ARRAY                                                        |
 
-    说明：
+  说明：
 
   * Hive 表 Schema 变更 **不会自动同步**，需要在 StarRocks 中重建 Hive 外表。
   * 支持 Hive 的存储格式为 Parquet，ORC 和 CSV 格式。
