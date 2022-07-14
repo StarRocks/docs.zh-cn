@@ -4,12 +4,7 @@
 
 Colocate Join 功能是分布式系统实现 Join 数据分布的策略之一，能够减少数据多节点分布时 Join 操作引起的数据移动和网络传输，从而提高查询性能。
 
-Colocate Join 使用 Colocation Group（CG）管理一组表 ，同一 CG 内的表 Colocation Group Schema（CGS）相同，即表对应的分桶副本具有一致的分桶键、副本数量和副本放置方式。如此可以保证同一 CG 内，所有表的数据分布在相同一组 BE 节点上。当 Join 列为分桶键时，计算节点只需做本地 Join，从而减少数据在节点间的传输耗时，提高查询性能。因此，Colocation Join，相对于其他 Join，例如 Shuffle Join 和 Broadcast Join，可以有效避免数据网络传输开销，提高查询性能。
-
-**名词解释：**
-
-* **Colocation Group（CG）**：一个 CG 中会包含一张及以上的表。一个 CG 内的表有相同的分桶方式和副本放置方式，使用 Colocation Group Schema 描述。
-* **Colocation Group Schema（CGS）**：包含 CG 的分桶键，分桶数以及副本数等信息。
+在 StarRocks 中使用 Colocate Join 功能，您需要在建表时为其指定一个 Colocation Group（CG），同一 CG 内的表需遵循相同的 Colocation Group Schema（CGS），即表对应的分桶副本具有一致的分桶键、副本数量和副本放置方式。如此可以保证同一 CG 内，所有表的数据分布在相同一组 BE 节点上。当 Join 列为分桶键时，计算节点只需做本地 Join，从而减少数据在节点间的传输耗时，提高查询性能。因此，Colocation Join，相对于其他 Join，例如 Shuffle Join 和 Broadcast Join，可以有效避免数据网络传输开销，提高查询性能。
 
 ## 使用 Colocate Join 功能
 
@@ -18,7 +13,7 @@ Colocate Join 使用 Colocation Group（CG）管理一组表 ，同一 CG 内的
 在建表时，您需要在 PROPERTIES 中指定属性 `"colocate_with" = "group_name"` 以创建一个 Colocate Join 表，并且指定其归属于特定的 Colocation Group。
 
 > 注意
-> StarRocks 仅支持对**同一 Database** 中的表进行 Colocate Join 操作。
+> StarRocks 仅支持对**同一 Database**中的表进行 Colocate Join 操作。
 
 示例：
 
@@ -82,7 +77,7 @@ mysql> SHOW PROC '/colocation_group';
 |BucketsNum|分桶数。|
 |ReplicationNum|副本数。|
 |DistCols|Distribution columns，即分桶列类型。|
-|IsStable|该 Group 是否[稳定](https://docs.starrocks.com/zh-cn/main/administration/Replica)。|
+|IsStable|该 Group 是否[稳定](#colocation-副本均衡和修复)。|
 
 <br/>
 
@@ -415,9 +410,9 @@ StarRocks 提供了多个与 Colocation Join 有关的 HTTP Restful API，用于
     > 注意
     > 使用该命令，需要将 FE 的配置 `disable_colocate_balance` 设为 `true`，即关闭系统自动 Colocation 副本修复和均衡。否则在修改数据分布设置后可能会被系统自动重置。
 
-    ~~~shell
+    ```shell
     curl -u<user>:<password> -X POST "http://<fe_host>:<fe_http_port>/api/colocate/bucketseq?db_id=10005&group_id=10008"
-    ~~~
+    ```
 
     `Body:`
 
