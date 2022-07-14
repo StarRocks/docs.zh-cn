@@ -2,16 +2,16 @@
 
 本文介绍如何通过 HyperLogLog（HLL）在 StarRocks 中近似去重。
 
-在现实场景中，随着 StarRocks 中的数据量增大，对数据进行去重分析的压力会越来越大。当数据的规模达到一定程度时，实施精确去重的成本会极大增加。在此情况下，您可以采用近似去重算法来降低计算压力。HyperLogLog 是一种近似去重算法，其特点是具有非常优异的空间复杂度 O(mloglogn)，时间复杂度为 O(n)，并且计算结果的误差可控制在 1% 至 10% 左右，误差与数据集大小以及所采用的哈希函数有关。
+HyperLogLog 是一种近似去重算法，在部分对去重精度要求不高的场景下，您可以选择使用 HyperLogLog 算法减轻数据去重分析的计算压力。根据数据集大小以及所采用的哈希函数的类型，HyperLogLog 算法的误差可控制在 1% 至 10% 左右。
 
 ## 创建包含 HLL 列的表
 
 使用 HLL 去重，需要在建表语句中，将目标的指标列的类型设置为 **HLL**，聚合函数设置为 **HLL_UNION**。
 
 > 说明
-> HLL 列是通过其它列或者导入数据里面的数据生成的，导入的时候通过 `HLL_HASH` 函数来指定数据中特定列用于生成 HLL 列。HLL 列常用于替代 `count distinct`，通过结合物化视图在业务上用于快速计算 uv。
+> 您无需向 HLL 列导入数据。HLL 列的数据将根据您指定的 `HLL_HASH` 函数基于导入的数据自动生成。导入数据时，该函数将自动根据指定的列生成 HLL 列。HLL 算法常用于替代 `count distinct`，通过结合物化视图在业务上用于快速计算 uv。
 
-以下示例创建 `test` 表，其中包含 DATE 数据类型列 `dt`，INT 数据类型列 `id`，以及 HLL 类型列 `uv`。
+以下示例创建 `test` 表，其中包含 DATE 数据类型列 `dt`，INT 数据类型列 `id`，以及 HLL 类型列 `uv`，其使用的 `HLL_HASH` 函数为 `HLL_UNION`。
 
 ~~~sql
 CREATE TABLE test(
@@ -46,7 +46,7 @@ DISTRIBUTED BY HASH(ID) BUCKETS 32;
 2022-03-16,6
 ~~~
 
-你可以通过 Stream Load 或者 Broker Load 模式导入 **test.csv**。
+您可以通过 Stream Load 或者 Broker Load 模式导入 **test.csv**。
 
 * Stream Load 模式:
 
@@ -137,9 +137,9 @@ SELECT COUNT(DISTINCT uv) FROM test;
 
 ## 选择去重方案
 
-如果您的数据集基数在百万、千万量级，并拥有几十台机器，那么您可以直接使用 `count distinct` 方式。如果您的数据集基数在亿级以上，并且需要精确去重，那么您需要使用 Bitmap 去重。如果您选择近似去重，那么可以使用 HLL 类型去重。
+如果您的数据集基数在百万、千万量级，并拥有几十台机器，那么您可以直接使用 `count distinct` 方式。如果您的数据集基数在亿级以上，并且需要精确去重，那么您需要使用 [Bitmap 去重](/using_starrocks/Bitmap_index.md#基于-trie-树构建全局字典)。如果您选择近似去重，那么可以使用 HLL 类型去重。
 
-Bitmap 类型仅支持 TINYINT，SMALLINT，INT，BIGINT（注意不支持 LARGEINT）去重。对于其他类型数据集去重，您需要构建词典，将原类型映射到整数类型。词典构建较复杂，需要权衡数据量，更新频率，查询效率，存储等一系列问题。HLL 去重方式则无需构建词典，仅要求对应的数据类型支持哈希函数。即便在没有内部支持 HLL 的分析系统中，您依然可以使用系统提供的哈希函数，使用 SQL 实现 HLL 去重。
+Bitmap 类型仅支持 TINYINT，SMALLINT，INT，BIGINT（注意不支持 LARGEINT）去重。对于其他类型数据集去重，您需要[构建词典](/using_starrocks/Bitmap_index.md#基于-trie-树构建全局字典)，将原类型映射到整数类型。HLL 去重方式则无需构建词典，仅要求对应的数据类型支持哈希函数。
 
 对于普通列，您还可以使用 `NDV` 函数进行近似去重计算。`NDV` 函数返回值是 `COUNT(DISTINCT col)` 结果的近似值聚合函数，底层实现将数据存储类型转为 HyperLogLog 类型进行计算。但 `NDV` 函数在计算的时候消耗资源较大，不适合于并发高的场景。
 
