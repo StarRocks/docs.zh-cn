@@ -130,13 +130,26 @@ json_root 为合法的 jsonpath 字符串，用于指定 json document 的根节
 **其他** 此次导入失败，用户可以指定 Label 重试此次作业
 Message: 导入状态详细的说明。失败时会返回具体的失败原因。
 
-**NumberTotalRows:** 从数据流中读取到的总行数
-**NumberLoadedRows:** 此次导入的数据行数，只有在 Success 时有效。
-**NumberFilteredRows:** 此次导入过滤掉的行数，即数据质量不合格的行数。
-**NumberUnselectedRows:** 此次导入，通过 where 条件被过滤掉的行数。
-**LoadBytes:** 此次导入的源文件数据量大小。
-**LoadTimeMs:** 此次导入所用的时间。
-**ErrorURL:** 被过滤数据的具体内容，仅保留前 1000 条。
+**NumberTotalRows**
+从数据流中读取到的总行数。
+
+**NumberLoadedRows**
+此次导入的数据行数，只有在 Success 时有效。
+
+**NumberFilteredRows**
+此次导入过滤掉的行数，即数据质量不合格的行数。
+
+**NumberUnselectedRows**
+此次导入，通过 where 条件被过滤掉的行数。
+
+**LoadBytes**
+此次导入的源文件数据量大小。
+
+**LoadTimeMs**
+此次导入所用的时间。
+
+**ErrorURL**
+被过滤数据的具体内容，仅保留前 1000 条。
 
 ### 错误信息
 
