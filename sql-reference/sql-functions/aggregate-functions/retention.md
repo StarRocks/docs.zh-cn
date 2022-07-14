@@ -7,12 +7,12 @@
 ## 语法
 
 ```Haskell
-retention(cond1 [,cond2, ..., cond31])
+retention(cond [, cond ...])
 ```
 
 ## 参数说明
 
-`cond`：条件表达式，最多支持传入31个条件。
+`cond`：条件表达式构成的数组，最多支持传入31个条件。
 
 ## 返回值说明
 
