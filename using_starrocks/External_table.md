@@ -1,6 +1,6 @@
 # 外部表
 
-StarRocks 支持以外部表的形式，接入其他数据源。外部表指的是保存在其他数据源中的数据表，而 StartRocks 只保存表对应的元数据，并直接向外部表所在数据源发起查询。目前 StarRocks 已支持的第三方数据源包括 MySQL、Elasticsearch、Hive、StarRocks、Apache Iceberg 和 Apache Hudi。**对于 StarRocks 数据源，现阶段只支持 Insert 写入，不支持读取，对于其他数据源，现阶段只支持读取，还不支持写入**。
+StarRocks 支持以外部表的形式，接入其他数据源。外部表指的是保存在其他数据源中的数据表，而 StartRocks 只保存表对应的元数据，并直接向外部表所在数据源发起查询。目前 StarRocks 已支持的第三方数据源包括 MySQL、Elasticsearch、Apache Hive™、StarRocks、Apache Iceberg 和 Apache Hudi。**对于 StarRocks 数据源，现阶段只支持 Insert 写入，不支持读取，对于其他数据源，现阶段只支持读取，还不支持写入**。
 
 <br/>
 
@@ -113,7 +113,7 @@ insert into external_t select * from other_table;
 
 ## Elasticsearch 外部表
 
-StarRocks 与 Elasticsearch 都是目前流行的分析系统，StarRocks 强于大规模分布式计算，Elasticsearch 擅长全文检索。StarRocks 支持 Elasticsearch 访问的目的，就在于将这两种能力结合，提供更完善的一个 OLAP 解决方案。
+如要查询 Elasticsearch 中的数据，需要在 StarRocks 中创建 Elasticsearch 外部表，并将外部表与中需要查询的 Elasticsearch 表建立映射。StarRocks 与 Elasticsearch 都是目前流行的分析系统。StarRocks 擅长大规模分布式计算，且支持通过外部表查询 Elasticsearch。Elasticsearch 擅长全文检索。两者结合提供了一个更完善的 OLAP 解决方案。
 
 ### 建表示例
 
@@ -151,7 +151,24 @@ PROPERTIES (
   * true：StarRocks 仅使用 `hosts` 指定的地址去访问 Elasticsearch 集群并获取数据，不会探测 Elasticsearch 集群的索引每个分片所在的数据节点地址。如果 StarRocks 无法访问 Elasticsearch 集群内部数据节点的地址，则需要配置为 `true`。
   * false：默认值，StarRocks 通过 `host` 中的地址，探测 Elasticsearch 集群索引各个分片所在数据节点的地址。StarRocks 经过查询规划后，相关 BE 节点会直接去请求 Elasticsearch 集群内部的数据节点，获取索引的分片数据。如果 StarRocks 可以访问 Elasticsearch 集群内部数据节点的地址，则建议保持默认值 `false`。
 
-<br/>
+创建外部表时，需根据 Elasticsearch 的字段类型指定 StarRocks 中外部表的列类型，具体映射关系如下：
+
+| **Elasticsearch**          | **StarRocks**                     |
+| -------------------------- | --------------------------------- |
+| BOOLEAN                    | BOOLEAN                           |
+| BYTE                       | TINYINT/SMALLINT/INT/BIGINT |
+| SHORT                      | SMALLINT/INT/BIGINT           |
+| INTEGER                    | INT/BIGINT                      |
+| LONG                       | BIGINT                            |
+| FLOAT                      | FLOAT                             |
+| DOUBLE                     | DOUBLE                            |
+| KEYWORD                    | CHAR/VARCHAR                    |
+| TEXT                       | CHAR/VARCHAR                    |
+| DATE                       | DATE/DATETIME                   |
+| NESTED                     | CHAR/VARCHAR                    |
+| OBJECT                     | CHAR/VARCHAR                    |
+
+> 说明：StarRocks 会通过 JSON 相关函数读取嵌套字段。
 
 ### 谓词下推
 
@@ -520,7 +537,6 @@ PROPERTIES (
   "database" = "rawdata",
   "table" = "profile_parquet_p7"
 );
-
 ~~~
 
 说明：
@@ -535,28 +551,26 @@ PROPERTIES (
   * **hive.resource**：指定使用的 Hive 资源。
   * **database**：指定 Hive 中的数据库。
   * **table**：指定 Hive 中的表，**不支持 view**。
-* 支持的列类型对应关系如下表：
+* 创建外部表时，需根据 Hive 表列类型指定 StarRocks 中外部表列类型，具体映射关系如下：
 
-    |  Hive 列类型   | StarRocks 列类型    | 描述 |
-    | --- | --- | ---|
-    |   INT/INTEGER  | INT    |
-    |   BIGINT  | BIGINT    |
-    |   TIMESTAMP  | DATETIME    |TIMESTAMP 转成 DATETIME，会损失精度和时区信息，<br/> 根据 sessionVariable 中的时区转成无时区 DATETIME|
-    |  STRING  | VARCHAR   |
-    |  VARCHAR  | VARCHAR   |
-    |  CHAR  | CHAR   |
-    |  DOUBLE | DOUBLE |
-    | FLOAT | FLOAT|
-    | DECIMAL | DECIMAL |
-    | ARRAY | ARRAY |
-    | BOOLEAN | BOOLEAN |
+| **Hive**      | **StarRocks**                                                |
+| ------------- | ------------------------------------------------------------ |
+| INT/INTEGER | INT                                                          |
+| BIGINT        | BIGINT                                                       |
+| TIMESTAMP     | DATETIME <br />注意 TIMESTAMP 转成 DATETIME会损失精度和时区信息，并根据 sessionVariable 中的时区转成无时区 DATETIME。 |
+| STRING        | VARCHAR                                                      |
+| VARCHAR       | VARCHAR                                                      |
+| CHAR          | CHAR                                                         |
+| DOUBLE        | DOUBLE                                                       |
+| FLOAT         | FLOAT                                                        |
+| DECIMAL       | DECIMAL                                                      |
+| ARRAY         | ARRAY                                                        |
 
-    说明：
+说明：
 
-  * Hive 表 Schema 变更 **不会自动同步**，需要在 StarRocks 中重建 Hive 外表。
-  * 支持 Hive 的存储格式为 Parquet，ORC 和 CSV 格式。
-  > 如果为 CSV 格式，则暂不支持引号为转义字符。
-  * 压缩格式支持 snappy，lz4。
+* Hive 表 Schema 变更 **不会自动同步**，需要在 StarRocks 中重建 Hive 外表。
+* 支持 Hive 的存储格式为 Parquet，ORC 和 CSV 格式。如果为 CSV 格式，则暂不支持使用引号作为转义字符。
+* 压缩格式支持 Snappy 和 LZ4。
 
 <br/>
 
@@ -685,7 +699,7 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
 * 手动刷新元数据信息：
   1. hive 中新增或者删除分区时，需要刷新 **表** 的元数据信息：`REFRESH EXTERNAL TABLE hive_t`，其中 hive_t 是 starrocks 中的外表名称。
   2. hive 中向某些 partition 中新增数据时，需要 **指定 partition** 进行刷新：`REFRESH EXTERNAL TABLE hive_t PARTITION ('k1=01/k2=02', 'k1=03/k2=04')`，其中 hive_t 是 starrocks 中的外表名称，'k1 = 01/k2 = 02'、 'k1 = 03/k2 = 04'是 hive 中的 partition 名称。
-  3. 在执行 `REFRESH EXTERNAL TABLE hive_t` 命令时，StarRocks 会先检查 Apache Hive™ 外部表中的列信息和 Hive Metastore 返回的 Apache Hive™ 表中的列信息是否一致。若发现 Apache Hive™ 表的 schema 有修改，如增加列或减少列，那么 StarRocks 会将修改的信息同步到 Apache Hive™ 外部表。同步后，Apache Hive™ 外部表的列顺序和 Apache Hive™ 表的列顺序保持一致，且分区列为最后一列。
+  3. 在执行 `REFRESH EXTERNAL TABLE hive_t` 命令时，StarRocks 会先检查 Hive 外部表中的列信息和 Hive Metastore 返回的 Hive 表中的列信息是否一致。若发现 Hive 表的 schema 有修改，如增加列或减少列，那么 StarRocks 会将修改的信息同步到 Hive 外部表。同步后，Hive 外部表的列顺序和 Hive 表的列顺序保持一致，且分区列为最后一列。
   
 #### 自动增量更新元数据缓存
 
@@ -752,7 +766,7 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
 
 ### 前提条件
 
-确保 StarRocks 有权限访问 Apache Iceberg 依赖的元数据服务（如 Hive metastore）、文件系统（如 HDFS ）和对象存储系统（如 Amazon S3 和阿里云对象存储 OSS）。
+确保 StarRocks 有权限访问 Iceberg 依赖的元数据服务（如 Hive metastore）、文件系统（如 HDFS ）和对象存储系统（如 Amazon S3 和阿里云对象存储 OSS）。
 
 ### 注意事项
 
@@ -766,7 +780,7 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
 
 #### 步骤一：创建  Iceberg 资源
 
-在创建外部表之前，需先创建 Iceberg 资源，以用来管理 Apache Iceberg 的访问信息。此外，在创建Iceberg 外部表时也需要指定引用的 Iceberg 资源。您可以根据业务需求创建不同 catalog 类型的资源：
+在创建外部表之前，需先创建 Iceberg 资源，以用来管理 Iceberg 的访问信息。此外，在创建Iceberg 外部表时也需要指定引用的 Iceberg 资源。您可以根据业务需求创建不同 catalog 类型的资源：
 
 * 如果 Iceberg 表的元数据是从 Hive metastore 获取的，则可以创建 catalog 类型为 `HIVE` 的资源。
 * 如果 Iceberg 表的元数据是从其他服务获取的，则可以开发一个 custom catalog （即自定义 catalog），然后创建 catalog 类型为 `CUSTOM` 的资源。
@@ -908,21 +922,21 @@ PROPERTIES (
 ); 
 ~~~
 
-创建外部表时，需根据 Iceberg 表的列类型指定外部表的列类型，具体映射关系如下：
+创建外部表时，需根据 Iceberg 表的列类型指定 StarRocks 中外部表的列类型，具体映射关系如下：
 
-| **Iceberg 表** | **Iceberg 外部表**       |
+| **Iceberg**    | **StarRocks**            |
 | -------------- | ------------------------ |
 | BOOLEAN        | BOOLEAN                  |
-| INT            | TINYINT / SMALLINT / INT |
+| INT            | TINYINT/SMALLINT/INT |
 | LONG           | BIGINT                   |
 | FLOAT          | FLOAT                    |
 | DOUBLE         | DOUBLE                   |
 | DECIMAL(P, S)  | DECIMAL                  |
-| DATE           | DATE / DATETIME          |
+| DATE           | DATE/DATETIME          |
 | TIME           | BIGINT                   |
 | TIMESTAMP      | DATETIME                 |
-| STRING         | STRING / VARCHAR         |
-| UUID           | STRING / VARCHAR         |
+| STRING         | STRING/VARCHAR         |
+| UUID           | STRING/VARCHAR         |
 | FIXED(L)       | CHAR                     |
 | BINARY         | VARCHAR                  |
 
@@ -938,18 +952,18 @@ select count(*) from iceberg_tbl;
 
 ## Apache Hudi 外表
 
-StarRocks 支持通过外表的方式查询 Apache Hudi 数据湖中的数据，帮助您实现对数据湖的极速分析。本文介绍如何在 StarRock 创建外表，查询 Apache Hudi 中的数据。
+StarRocks 支持通过外表的方式查询 Hudi 数据湖中的数据，帮助您实现对数据湖的极速分析。本文介绍如何在 StarRock 创建外表，查询 Hudi 中的数据。
 
 ### 前提条件
 
-请确认 StarRocks 有权限访问 Apache Hudi 对应的 Hive Metastore、HDFS 集群或者对象存储的 Bucket。
+请确认 StarRocks 有权限访问 Hudi 对应的 Hive Metastore、HDFS 集群或者对象存储的 Bucket。
 
 ### 注意事项
 
 * Hudi 外表是只读的，只能用于查询操作。
 * 当前支持 Hudi 的表类型为 Copy on write(下文简称 COW)，暂不支持 Merge on read(下文简称 MOR)表类型。COW 和 MOR 之间的更多区别，请参见 [Apache Hudi 官网](https://hudi.apache.org/docs/table_types)。
 * 支持 Hudi 文件的压缩格式为 GZIP（默认值），ZSTD，LZ4 和 SNAPPY。
-* StarRocks 暂不⽀持同步 Hudi 中的 [schema evolution](https://hudi.apache.org/docs/schema_evolution)，如果 Hudi 表 schema evolution 发生变更，您需要在 StarRocks 中删除对应 Hudi 外表并重新建立。
+* StarRocks 暂不⽀持同步 Hudi 表结构。如果 Hudi 表结构发生变化，您需要在 StarRocks 中删除相应的外部表并重新创建。
 
 ### 操作步骤
 
@@ -970,7 +984,7 @@ PROPERTIES (
 |  参数   | 说明  |
 |  ----  | ----  |
 | type  | 资源类型，固定取值为 **hudi**。 |
-| hive.metastore.uris | Hive Metastore 的 thrift URI。<br> Hudi 通过连接 Hive Metastore，以创建并管理表。您需要传入该 Hive Metastore 的 thrift URI。格式为 **thrift://<Hive Metadata的IP地址>: <端口号>**，端口号默认为 9083。 |
+| hive.metastore.uris | Hive Metastore 的 thrift URI。<br> Hudi 通过连接 Hive Metastore，以创建并管理表。您需要传入该 Hive Metastore 的 thrift URI。格式为 **thrift://<Hudi元数据的IP地址>:<端口号>**，端口号默认为 9083。 |
 
 StarRocks 2.3 及以上版本支持修改 Hudi 资源的 `hive.metastore.uris`。更多信息，参见 [ALTER RESOURCE](../sql-reference/sql-statements/data-definition/ALTER%20RESOURCE.md).
 
@@ -986,7 +1000,7 @@ SHOW RESOURCES;
 DROP RESOURCE "hudi0";
 ~~~~
 
-> 删除 Hudi 资源会导致其包含的所有 Hudi 外表不可用，但 Apache Hudi 中的数据并不会丢失。如果您仍需要通过 StarRocks 查询 Hudi 的数据，请重新创建 Hudi 资源，Hudi 数据库和外表。
+> 删除 Hudi 资源会导致其包含的所有 Hudi 外表不可用，但 Hudi 中的数据并不会丢失。如果您仍需要通过 StarRocks 查询 Hudi 的数据，请重新创建 Hudi 资源，Hudi 数据库和外表。
 
 #### 步骤二：创建 Hudi 数据库
 
@@ -1026,9 +1040,10 @@ PROPERTIES (
 
 * 表名无需与 Hudi 实际表名保持一致。
 * 列名需要与 Hudi 实际列名保持一致，列的顺序无需保持一致。
-* 您可以按照业务需求选择 Hudi 表中的全部或部分列。支持的数据类型以及与 StarRocks 对应关系，请参见下表。
+* 您可以按照业务需求选择 Hudi 表中的全部或部分列。
+* 创建外部表时，需根据 Hudi 表列类型指定 StarRocks 中外部表列类型，具体映射关系如下：
 
-| Apache Hudi 中列的数据类型 | StarRocks 中列的数据类型 |
+| **Hudi**                     | **StarRocks**           |
 | ---------------------------- | ----------------------- |
 | BOOLEAN                      | BOOLEAN                 |
 | INT                          | TINYINT/SMALLINT/INT    |
@@ -1041,7 +1056,7 @@ PROPERTIES (
 | ARRAY                        | ARRAY                   |
 | DECIMAL                      | DECIMAL                 |
 
-> 如果 Apache Hudi 部分列的数据类型为 FIXED, ENUM, UNION, MAP, BYTES，则 StarRocks 暂不支持通过 Hudi 关联外表的方式访问此数据类型。
+> 如果 Hudi 部分列的数据类型为 FIXED, ENUM, UNION, MAP, BYTES，则 StarRocks 暂不支持通过 Hudi 关联外表的方式访问此数据类型。
 
 #### 步骤四：查询 Hudi 外表
 
@@ -1050,3 +1065,18 @@ PROPERTIES (
 ~~~sql
 SELECT COUNT(*) FROM hudi_tbl;
 ~~~
+
+## 常见问题
+
+### StarRocks 外部表同步出错，应该如何解决？
+
+**提示问题**：
+
+SQL 错误 [1064] [42000]: data cannot be inserted into table with empty partition.Use `SHOW PARTITIONS FROM external_t` to see the currently partitions of this table.
+
+查看Partitions时提示另一错误：SHOW PARTITIONS FROM external_t
+SQL 错误 [1064] [42000]: Table[external_t] is not a OLAP/ELASTICSEARCH/HIVE table
+
+**解决方法**：
+
+原来是建外部表时端口不对，正确的端口是"port"="9020"，不是9931.

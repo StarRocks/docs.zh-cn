@@ -113,7 +113,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |配置项|默认值|描述|
 |---|---|---|
 |enable_strict_storage_medium_check|TRUE|在创建表时，FE 是否检查 BE 的可用的存储介质空间。|
-|capacity_used_percent_high_water|0.75|BE 上磁盘使用容量的度量值，超过 0.75 之后，尽量不在往这个 tablet 上发送建表，克隆的任务，直到恢复正常。|
+|capacity_used_percent_high_water|0.75|BE 上磁盘使用容量的度量值，超过 0.75 之后，尽量不再往这个 tablet 上发送建表，克隆的任务，直到恢复正常。|
 |storage_high_watermark_usage_percent|85|BE 存储目录下空间使用率的最大值。|
 |storage_min_left_capacity_bytes|2 \* 1024 \* 1024 \* 1024|BE 存储目录下剩余空间的最小值，单位为 Byte。|
 |catalog_trash_expire_second|86400|删表/数据库之后，元数据在回收站中保留的时长，超过这个时长，数据就不可以在恢复，单位为秒。|
@@ -527,5 +527,5 @@ ulimit -u 40960
 
 |参数名称|建议值|修改方式|
 |---|---|---|
-|tcp abort on overflow|1|echo 1 \|sudo tee /proc/sys/net/ipv4/tcp_abort_on_overflow|
-|somaxconn|1024|echo 1024 |sudo tee /proc/sys/net/core/somaxconn|
+|tcp abort on overflow|1|echo 1 \| sudo tee /proc/sys/net/ipv4/tcp_abort_on_overflow|
+|somaxconn|1024|echo 1024 \| sudo tee /proc/sys/net/core/somaxconn|

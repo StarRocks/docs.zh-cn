@@ -7,7 +7,7 @@
 在成功 [部署 StarRocks 集群](Deploy.md) 后，您可以通过 MySQL 客户端连接任意一个 FE 节点的 `query_port`（默认为 `9030`）以连接 StarRocks。StarRocks 内置 `root` 用户，密码默认为空。
 
 ```shell
-mysql -h < fe_host > -P9030 -u root
+mysql -h <fe_host> -P9030 -u root
 ```
 
 ## 创建数据库
@@ -122,10 +122,22 @@ SHOW TABLES;
 DESC table_name;
 ```
 
+示例：
+
+```sql
+DESC detailDemo;
+```
+
 * 查看建表语句
 
 ```sql
 SHOW CREATE TABLE table_name;
+```
+
+示例：
+
+```sql
+SHOW CREATE TABLE detailDemo;
 ```
 
 <br/>
@@ -142,6 +154,17 @@ StarRocks 支持多种 DDL 操作。
 
 ```sql
 ALTER TABLE detailDemo ADD COLUMN uv BIGINT DEFAULT '0' after ispass;
+```
+
+### 删除列
+
+删除以上步骤新增的列。
+
+> 注意
+> 如果您通过上述步骤添加了 `uv`，请务必删除此列以保证后续 Quick Start 内容可以执行。
+
+```sql
+ALTER TABLE detailDemo DROP COLUMN uv;
 ```
 
 ### 查看修改表结构作业状态
