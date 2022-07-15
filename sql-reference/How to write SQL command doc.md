@@ -74,7 +74,7 @@ LIMIT 10
 
 ### 示例
 
-示例1：设置 tablet 10003 在 BE 10001 上的副本状态为 `bad`。
+示例一：设置 tablet 10003 在 BE 10001 上的副本状态为 `bad`。
 
 ```SQL
 ADMIN SET REPLICA STATUS
@@ -82,7 +82,7 @@ ADMIN SET REPLICA STATUS
 PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "status" = "bad");
 ```
 
-示例2：设置 tablet 10003 在 BE 10001 上的副本状态为 `ok`。
+示例二：设置 tablet 10003 在 BE 10001 上的副本状态为 `ok`。
 
 ```SQL
 ADMIN SET REPLICA STATUS
@@ -90,7 +90,7 @@ ADMIN SET REPLICA STATUS
 PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "status" = "ok");
 ```
 
-- > *需要提供命令的使用示例，并说明示例的作用。*
+- > *需要描述每一个示例的作用和目的，帮助用户快速了解该示例场景。*
 
 - > *如果有多个示例，可以使用示例1，示例2的样式来组织。*
 

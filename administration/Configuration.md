@@ -43,6 +43,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |max_backend_down_time_second|3600|BE 和 FE 失联之后，FE 容忍 BE 重新加回来的最长时间|
 |drop_backend_after_decommission|TRUE|BE 被下线后，是否删除该 BE|
 |catalog_try_lock_timeout_ms|5000|Catalog Lock 获取的超时时长|
+|enable_collect_query_detail_info|false| 是否支持通过 StarRocks Manager 查看 Profile|
 
 * **Query Engine**
 
@@ -110,12 +111,13 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 |export_max_bytes_per_be_per_task|268435456|单个导出任务在单个 be 上导出的最大数据量，默认 256M|
 |export_running_job_num_limit|5|导出作业最大的运行数目|
 |export_task_default_timeout_second|7200|导出作业超时时长，默认 2 小时|
+|empty_load_as_error|TRUE|导入数据为空时，是否返回报错提示 `all partitions have no load data`。取值：<br> - **TRUE**：当导入数据为空时，则显示导入失败，并返回报错提示 `all partitions have no load data`。<br> - **FALSE**：当导入数据为空时，则显示导入成功，并返回 `OK`，不返回报错提示。|
 
 * **存储相关**
 
 |配置项|默认值|作用|
 |---|---|---|
-|enable_strict_storage_medium_check|FALSE|在创建表时，FE 是否检查 BE 的可用的存储介质空间|
+|enable_strict_storage_medium_check|TRUE|在创建表时，FE 是否检查 BE 的可用的存储介质空间|
 |capacity_used_percent_high_water|0.75|Backend 上磁盘使用容量的度量值，超过 0.75 之后，尽量不在往这个 tablet 上发送建表，克隆的任务，直到恢复正常|
 |storage_high_watermark_usage_percent|85|BE 存储目录下空间使用率的最大值|
 |storage_min_left_capacity_bytes|2 *1024\* 1024\*1024|BE 存储目录下剩余空间的最小值，默认 2GB|
@@ -256,7 +258,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 
 |配置项|默认值|作用|
 |---|---|---|
-|storage_cooldown_second|2592000|介质迁移的时间，默认 30 天|
+|storage_cooldown_second|-1|从 Table 创建时间点开始计算，自动降冷（从 HDD 介质迁移到 SSD 介质）的时延。单位为秒。默认为 `-1` 表示不进行自动降冷，如需启用该功能请显式设置大于 0 的值。|
 |default_storage_medium|HDD|默认的存储介质，值为 HDD/SSD。在创建表/分区时，如果没有指定存储介质，那么会使用该值|
 |schedule_slot_num_per_path|2|一个 BE 存储目录能够同时执行 tablet 相关任务的数目|
 |tablet_balancer_strategy|disk_and_tablet|Tablet 均衡策略，值为 disk_and_tablet 或 be_load_score|
@@ -340,7 +342,7 @@ BE 配置项暂不支持在线修改，生效需在 be.conf 中修改并重启 b
 |file_descriptor_cache_clean_interval|3600|文件句柄缓存清理的间隔，用于清理长期不用的文件句柄|
 |disk_stat_monitor_interval|5|磁盘状态检测的间隔|
 |unused_rowset_monitor_interval|30|清理过期 Rowset 的时间间隔|
-|storage_root_path|空字符串|存储数据的目录|
+|storage_root_path|空字符串|存储数据的目录，多块盘配置使用分隔符";"间隔，例如：/data1/starrocks;/data2/starrocks|
 |max_percentage_of_error_disk|0|磁盘错误达到一定比例，BE 退出|
 |default_num_rows_per_data_block|1024|每个 block 的数据行数|
 |max_tablet_num_per_shard|1024|每个 shard 的 tablet 数目，用于划分 tablet，防止单个目录下 tablet 子目录过多|
@@ -363,17 +365,15 @@ BE 配置项暂不支持在线修改，生效需在 be.conf 中修改并重启 b
 |base_compaction_num_threads_per_disk|1|每个磁盘 BaseCompaction 线程的数目|
 |base_cumulative_delta_ratio|0.3|BaseCompaction 触发条件之一：Cumulative 文件大小达到 Base 文件的比例|
 |base_compaction_interval_seconds_since_last_operation|86400|BaseCompaction 触发条件之一：上一轮 BaseCompaction 距今的间隔|
-|base_compaction_write_mbytes_per_sec|5|BaseCompaction 写磁盘的限速|
 |cumulative_compaction_check_interval_seconds|10|CumulativeCompaction 线程轮询的间隔|
 |min_cumulative_compaction_num_singleton_deltas|5|CumulativeCompaction 触发条件之一：Singleton 文件数目要达到的下限|
 |max_cumulative_compaction_num_singleton_deltas|1000|CumulativeCompaction 触发条件之一：Singleton 文件数目要达到的上限|
-|cumulative_compaction_num_threads_per_disk|1|每个磁盘 CumulativeCompaction 线程的数目|
-|cumulative_compaction_budgeted_bytes|104857600|BaseCompaction 触发条件之一：Singleton 文件大小的总和限制，100MB|
 |cumulative_compaction_write_mbytes_per_sec|100|CumulativeCompaction 写磁盘的限速|
 |min_compaction_failure_interval_sec|600|Tablet Compaction 失败之后，再次被调度的间隔。|
-|max_compaction_concurrency|-1|BaseCompaction + CumulativeCompaction 的最大并发，-1 就是没有限制|
+|max_compaction_concurrency|4|BaseCompaction + CumulativeCompaction 的最大并发， -1 代表没有限制。|
+|compaction_trace_threshold|60|单次 Compaction 打印 trace 的时间阈值，如果单次 compaction 时间超过该阈值就打印 trace，单位为秒|
 |webserver_port|8040|Http Server 端口|
-|webserver_num_workers|5|Http Server 线程数|
+|webserver_num_workers|48|Http Server 线程数|
 |periodic_counter_update_period_ms|500|Counter 统计信息的间隔|
 |load_data_reserve_hours|4|小批量导入生成的文件保留的时间|
 |load_error_log_reserve_hours|48|导入数据信息保留的时长|
@@ -421,7 +421,7 @@ BE 配置项暂不支持在线修改，生效需在 be.conf 中修改并重启 b
 
 |参数名称|描述|建议值|修改方式|
 |---|---|---|---|
-|Overcommit|不建议使用 Overcommit|1|echo 1 \| sudo tee /proc/sys/vm/overcommit_memory|
+|Overcommit|建议使用 Overcommit|1|echo 1 \| sudo tee /proc/sys/vm/overcommit_memory|
 |Huge Pages|禁止 transparent huge pages，这个会干扰内存分配器，导致性能下降|madvise|echo 'madvise' \| sudo tee /sys/kernel/mm/transparent_hugepage/enabled|
 |Swappiness|关闭交换区，消除交换内存到虚拟内存时对性能的扰动|0|echo 0 \| sudo tee /proc/sys/vm/swappiness|
 
@@ -472,4 +472,4 @@ ulimit -u 40960
 |参数名称|建议值|修改方式|
 |---|---|---|
 |tcp abort on overflow|1|echo 1 \| sudo tee /proc/sys/net/ipv4/tcp_abort_on_overflow|
-|somaxconn|1024|echo 1024 | sudo tee /proc/sys/net/core/somaxconn|
+|somaxconn|1024|echo 1024 \| sudo tee /proc/sys/net/core/somaxconn|

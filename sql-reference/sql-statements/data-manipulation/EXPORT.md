@@ -26,13 +26,11 @@ broker;
 
 2. partition
 
-    可以只导出指定表的某些指定分区
+    可以指定需要导出数据所在的分区，不指定的话默认导出表中所有分区的数据。
 
 3. export_path
 
-    导出的路径。目前不能导出到本地，需要导出到 broker。
-
-    如果是目录，需要以斜线结尾。否则最后一个斜线后面的部分会作为导出文件的前缀。
+    导出的路径。目前不能导出到本地，需要导出到 broker。如果是目录，需要以斜线结尾。否则最后一个斜线后面的部分会作为导出文件的前缀。如不指定文件名前缀，文件名前缀默认为 **data_**。
 
 4. opt_properties
 
@@ -49,7 +47,7 @@ broker;
     ```plain text
     column_separator: 指定导出的列分隔符，默认为\t。
     line_delimiter: 指定导出的行分隔符，默认为\n。
-    exec_mem_limit: 导出在单个 BE 节点的内存使用上限，默认为 2GB，单位为字节。
+    load_mem_limit: 导出在单个 BE 节点的内存使用上限，默认为 2GB，单位为字节。
     timeout：导入作业的超时时间，默认为1天，单位是「秒」。
     include_query_id: 导出文件名中是否包含 query id，默认为 true。
     ```
@@ -149,7 +147,3 @@ WITH BROKER "broker_name"
 "fs.s3a.endpoint" = "s3-ap-northeast-1.amazonaws.com"
 );
 ```
-
-## 关键字(keywords)
-
-EXPORT

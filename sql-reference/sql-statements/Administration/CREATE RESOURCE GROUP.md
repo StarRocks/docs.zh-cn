@@ -7,7 +7,7 @@
 ## 语法
 
 ```sql
-CREAE RESOURCE GROUP < name > 
+CREAE RESOURCE GROUP <name> 
 TO CLASSIFIER[,...]
 WITH ("key" = "value", ...);
 ```
@@ -37,7 +37,3 @@ with (
     'type' = 'normal'
 );
 ```
-
-## 关键字(keywords)
-
-CREATE，RESOURCE GROUP
