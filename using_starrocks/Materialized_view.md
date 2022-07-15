@@ -128,7 +128,9 @@ SHOW ALTER TABLE ROLLUP FROM db_name;
 
 如果 State 为 FINISHED，说明物化视图已经创建完成。
 
-查看物化视图的表结果，需用通过基表名进行：
+### 查看已创建的物化视图
+
+您可以通过基表名查看一个基表的所有物化视图。例如，运行如下命令查看`sales_records`的所有物化视图。
 
 ~~~PlainText
 mysql> desc sales_records all;
@@ -238,7 +240,7 @@ EXPLAIN SELECT store_id, SUM(sale_amt) FROM sales_records GROUP BY store_id;
 删除已经创建完成的物化视图:
 
 ~~~SQL
-DROP MATERIALIZED VIEW IF EXISTS store_amt on sales_records;
+DROP MATERIALIZED VIEW IF EXISTS store_amt;
 ~~~
 
 删除处于创建中的物化视图，需要先取消异步任务，然后再删除物化视图，以表 `db0.table0` 上的物化视图 mv 为例:
@@ -328,7 +330,6 @@ GROUP BY advertiser, channel;
 CREATE MATERIALIZED VIEW mv_1 AS
 SELECT k3, k2, k1
 FROM tableA
-ORDER BY k3;
 ~~~
 
 这时候查询就会直接从刚才创建的 mv_1 物化视图中读取数据。物化视图对 k3 是存在前缀索引的，查询效率也会提升。
@@ -342,4 +343,5 @@ ORDER BY k3;
 3. 单表上过多的物化视图会影响导入的效率：导入数据时，物化视图和 base 表数据是同步更新的，如果一张表的物化视图表超过10张，则有可能导致导入速度很慢。这就像单次导入需要同时导入10张表数据是一样的。
 4. 相同列，不同聚合函数，不能同时出现在一张物化视图中，比如：`select sum(a), min(a) from table` 不支持。
 5. 物化视图的创建语句目前不支持 JOIN 和 WHERE ，也不支持 GROUP BY 的 HAVING 子句。
-6. 不能同时创建多个物化视图，只能等待上一个物化视图创建完成，才能创建下一个物化视图。
+6. 目前聚合模型、更新模型和明细模型支持创建物化视图，主键模型不支持创建物化视图。
+7. 创建物化视图是一个异步的操作。在执行完 CREATE MATERIALIZED VIEW 语句后，创建物化视图的任务即提交成功。只有等待上一个物化视图创建完成后（即`State`为`FINISHED`），才能提交下一个创建物化视图的任务。

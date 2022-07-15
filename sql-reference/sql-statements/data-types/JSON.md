@@ -1,6 +1,6 @@
-# JSON
+# JSON【公测中】
 
-本文介绍 JSON 的基本概念，以及 StarRocks 如何创建 JSON 类型的列、导入和查询 JSON 数据，通过 JSON 函数及运算符构造和处理 JSON 数据。
+自 2.2.0 版本起，StarRocks 支持 JSON【公测中】。本文介绍 JSON 的基本概念，以及 StarRocks 如何创建 JSON 类型的列、导入和查询 JSON 数据，通过 JSON 函数及运算符构造和处理 JSON 数据。
 
 ## 什么是 JSON
 
@@ -16,7 +16,7 @@ StarRocks 支持存储和高效查询分析 JSON 数据。StarRocks 采用二进
 
 建表时，通过关键字 `JSON`，指定列 `j` 为 JSON 类型。
 
-```Plain Text
+```SQL
 CREATE TABLE `tj` (
     `id` INT(11) NOT NULL COMMENT "",
     `j`  JSON NULL COMMENT ""
@@ -39,7 +39,7 @@ StarRocks 支持如下三种方式导入数据并存储为 JSON 类型。
 
 - 方式一：通过 `INSERT INTO` 将数据写入至 JSON 类型的列（例如列 `j`）。
 
-```Plain Text
+```SQL
 INSERT INTO tj (id, j) VALUES (1, parse_json('{"a": 1, "b": true}'));
 INSERT INTO tj (id, j) VALUES (2, parse_json('{"a": 2, "b": false}'));
 INSERT INTO tj (id, j) VALUES (3, parse_json('{"a": 3, "b": true}'));
@@ -48,7 +48,7 @@ INSERT INTO tj (id, j) VALUES (4, json_object('a', 4, 'b', false));
 
 > PARSE_JSON 函数能够基于字符串类型的数据构造出 JSON 类型的数据。JSON_OBJECT 函数能够构造出 JSON 对象类型的数据，可以将现有的表转成 JSON 类型。更多说明，请参见 [PARSE_JSON](../../sql-functions/json-functions/json-creation-functions/parse_json.md) 和 [JSON_OBJECT](../../sql-functions/json-functions/json-creation-functions/json_object.md)。
 
-- 方式二：通过 Stream Load 的方式导入 JSON 文件并存储为 JSON 类型。导入方式，请参见 [通过 Stream Load 导入 JSON 数据](../../../loading/Json_loading.md#stream-load导入)。
+- 方式二：通过 Stream Load 的方式导入 JSON 文件并存储为 JSON 类型。导入方法请参见 [导入 JSON 数据](../../../loading/StreamLoad.md)。
   - 如果需要将 JSON 文件中一个 JSON 对象的指定值导入并存储为 JSON 类型，则您需要设置 `jsonpaths` 为$.a（a 代表指定键）。
   - 如果需要将 JSON 文件中的一个 JSON 对象导入并存储为 JSON 类型，则您需要设置 `jsonpaths` 为 $。
 - 方式三：通过 Broker Load 的方式导入 Parquet 文件并存储为 JSON 类型。导入方式，请参见 [Broker Load](../../../loading/BrokerLoad.md)。
@@ -169,6 +169,6 @@ JSON 函数和运算符可以用于构造和处理 JSON 数据。具体说明，
 
 - 当前 JSON 类型的数据最大长度和字符串类型相同。
 - ORDER BY、GROUP BY、JOIN 子句不支持引用 JSON 类型的列。如果需要引用，您可以提前使用 CAST 函数，将 JSON 类型的列转为其他 SQL 类型。具体转换方式，请参见 [JSON 类型转换](../../sql-functions/json-functions/json-processing-functions/cast-from-or-to-json.md)。
-- JSON 类型的列仅支持存在于明细模型的表中，且该列不允许为排序键。
-- JSON 类型的列不支持用作分区键和分桶键。
-- StarRocks 支持使用 <，<=，>，>=， =，!= 运算符查询 JSON 数据，不支持使用 IN 运算符。
+- 支持 JSON 类型的列存在于明细模型、主键模型、更新模型的表中，但不支持存在于聚合模型的表中。
+- 暂不支持 JSON 类型的列作为分区键、分桶键、维度列（DUPLICATE KEY、PRIMARY KEY、UNIQUE KEY），并且不支持用于 JOIN、GROUP BY、ORDER BY 子句。
+- StarRocks 支持使用 `<`，`<=`，`>`，`>=`， `=`，`!=` 运算符查询 JSON 数据，不支持使用 IN 运算符。

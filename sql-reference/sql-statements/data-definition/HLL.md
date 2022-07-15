@@ -24,13 +24,14 @@ HLL 列是通过其它列或者导入数据里面的数据生成的，导入的�
 
 ```sql
 create table test(
-dt date,
-id int,
-name char(10),
-province char(10),
-os char(1),
-set1 hll hll_union,
-set2 hll hll_union)
+    dt date,
+    id int,
+    name char(10),
+    province char(10),
+    os char(1),
+    set1 hll hll_union,
+    set2 hll hll_union
+)
 distributed by hash(id) buckets 32;
 ```
 
@@ -58,24 +59,27 @@ http://host/api/test_db/test/_stream_load
 --基于第一个示例创建的HLL表创建一个rollup，让hll列产生聚合
 alter table test add rollup test_rollup(dt, set1);
 
---创建另外一张专门计算uv的表，然后insert数据）
 
+--创建另外一张专门计算uv的表，然后insert数据
 create table test_uv(
-dt date,
-id int,
-uv_set hll hll_union)
+    dt date,
+    id int,
+    uv_set hll hll_union
+)
 distributed by hash(id) buckets 32;
 
-insert into test_uv select dt, set1 from test;
+insert into test_uv select dt, id, set1 from test;
+
 
 --创建另外一张专门计算uv的表，然后insert并通过hll_hash根据test其它非hll列生成hll列
-
 create table test_uv(
-dt date,
-id_set hll hll_union)
+    dt date,
+    id int,
+    id_set hll hll_union
+)
 distributed by hash(id) buckets 32;
 
-insert into test_uv select dt, hll_hash(id) from test;
+insert into test_uv select dt, id, hll_hash(id) from test;
 ```
 
 ### 查询 HLL 列
@@ -90,10 +94,7 @@ select HLL_UNION_AGG(uv_set) from test_uv;
 select dt, HLL_CARDINALITY(uv_set) from test_uv;
 
 --c. 求test表中set1的聚合值
-select dt, HLL_CARDINALITY(uv) from (select dt, HLL_RAW_AGG(set1) as uv from test group by dt) tmp;
+select dt, HLL_CARDINALITY(uv)from (
+    select dt, HLL_RAW_AGG(set1) as uv from test group by dt) tmp;
 select dt, HLL_UNION_AGG(set1) as uv from test group by dt;
 ```
-
-## 关键字(keywords)
-
-HLL

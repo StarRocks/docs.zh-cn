@@ -1,50 +1,74 @@
-# 资源隔离
+# 资源隔离【公测中】
 
-自 2.2.0 版本起，StarRocks 支持资源隔离，通过限制查询任务对计算资源的消耗，实现资源隔离和合理利用。本文介绍资源隔离的功能、基本概念和使用方式。
+本文介绍如何使用资源隔离功能。
 
-## 功能简介
+自 2.2 版本起，StarRocks 支持资源组管理，集群可以通过设置资源组（Resource Group）的方式限制查询对资源的消耗，实现多租户之间的资源隔离与合理利用。在 2.3 版本中，StarRocks 支持限制大查询，集群可以进一步控制大查询对资源的消耗，避免少数的大查询耗尽系统资源，进而影响系统稳定性。
 
-资源隔离功能可以限制查询任务对计算资源的消耗，让不同租户的查询任务在同一集群执行时，既能实现资源隔离，又能合理使用资源。
+通过资源隔离功能，您可以将 BE 节点的计算资源划分成若干个资源组，并且为每个资源组关联一个或多个分类器（Classifier）。根据在分类器中设置的条件，系统将匹配查询任务的对应信息。当您发起查询任务时，分类器会根据查询任务的相关信息进行匹配。其中匹配度最高的分类器才会生效，系统则会根据生效的分类器所属的资源组为查询任务分配资源。
 
-您需要创建资源组（Resource Group），将 BE 节点的计算资源（CPU、内存）划分成若干个资源组，并且每个资源组会关联一个或多个分类器（Classifier），您需要在分类器中设置条件（用户名、用户所属的 Role、IP 地址、 查询类型），用于匹配查询任务的对应信息。
+在后续版本中，我们将会持续强化资源隔离功能。
 
-当您发起查询任务时，分类器会根据查询任务的信息（用户名、用户所属的 Role、IP 地址、 查询类型），进行匹配。匹配度最高的分类器才会生效，最终该分类器所属资源组为查询任务的资源组。
+资源隔离功能支持计划
+
+|  | 内部表 | 外部表 | 大小查询隔离 | 导入资源隔离 | Schema Change 资源隔离 |
+|---|---|---|---|---|---|
+| 2.2 | √ | × | × | × | × |
+| 2.3 | √ | √ | √ | × | × |
 
 ## 基本概念
 
-- 资源组（Resource Group）
+本小节介绍资源隔离功能相关的基本概念。
 
-  资源组包括 BE 节点计算资源（CPU、内存）的配额。并且，一个资源组可以绑定一个或多个分类器。
-  资源配额的计算方式如下：
-  - `cpu_core_limit`：该资源组所分配到的 CPU 核数占 BE 节点 CPU 核数的比例，取值为正整数。按照比例，向各个资源组分配执行线程和 IO 线程的 CPU 时间片。例如 16 核的机器，设置三个资源组 rg1、rg2、rg3，`cpu_core_limit` 为 2、6、8，则资源组 rg1、rg2、rg3 分别能分配到的 CPU 核数分别为  BE 节点 CPU 核数×（2/16）、 BE 节点 CPU 核数×（6/16）、BE 节点 CPU 核数×（8/16）。如果资源空闲，rg1、rg2 有负载，但是 rg3 没有请求，则 rg1、rg2 分配到的 CPU 核数分别为 BE 节点 CPU 核数×（2/8）、 BE 节点 CPU 核数×（6/8）。
-  - `mem_limit`：使用 query_pool（BE 节点中用于查询的内存）的上限，取值范围为 0.0 ~ 1.0。
-    > query_pool 的查看方式，请参见 [内存管理](Memory_management.md)。
+### 资源组
 
-- 分类器（Classifier）
-  
-  分类器包含四个条件（用户名，用户所属的 Role，用户发起查询的 IP 地址，查询类型），用于匹配查询任务的信息。 匹配度最高的分类器才会生效，最终该分类器所属资源组为查询任务的资源组。
+通过将 BE 节点划分为若干个资源组，系统在执行相应资源组的查询任务时，会按照为该资源组划分的资源配额（CPU 及内存）分配查询资源。
 
-  > 一个资源组可以绑定一个或多个分类器。
+您可以为资源组设置以下资源限制：
 
-- 分类器包含的四个条件
-  - `user`：用户名。
-  - `role`：用户所属的 Role。
-  - `query_type`: 查询类型，目前仅支持 SELECT。
-  - `source_ip`：发起查询的 IP 地址，类型为 CIDR。
+- `cpu_core_limit`：该资源组在当前 BE 节点可使用的 CPU 核数软上限，实际使用的 CPU 核数会根据节点资源空闲程度按比例弹性伸缩。取值为正整数。
+  > 说明：例如，在 16 核的 BE 节点中设置三个资源组 rg1、rg2、rg3，`cpu_core_limit` 分别设置为 `2`、`6`、`8`。当在该 BE 节点满载时，资源组 rg1、rg2、rg3 能分配到的 CPU 核数分别为 BE 节点总 CPU 核数 ×（2/16）= 2、 BE 节点总 CPU 核数 ×（6/16）= 6、BE 节点总 CPU 核数 ×（8/16）= 8。如果当前 BE 节点资源非满载，rg1、rg2 有负载，rg3 无负载，则 rg1、rg2 分配到的 CPU 核数分别为 BE 节点总 CPU 核数 ×（2/8）= 4、 BE 节点总 CPU 核数 ×（6/8）= 12。
+- `mem_limit`：该资源组在当前 BE 节点可使用于查询的内存（query_pool）占总内存的百分比（%）。取值范围为 (0,1)。
+  > 说明：query_pool 的查看方式，参见 [内存管理](Memory_management.md)。
+- `concurrency_limit`：资源组中并发查询数的上限，用以防止并发查询提交过多而导致的过载。
 
-- 分类器与查询任务的匹配方式
+在以上资源限制的基础上，您可以通过以下大查询限制进一步对资源组进行配置：
 
-1. 分类器与查询任务匹配时， 分类器的条件需要与查询任务的信息完全匹配。
-2. 如果存在多个分类器的条件与查询任务完全匹配，则需要计算不同分类器的匹配度。其中只有匹配度最高的分类器才会生效。匹配度的计算方式如下：
-   - 如果用户名一致，则匹配度加 1。
-   - 如果用户所属 Role 一致，则匹配度加 1。
-   - 如果查询类型一致，则该部分匹配度为 1 + 1/分类器的 `query_type` 数量。
-   - 如果发起查询的 IP 地址一致，则该部分匹配度为 1 +  (32-cidr_prefix)/64。
+- `big_query_cpu_second_limit`：大查询任务可以使用 CPU 的时间上限，其中的并行任务将累加 CPU 使用时间。单位为秒。
+- `big_query_scan_rows_limit`：大查询任务可以扫描的行数上限。
+- `big_query_mem_limit`：大查询任务可以使用的内存上限。单位为 Byte。
+
+> 说明
+> 当资源组中运行的查询超过以上大查询限制时，查询将会终止，并返回错误。您也可以在 FE 节点 **fe.audit.log** 的 `ErrorCode` 列中查看错误信息。
+
+### 分类器
+
+您可以为每个资源组关联一个或多个分类器。系统将会根据所有分类器中设置的条件，为每个查询任务选择一个匹配度最高的分类器，并根据生效的分类器所属的资源组为该查询任务分配资源。
+
+分类器可以包含以下四个条件：
+
+- `user`：用户名。
+- `role`：用户所属的 Role。
+- `query_type`: 查询类型，目前仅支持 `SELECT`。
+- `source_ip`：发起查询的 IP 地址，类型为 CIDR。
+- `db`：查询所访问的 Database，可以为 `,` 分割的字符串。
+
+系统在为查询任务匹配分类器时，查询任务的信息与分类器的条件完全相同，才能视为匹配。如果存在多个分类器的条件与查询任务完全匹配，则需要计算不同分类器的匹配度。其中只有匹配度最高的分类器才会生效。
+
+> 说明：
+> 您可以在 FE 节点 **fe.audit.log** 的 `ResourceGroup` 列中查看特定查询任务最终所匹配的资源组。
+
+匹配度的计算方式如下：
+
+- 如果 `user` 一致，则该分类器匹配度增加 1。
+- 如果 `role` 一致，则该分类器匹配度增加 1。
+- 如果 `query_type` 一致，则该分类器匹配度增加 1 + 1/分类器的 `query_type` 数量。
+- 如果 `source_ip` 一致，则该分类器匹配度增加 1 + (32 - cidr_prefix)/64。
+- 如果查询的 `db` 匹配，则匹配度加 10。
 
 例如，多个与查询任务匹配的分类器中，分类器的条件数量越多，则其匹配度越高。
 
 ```Plain%20Text
--- B的匹配度比A高，因为条件数量越多。
+-- 因为分类器 B 的条件数量比 A 多，所以 B 的匹配度比 A 高。
 classifier A (user='Alice')
 classifier B (user='Alice', source_ip = '192.168.1.0/24')
 ```
@@ -52,76 +76,102 @@ classifier B (user='Alice', source_ip = '192.168.1.0/24')
 如果分类器的条件数量相等，则分类器的条件描述越精确，其匹配度越高。
 
 ```Plain%20Text
--- B的匹配度比A高, 因为192.168.1.0/24相对于192.168.1.0/16限定的source_ip地址范围更小。
+-- 因为分类器 B 限定的 `source_ip` 地址范围更小，所以 B 的匹配度比 A 高。
 classifier A (user='Alice', source_ip = '192.168.1.0/16')
 classifier B (user='Alice', source_ip = '192.168.1.0/24')
 
---C的匹配度比D高, 因为('select')比 ('insert','select', 'ctas')限定的查询类型数量少。
+-- 因为分类器 C 限定的查询类型数量更少，所以 C 的匹配度比 D 高。
 classifier C (user='Alice', query_type in ('select'))
 classifier D (user='Alice', query_type in ('insert','select', 'ctas')）
 ```
 
-## 操作步骤
+## 隔离计算资源
+
+您可以通过创建资源组并设置相应分类器为不同查询任务隔离计算资源。
 
 ### 开启资源组
 
-设置会话变量 `SET enable_resource_group = true`，开启资源组。
+通过设置相应会话变量开启 Pipeline 引擎以及资源组功能。
 
-> 如果需要设置全局变量，则需要设置`SET GLOBAL enable_resource_group = true`。
+```sql
+SET enable_pipeline_engine = true;
+SET enable_resource_group = true;
+```
+
+> 说明：如果需要设置全局变量，需要运行 `SET GLOBAL enable_resource_group = true;`。
 
 ### 创建资源组和分类器
 
-语法如下：
+创建资源组，关联分类器，并分配资源。
 
 ```SQL
-CREAE RESOURCE_GROUP <name> 
-TO CLASSIFIER[,...] --创建分类器，语法见下方。多个分类器间用英文逗号（,）分隔。
+CREATE RESOURCE GROUP group_name 
+TO (
+    user='string', 
+    role='string', 
+    query_type in ('select'), 
+    source_ip='cidr'
+) --创建分类器，多个分类器间用英文逗号（,）分隔。
 WITH (
-    "cpu_core_limit" = "n",
+    "cpu_core_limit" = "INT",
     "mem_limit" = "m%",
-    "type" = "normal" --资源组的类型，固定取值为normal。
+    "concurrency_limit" = "INT",
+    "type" = "normal" --资源组的类型，固定取值为 normal。
 );
-
--- 创建分类器的语法如下：
-CLASSIFIER: 
-   (user='string', role='string', query_type in ('select'), source_ip='cidr')
 ```
 
 示例：
 
 ```SQL
-create resource_group rg1
-to 
-    (user='rg1_user1', role='rg1_role1', query_type in ('select'), source_ip='192.168.2.1/24'),
-    (user='rg1_user2', query_type in ('select'), source_ip='192.168.3.1/24'),
-    (user='rg1_user3', source_ip='192.168.4.1/24'),
-    (user='rg1_user4')
-with (
+CREATE RESOURCE GROUP rg1
+TO 
+    (user='rg1_user1', role='rg1_role1', query_type in ('select'), source_ip='192.168.x.x/24'),
+    (user='rg1_user2', query_type in ('select'), source_ip='192.168.x.x/24'),
+    (user='rg1_user3', source_ip='192.168.x.x/24'),
+    (user='rg1_user4'),
+    (db='db1')
+WITH (
     'cpu_core_limit' = '10',
     'mem_limit' = '20%',
-    'type' = 'normal'
+    'type' = 'normal',
+    'big_query_cpu_second_limit' = '100',
+    'big_query_scan_rows_limit' = '100000',
+    'big_query_mem_limit' = '1073741824'
 );
+```
+
+### 指定资源组（可选）
+
+除通过分类器自动指定资源组外，您也可以通过会话变量直接指定资源组。
+
+```sql
+SET resource_group = 'group_name';
 ```
 
 ### 查看资源组和分类器
 
-语法如下：
+查询所有的资源组和分类器。
 
 ```SQL
--- 查询所有的资源组和分类器。
-SHOW RESOURCE_GROUPS ALL;
+SHOW RESOURCE GROUPS ALL;
+```
 
--- 查询和当前用户匹配的资源组和分类器。
-SHOW RESOURCE_GROUPS;
+查询和当前用户匹配的资源组和分类器。
 
--- 查询指定的资源组和分类器。
-SHOW RESOURCE_GROUP <NAME>
+```SQL
+SHOW RESOURCE GROUPS;
+```
+
+查询指定的资源组和分类器。
+
+```SQL
+SHOW RESOURCE GROUP group_name；
 ```
 
 示例：
 
 ```Plain%20Text
-SHOW RESOURCE_GROUPS ALL;
+mysql> SHOW RESOURCE GROUPS ALL;
 
 +------+--------+--------------+----------+------------------+--------+------------------------------------------------------------------------------------------------------------------------+
 | Name | Id     | CPUCoreLimit | MemLimit | ConcurrencyLimit | Type   | Classifiers                                                                                                            |
@@ -133,72 +183,65 @@ SHOW RESOURCE_GROUPS ALL;
 +------+--------+--------------+----------+------------------+--------+------------------------------------------------------------------------------------------------------------------------+
 ```
 
-> `weight`：代表分类器的匹配度。
+> 说明：`weight`：代表分类器的匹配度。
 
 ### 管理资源组配额和分类器
 
-您可以执行命令，修改资源组的配额，以及增加或删除资源组的分类器。
+您可以修改资源组的配额，以及增加或删除资源组的分类器。
 
-#### 修改资源组的配额
-
-语法如下：
+为已有的资源组修改资源配额。
 
 ```SQL
-ALTER RESOURCE_GROUP <NAME> WITH (
-    'cpu_core_limit' = '10',
-    'mem_limit' = '20%',
+ALTER RESOURCE GROUP group_name WITH (
+    'cpu_core_limit' = 'INT',
+    'mem_limit' = 'm%',
     'type' = 'normal'
 );
 ```
 
-示例：
+删除指定资源组。
 
 ```SQL
--- 修改资源组rg1的CPU核数上限为20;
-ALTER RESOURCE_GROUP rg1 WITH (
-    'cpu_core_limit' = '20'
-);
+DROP RESOURCE GROUP <group_name>;
 ```
 
-#### 增加或删除分类器
-
-语法如下：
+添加新的分类器。
 
 ```SQL
--- 添加新的分类器
-ALTER RESOURCE_GROUP <NAME> ADD CLASSIFIER[,...];
-
--- 删除指定的分类器
-ALTER RESOURCE_GROUP <NAME> DROP (CLASSIFER_ID_1, CLASSIFIER_ID_2, ...);
-
--- 删除所有的分类器
-ALTER RESOURCE_GROUP <NAME> DROP ALL;
+ALTER RESOURCE GROUP <group_name> ADD (user='string', role='string', query_type in ('select'), source_ip='cidr');
 ```
 
-示例：
+删除指定的分类器。
 
 ```SQL
--- 在资源组rg1中, 添加新的分类器。
-ALTER RESOURCE_GROUP rg1 ADD (user='root', query_type in ('select'));
-
--- 删除资源组rg1的id为(300040, 300041, 300041)的分类器。
-ALTER RESOURCE_GROUP rg1 DROP (300040, 300041, 300041);
-
--- 删除资源组rg1的所有分类器。
-ALTER RESOURCE_GROUP rg1 DROP ALL;
+ALTER RESOURCE GROUP <group_name> DROP (CLASSIFER_ID_1, CLASSIFIER_ID_2, ...);
 ```
 
-### 删除资源组
-
-语法如下：
-
-```Nginx
-DROP RESOURCE_GROUP <NAME>;
-```
-
-示例：
+删除所有的分类器。
 
 ```SQL
--- 删除资源组rg1。
-DROP RESOURCE_GROUP rg1;
+ALTER RESOURCE GROUP <group_name> DROP ALL;
 ```
+
+## 监控资源组
+
+您可以为资源组设置[监控与报警](Monitor_and_Alert.md)。
+
+可监控的资源组相关 Metric 包括：
+
+- FE 节点
+  - starrocks_fe_query_resource_group：该资源组中查询任务的数量。
+  - starrocks_fe_query_resource_group_latency：该资源组的查询延迟百分位数。
+  - starrocks_fe_query_resource_group_err：该资源组中报错的查询任务的数量。
+- BE 节点
+  - starrocks_be_resource_group_cpu_limit_ratio：该资源组 CPU 配额比率的瞬时值。
+  - starrocks_be_resource_group_cpu_use_ratio：该资源组 CPU 使用率瞬时值。
+  - starrocks_be_resource_group_mem_limit_bytes：该资源组内存配额比率的瞬时值。
+  - starrocks_be_resource_group_mem_allocated_bytes：该资源组内存使用率瞬时值。
+
+## 下一步
+
+成功设置资源组后，您可以：
+
+- [管理内存](Memory_management.md)
+- [管理查询](Query_management.md)

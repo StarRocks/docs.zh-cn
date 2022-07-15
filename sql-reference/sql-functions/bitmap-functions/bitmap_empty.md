@@ -1,14 +1,8 @@
 # bitmap_empty
 
-## description
+## 功能
 
-### Syntax
-
-```Haskell
-BITMAP BITMAP_EMPTY()
-```
-
-返回一个空bitmap。主要用于 insert 或 stream load 时填充默认值。例如
+返回一个空 bitmap, 主要用于 insert 或 stream load 时填充默认值, 如下例:
 
 ```bash
 cat data | curl --location-trusted -u user:passwd -T - \
@@ -16,7 +10,21 @@ cat data | curl --location-trusted -u user:passwd -T - \
     http://host:8410/api/test/testDb/_stream_load
 ```
 
-## example
+## 语法
+
+```Haskell
+BITMAP_EMPTY()
+```
+
+## 参数说明
+
+无
+
+## 返回值说明
+
+返回值的数据类型为 BITMAP
+
+## 示例
 
 ```Plain Text
 MySQL > select bitmap_count(bitmap_empty());
@@ -26,7 +34,3 @@ MySQL > select bitmap_count(bitmap_empty());
 |                            0 |
 +------------------------------+
 ```
-
-## keyword
-
-BITMAP_EMPTY,BITMAP

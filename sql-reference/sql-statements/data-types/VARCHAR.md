@@ -13,13 +13,9 @@ VARCHAR(M)
 ```sql
 CREATE TABLE varcharDemo (
     pk INT COMMENT "range [-2147483648, 2147483647]",
-    pd_type VARCHAR(20) COMMENT "range char(m),m in (1-255) "
+    pd_type VARCHAR(20) COMMENT "range char(m),m in (1-65533) "
 ) ENGINE=OLAP 
 DUPLICATE KEY(pk)
 COMMENT "OLAP"
 DISTRIBUTED BY HASH(pk) BUCKETS 4;
 ```
-
-## 关键字
-
-VARCHAR
