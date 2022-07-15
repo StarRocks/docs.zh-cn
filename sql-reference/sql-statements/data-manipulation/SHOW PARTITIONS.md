@@ -12,7 +12,8 @@
 SHOW [TEMPORARY] PARTITIONS FROM [db_name.]table_name [WHERE] [ORDER BY] [LIMIT];
 ```
 
-> 说明:
+> 说明
+>
 > * 支持PartitionId,PartitionName,State,Buckets,ReplicationNum,LastConsistencyCheckTime等列的过滤。
 > * 该语法只支持OLAP表，ES表和HIVE表请使用 SHOW PROC '/dbs/db_id/table_id/partitions';
 
