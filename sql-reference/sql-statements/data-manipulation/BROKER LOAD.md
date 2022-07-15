@@ -394,10 +394,8 @@ LOAD LABEL example_db.label10
 
 假设有如下文件：
 
-```
-/user/data/data_time = 2020-02-17 00%3A00%3A00/test.txt
-/user/data/data_time = 2020-02-18 00%3A00%3A00/test.txt
-```
+- `/user/data/data_time = 2020-02-17 00%3A00%3A00/test.txt`
+- `/user/data/data_time = 2020-02-18 00%3A00%3A00/test.txt`
 
 表结构为：
 
