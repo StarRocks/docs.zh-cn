@@ -13,9 +13,9 @@ CloudCanal 社区版是一款由 [ClouGence 公司](https://www.clougence.com) �
 
 ## 功能说明
 
-- 推荐使用2.2.5.0及以上的CloudCanal版本写入StarRocks
-- 建议您在使用 CloudCanal 将 **增量数据** 导入至 StarRocks 时，控制导入的频率，CloudCanal写入StarRocks的默认导入频率可以通过参数`realFlushPauseSec`调整，默认为10秒。
-- 当前社区版本最大的内存配置为2g，如果同步任务运行产生OOM异常或者GC停顿严重可以调小以下参数减少批次大小从而减少内存占用。全量参数为`fullBatchSize`和`fullRingBufferSize`，增量参数为`increBatchSize`和`increRingBufferSize`
+- 推荐使用 v2.2.5.0 及以上的 CloudCanal 版本写入 StarRocks。
+- 建议您在使用 CloudCanal 将 **增量数据** 导入至 StarRocks 时，控制导入的频率，CloudCanal 写入 StarRocks 的默认导入频率可以通过参数 `realFlushPauseSec` 调整，默认为 10 秒。
+- 当前社区版本最大的内存配置为 2GB，如果同步任务运行产生 OOM 异常或者 GC 停顿严重，可以调小以下参数来减少批次大小，从而减少内存占用。全量参数为 `fullBatchSize` 和 `fullRingBufferSize`，增量参数为 `increBatchSize` 和 `increRingBufferSize`。
 - 支持的源端以及功能项：
   
   | 数据源 \ 功能项 | 结构迁移 | 全量数据迁移 | 增量实时同步 | 数据校验 |
@@ -43,9 +43,9 @@ CloudCanal 提供了完整的产品化能力，用户在可视化界面完成数
 
 > Tips:
 >
-> - Client 地址： 为 StarRocks 提供给 MySQL Client 的服务端口，CloudCanal 主要用其查询库表的元数据信息
+> - Client 地址：为 StarRocks 提供给 MySQL Client 的服务端口，CloudCanal 主要用其查询库表的元数据信息。
 >
-> - Http 地址： Http 地址主要用于接收 CloudCanal 数据导入的请求
+> - Http 地址：Http 地址主要用于接收 CloudCanal 数据导入的请求。
 
 ### 任务创建
 
