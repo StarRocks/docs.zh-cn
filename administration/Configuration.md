@@ -448,7 +448,7 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 |enable_token_check|TRUE|Token 开启检验|
 |enable_prefetch|TRUE|查询提前预取|
 |load_process_max_memory_limit_bytes|107374182400|单节点上所有的导入线程占据的内存上限，100GB|
-|load_process_max_memory_limit_percent|30|单节点上所有的导入线程占据的内存上限比例，100GB|
+|load_process_max_memory_limit_percent|30|单节点上所有的导入线程占据的内存上限比例。|
 |sync_tablet_meta|FALSE|存储引擎是否开 sync 保留到磁盘上。|
 |routine_load_thread_pool_size|10|例行导入的线程池数目。|
 |default_rowset_type|ALPHA|存储引擎的格式，默认新 ALPHA，后面会替换成 BETA。|
