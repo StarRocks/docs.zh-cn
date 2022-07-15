@@ -393,12 +393,14 @@ LOAD LABEL example_db.label10
 在 hdfs 路径中，不允许有 ':'，所有 ':' 会由 %3A 替换。
 
 假设有如下文件：
+
 ```
 /user/data/data_time = 2020-02-17 00%3A00%3A00/test.txt
 /user/data/data_time = 2020-02-18 00%3A00%3A00/test.txt
 ```
 
 表结构为：
+
 ```PLAIN TEXT
 data_time DATETIME,
 k2        INT,
