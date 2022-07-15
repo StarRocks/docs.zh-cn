@@ -39,7 +39,7 @@ flink-connector-starrocks 的内部实现是通过缓存并批量由 stream load
 </dependency>
 ```
 
-### 步骤二：调用 flink-connector-starrocks，将 MySQL 数据实时同步至 StarRocks
+### 步骤二：调用 flink-connector-starrocks
 
 * 如您使用 Flink DataStream API，则需要参考如下命令。
 
@@ -60,6 +60,8 @@ flink-connector-starrocks 的内部实现是通过缓存并批量由 stream load
                 .withProperty("database-name", "xxx")
                 .withProperty("sink.properties.format", "json")
                 .withProperty("sink.properties.strip_outer_array", "true")
+                // 设置并行度，多并行度情况下需要考虑如何保证数据有序性
+                .withProperty("sink.parallelism", "1")
                 .build()
         )
     );

@@ -1,6 +1,6 @@
 # 导入和查询数据
 
-本文档介绍如何在 StarRocks 中导入和查询数据。
+本文介绍如何在 StarRocks 中导入和查询数据。
 
 ## 导入数据
 
@@ -67,9 +67,10 @@ StarRocks 兼容 MySQL 协议，其查询语句基本符合 SQL92 标准。
 
 ### 简单查询
 
-查询表中全部数据。
+通过 MySQL 客户端登录 StarRocks，查询表中全部数据。
 
 ```sql
+use example_db;
 select * from detailDemo;
 ```
 
@@ -119,11 +120,13 @@ explain costs select * from detailDemo;
 
 * 开启 Profile 上报。
 
+> 注意：通过此方式设置 Profile 上报仅在当前 session 生效。
+
 ```sql
 set is_report_success = true;
 ```
 
 * 社区版用户可以通过 `http:FE_IP:FE_HTTP_PORT/query` 查看当前的查询和 Profile 信息。
-* 企业版用户可以在 StarRocksManager 的查询页面查看图形化 Profile 展示，点击查询链接可以在 **执行时间** 页面看到树状展示，并可以在 **执行详情** 页面看到完整的 Profile 详细信息。如果以上方法仍达不到预期，您可以发送执行详情页面的文本到社区或者技术支持群以寻求帮助。
+* 企业版用户可以在 StarRocks Manager 的查询页面查看图形化 Profile 展示，点击查询链接可以在 **执行时间** 页面看到树状展示，并可以在 **执行详情** 页面看到完整的 Profile 详细信息。如果以上方法仍达不到预期，您可以发送执行详情页面的文本到社区或者技术支持群以寻求帮助。
 
 > 有关 Plan 和 Profile 的详细介绍，参考 [查询分析](../administration/Query_planning.md) 和 [性能优化](../administration/Profiling.md) 章节。

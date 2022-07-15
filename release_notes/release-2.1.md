@@ -1,5 +1,31 @@
 # StarRocks version 2.1
 
+## 2.1.11
+
+发布日期：2022年7月9日
+
+### Bug 修复
+
+修复了如下 Bug：
+
+- 主键模型 (Primary Key) 表在高频导入时，会卡住无法继续进行。[#7763](https://github.com/StarRocks/starrocks/issues/7763)
+- 在低基数优化中，对聚合表达式的顺序处理有误，导致 `count distinct` 函数返回的一些结果错误。[#7659](https://github.com/StarRocks/starrocks/issues/7659)
+- LIMIT 子句中的裁剪规则处理错误，导致 LIMIT 子句执行以后没有结果。[#7894](https://github.com/StarRocks/starrocks/pull/7894)
+- 如果一个查询的 Join 条件列中有进行全局低基数字典优化，会导致查询结果错误。[#8302](https://github.com/StarRocks/starrocks/issues/8302)
+
+## 2.1.10
+
+发布日期：2022年6月24日
+
+### Bug 修复
+
+修复了如下 Bug：
+
+- 反复切换 Leader FE 节点可能会导致所有导入作业挂起，无法进行导入。[#7350](https://github.com/StarRocks/starrocks/issues/7350)
+- 使用 `DESC` 查看表结构时，类型为 DECIMAL(18,2) 的字段会展示为 DECIMAL64(18,2) 类型。[#7309](https://github.com/StarRocks/starrocks/pull/7309)
+- 导入的数据有倾斜时，某些列占用内存比较大，可能会导致 MemTable 的内存估算超过 4GB，从而导致 BE 停止工作。[#7161](https://github.com/StarRocks/starrocks/issues/7161)
+- 当 Compaction 的输入行数较多时，max_rows_per_segment 的内部估算会产生溢出，最终导致创建了大量的小 Segment 文件。[#5610](https://github.com/StarRocks/starrocks/issues/5610)
+
 ## 2.1.8
 
 发布日期：2022年6月9日
