@@ -1,6 +1,6 @@
 # Flink Connector
 
-本文介绍 Flink 如何通过 flink-connector-starrocks 的 source 功能读取 StarRocks 数据。
+Starrocks 提供 flink-connector-starrocks，支持 Flink 通过 flink-connector-starrocks 的 source 功能批量读取 StarRocks 数据。本文介绍实现方案和使用方式。
 
 > 如果 Flink 需要通过 flink-connector-starrocks 的 sink 功能，将数据写入至 StarRocks，请参见数据导入章节的 [Flink connector](../loading/Flink-connector-starrocks.md)。
 
@@ -20,7 +20,7 @@ Flink 可以通过 flink-connector-starrocks 的 source 功能读取 StarRocks �
 
 ### 步骤一：准备flink-connector-starrocks
 
-1. 根据 Flink 的版本，选择对应版本。下载 JAR 包 [flink-connector-starrocks](https://github.com/StarRocks/flink-connector-starrocks/releases)。
+1. 根据 Flink 的版本，选择对应版本。下载 JAR 包 [flink-connector-starrocks](https://github.com/StarRocks/flink-connector-starrocks/releases)（必须为1.2.x及以上版本）。
 2. 如需调试代码，可选择对应分支代码自行编译
 3. 将下载或者编译的 JAR 包放在 Flink 的 lib 目录中。
 4. 重启 Flink。
@@ -125,7 +125,7 @@ public class StarRocksSourceApp {
                .field("decimal_1", DataTypes.DECIMAL(27, 9))
                .build();
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.addSource(StarRocksSource.source(options, tableSchema)).setParallelism(5).print();
+        env.addSource(StarRocksSource.source(tableSchema, options)).setParallelism(5).print();
         env.execute("StarRocks flink source");
     }
 
@@ -137,8 +137,8 @@ public class StarRocksSourceApp {
 | 参数 | 是否必填 | 数据类型 | 描述 |
 | --------------------------- | -------- | -------- | ------------------------------------------------------------ |
 | connector | 是 | String | 固定为 starrocks。 |
-| scan-url | 是 | String | FE 节点的连接地址，用于通过 Web 服务器访问 FE 节点。 具体格式为< FE 节点的 IP 地址>:< FE 的 http_port>，端口号默认为8030。多个地址之间用英文半角逗号分隔。例如192.168.xxx.xxx:8030,192.168.xxx.xxx:8030。 |
-| jdbc-url | 是 | String   | FE 节点的连接地址，用于访问 FE 节点上的 MySQL 客户端。具体格式为 jdbc:mysql://< FE 节点的 IP 地址>:< FE 的 query_port>，端口号默认为9030。 |
+| scan-url | 是 | String | FE 节点的连接地址，用于通过 Web 服务器访问 FE 节点。 具体格式为\<FE 节点的 IP 地址\>:\<FE 的 http_port\>，端口号默认为8030。多个地址之间用英文半角逗号分隔。例如192.168.xxx.xxx:8030,192.168.xxx.xxx:8030。 |
+| jdbc-url | 是 | String   | FE 节点的连接地址，用于访问 FE 节点上的 MySQL 客户端。具体格式为 jdbc:mysql://\<FE 节点的 IP 地址\>:\<FE 的 query_port\>，端口号默认为9030。 |
 | username | 是 | String   | StarRocks 中的用户名称。需具备目标数据库表的读权限。用户权限说明，请参见[用户权限](../administration/User_privilege.md)。 |
 | password | 是 | String   | StarRocks 的用户密码。 |
 | database-name | 是 | String   | StarRocks 数据库的名称。 |
