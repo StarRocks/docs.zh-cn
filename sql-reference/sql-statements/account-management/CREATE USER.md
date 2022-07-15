@@ -35,7 +35,7 @@ auth_option: {
 3. **auth_option**
 
     指定用户的认证方式，目前支持 `mysql_native_password` 和 `authentication_ldap_simple`。
-    
+
     > 注意
     > 同一个用户（user_identity）只能使用一种认证方式。
 
