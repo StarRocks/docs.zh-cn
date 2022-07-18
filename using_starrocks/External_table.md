@@ -793,9 +793,7 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
 
 ~~~SQL
 CREATE EXTERNAL RESOURCE "iceberg0" 
-
 PROPERTIES ( "type" = "iceberg", "starrocks.catalog-type"="HIVE", "iceberg.catalog.hive.metastore.uris"="thrift://192.168.0.81:9083" 
-
 );
 ~~~
 
@@ -853,7 +851,6 @@ DROP RESOURCE "iceberg0";
 
 ~~~SQL
 CREATE DATABASE iceberg_test; 
-
 USE iceberg_test; 
 ~~~
 
