@@ -787,7 +787,7 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
 
 > 说明：仅 StarRocks 2.3 及以上版本支持创建 catalog 类型为 `CUSTOM` 的资源。
 
-**创建 catalog 类型为 `HIVE` 的资源**
+##### 创建 catalog 类型为 `HIVE` 的资源
 
 例如，创建一个名为 `iceberg0` 的资源，并指定该资源的 catalog 类型为 `HIVE`。
 
@@ -807,7 +807,7 @@ PROPERTIES ( "type" = "iceberg", "starrocks.catalog-type"="HIVE", "iceberg.catal
 | starrocks.catalog-type              | 资源的 catalog 类型。目前支持 Hive catalog 和 custom catalog。 如要使用 Hive catalog， 设置该参数为 `HIVE`。 如要使用 custom catalog，设置该参数为 `CUSTOM`。 |
 | iceberg.catalog.hive.metastore.uris | Hive Metastore 的 URI。格式为 `thrift://<Iceberg 元数据的IP地址>:<端口号>`，端口号默认为 9083。Apache Iceberg 通过 Hive catalog 连接 Hive metastore，以查询 Iceberg 表的元数据。 |
 
-**创建 catalog 类型为 `CUSTOM` 的资源**
+##### 创建 catalog 类型为 `CUSTOM` 的资源
 
 Custom catalog 需要继承抽象类 BaseMetastoreCatalog，并实现 IcebergCatalog 接口。更多有关开发 custom catalog 的信息，参考 [IcebergHiveCatalog](https://github.com/StarRocks/starrocks/blob/main/fe/fe-core/src/main/java/com/starrocks/external/iceberg/IcebergHiveCatalog.java)。此外，custom catalog 类名不能与 StarRocks 中已存在的类名重复。开发完成后，您需要将 custom catalog 及其相关文件打包并放到所有 FE 节点的 **fe/lib** 路径下，然后重启所有 FE 节点，以便 FE 识别这个类。以上操作完成后即可创建资源。
 
