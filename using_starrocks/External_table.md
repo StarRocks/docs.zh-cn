@@ -785,6 +785,8 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
 * 如果使用 Hive metastore 作为 Iceberg 的元数据服务，则可以创建 catalog 类型为 `HIVE` 的资源。
 * 如果想要自定义 Iceberg 的元数据服务，则可以开发一个 custom catalog （即自定义 catalog），然后创建 catalog 类型为 `CUSTOM` 的资源。
 
+> 说明：仅 StarRocks 2.3 及以上版本支持创建 catalog 类型为 `CUSTOM` 的资源。
+
 **创建 catalog 类型为 `HIVE` 的资源**
 
 例如，创建一个名为 `iceberg0` 的资源，并指定该资源的 catalog 类型为 `HIVE`。
