@@ -12,7 +12,6 @@
 
 - 全局低基数字典优化支持实时数据导入，实时场景下字符串数据的查询性能提升一倍。
 
-
 - 支持以异步的方式执行 CTAS，并将结果写入新表。相关文档，请参见 [CREATE TABLE AS SELECT](../sql-reference/sql-statements/data-definition/CREATE%20TABLE%20AS%20SELECT.md)。
 
 - 资源组相关功能：
