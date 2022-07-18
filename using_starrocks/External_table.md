@@ -780,7 +780,7 @@ Hive Table 的 Partition 统计信息以及 Partition 下面的文件信息可�
 
 #### 步骤一：创建  Iceberg 资源
 
-在创建外部表之前，需先创建 Iceberg 资源，以用来管理 Iceberg 的访问信息。此外，在创建Iceberg 外部表时也需要指定引用的 Iceberg 资源。您可以根据业务需求创建不同 catalog 类型的资源：
+在创建外部表之前，需先创建 Iceberg 资源，以用来管理 Iceberg 的访问信息。此外，在创建 Iceberg 外部表时也需要指定引用的 Iceberg 资源。您可以根据业务需求创建不同 catalog 类型的资源：
 
 * 如果使用 Hive metastore 作为 Iceberg 的元数据服务，则可以创建 catalog 类型为 `HIVE` 的资源。
 * 如果想要自定义 Iceberg 的元数据服务，则可以开发一个 custom catalog （即自定义 catalog），然后创建 catalog 类型为 `CUSTOM` 的资源。
@@ -799,7 +799,7 @@ PROPERTIES ( "type" = "iceberg", "starrocks.catalog-type"="HIVE", "iceberg.catal
 );
 ~~~
 
-参数说明:
+参数说明：
 
 | **参数**                            | **说明**                                                     |
 | ----------------------------------- | ------------------------------------------------------------ |
@@ -824,7 +824,7 @@ PROPERTIES ( "type" = "iceberg", "starrocks.catalog-type"="CUSTOM", "iceberg.cat
 | **参数**               | **说明**                                                     |
 | ---------------------- | ------------------------------------------------------------ |
 | type                   | 资源类型，取值为 `iceberg`。                                 |
-| starrocks.catalog-type | 资源的 catalog。目前支持 Hive catalog 和 custom catalog。 如要使用 Hive catalog， 需指定该参数值为 `HIVE`。 如要使用 custom catalog，需指定该参数值为 `CUSTOM`。 |
+| starrocks.catalog-type | 资源的 catalog 类型。目前支持 Hive catalog 和 custom catalog。 如要使用 Hive catalog， 需指定该参数值为 `HIVE`。 如要使用 custom catalog，需指定该参数值为 `CUSTOM`。 |
 | iceberg.catalog-impl   | 开发的 custom catalog 的全限定类名。FE 会根据该类名查找开发的 custom catalog。如果 custom catalog 中包含自定义的配置项，需要在创建 Iceberg 外部表时将其以键值对的形式添加到 SQL 语句的 `PROPERTIES` 中。 |
 
 StarRocks 2.3 及以上版本支持修改 Iceberg 资源的 `hive.metastore.uris` 和 `iceberg.catalog-impl`。更多信息，参见 [ALTER RESOURCE](../sql-reference/sql-statements/data-definition/ALTER%20RESOURCE.md).
@@ -843,7 +843,7 @@ SHOW RESOURCES;
 DROP RESOURCE "iceberg0";
 ~~~
 
-删除一个资源会导致其包含的所有外部表不可用，但对应的 Iceberg 表中的数据不会删除。如果删除后仍想通过 StarRocks 查询 Iceberg 数据，需要重新创建 Iceberg 资源和 Iceberg 外部表。
+删除一个资源会导致引用该资源的所有外部表不可用，但对应的 Iceberg 表中的数据不会删除。如果删除后仍想通过 StarRocks 查询 Iceberg 数据，需要重新创建 Iceberg 资源和 Iceberg 外部表。
 
 #### （可选）步骤二：创建数据库
 
@@ -895,7 +895,7 @@ PROPERTIES (
 > 说明：
  >
  >* 表名无需与 Iceberg 的实际表名保持一致。
- >* 列名需要与 Iceberg 的实际列名保持一致，列的顺序无需保持一致。
+ >* 列名必须与 Iceberg 的实际列名保持一致，列的顺序无需保持一致。
 如果您在 custom catalog 中自定义了配置项，且希望在查询外部表时这些配置项能生效，您可以将这些配置项以键值对的形式添加到建表语句的 `PROPERTIES` 中。例如，在 custom catalog 中定义了一个配置项 `custom-catalog.properties`，那么创建 Iceberg 外部表的语法如下：
 
 ~~~sql
@@ -909,6 +909,7 @@ PROPERTIES (
     "table" = "iceberg_table",
     "custom-catalog.properties" = "my_property"
 ); 
+~~~
 
 创建外部表时，需根据 Iceberg 表的列类型指定 StarRocks 中外部表的列类型，具体映射关系如下：
 
