@@ -79,13 +79,14 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 8;
 
 - 建表时，支持为指标列创建 BITMAP、Bloom Filter 等索引。
 
-- 如果导入两行完全相同的数据，则明细模型会将这两行数据视为两行，而不是一行。
+- 支持指标列的数据类型为 BITMAP、HLL，不支持排序键的数据类型为 BITMAP、HLL。
 
 ### 下一步
 
 建表完成后，您可以创建多种导入作业，导入数据至表中。具体导入方式，请参见[导入概览](../loading/Loading_intro.md)。
 
-> 导入时，支持追加新数据，不支持修改历史数据。
+> - 导入时，支持追加新数据，不支持修改历史数据。
+> - 如果导入两行完全相同的数据，则明细模型会将这两行数据视为两行，而不是一行。
 
 ## 聚合模型
 
@@ -173,6 +174,8 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 8;
 
 - 建表时，不支持为指标列创建 BITMAP、Bloom Filter 等索引。
 
+- 支持指标列的数据类型为 BITMAP、HLL，不支持排序键的数据类型为 BITMAP、HLL。
+
 ### 下一步
 
 建表完成后，您可以创建多种导入作业，导入数据至表中。具体导入方式，请参见[导入概览](../loading/Loading_intro.md)。
@@ -239,6 +242,8 @@ DISTRIBUTED BY HASH(order_id) BUCKETS 8;
     - 聚合过程中会比较所有主键，因此需要避免设置过多的主键，以免降低查询性能。如果某个列只是偶尔会作为查询中的过滤条件，则不建议放在主键中。
 
 - 建表时，不支持为指标列创建 BITMAP、Bloom Filter 等索引。
+
+- 支持指标列的数据类型为 BITMAP、HLL，不支持主键的数据类型为 BITMAP、HLL。
 
 ### 下一步
 
@@ -356,6 +361,8 @@ PROPERTIES("replication_num" = "3",
    > - 自 2.3.0 版本起，StarRocks 支持配置该参数。
 
 - 创建表时，支持为指标列创建 BITMAP、Bloom Filter 等索引。
+
+- 自 2.3 版本开始，支持指标列的数据类型为 BITMAP、HLL，不支持主键的数据类型为 BITMAP、HLL。
 
 - 主键模型目前不支持物化视图。
 
