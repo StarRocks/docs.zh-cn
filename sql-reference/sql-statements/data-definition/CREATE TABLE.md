@@ -288,14 +288,17 @@ DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]
 
 #### **PROPERTIES**
 
-##### 设置数据的初始存储介质、存储到期时间和副本数
+##### 设置数据的初始存储介质、存储降冷时间和副本数
 
 如果 ENGINE 类型为 olap, 可以在 properties 设置该表数据的初始存储介质、存储降冷时间和副本数。
+
+注意：
+只有 "storage_medium" = "SSD" 时才可设置降冷时间，创建 SSD 属性的表需要您的集群中配置了 SSD 类型的存储路径（storage_root_path）。
 
 ``` sql
 PROPERTIES (
     "storage_medium" = "[SSD|HDD]",
-    [ "storage_cooldown_time" = "INTEGER", ]
+    [ "storage_cooldown_time" = "yyyy-MM-dd HH:mm:ss", ]
     [ "replication_num" = "3" ]
 )
 ```
@@ -306,10 +309,10 @@ PROPERTIES (
 
 > 注意：当 FE 配置项 `enable_strict_storage_medium_check` 为 `true` 时，若集群中没有设置对应的存储介质时，建表语句会报错 `Failed to find enough hosts with storage medium [SSD|HDD] at all backends...`。设置 `enable_strict_storage_medium_check` 为 `false` 可以忽略该报错强行建表，但是后续可能会导致集群磁盘空间分布出现不均衡，所以强烈建议在建表时指定和集群存储介质相匹配的 `storage_medium` 属性。
 
-**storage_cooldown_time**：当设置存储介质为 SSD 时，指定该分区在多久之后（从建表时间点开始计算）从 SSD 降冷到 HDD。
+**storage_cooldown_time**：当设置存储介质为 SSD 时，指定该分区在该时间点之后从 SSD 降冷到 HDD，设置的时间应该大于当前时间。
 
-* 默认不进行自动降冷。
-* 格式为：一个整数，单位为秒
+* 不显式设置该属性时，默认不进行自动降冷。
+* 格式为："yyyy-MM-dd HH:mm:ss"
 
 **replication_num**：指定分区的副本数。
 
@@ -429,7 +432,7 @@ CREATE TABLE example_db.table_hash
     k1 BIGINT,
     k2 LARGEINT,
     v1 VARCHAR(2048) REPLACE,
-    v2 SMALLINT SUM DEFAULT "10"
+    v2 SMALLINT DEFAULT "10"
 )
 ENGINE = olap
 UNIQUE KEY(k1, k2)
@@ -437,7 +440,7 @@ DISTRIBUTED BY HASH (k1, k2) BUCKETS 32
 PROPERTIES(
     "storage_type" = "column",
     "storage_medium" = "SSD",
-    "storage_cooldown_time" = "1296000" // 15 天
+    "storage_cooldown_time" = "2025-06-04 00:00:00"
 );
 ```
 
@@ -449,7 +452,7 @@ CREATE TABLE example_db.table_hash
     k1 BIGINT,
     k2 LARGEINT,
     v1 VARCHAR(2048) REPLACE,
-    v2 SMALLINT SUM DEFAULT "10"
+    v2 SMALLINT DEFAULT "10"
 )
 ENGINE = olap
 PRIMARY KEY(k1, k2)
@@ -457,7 +460,7 @@ DISTRIBUTED BY HASH (k1, k2) BUCKETS 32
 PROPERTIES(
     "storage_type" = "column",
     "storage_medium" = "SSD",
-    "storage_cooldown_time" = "1296000" // 15 天
+    "storage_cooldown_time" = "2025-06-04 00:00:00"
 );
 ```
 
@@ -486,7 +489,7 @@ PARTITION BY RANGE (k1)
 )
 DISTRIBUTED BY HASH(k2) BUCKETS 32
 PROPERTIES(
-    "storage_medium" = "SSD", "storage_cooldown_time" = "1296000" // 15 天
+    "storage_medium" = "SSD", "storage_cooldown_time" = "2025-06-04 00:00:00"
 );
 ```
 
