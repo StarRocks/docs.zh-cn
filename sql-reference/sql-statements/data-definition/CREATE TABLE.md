@@ -477,7 +477,7 @@ CREATE TABLE example_db.table_range
     k2 INT,
     k3 SMALLINT,
     v1 VARCHAR(2048),
-    v2 DATETIME DEFAULT "2014-02-04 15: 36: 00"
+    v2 DATETIME DEFAULT "2014-02-04 15:36:00"
 )
 ENGINE = olap
 DUPLICATE KEY(k1, k2, k3)
@@ -513,7 +513,7 @@ CREATE TABLE table_range
     k2 INT,
     k3 SMALLINT,
     v1 VARCHAR(2048),
-    v2 DATETIME DEFAULT "2014-02-04 15: 36: 00"
+    v2 DATETIME DEFAULT "2014-02-04 15:36:00"
 )
 ENGINE = olap
 DUPLICATE KEY(k1, k2, k3)
@@ -548,7 +548,7 @@ PROPERTIES
     "password" = "mysql_passwd",
     "database" = "mysql_db_test",
     "table" = "mysql_table_test"
-)
+);
 ```
 
 ### 创建一张含有 HLL 列的表
@@ -585,9 +585,9 @@ DISTRIBUTED BY HASH(k1) BUCKETS 32
 PROPERTIES ("storage_type" = "column");
 ```
 
-### 创建两张支持 Colocat Join 的表
+### 创建两张支持 Colocate Join 的表
 
-创建 t1 和 t2 两个表，两表可进行 Colocat Join。两表的属性中的 `colocate_with` 属性的值需保持一致。
+创建 t1 和 t2 两个表，两表可进行 Colocate Join。两表的属性中的 `colocate_with` 属性的值需保持一致。
 
 ``` sql
 CREATE TABLE `t1` (
