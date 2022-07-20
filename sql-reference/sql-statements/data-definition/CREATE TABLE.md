@@ -670,7 +670,7 @@ PROPERTIES(
 );
 ```
 
-### Create a table with rollup index
+### 创建一个带有 rollup 的表
 
 ``` sql
 CREATE TABLE example_db.rolup_index_table
@@ -721,8 +721,8 @@ CREATE TABLE example_db.table_hive
 ENGINE = hive
 PROPERTIES
 (
+    "resource" = "hive0",
     "database" = "hive_db_name",
-    "table" = "hive_table_name",
-    "hive.metastore.uris" = "thrift://127.0.0.1: 9083"
+    "table" = "hive_table_name"
 );
 ```
