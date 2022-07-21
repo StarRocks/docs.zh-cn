@@ -101,7 +101,6 @@ starrocksSparkRDD.collect()
 | starrocks.request.auth.user     | --            | 访问StarRocks的用户名                                            |
 | starrocks.request.auth.password | --            | 访问StarRocks的密码                                              |
 | starrocks.read.field            | --            | 读取StarRocks表的列名列表，多列之间使用逗号分隔                  |
-| starrocks.filter.query          | --            | 过滤读取数据的表达式，此表达式透传给StarRocks。StarRocks使用此表达式完成源端数据过滤。 |
 
 ## StarRocks 和 Spark 列类型映射关系
 
