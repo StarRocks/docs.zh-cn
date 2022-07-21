@@ -288,9 +288,9 @@ DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]
 
 #### **PROPERTIES**
 
-##### 设置数据的初始存储介质、存储降冷时间和副本数
+##### 设置数据的初始存储介质、存储到期时间和副本数
 
-如果 ENGINE 类型为 olap, 可以在 properties 设置该表数据的初始存储介质、存储降冷时间和副本数。
+如果 ENGINE 类型为 olap, 可以在 properties 设置该表数据的初始存储介质、存储到期时间和副本数。
 
 ``` sql
 PROPERTIES (
