@@ -18,7 +18,7 @@ Roaring Bitmap 实现，细节可以参考：[具体论文和实现](https://git
 3. 创建表时指定指标列的数据类型为 ·BITMAP， 聚合函数为 BITMAP_UNION。
 4. 当在 Bitmap 类型列上使用 count distinct 时，StarRocks 会自动转化为 BITMAP_UNION_COUNT 计算。
 
-具体操作函数参见 [Bitmap函数](../sql-reference/sql-functions/bitmap-functions/bitmap_and.md)。
+具体操作函数参见 [Bitmap函数](../sql-reference/sql-functions/bitmap-functions/bitmap_union.md)。
 
 ### 示例
 
@@ -70,6 +70,11 @@ DONE
 ```
 
 统计每个页面的 UV
+
+```sql
+select page_id, bitmap_count(bitmap_union(visit_users)) from page_uv group by page_id;
+```
+visit_users 字段为整数型类型，上面查询语义等同于
 
 ```sql
 select page_id, count(distinct visit_users) from page_uv group by page_id;
