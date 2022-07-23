@@ -540,7 +540,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     PROPERTIES ("storage_type"="column");
     ```
 
-7. 创建两张支持Colocat Join的表t1 和t2
+7. 创建两张支持Colocate Join的表t1 和t2
 
     ```sql
     CREATE TABLE `t1` (
@@ -619,7 +619,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     );
     ```
 
-10. Create a table with rollup index
+10. 创建一个带 rollup 的表
 
     ```sql
     CREATE TABLE example_db.rolup_index_table
@@ -638,6 +638,7 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     r3(event_day)
     )
     PROPERTIES("replication_num" = "3");
+    ```
 
 11. 创建一个内存表
 
@@ -669,9 +670,9 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
     ENGINE=hive
     PROPERTIES
     (
+        "resource" = "hive0",
         "database" = "hive_db_name",
-        "table" = "hive_table_name",
-        "hive.metastore.uris" = "thrift://127.0.0.1:9083"
+        "table" = "hive_table_name"
     );
     ```
 
